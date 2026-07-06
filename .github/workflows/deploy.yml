@@ -15,13 +15,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # NOTE: requires one-time repo setup — Settings > Pages > Source: "GitHub Actions".
+  # The workflow token cannot enable Pages itself (needs admin scope).
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: withastro/action@v6
 
   deploy:
