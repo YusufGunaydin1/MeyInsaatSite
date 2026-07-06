@@ -213,7 +213,8 @@ const poster = frameUrls[frameUrls.length - 1];
   }
 
   .scrub-stage-no {
-    color: rgb(244 244 242 / 0.4);
+    /* 0.55 keeps ~5.2:1 on night-950 (WCAG AA); 0.4 failed at 3.59:1 */
+    color: rgb(244 244 242 / 0.55);
   }
   .scrub-stage-item[data-active] .scrub-stage-no {
     color: var(--color-red-on-dark);
@@ -225,9 +226,10 @@ const poster = frameUrls[frameUrls.length - 1];
     color: rgb(244 244 242 / 0.75);
   }
 
-  /* Small screens: the vertical rail goes screen-reader-only; compact line replaces it */
+  /* Small screens: the vertical rail goes screen-reader-only; compact line replaces
+     it. Gated on html.js: without JS the mandated four-stage static list must show. */
   @media (max-width: 1023px) {
-    [data-scrub]:not([data-static]) .scrub-stages {
+    .js [data-scrub]:not([data-static]) .scrub-stages {
       position: absolute;
       width: 1px;
       height: 1px;

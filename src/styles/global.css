@@ -24,7 +24,9 @@
   --color-line: #e2e2de;
   --color-graphite-900: #17181a;
   --color-graphite-600: #4b4e50;
-  --color-graphite-400: #82868a;
+  /* Brief lists #82868A, but that fails its own §14 WCAG-AA floor on light
+     surfaces (3.67:1 on white) — darkened to pass ≥4.5:1 on white and concrete. */
+  --color-graphite-400: #66696d;
   --color-charcoal: #656667;
   --color-mey-red: #b52323;
   --color-mey-red-700: #791a1a;
