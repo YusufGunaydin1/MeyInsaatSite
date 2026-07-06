@@ -30,10 +30,12 @@ Thumbs.db
 # it needs, brought into the Astro project and optimized (WebP/AVIF) at build time.
 images/
 
-# Internal AI-development guides (inherited from the ERP project) — kept local, not
-# published to this public repo. Remove these two lines if you want them public.
+# Internal working docs — kept local, not published to this public repo:
+# AI-development guides inherited from the ERP, plus the site design brief.
+# Remove a line if you want that file published.
 CLAUDE.md
 AGENTS.md
+MEY_INSAAT_DESIGN_BRIEF.md
 
 # Logs
 *.log
