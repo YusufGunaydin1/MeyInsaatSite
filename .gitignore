@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+.output/
+.vercel/
+.netlify/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Windows Alternate Data Stream sidecars (mark-of-the-web) — never publish
+*Zone.Identifier*
+*:Zone.Identifier
+
+# Image source library (all generated candidates, used + unused) — maintained
+# locally as a working library, NOT published. The site consumes only the images
+# it needs, brought into the Astro project and optimized (WebP/AVIF) at build time.
+images/
+
+# Internal AI-development guides (inherited from the ERP project) — kept local, not
+# published to this public repo. Remove these two lines if you want them public.
+CLAUDE.md
+AGENTS.md
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
