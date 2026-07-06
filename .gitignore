@@ -37,6 +37,12 @@ CLAUDE.md
 AGENTS.md
 MEY_INSAAT_DESIGN_BRIEF.md
 
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+e2e/.env
+
 # Logs
 *.log
 npm-debug.log*

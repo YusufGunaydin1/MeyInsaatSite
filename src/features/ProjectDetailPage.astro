@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import PlaceholderChip from '../components/PlaceholderChip.astro';
+import { type Locale } from '../lib/i18n';
+import { ui, project } from '../lib/content';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+
+const { locale, slug } = Astro.props;
+const t = ui(locale);
+const entry = project(slug, locale);
+if (!entry) throw new Error(`Unknown project slug: ${slug}`);
+const { data } = entry;
+const fm = entry.md?.frontmatter ?? {};
+const Content = entry.md?.Content;
+const isSample = data.placeholder === true;
+
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.webp',
+  { eager: true }
+);
+const photo = (name: string) =>
+  photos[`../assets/photos/${name}.webp`]!.default;
+
+const specs = [
+  { label: t.projects.specs.location, value: data.location },
+  { label: t.projects.specs.type, value: t.projects.types?.[data.type] ?? data.type },
+  { label: t.projects.specs.status, value: t.projects.status[data.status] ?? data.status },
+  { label: t.projects.specs.year, value: data.year },
+  { label: t.projects.specs.units, value: data.units },
+];
+---
+
+<Base
+  locale={locale}
+  page="projects"
+  path={`/projeler/${slug}`}
+  title={`${fm.name ?? slug} — MEY İnşaat`}
+  description={fm.summary}
+  noindex={isSample}
+>
+  <section class="container-site section-pad">
+    {isSample && (
+      <div class="border border-dashed border-graphite-400/60 rounded-brand bg-concrete-100 px-5 py-4 mb-10 max-w-3xl">
+        <p class="t-tech text-mey-red">{t.placeholder.sampleProject}</p>
+        <p class="t-caption mt-1">{t.placeholder.sampleProjectNote}</p>
+      </div>
+    )}
+
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red mb-4">{t.nav.projects.toUpperCase()}</p>
+      <h1 class="t-display-l">{fm.name}</h1>
+      <p class="t-body-l mt-4 max-w-2xl">{fm.summary}</p>
+    </div>
+
+    <dl class="grid grid-cols-2 md:grid-cols-5 gap-px bg-line border border-line rounded-brand overflow-hidden mt-12">
+      {specs.map((s) => (
+        <div class="bg-white p-4">
+          <dt class="t-tech text-graphite-400">{s.label}</dt>
+          <dd class="t-heading-s mt-1 tabular-nums">
+            {s.value ?? <PlaceholderChip locale={locale} />}
+          </dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="grid gap-4 sm:grid-cols-2 mt-12">
+      {(data.gallery ?? []).map((name: string) => (
+        <figure class="card overflow-hidden">
+          <Image
+            src={photo(name)}
+            alt={t.placeholder.representativeImage}
+            widths={[640, 1024, 1600]}
+            sizes="(min-width: 1024px) 640px, 100vw"
+            class="w-full aspect-[4/3] object-cover"
+          />
+          <figcaption class="t-tech text-graphite-400 px-4 py-2 border-t border-line bg-white">
+            {t.placeholder.representativeImage}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <article class="mt-12 max-w-3xl t-body">
+      {Content && <Content />}
+    </article>
+  </section>
+</Base>

@@ -1,0 +1,28 @@
+---
+/*
+  Visible "fact pending" marker (never invent facts — flag them).
+  Dashed border reads as provisional; quiet by design.
+*/
+import type { Locale } from '../lib/i18n';
+import { ui } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+  /** what is missing, e.g. "Telefon" */
+  label?: string;
+  onDark?: boolean;
+}
+
+const { locale, label, onDark = false } = Astro.props;
+const t = ui(locale);
+---
+
+<span
+  class:list={[
+    't-tech inline-flex items-center gap-1.5 border border-dashed rounded-brand px-2 py-1',
+    onDark ? 'border-white/25 text-concrete-100/60' : 'border-graphite-400/60 text-graphite-400',
+  ]}
+>
+  {label && <span>{label}:</span>}
+  <span>{t.placeholder.chip}</span>
+</span>

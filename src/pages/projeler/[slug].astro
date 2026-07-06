@@ -1,0 +1,12 @@
+---
+import ProjectDetailPage from '../../features/ProjectDetailPage.astro';
+import { projects } from '../../lib/content';
+
+export function getStaticPaths() {
+  return projects('tr').map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<ProjectDetailPage locale="tr" slug={slug!} />

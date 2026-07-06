@@ -1,0 +1,119 @@
+{
+  "locale": "en",
+  "langName": "English",
+  "machineTranslated": true,
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "corporate": "Corporate",
+    "services": "Services",
+    "contact": "Contact"
+  },
+  "cta": {
+    "viewProjects": "View projects",
+    "contact": "Contact",
+    "allProjects": "All projects",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "readMore": "Read more"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "languageSwitcher": "Language selection",
+    "mainNav": "Main navigation",
+    "footerNav": "Footer navigation",
+    "buildAnimation": "Construction timeline animation: a building rising from excavation to roof"
+  },
+  "signature": {
+    "eyebrow": "CONSTRUCTION PROCESS",
+    "title": "From foundation to roof",
+    "sub": "The timeline of a real construction site. As you scroll, the building rises in the order it was built.",
+    "stages": [
+      {
+        "no": "01",
+        "name": "Excavation",
+        "desc": "Ground is broken; the foundation pit and reinforcement are prepared."
+      },
+      {
+        "no": "02",
+        "name": "Structural Shell",
+        "desc": "The foundation is poured; the reinforced-concrete frame rises floor by floor."
+      },
+      {
+        "no": "03",
+        "name": "Walls",
+        "desc": "Brick infill walls are laid; the floor plans take shape."
+      },
+      {
+        "no": "04",
+        "name": "Roof",
+        "desc": "The top floor is completed; the building reaches its highest point."
+      }
+    ],
+    "readout": {
+      "excavation": "EXCAVATION",
+      "foundation": "FOUNDATION",
+      "floor": "FLOOR"
+    },
+    "loading": "LOADING",
+    "reducedMotionNote": "Animation off: the completed structure and the construction stages are listed below."
+  },
+  "stats": {
+    "groupYears": "Years of group experience",
+    "constructionYears": "Years in construction",
+    "projectsCompleted": "Projects completed",
+    "unitsDelivered": "Units delivered",
+    "builtAreaM2": "m² built area",
+    "region": "Operating region"
+  },
+  "placeholder": {
+    "chip": "Information pending",
+    "value": "—",
+    "sampleProject": "SAMPLE TEMPLATE",
+    "sampleProjectNote": "This page is a template preview; it will be updated when real project information is added.",
+    "representativeImage": "Representative image"
+  },
+  "projects": {
+    "empty": "The project portfolio is being prepared. Real project information and photos will be here soon.",
+    "filters": {
+      "all": "All",
+      "type": "Type",
+      "status": "Status",
+      "location": "Location"
+    },
+    "status": {
+      "completed": "Completed",
+      "ongoing": "Ongoing",
+      "planned": "Planned"
+    },
+    "specs": {
+      "location": "Location",
+      "type": "Type",
+      "status": "Status",
+      "year": "Year",
+      "units": "Units"
+    },
+    "types": {
+      "konut": "Residential"
+    }
+  },
+  "contact": {
+    "title": "Let's talk about your project",
+    "sub": "Reach us directly by phone, WhatsApp, or email.",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "address": "Address",
+    "hours": "Working hours"
+  },
+  "footer": {
+    "sitemap": "Sitemap",
+    "contact": "Contact",
+    "languages": "Languages",
+    "groupNote": "MEY İnşaat is a MEY Group brand.",
+    "rights": "All rights reserved."
+  }
+}

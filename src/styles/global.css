@@ -1,0 +1,248 @@
+/*
+  MEY İnşaat — design tokens & primitives.
+  Authority: MEY_INSAAT_DESIGN_BRIEF.md (local). Values are exact — do not approximate.
+  Light institutional base; red = action/structure, teal = technical/blueprint (mostly on dark).
+  Radius 2px everywhere. Flat: no shadows on the light layer. Max weight 600 (AR display 700).
+*/
+
+@import "tailwindcss";
+
+/* IBM Plex superfamily — self-hosted, subset per script via unicode-range */
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-sans-condensed/600.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-sans-arabic/400.css";
+@import "@fontsource/ibm-plex-sans-arabic/500.css";
+@import "@fontsource/ibm-plex-sans-arabic/700.css";
+
+@theme {
+  /* Core palette — sampled from the MEY logo */
+  --color-concrete-050: #f4f4f2;
+  --color-concrete-100: #ecece9;
+  --color-line: #e2e2de;
+  --color-graphite-900: #17181a;
+  --color-graphite-600: #4b4e50;
+  --color-graphite-400: #82868a;
+  --color-charcoal: #656667;
+  --color-mey-red: #b52323;
+  --color-mey-red-700: #791a1a;
+  --color-mey-red-bright: #d54e52;
+  --color-mey-teal: #49c1c6;
+  --color-mey-teal-700: #0f757a;
+  --color-night-950: #0e0f11;
+  --color-night-800: #191b1e;
+  --color-red-on-dark: #f2555a;
+
+  /* Faces */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "IBM Plex Sans Condensed", "IBM Plex Sans", ui-sans-serif, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-arabic: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif;
+
+  /* Engineered near-square radius */
+  --radius-brand: 2px;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-concrete-050);
+    color: var(--color-graphite-600);
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html:lang(ar) {
+    font-family: var(--font-arabic);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-graphite-900);
+  }
+
+  ::selection {
+    background-color: var(--color-mey-red);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-mey-red);
+    outline-offset: 2px;
+  }
+
+  .theatre :focus-visible {
+    outline-color: var(--color-red-on-dark);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* ---- Type scale (brief §6) ---- */
+  .t-display-xl {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.75rem, 6vw, 5.5rem);
+    letter-spacing: -0.02em;
+    line-height: 0.98;
+    color: var(--color-graphite-900);
+  }
+  .t-display-l {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    letter-spacing: -0.015em;
+    line-height: 1.02;
+    color: var(--color-graphite-900);
+  }
+  /* Arabic display: no condensed Arabic exists — Plex Sans Arabic Bold, no negative tracking */
+  .t-display-xl:lang(ar), .t-display-l:lang(ar) {
+    font-family: var(--font-arabic);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+  /* Russian display: Plex Sans Condensed has no basic-Cyrillic glyphs — use Plex Sans 600 */
+  .t-display-xl:lang(ru), .t-display-l:lang(ru) {
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+  }
+  .t-heading-m {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--color-graphite-900);
+  }
+  .t-heading-s {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.3;
+    color: var(--color-graphite-900);
+  }
+  .t-heading-m:lang(ar), .t-heading-s:lang(ar) {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+  }
+  .t-body-l { font-size: 1.125rem; line-height: 1.6; }
+  .t-body { font-size: 1rem; line-height: 1.65; }
+  .t-caption { font-size: 0.875rem; line-height: 1.4; }
+
+  /* The technical layer — construction-drawing lettering. Latin digits in ALL locales. */
+  .t-tech {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  /* ---- Buttons (brief §9) ---- */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-mey-red);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-brand);
+    transition: background-color 200ms ease-out;
+  }
+  .btn-primary:hover { background-color: var(--color-mey-red-700); }
+  .btn-primary:lang(ar) { font-family: var(--font-arabic); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: transparent;
+    color: var(--color-graphite-900);
+    border: 1px solid var(--color-graphite-900);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    padding: calc(0.75rem - 1px) calc(1.5rem - 1px);
+    border-radius: var(--radius-brand);
+    transition: background-color 200ms ease-out;
+  }
+  .btn-ghost:hover { background-color: var(--color-concrete-100); }
+  .btn-ghost:lang(ar) { font-family: var(--font-arabic); }
+  .theatre .btn-ghost {
+    color: #fff;
+    border-color: #fff;
+  }
+  .theatre .btn-ghost:hover { background-color: rgb(255 255 255 / 0.08); }
+
+  /* ---- Structural devices ---- */
+  /* The guide-line: a builder's string-line as page structure (brief §7). Sparingly. */
+  .guide-line-v {
+    border-inline-start: 1px solid var(--color-mey-red);
+  }
+
+  .card {
+    background-color: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+  }
+
+  /* Dark theatre surfaces (signature section, footer) */
+  .theatre {
+    background-color: var(--color-night-950);
+    color: var(--color-concrete-100);
+  }
+  .theatre h1, .theatre h2, .theatre h3, .theatre h4 { color: #fff; }
+
+  /* Faint teal blueprint grid for the theatre */
+  .blueprint-grid {
+    background-image:
+      linear-gradient(to right, rgb(73 193 198 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(73 193 198 / 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* ---- Layout ---- */
+  .container-site {
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-site { padding-inline: 1.5rem; }
+  }
+
+  .section-pad {
+    padding-block: clamp(4rem, 10vh, 8rem);
+  }
+
+  /* Scroll-in reveal (quiet motion, brief §12). Hidden state only exists when JS
+     is confirmed (html.js, set by an inline script) — content is never JS-gated. */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: opacity 500ms ease-out, transform 500ms ease-out;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal { opacity: 1; transform: none; }
+  }
+}
+
+@utility tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,19 @@
+{
+  "_comment": "ÖRNEK ŞABLON — gerçek proje verisi değildir. Gerçek projeler eklendiğinde bu klasör silinebilir.",
+  "slug": "ornek-proje",
+  "placeholder": true,
+  "location": null,
+  "district": null,
+  "type": "konut",
+  "status": "completed",
+  "year": null,
+  "units": null,
+  "areaM2": null,
+  "cover": "residential-entrance-closeup",
+  "gallery": [
+    "residential-entrance-closeup",
+    "balcony-facade-closeup",
+    "facade-grid-detail",
+    "lobby-elevator-stairwell"
+  ]
+}

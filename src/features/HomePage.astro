@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ScrollToBuild from '../components/ScrollToBuild.astro';
+import StatsStrip from '../components/StatsStrip.astro';
+import ProjectTile from '../components/ProjectTile.astro';
+import ContactChannels from '../components/ContactChannels.astro';
+import { localePath, type Locale } from '../lib/i18n';
+import { ui, pageContent } from '../lib/content';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale);
+const page = pageContent('home', locale);
+const fm = page?.frontmatter ?? {};
+const headlineLines: string[] = (fm.hero?.headline ?? '').split('\n');
+
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.webp',
+  { eager: true }
+);
+const photo = (name: string) =>
+  photos[`../assets/photos/${name}.webp`]!.default;
+
+const previewTiles = [
+  { image: photo('residential-entrance-closeup'), index: '01' },
+  { image: photo('balcony-facade-closeup'), index: '02' },
+  { image: photo('facade-grid-detail'), index: '03' },
+];
+---
+
+<Base locale={locale} page="home" path="/">
+  <!-- HERO — restrained on purpose; the wow arrives one scroll down (brief §8) -->
+  <section class="container-site section-pad">
+    <div class="guide-line-v ps-6 sm:ps-10 max-w-4xl">
+      <p class="t-tech text-mey-red mb-6">{fm.hero?.eyebrow}</p>
+      <h1 class="t-display-xl uppercase">
+        {headlineLines.map((line: string, i: number) => (
+          <>
+            {line}
+            {i < headlineLines.length - 1 && <br />}
+          </>
+        ))}
+      </h1>
+      <p class="t-body-l mt-6 max-w-xl">{fm.hero?.sub}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={localePath(locale, '/projeler')} class="btn-primary">
+          {fm.hero?.primaryCta}
+          <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span>
+        </a>
+        <a href={localePath(locale, '/iletisim')} class="btn-ghost">{fm.hero?.secondaryCta}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SIGNATURE — scroll-to-build -->
+  <ScrollToBuild locale={locale} />
+
+  <!-- PROJECTS PREVIEW -->
+  <section class="container-site section-pad">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <SectionHeading
+        eyebrow={fm.sections?.projects?.eyebrow}
+        title={fm.sections?.projects?.title}
+        intro={fm.sections?.projects?.intro}
+      />
+      <a href={localePath(locale, '/projeler')} class="btn-ghost reveal">{t.cta.allProjects}</a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-10">
+      {previewTiles.map((tile) => (
+        <ProjectTile
+          index={tile.index}
+          title={t.projects.empty.split('.')[0]}
+          caption={t.placeholder.representativeImage}
+          badge={t.placeholder.chip}
+          image={tile.image}
+          alt={t.placeholder.representativeImage}
+          href={localePath(locale, '/projeler')}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- SERVICES / CAPABILITIES -->
+  <section class="bg-concrete-100 border-y border-line">
+    <div class="container-site section-pad">
+      <SectionHeading
+        eyebrow={fm.sections?.services?.eyebrow}
+        title={fm.sections?.services?.title}
+        intro={fm.sections?.services?.intro}
+      />
+      <div class="grid gap-px sm:grid-cols-2 lg:grid-cols-4 bg-line border border-line rounded-brand overflow-hidden mt-10 reveal">
+        {(pageContent('hizmetler', locale)?.frontmatter?.process?.steps ?? []).map(
+          (step: any, i: number) => (
+            <div class="bg-white p-5">
+              <p class="t-tech text-mey-red">{String(i + 1).padStart(2, '0')}</p>
+              <h3 class="t-heading-s mt-3">{step.name}</h3>
+              <p class="t-caption text-graphite-600 mt-2">{step.desc}</p>
+            </div>
+          )
+        )}
+      </div>
+      <div class="mt-8">
+        <a href={localePath(locale, '/hizmetler')} class="btn-ghost">{t.nav.services}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="container-site section-pad">
+    <SectionHeading
+      eyebrow={fm.sections?.stats?.eyebrow}
+      title={fm.sections?.stats?.title}
+    />
+    <div class="mt-10">
+      <StatsStrip locale={locale} />
+    </div>
+  </section>
+
+  <!-- CONTACT CTA -->
+  <section class="bg-concrete-100 border-t border-line">
+    <div class="container-site section-pad">
+      <SectionHeading
+        eyebrow={fm.sections?.contact?.eyebrow}
+        title={fm.sections?.contact?.title}
+        intro={fm.sections?.contact?.intro}
+      />
+      <div class="mt-10">
+        <ContactChannels locale={locale} />
+      </div>
+    </div>
+  </section>
+</Base>

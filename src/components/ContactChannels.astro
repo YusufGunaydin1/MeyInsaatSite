@@ -1,0 +1,54 @@
+---
+/*
+  Direct channels — phone / WhatsApp / email links only, no form backend (settled).
+  Missing facts render as visible placeholders, never invented.
+*/
+import type { Locale } from '../lib/i18n';
+import { ui, company } from '../lib/content';
+import PlaceholderChip from './PlaceholderChip.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale);
+const c = company.contact;
+
+const channels = [
+  {
+    key: 'phone',
+    label: t.contact.phone,
+    value: c.phone,
+    href: c.phone ? `tel:${String(c.phone).replace(/\s/g, '')}` : null,
+  },
+  {
+    key: 'whatsapp',
+    label: t.contact.whatsapp,
+    value: c.whatsapp,
+    href: c.whatsapp ? `https://wa.me/${String(c.whatsapp).replace(/\D/g, '')}` : null,
+  },
+  {
+    key: 'email',
+    label: t.contact.email,
+    value: c.email,
+    href: c.email ? `mailto:${c.email}` : null,
+  },
+];
+---
+
+<div class="grid gap-px sm:grid-cols-3 bg-line border border-line rounded-brand overflow-hidden reveal">
+  {channels.map((ch) =>
+    ch.href ? (
+      <a href={ch.href} class="bg-white p-5 hover:bg-concrete-100 transition-colors block">
+        <p class="t-tech text-graphite-400">{ch.label}</p>
+        <p class="t-heading-s mt-2 tabular-nums">{ch.value}</p>
+      </a>
+    ) : (
+      <div class="bg-white p-5">
+        <p class="t-tech text-graphite-400">{ch.label}</p>
+        <p class="mt-2"><PlaceholderChip locale={locale} /></p>
+      </div>
+    )
+  )}
+</div>

@@ -1,0 +1,29 @@
+{
+  "_comment": "TEK KAYNAK — sert gerçekler. null = MEY'den beklenen bilgi (asla uydurma). Site null değerleri görünür [Bilgi bekleniyor] rozetiyle gösterir.",
+  "name": "MEY İnşaat",
+  "legalName": null,
+  "group": "MEY Grubu",
+  "parentBrand": "MEY Kozmetik",
+  "groupYears": 23,
+  "constructionYears": 6,
+  "groupFoundedYear": null,
+  "constructionFoundedYear": null,
+  "contact": {
+    "phone": null,
+    "whatsapp": null,
+    "email": null,
+    "address": null,
+    "hours": null
+  },
+  "social": {
+    "instagram": null,
+    "linkedin": null
+  },
+  "stats": {
+    "projectsCompleted": null,
+    "unitsDelivered": null,
+    "builtAreaM2": null,
+    "region": null
+  },
+  "domain": null
+}

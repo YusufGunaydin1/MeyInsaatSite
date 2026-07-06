@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import { LOCALES, localePath, type Locale } from '../lib/i18n';
+import { ui, company, companyContent } from '../lib/content';
+import PlaceholderChip from './PlaceholderChip.astro';
+import logo from '../assets/brand/mey-logo.png';
+
+interface Props {
+  locale: Locale;
+  path: string;
+}
+
+const { locale, path } = Astro.props;
+const t = ui(locale);
+const prose = companyContent(locale);
+const year = new Date().getFullYear();
+
+const items = [
+  { href: '/', label: t.nav.home },
+  { href: '/projeler', label: t.nav.projects },
+  { href: '/kurumsal', label: t.nav.corporate },
+  { href: '/hizmetler', label: t.nav.services },
+  { href: '/iletisim', label: t.nav.contact },
+];
+---
+
+<footer class="theatre blueprint-grid mt-auto">
+  <div class="container-site py-14">
+    <div class="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
+      <div>
+        <div class="flex items-center gap-3">
+          <Image src={logo} alt="MEY İnşaat" height={30} densities={[1, 2]} class="h-[30px] w-auto" />
+        </div>
+        <p class="t-caption mt-4 max-w-sm text-concrete-100/70">
+          {prose?.frontmatter?.boilerplate}
+        </p>
+        <p class="t-tech mt-4 text-mey-teal">{t.footer.groupNote}</p>
+      </div>
+
+      <nav aria-label={t.a11y.footerNav}>
+        <h2 class="t-tech text-concrete-100/50 mb-3">{t.footer.sitemap}</h2>
+        <ul class="space-y-2">
+          {items.map((item) => (
+            <li>
+              <a href={localePath(locale, item.href)} class="t-caption text-concrete-100/85 hover:text-white">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="t-tech text-concrete-100/50 mb-3">{t.footer.contact}</h2>
+        <ul class="space-y-2 t-caption text-concrete-100/85">
+          <li>
+            {company.contact.phone
+              ? <a href={`tel:${company.contact.phone}`} class="hover:text-white">{company.contact.phone}</a>
+              : <PlaceholderChip locale={locale} label={t.contact.phone} onDark />}
+          </li>
+          <li>
+            {company.contact.email
+              ? <a href={`mailto:${company.contact.email}`} class="hover:text-white">{company.contact.email}</a>
+              : <PlaceholderChip locale={locale} label={t.contact.email} onDark />}
+          </li>
+          <li>
+            {company.contact.address
+              ? <span>{company.contact.address}</span>
+              : <PlaceholderChip locale={locale} label={t.contact.address} onDark />}
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="t-tech text-concrete-100/50 mb-3">{t.footer.languages}</h2>
+        <ul class="space-y-2">
+          {LOCALES.map((l) => (
+            <li>
+              <a
+                href={localePath(l, path)}
+                aria-current={l === locale ? 'true' : undefined}
+                class:list={[
+                  't-tech hover:text-white',
+                  l === locale ? 'text-red-on-dark' : 'text-concrete-100/70',
+                ]}
+              >
+                {l.toUpperCase()}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10 mt-12 pt-6 flex flex-wrap items-center justify-between gap-2">
+      <p class="t-tech text-concrete-100/50">© {year} {company.name} · {t.footer.rights}</p>
+      <p class="t-tech text-concrete-100/35">{prose?.frontmatter?.slogan}</p>
+    </div>
+  </div>
+</footer>

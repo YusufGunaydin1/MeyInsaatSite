@@ -1,0 +1,119 @@
+{
+  "locale": "tr",
+  "langName": "Türkçe",
+  "machineTranslated": false,
+  "nav": {
+    "home": "Ana Sayfa",
+    "projects": "Projeler",
+    "corporate": "Kurumsal",
+    "services": "Hizmetler",
+    "contact": "İletişim"
+  },
+  "cta": {
+    "viewProjects": "Projeleri gör",
+    "contact": "İletişim",
+    "allProjects": "Tüm projeler",
+    "call": "Telefon",
+    "whatsapp": "WhatsApp",
+    "email": "E-posta",
+    "readMore": "Devamı"
+  },
+  "a11y": {
+    "skipToContent": "İçeriğe geç",
+    "openMenu": "Menüyü aç",
+    "closeMenu": "Menüyü kapat",
+    "languageSwitcher": "Dil seçimi",
+    "mainNav": "Ana gezinme",
+    "footerNav": "Alt bilgi gezinmesi",
+    "buildAnimation": "İnşaat zaman akışı animasyonu: kazıdan çatıya yükselen bina"
+  },
+  "signature": {
+    "eyebrow": "İNŞAAT SÜRECİ",
+    "title": "Temelden çatıya",
+    "sub": "Gerçek bir şantiyenin zaman akışı. Kaydırdıkça bina, inşa edildiği sırayla yükselir.",
+    "stages": [
+      {
+        "no": "01",
+        "name": "Kazı",
+        "desc": "Zemin açılır, temel çukuru ve donatı hazırlanır."
+      },
+      {
+        "no": "02",
+        "name": "Kaba İnşaat",
+        "desc": "Temel atılır; betonarme taşıyıcı sistem kat kat yükselir."
+      },
+      {
+        "no": "03",
+        "name": "Duvar",
+        "desc": "Tuğla dolgu duvarlar örülür, kat planları belirginleşir."
+      },
+      {
+        "no": "04",
+        "name": "Çatı",
+        "desc": "Son kat tamamlanır; bina tepe noktasına ulaşır."
+      }
+    ],
+    "readout": {
+      "excavation": "KAZI",
+      "foundation": "TEMEL",
+      "floor": "KAT"
+    },
+    "loading": "YÜKLENİYOR",
+    "reducedMotionNote": "Animasyon kapalı: tamamlanan yapı ve inşaat aşamaları aşağıda listelenmiştir."
+  },
+  "stats": {
+    "groupYears": "Yıllık grup deneyimi",
+    "constructionYears": "Yıldır inşaatta",
+    "projectsCompleted": "Tamamlanan proje",
+    "unitsDelivered": "Teslim edilen daire",
+    "builtAreaM2": "m² inşa alanı",
+    "region": "Faaliyet bölgesi"
+  },
+  "placeholder": {
+    "chip": "Bilgi bekleniyor",
+    "value": "—",
+    "sampleProject": "ÖRNEK ŞABLON",
+    "sampleProjectNote": "Bu sayfa bir şablon önizlemesidir; gerçek proje bilgileri eklendiğinde güncellenecektir.",
+    "representativeImage": "Temsili görsel"
+  },
+  "projects": {
+    "empty": "Proje portföyü hazırlanıyor. Gerçek proje bilgileri ve fotoğrafları yakında burada olacak.",
+    "filters": {
+      "all": "Tümü",
+      "type": "Tür",
+      "status": "Durum",
+      "location": "Konum"
+    },
+    "status": {
+      "completed": "Tamamlandı",
+      "ongoing": "Devam ediyor",
+      "planned": "Planlanıyor"
+    },
+    "specs": {
+      "location": "Konum",
+      "type": "Tür",
+      "status": "Durum",
+      "year": "Yıl",
+      "units": "Daire"
+    },
+    "types": {
+      "konut": "Konut"
+    }
+  },
+  "contact": {
+    "title": "Projeleriniz için konuşalım",
+    "sub": "Telefon, WhatsApp veya e-posta ile doğrudan ulaşın.",
+    "phone": "Telefon",
+    "whatsapp": "WhatsApp",
+    "email": "E-posta",
+    "address": "Adres",
+    "hours": "Çalışma saatleri"
+  },
+  "footer": {
+    "sitemap": "Site haritası",
+    "contact": "İletişim",
+    "languages": "Diller",
+    "groupNote": "MEY İnşaat bir MEY Grubu markasıdır.",
+    "rights": "Tüm hakları saklıdır."
+  }
+}

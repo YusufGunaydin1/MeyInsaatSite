@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectTile from '../components/ProjectTile.astro';
+import { localePath, type Locale } from '../lib/i18n';
+import { ui, projects } from '../lib/content';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale);
+const list = projects(locale);
+
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.webp',
+  { eager: true }
+);
+const photo = (name: string) =>
+  photos[`../assets/photos/${name}.webp`]!.default;
+
+/*
+  Filter bar (type/status/location) intentionally deferred: with a single sample
+  template it filters nothing — add when real projects land (utility gate).
+*/
+---
+
+<Base locale={locale} page="projects" path="/projeler">
+  <section class="container-site section-pad">
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red mb-4">{t.nav.projects.toUpperCase()}</p>
+      <h1 class="t-display-xl">{t.nav.projects}</h1>
+      <p class="t-body-l mt-6 max-w-2xl">{t.projects.empty}</p>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-14">
+      {list.map((p, i) => (
+        <ProjectTile
+          index={String(i + 1).padStart(2, '0')}
+          title={p.md?.frontmatter?.name ?? p.slug}
+          caption={p.data.placeholder ? t.placeholder.sampleProjectNote : undefined}
+          badge={p.data.placeholder ? t.placeholder.sampleProject : undefined}
+          image={photo(p.data.cover)}
+          alt={p.md?.frontmatter?.name ?? p.slug}
+          href={localePath(locale, `/projeler/${p.slug}`)}
+        />
+      ))}
+    </div>
+  </section>
+</Base>

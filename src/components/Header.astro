@@ -1,0 +1,121 @@
+---
+import { Image } from 'astro:assets';
+import { LOCALES, localePath, type Locale } from '../lib/i18n';
+import { ui } from '../lib/content';
+import logo from '../assets/brand/mey-logo.png';
+
+interface Props {
+  locale: Locale;
+  path: string;
+}
+
+const { locale, path } = Astro.props;
+const t = ui(locale);
+
+const items = [
+  { href: '/projeler', label: t.nav.projects },
+  { href: '/kurumsal', label: t.nav.corporate },
+  { href: '/hizmetler', label: t.nav.services },
+  { href: '/iletisim', label: t.nav.contact },
+];
+
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+<header class="bg-concrete-050 border-b border-line">
+  <div class="container-site flex items-center justify-between gap-4 h-16">
+    <a href={localePath(locale, '/')} class="flex items-center shrink-0" aria-label="MEY İnşaat">
+      <Image src={logo} alt="MEY İnşaat" height={34} densities={[1, 2]} loading="eager" class="h-[34px] w-auto" />
+    </a>
+
+    <nav aria-label={t.a11y.mainNav} class="hidden md:flex items-center gap-6">
+      {items.map((item) => (
+        <a
+          href={localePath(locale, item.href)}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+          class:list={[
+            'text-sm font-medium py-1 border-b-2 transition-colors',
+            isActive(item.href)
+              ? 'text-graphite-900 border-mey-red'
+              : 'text-graphite-600 border-transparent hover:text-graphite-900 hover:border-line',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <details class="relative group" data-lang-switcher>
+        <summary
+          class="list-none cursor-pointer t-tech text-graphite-600 hover:text-graphite-900 px-2 py-2 flex items-center gap-1 select-none"
+          aria-label={t.a11y.languageSwitcher}
+        >
+          {locale.toUpperCase()}<span aria-hidden="true" class="text-graphite-400">▾</span>
+        </summary>
+        <ul
+          class="absolute end-0 top-full mt-1 z-40 card min-w-24 py-1"
+          role="list"
+        >
+          {LOCALES.map((l) => (
+            <li>
+              <a
+                href={localePath(l, path)}
+                aria-current={l === locale ? 'true' : undefined}
+                class:list={[
+                  't-tech block px-4 py-2 hover:bg-concrete-100',
+                  l === locale ? 'text-mey-red' : 'text-graphite-600',
+                ]}
+              >
+                {l.toUpperCase()}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      <details class="md:hidden relative" data-mobile-menu>
+        <summary
+          class="list-none cursor-pointer p-2 text-graphite-900 select-none"
+          aria-label={t.a11y.openMenu}
+        >
+          <span aria-hidden="true" class="block w-5 space-y-1">
+            <span class="block h-0.5 bg-current"></span>
+            <span class="block h-0.5 bg-current"></span>
+            <span class="block h-0.5 bg-current"></span>
+          </span>
+        </summary>
+        <nav
+          aria-label={t.a11y.mainNav}
+          class="absolute end-0 top-full mt-1 z-40 card min-w-48 py-1"
+        >
+          {items.map((item) => (
+            <a
+              href={localePath(locale, item.href)}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'block px-4 py-2.5 text-sm font-medium hover:bg-concrete-100',
+                isActive(item.href)
+                  ? 'text-mey-red'
+                  : 'text-graphite-900',
+              ]}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Close open <details> menus when clicking elsewhere.
+  document.addEventListener('click', (e) => {
+    for (const d of document.querySelectorAll<HTMLDetailsElement>(
+      'details[data-lang-switcher][open], details[data-mobile-menu][open]'
+    )) {
+      if (!d.contains(e.target as Node)) d.open = false;
+    }
+  });
+</script>

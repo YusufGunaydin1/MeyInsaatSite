@@ -1,0 +1,25 @@
+{
+  "siteName": "MEY İnşaat",
+  "pages": {
+    "home": {
+      "title": "MEY İnşaat — Çizdiğimizi inşa ederiz",
+      "description": "MEY İnşaat, 23 yıllık MEY Grubu güvencesiyle İstanbul'da modern konut projeleri geliştirir. Sağlam, zamanında ve söz verdiğimiz kalitede."
+    },
+    "projects": {
+      "title": "Projeler — MEY İnşaat",
+      "description": "MEY İnşaat'ın İstanbul'daki konut projeleri: tamamlanan ve devam eden yapılar."
+    },
+    "corporate": {
+      "title": "Kurumsal — MEY İnşaat",
+      "description": "MEY Grubu'nun 23 yıllık kurumsal geçmişinden doğan MEY İnşaat'ın hikayesi, değerleri, misyonu ve vizyonu."
+    },
+    "services": {
+      "title": "Hizmetler — MEY İnşaat",
+      "description": "Konut geliştirme başta olmak üzere MEY İnşaat'ın hizmet alanları ve çalışma süreci."
+    },
+    "contact": {
+      "title": "İletişim — MEY İnşaat",
+      "description": "MEY İnşaat ile telefon, WhatsApp veya e-posta üzerinden doğrudan iletişime geçin."
+    }
+  }
+}

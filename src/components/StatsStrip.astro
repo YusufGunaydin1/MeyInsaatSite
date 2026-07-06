@@ -1,0 +1,39 @@
+---
+/*
+  Mono labels + large tabular numerals (brief §9). Numbers we don't have render
+  as visible placeholders — never invented.
+*/
+import type { Locale } from '../lib/i18n';
+import { ui, company } from '../lib/content';
+import PlaceholderChip from './PlaceholderChip.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale);
+
+const stats: { key: string; value: number | string | null; hero?: boolean }[] = [
+  { key: 'groupYears', value: company.groupYears, hero: true },
+  { key: 'constructionYears', value: company.constructionYears },
+  { key: 'projectsCompleted', value: company.stats.projectsCompleted },
+  { key: 'unitsDelivered', value: company.stats.unitsDelivered },
+];
+---
+
+<dl class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line rounded-brand overflow-hidden reveal">
+  {stats.map((s) => (
+    <div class="bg-white p-5 sm:p-6">
+      <dd
+        class:list={[
+          't-display-l tabular-nums',
+          s.hero ? 'text-mey-red' : 'text-graphite-900',
+        ]}
+      >
+        {s.value ?? <PlaceholderChip locale={locale} />}
+      </dd>
+      <dt class="t-tech text-graphite-400 mt-2">{t.stats[s.key]}</dt>
+    </div>
+  ))}
+</dl>

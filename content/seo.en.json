@@ -1,0 +1,25 @@
+{
+  "siteName": "MEY İnşaat",
+  "pages": {
+    "home": {
+      "title": "MEY İnşaat — We build what we draw",
+      "description": "MEY İnşaat develops modern residential projects in Istanbul, backed by MEY Group's 23-year track record. Solid, on time, and at the quality we promise."
+    },
+    "projects": {
+      "title": "Projects — MEY İnşaat",
+      "description": "MEY İnşaat's residential projects in Istanbul: completed and ongoing buildings."
+    },
+    "corporate": {
+      "title": "Corporate — MEY İnşaat",
+      "description": "The story, values, mission, and vision of MEY İnşaat, born from MEY Group's 23-year corporate history."
+    },
+    "services": {
+      "title": "Services — MEY İnşaat",
+      "description": "MEY İnşaat's service areas and how we work, with residential development at the core."
+    },
+    "contact": {
+      "title": "Contact — MEY İnşaat",
+      "description": "Contact MEY İnşaat directly by phone, WhatsApp, or email."
+    }
+  }
+}

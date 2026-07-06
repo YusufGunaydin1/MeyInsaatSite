@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import StatsStrip from '../components/StatsStrip.astro';
+import { type Locale } from '../lib/i18n';
+import { ui, companyContent } from '../lib/content';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale);
+const prose = companyContent(locale);
+const Content = prose?.Content;
+
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.webp',
+  { eager: true }
+);
+const hero = photos['../assets/photos/hero-residential-corner-building.webp']!.default;
+---
+
+<Base locale={locale} page="corporate" path="/kurumsal">
+  <section class="container-site section-pad">
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red mb-4">{t.nav.corporate.toUpperCase()}</p>
+      <h1 class="t-display-xl">{prose?.frontmatter?.slogan}</h1>
+      <p class="t-body-l mt-6 max-w-2xl">{prose?.frontmatter?.boilerplate}</p>
+    </div>
+
+    <div class="mt-14 border border-line rounded-brand overflow-hidden reveal">
+      <Image
+        src={hero}
+        alt={t.placeholder.representativeImage}
+        widths={[768, 1280, 1920]}
+        sizes="(min-width: 1360px) 1320px, 100vw"
+        class="w-full aspect-[21/9] object-cover"
+      />
+      <p class="t-tech text-graphite-400 px-4 py-2 border-t border-line bg-white">
+        {t.placeholder.representativeImage}
+      </p>
+    </div>
+
+    <article class="prose-mey mt-16 max-w-3xl">
+      {Content && <Content />}
+    </article>
+
+    <div class="mt-16">
+      <StatsStrip locale={locale} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Markdown prose, on-brief: condensed section titles, calm body, no bold-heavy look */
+  .prose-mey :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+    margin-top: 3rem;
+    padding-inline-start: 1rem;
+    border-inline-start: 2px solid var(--color-mey-red);
+  }
+  .prose-mey :global(h2:lang(ar)) {
+    font-family: var(--font-arabic);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.25;
+  }
+  .prose-mey :global(h3) {
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-top: 2rem;
+    color: var(--color-graphite-900);
+  }
+  .prose-mey :global(p) {
+    margin-top: 1rem;
+    line-height: 1.65;
+  }
+  .prose-mey :global(strong) {
+    font-weight: 600;
+    color: var(--color-graphite-900);
+  }
+</style>

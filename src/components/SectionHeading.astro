@@ -1,0 +1,20 @@
+---
+/* Mono eyebrow + condensed display title + optional intro — the standard section head. */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  onDark?: boolean;
+  id?: string;
+}
+
+const { eyebrow, title, intro, onDark = false, id } = Astro.props;
+---
+
+<div class="max-w-2xl reveal">
+  {eyebrow && (
+    <p class:list={['t-tech mb-3', onDark ? 'text-mey-teal' : 'text-mey-red']}>{eyebrow}</p>
+  )}
+  <h2 id={id} class="t-display-l">{title}</h2>
+  {intro && <p class:list={['t-body-l mt-4', onDark && 'text-concrete-100/80']}>{intro}</p>}
+</div>
