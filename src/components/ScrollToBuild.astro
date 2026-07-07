@@ -1,9 +1,10 @@
 ---
 /*
-  THE signature section (design brief §11): scroll = time. A pinned portrait canvas
-  scrubs 26 time-lapse frames (excavation -> topping-out) while a red level-line and
-  mono readout track the rising building. Everything else on the site stays calm so
-  this one gesture can be loud.
+  THE signature section (design brief §11, staged full-viewport since 2026-07):
+  scroll = time. A pinned full-screen theatre scrubs 26 time-lapse frames
+  (excavation -> topping-out) with inter-frame crossfade, while a red level-line,
+  a giant floor counter and a mono readout track the rising building. Everything
+  else on the site stays calm so this one gesture can be loud.
 
   Fallbacks (mandatory): prefers-reduced-motion, Save-Data, or no JS render the
   final-state poster + the four stages as plain text. Stage list is real text always.
@@ -36,6 +37,7 @@ const poster = frameUrls[frameUrls.length - 1];
   data-label-excavation={t.signature.readout.excavation}
   data-label-foundation={t.signature.readout.foundation}
   data-label-floor={t.signature.readout.floor}
+  data-label-datum={t.signature.hud?.datum ?? 'KOT'}
   aria-labelledby="scroll-to-build-title"
 >
   <div class="container-site pt-16 sm:pt-20">
@@ -50,57 +52,79 @@ const poster = frameUrls[frameUrls.length - 1];
 
   <div class="scrub-wrap" data-scrub-wrap>
     <div class="scrub-stage" data-scrub-stage>
-      <div class="container-site h-full flex items-center">
-        <div class="grid w-full items-center gap-6 lg:gap-16 lg:grid-cols-[1fr_auto]">
-          <!-- Stage list: real text, SEO/a11y-safe. Vertical rail on desktop; sr-only on small screens (a compact active-stage line replaces it visually). -->
-          <ol class="scrub-stages space-y-6 lg:space-y-8" data-stage-list>
-            {t.signature.stages.map((s: any, i: number) => (
-              <li
-                class="scrub-stage-item grid grid-cols-[auto_1fr] gap-x-4 max-w-md"
-                data-stage-item={i}
-              >
-                <span class="t-tech scrub-stage-no text-base" aria-hidden="true">{s.no}</span>
-                <div>
-                  <h3 class="t-heading-s scrub-stage-name text-concrete-100/60">{s.name}</h3>
-                  <p class="t-caption text-concrete-100/50 mt-1 scrub-stage-desc">{s.desc}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+      <!-- Cinematic backdrop: the current frame, blurred — depth without upscaling
+           the 720px source. Decorative only; dark night-950 if unsupported. -->
+      <canvas class="scrub-bgfx" data-bgfx aria-hidden="true"></canvas>
 
+      <div class="scrub-hud t-tech" aria-hidden="true">
+        <span>{t.signature.hud?.source}</span>
+        <span>{t.signature.hud?.scroll}</span>
+      </div>
+
+      <div class="scrub-grid container-site h-full">
+        <!-- Stage list: real text, SEO/a11y-safe. Vertical rail on desktop; sr-only on small screens (a compact active-stage line replaces it visually). -->
+        <ol class="scrub-stages space-y-6 lg:space-y-8" data-stage-list>
+          {t.signature.stages.map((s: any, i: number) => (
+            <li
+              class="scrub-stage-item grid grid-cols-[auto_1fr] gap-x-4 max-w-md"
+              data-stage-item={i}
+            >
+              <span class="t-tech scrub-stage-no text-base" aria-hidden="true">{s.no}</span>
+              <div>
+                <h3 class="t-heading-s scrub-stage-name text-concrete-100/60">{s.name}</h3>
+                <p class="t-caption text-concrete-100/50 mt-1 scrub-stage-desc">{s.desc}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div class="scrub-canvas-col">
           <!-- Compact mobile stage indicator (visual duplicate of the list's active row) -->
           <div class="scrub-mobile-stage t-tech text-concrete-100/90 lg:hidden" aria-hidden="true">
             <span data-mobile-stage>{t.signature.stages[0].no} {t.signature.stages[0].name}</span>
           </div>
-
-          <div class="scrub-canvas-col">
-            <div class="scrub-canvas-box" data-canvas-box>
-              <img
-                src={poster}
-                width="720"
-                height="1120"
-                alt={t.a11y.buildAnimation}
-                loading="lazy"
-                decoding="async"
-                class="scrub-poster"
-                data-poster
-              />
-              <canvas
-                width="720"
-                height="1120"
-                class="scrub-canvas"
-                aria-hidden="true"
-                data-canvas
-              ></canvas>
-              <div class="scrub-level" data-level aria-hidden="true">
-                <span class="t-tech scrub-readout" data-readout>{t.signature.readout.excavation} · −4.50 M</span>
-              </div>
-              <p class="t-tech scrub-loader" data-loader aria-hidden="true">{t.signature.loading} <span data-loader-pct>0%</span></p>
+          <div class="scrub-canvas-box" data-canvas-box>
+            <!-- Poster is the LCP element now that the theatre is the hero -->
+            <img
+              src={poster}
+              width="720"
+              height="1120"
+              alt={t.a11y.buildAnimation}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="scrub-poster"
+              data-poster
+            />
+            <canvas
+              width="720"
+              height="1120"
+              class="scrub-canvas"
+              aria-hidden="true"
+              data-canvas
+            ></canvas>
+            <div class="scrub-level" data-level aria-hidden="true">
+              <span class="t-tech scrub-readout" data-readout>{t.signature.readout.excavation} · −4.50 M</span>
             </div>
+            <p class="t-tech scrub-loader" data-loader aria-hidden="true">{t.signature.loading} <span data-loader-pct>0%</span></p>
           </div>
         </div>
+
+        <!-- The giant counter: the one place monumental type narrates data -->
+        <div class="scrub-counter" aria-hidden="true">
+          <span class="scrub-counter-big" data-counter-big>{t.signature.readout.excavation}</span>
+          <span class="t-tech scrub-counter-sub" data-counter-sub>−4.50 M · {t.signature.hud?.datum ?? 'KOT'}</span>
+        </div>
       </div>
+
+      <div class="scrub-progress" aria-hidden="true"><i data-progress-bar></i></div>
     </div>
+  </div>
+
+  <!-- Visible ONLY in static mode: explains why the scene isn't animating
+       (OS reduced-motion / Save-Data) instead of silently looking broken. -->
+  <div class="scrub-static-note container-site pb-10">
+    <p class="t-tech text-concrete-100/60">{t.signature.reducedMotionNote}</p>
   </div>
 
   <noscript>
@@ -112,15 +136,17 @@ const poster = frameUrls[frameUrls.length - 1];
 
 <style>
   .scrub-wrap {
-    height: 300vh;
+    height: 340vh;
   }
   .scrub-stage {
     position: sticky;
     top: 0;
     height: 100vh;
-    height: 100dvh;
+    /* svh, NOT dvh: dvh changes as the mobile URL bar hides/shows, resizing the
+       whole stage mid-scroll (the canvas visibly jumped on scroll direction flips) */
+    height: 100svh;
     overflow: hidden;
-    padding-block: 1.5rem;
+    padding-block: 3.25rem 1.5rem;
   }
   /* Static mode (reduced motion / Save-Data / no JS): no pin, natural height */
   [data-static] .scrub-wrap {
@@ -132,21 +158,78 @@ const poster = frameUrls[frameUrls.length - 1];
     overflow: visible;
     padding-block: 3rem;
   }
+  [data-static] .scrub-bgfx,
+  [data-static] .scrub-hud,
+  [data-static] .scrub-counter,
+  [data-static] .scrub-progress {
+    display: none;
+  }
+  .scrub-static-note {
+    display: none;
+  }
+  [data-static] .scrub-static-note {
+    display: block;
+  }
+
+  .scrub-bgfx {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 600ms ease-out;
+  }
+  [data-ready] .scrub-bgfx {
+    opacity: 0.25;
+  }
+
+  .scrub-hud {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding: 1.1rem 1rem 0;
+    color: rgb(244 244 242 / 0.6);
+  }
+  @media (min-width: 640px) {
+    .scrub-hud { padding-inline: 1.5rem; }
+  }
+
+  .scrub-grid {
+    position: relative;
+    display: grid;
+    align-items: center;
+    align-content: center;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  @media (min-width: 1024px) {
+    .scrub-grid {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: clamp(1.5rem, 3.5vw, 4rem);
+      justify-items: start;
+    }
+  }
 
   /*
     The canvas column must have a DEFINITE width: inside the grid's `auto` track a
-    percentage width is circular and collapses to 0. Bound by 460px (respects the
-    720px source, brief §11) and by viewport height so the 3:5 box always fits the pin.
+    percentage width is circular and collapses to 0. Bound by 580px (respects the
+    720px source — mild upscale only) and by viewport height so 9:14 fits the pin.
   */
   .scrub-canvas-col {
-    width: min(100%, 460px, calc((100dvh - 12rem) * 0.64));
+    width: min(100%, 84vw, calc((100svh - 12rem) * 0.643));
     margin-inline: auto;
   }
   @media (min-width: 1024px) {
     .scrub-canvas-col {
-      width: min(460px, calc((100dvh - 10rem) * 0.64));
+      width: min(580px, calc((100svh - 9.5rem) * 0.643));
       margin-inline: 0;
-      justify-self: end;
+      justify-self: center;
     }
   }
   .scrub-canvas-box {
@@ -212,6 +295,57 @@ const poster = frameUrls[frameUrls.length - 1];
     display: none;
   }
 
+  .scrub-counter {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.9rem;
+    justify-content: center;
+  }
+  @media (min-width: 1024px) {
+    .scrub-counter {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.4rem;
+      justify-self: start;
+    }
+  }
+  .scrub-counter-big {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 8vw, 3rem);
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+  .scrub-counter-big:lang(ar) {
+    font-family: var(--font-arabic);
+  }
+  @media (min-width: 1024px) {
+    .scrub-counter-big {
+      font-size: clamp(3.5rem, 12vh, 7.5rem);
+    }
+  }
+  .scrub-counter-sub {
+    color: var(--color-mey-teal);
+  }
+
+  .scrub-progress {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 3px;
+    background: rgb(255 255 255 / 0.12);
+  }
+  .scrub-progress i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--color-red-on-dark);
+  }
+
   .scrub-stage-no {
     /* 0.55 keeps ~5.2:1 on night-950 (WCAG AA); 0.4 failed at 3.59:1 */
     color: rgb(244 244 242 / 0.55);
@@ -228,8 +362,14 @@ const poster = frameUrls[frameUrls.length - 1];
 
   /* Small screens: the vertical rail goes screen-reader-only; compact line replaces
      it. Gated on html.js: without JS the mandated four-stage static list must show. */
+  .scrub-mobile-stage {
+    text-align: center;
+    margin-bottom: 0.6rem;
+  }
   @media (max-width: 1023px) {
-    .js [data-scrub]:not([data-static]) .scrub-stages {
+    /* :global(.js): the class lives on <html>, outside this component's scope —
+       a scoped `.js` compiles to `.js:where(.astro-…)` and never matches. */
+    :global(.js) [data-scrub]:not([data-static]) .scrub-stages {
       position: absolute;
       width: 1px;
       height: 1px;
@@ -258,11 +398,15 @@ const poster = frameUrls[frameUrls.length - 1];
     const urls: string[] = JSON.parse(root.dataset.frames || '[]');
     const wrap = root.querySelector<HTMLElement>('[data-scrub-wrap]')!;
     const canvas = root.querySelector<HTMLCanvasElement>('[data-canvas]')!;
+    const bgfx = root.querySelector<HTMLCanvasElement>('[data-bgfx]')!;
     const box = root.querySelector<HTMLElement>('[data-canvas-box]')!;
     const level = root.querySelector<HTMLElement>('[data-level]')!;
     const readout = root.querySelector<HTMLElement>('[data-readout]')!;
     const loaderPct = root.querySelector<HTMLElement>('[data-loader-pct]')!;
     const mobileStage = root.querySelector<HTMLElement>('[data-mobile-stage]')!;
+    const counterBig = root.querySelector<HTMLElement>('[data-counter-big]')!;
+    const counterSub = root.querySelector<HTMLElement>('[data-counter-sub]')!;
+    const progressBar = root.querySelector<HTMLElement>('[data-progress-bar]')!;
     const stageItems = Array.from(
       root.querySelectorAll<HTMLElement>('[data-stage-item]')
     );
@@ -282,11 +426,15 @@ const poster = frameUrls[frameUrls.length - 1];
       excavation: root.dataset.labelExcavation ?? 'KAZI',
       foundation: root.dataset.labelFoundation ?? 'TEMEL',
       floor: root.dataset.labelFloor ?? 'KAT',
+      datum: root.dataset.labelDatum ?? 'KOT',
     };
 
     const ctx = canvas.getContext('2d')!;
+    const bctx = bgfx.getContext('2d');
     let bitmaps: (ImageBitmap | HTMLImageElement)[] = [];
-    let current = -1;
+    let currentPos = -1;
+    let currentFrame = -1;
+    let bgFrame = -1;
     let ticking = false;
 
     function stageOf(frame: number): number {
@@ -297,27 +445,66 @@ const poster = frameUrls[frameUrls.length - 1];
       return Math.min(6, Math.max(1, Math.round((frame - 8) / 2)));
     }
 
-    function readoutText(frame: number): string {
-      if (frame <= 5) return `${labels.excavation} · −4.50 M`;
-      if (frame <= 8) return `${labels.foundation} · ±0.00 M`;
+    // One source for every HUD element: big label, elevation, level-line height
+    function meta(frame: number): { big: string; elev: string; lvl: number } {
+      if (frame <= 5) return { big: labels.excavation, elev: '−4.50 M', lvl: 8 };
+      if (frame <= 8) return { big: labels.foundation, elev: '±0.00 M', lvl: 12 };
       const kat = floorOf(frame);
       const h = ((kat * 18.4) / 6).toFixed(2);
-      return `${labels.floor} ${kat} · +${h} M`;
+      return { big: `${labels.floor} ${kat}`, elev: `+${h} M`, lvl: 15 + (kat / 6) * 70 };
     }
 
-    function levelPct(frame: number): number {
-      if (frame <= 5) return 8;
-      if (frame <= 8) return 12;
-      return 15 + (floorOf(frame) / 6) * 70;
+    function sizeBg() {
+      bgfx.width = Math.max(1, Math.round(window.innerWidth / 3));
+      bgfx.height = Math.max(1, Math.round(window.innerHeight / 3));
+      bgFrame = -1; // force redraw at the new size
     }
 
-    function render(frame: number) {
-      if (frame === current) return;
-      current = frame;
+    function drawBg(frame: number) {
+      if (!bctx || frame === bgFrame) return;
       const bmp = bitmaps[frame - 1];
-      if (bmp) ctx.drawImage(bmp as CanvasImageSource, 0, 0, canvas.width, canvas.height);
-      level.style.bottom = `${levelPct(frame)}%`;
-      readout.textContent = readoutText(frame);
+      if (!bmp) return;
+      bgFrame = frame;
+      try {
+        bctx.filter = 'blur(14px) brightness(0.55)';
+        bctx.drawImage(
+          bmp as CanvasImageSource,
+          -32, -32, bgfx.width + 64, bgfx.height + 64
+        );
+      } catch {
+        /* ctx.filter unsupported: backdrop stays night-950 — acceptable */
+      }
+    }
+
+    function render(pos: number) {
+      if (Math.abs(pos - currentPos) < 0.002) return;
+      currentPos = pos;
+      const base = Math.floor(pos);
+      const frac = pos - base;
+      const a = bitmaps[base];
+      const b = bitmaps[base + 1];
+      if (a) {
+        ctx.globalAlpha = 1;
+        ctx.drawImage(a as CanvasImageSource, 0, 0, canvas.width, canvas.height);
+        // Crossfade to the next frame: 26 frames scrub like a continuous take
+        if (b && frac > 0.01) {
+          ctx.globalAlpha = frac;
+          ctx.drawImage(b as CanvasImageSource, 0, 0, canvas.width, canvas.height);
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      const frame = Math.round(pos) + 1;
+      progressBar.style.width = `${((pos / (urls.length - 1)) * 100).toFixed(2)}%`;
+      drawBg(frame);
+      if (frame === currentFrame) return;
+      currentFrame = frame;
+
+      const m = meta(frame);
+      level.style.bottom = `${m.lvl}%`;
+      readout.textContent = `${m.big} · ${m.elev}`;
+      counterBig.textContent = m.big;
+      counterSub.textContent = `${m.elev} · ${labels.datum}`;
       const active = stageOf(frame);
       stageItems.forEach((el, i) => {
         if (i === active) {
@@ -332,7 +519,7 @@ const poster = frameUrls[frameUrls.length - 1];
       if (s) {
         const no = s.querySelector('.scrub-stage-no')?.textContent ?? '';
         const name = s.querySelector('.scrub-stage-name')?.textContent ?? '';
-        mobileStage.textContent = `${no} ${name} — ${readoutText(frame)}`;
+        mobileStage.textContent = `${no} ${name} — ${m.big} ${m.elev}`;
       }
     }
 
@@ -343,8 +530,8 @@ const poster = frameUrls[frameUrls.length - 1];
       return Math.min(1, Math.max(0, -rect.top / span));
     }
 
-    function frameFromProgress(): number {
-      return 1 + Math.round(progress() * (urls.length - 1));
+    function posFromProgress(): number {
+      return progress() * (urls.length - 1);
     }
 
     function onScroll() {
@@ -352,7 +539,7 @@ const poster = frameUrls[frameUrls.length - 1];
       ticking = true;
       requestAnimationFrame(() => {
         ticking = false;
-        render(frameFromProgress());
+        render(posFromProgress());
       });
     }
 
@@ -382,12 +569,21 @@ const poster = frameUrls[frameUrls.length - 1];
       }
       await Promise.all(Array.from({ length: 4 }, worker));
       bitmaps = results;
+      sizeBg();
       root.dataset.ready = 'true';
-      render(frameFromProgress());
+      render(posFromProgress());
       window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
+      window.addEventListener(
+        'resize',
+        () => {
+          sizeBg();
+          currentPos = -1; // force full re-render after canvas resize
+          onScroll();
+        },
+        { passive: true }
+      );
       // Expose for E2E measurement: frame index must track scroll (prove the scrub).
-      (root as any).__scrub = { getFrame: () => current, getProgress: progress };
+      (root as any).__scrub = { getFrame: () => currentFrame, getProgress: progress };
     }
 
     // Never compete with the initial page load (LCP): start only after window

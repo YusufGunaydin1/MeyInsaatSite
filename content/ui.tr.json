@@ -59,7 +59,12 @@
       "floor": "KAT"
     },
     "loading": "YÜKLENİYOR",
-    "reducedMotionNote": "Animasyon kapalı: tamamlanan yapı ve inşaat aşamaları aşağıda listelenmiştir."
+    "reducedMotionNote": "Animasyon kapalı: tamamlanan yapı ve inşaat aşamaları aşağıda listelenmiştir.",
+    "hud": {
+      "source": "GERÇEK ŞANTİYE ZAMAN AKIŞI",
+      "scroll": "KAYDIR = ZAMAN",
+      "datum": "KOT"
+    }
   },
   "stats": {
     "groupYears": "Yıllık grup deneyimi",

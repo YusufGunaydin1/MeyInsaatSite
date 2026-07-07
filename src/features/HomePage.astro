@@ -35,18 +35,25 @@ const previewTiles = [
 ---
 
 <Base locale={locale} page="home" path="/">
-  <!-- HERO — restrained on purpose; the wow arrives one scroll down (brief §8) -->
+  <!-- HERO = THE SIGNATURE. The page opens straight into the dark theatre (it
+       fuses with the dark header) and the building constructs itself as the
+       visitor's first scroll. Owner-directed: the frame animation IS the hero.
+       The sr-only h1 keeps the heading outline sane (h1 first, exactly one). -->
+  <h1 class="sr-only">{headlineLines.join(' ')} — MEY İnşaat</h1>
+  <ScrollToBuild locale={locale} />
+
+  <!-- STATEMENT -->
   <section class="container-site section-pad">
-    <div class="guide-line-v ps-6 sm:ps-10 max-w-4xl">
+    <div class="guide-line-v ps-6 sm:ps-10 max-w-4xl reveal">
       <p class="t-tech text-mey-red mb-6">{fm.hero?.eyebrow}</p>
-      <h1 class="t-display-xl uppercase">
+      <h2 class="t-display-xl uppercase">
         {headlineLines.map((line: string, i: number) => (
           <>
             {line}
             {i < headlineLines.length - 1 && <br />}
           </>
         ))}
-      </h1>
+      </h2>
       <p class="t-body-l mt-6 max-w-xl">{fm.hero?.sub}</p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href={localePath(locale, '/projeler')} class="btn-primary">
@@ -58,8 +65,22 @@ const previewTiles = [
     </div>
   </section>
 
-  <!-- THE SIGNATURE — scroll-to-build -->
-  <ScrollToBuild locale={locale} />
+  <!-- DELIVERED — full-bleed proof photograph (reference-genre band) -->
+  <section class="border-y border-line" aria-label={fm.hero?.mediaAlt}>
+    <div class="hero-photo relative overflow-hidden">
+      <Image
+        src={photo('hero-residential-corner-building')}
+        alt={fm.hero?.mediaAlt ?? ''}
+        widths={[768, 1280, 1600, 2048]}
+        sizes="100vw"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      <!-- The brand level-line reads the photo like a survey drawing -->
+      <div class="hero-level" aria-hidden="true">
+        <span class="t-tech">{fm.hero?.mediaTag}</span>
+      </div>
+    </div>
+  </section>
 
   <!-- PROJECTS PREVIEW -->
   <section class="container-site section-pad">
@@ -72,16 +93,18 @@ const previewTiles = [
       <a href={localePath(locale, '/projeler')} class="btn-ghost reveal">{t.cta.allProjects}</a>
     </div>
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-10">
-      {previewTiles.map((tile) => (
-        <ProjectTile
-          index={tile.index}
-          title={t.projects.empty.split('.')[0]}
-          caption={t.placeholder.representativeImage}
-          badge={t.placeholder.chip}
-          image={tile.image}
-          alt={t.placeholder.representativeImage}
-          href={localePath(locale, '/projeler')}
-        />
+      {previewTiles.map((tile, i) => (
+        <div class="reveal" style={`transition-delay: ${i * 70}ms`}>
+          <ProjectTile
+            index={tile.index}
+            title={t.projects.empty.split('.')[0]}
+            caption={t.placeholder.representativeImage}
+            badge={t.placeholder.chip}
+            image={tile.image}
+            alt={t.placeholder.representativeImage}
+            href={localePath(locale, '/projeler')}
+          />
+        </div>
       ))}
     </div>
   </section>
@@ -117,7 +140,7 @@ const previewTiles = [
       eyebrow={fm.sections?.stats?.eyebrow}
       title={fm.sections?.stats?.title}
     />
-    <div class="mt-10">
+    <div class="mt-10 reveal">
       <StatsStrip locale={locale} />
     </div>
   </section>
@@ -130,9 +153,33 @@ const previewTiles = [
         title={fm.sections?.contact?.title}
         intro={fm.sections?.contact?.intro}
       />
-      <div class="mt-10">
+      <div class="mt-10 reveal">
         <ContactChannels locale={locale} />
       </div>
     </div>
   </section>
 </Base>
+
+<style>
+  /* Full-bleed photo hero: tall enough to speak, never taller than the fold */
+  .hero-photo {
+    height: min(66svh, 720px);
+    min-height: 320px;
+  }
+  .hero-level {
+    position: absolute;
+    inset-inline: 0;
+    top: 38%;
+    border-top: 2px solid var(--color-mey-red);
+    pointer-events: none;
+  }
+  .hero-level span {
+    position: absolute;
+    inset-inline-start: max(1rem, calc((100vw - 1320px) / 2 + 1.5rem));
+    top: 0.45rem;
+    background: rgb(23 24 26 / 0.88);
+    color: #fff;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-brand);
+  }
+</style>

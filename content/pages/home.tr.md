@@ -10,6 +10,8 @@ hero:
     teslim ederiz.
   primaryCta: "Projeleri gör"
   secondaryCta: "İletişim"
+  mediaTag: "TESLİM EDİLDİ · 6 KAT"
+  mediaAlt: "Teslim edilmiş MEY konut projesi — köşe cephe"
 sections:
   projects:
     eyebrow: "02 — PROJELER"

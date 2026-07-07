@@ -10,6 +10,8 @@ hero:
     the time we promise.
   primaryCta: "View projects"
   secondaryCta: "Contact"
+  mediaTag: "DELIVERED · 6 STOREYS"
+  mediaAlt: "Completed MEY residential project — corner façade"
 sections:
   projects:
     eyebrow: "02 — PROJECTS"

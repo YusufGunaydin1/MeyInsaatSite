@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import { LOCALES, localePath, type Locale } from '../lib/i18n';
 import { ui } from '../lib/content';
-import logo from '../assets/brand/mey-logo.png';
+// Dark-surface lockup: same mark, wordmark recolored white (standard dark variant)
+import logo from '../assets/brand/mey-logo-dark.png';
 
 interface Props {
   locale: Locale;
@@ -22,22 +23,28 @@ const items = [
 const isActive = (href: string) => path === href || path.startsWith(href + '/');
 ---
 
-<header class="bg-concrete-050 border-b border-line">
-  <div class="container-site flex items-center justify-between gap-4 h-16">
-    <a href={localePath(locale, '/')} class="flex items-center shrink-0" aria-label="MEY İnşaat">
-      <Image src={logo} alt="MEY İnşaat" height={34} densities={[1, 2]} loading="eager" class="h-[34px] w-auto" />
+<!-- Dark institutional header (2026-07 revision): night bar + boxed mark + wide-tracked
+     caps nav. Bookends the light body together with the dark footer/theatre. -->
+<header class="bg-night-950">
+  <div class="container-site flex items-center justify-between gap-4 h-16 md:h-24">
+    <a
+      href={localePath(locale, '/')}
+      class="flex items-center shrink-0"
+      aria-label="MEY İnşaat"
+    >
+      <Image src={logo} alt="MEY İnşaat" height={44} densities={[1, 2]} loading="eager" class="h-9 md:h-11 w-auto" />
     </a>
 
-    <nav aria-label={t.a11y.mainNav} class="hidden md:flex items-center gap-6">
+    <nav aria-label={t.a11y.mainNav} class="hidden md:flex items-center gap-8">
       {items.map((item) => (
         <a
           href={localePath(locale, item.href)}
           aria-current={isActive(item.href) ? 'page' : undefined}
           class:list={[
-            'text-sm font-medium py-1 border-b-2 transition-colors',
+            'nav-caps py-1 border-b-2 transition-colors',
             isActive(item.href)
-              ? 'text-graphite-900 border-mey-red'
-              : 'text-graphite-600 border-transparent hover:text-graphite-900 hover:border-line',
+              ? 'text-white border-red-on-dark'
+              : 'text-concrete-100/70 border-transparent hover:text-white hover:border-concrete-100/30',
           ]}
         >
           {item.label}
@@ -48,10 +55,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     <div class="flex items-center gap-2">
       <details class="relative group" data-lang-switcher>
         <summary
-          class="list-none cursor-pointer t-tech text-graphite-600 hover:text-graphite-900 px-2 py-2 flex items-center gap-1 select-none"
+          class="list-none cursor-pointer t-tech text-concrete-100/70 hover:text-white px-2 py-2 flex items-center gap-1 select-none"
           aria-label={t.a11y.languageSwitcher}
         >
-          {locale.toUpperCase()}<span aria-hidden="true" class="text-graphite-400">▾</span>
+          {locale.toUpperCase()}<span aria-hidden="true" class="text-concrete-100/50">▾</span>
         </summary>
         <ul
           class="absolute end-0 top-full mt-1 z-40 card min-w-24 py-1"
@@ -76,7 +83,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
 
       <details class="md:hidden relative" data-mobile-menu>
         <summary
-          class="list-none cursor-pointer p-2 text-graphite-900 select-none"
+          class="list-none cursor-pointer p-2 text-white select-none"
           aria-label={t.a11y.openMenu}
         >
           <span aria-hidden="true" class="block w-5 space-y-1">
@@ -108,6 +115,23 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     </div>
   </div>
 </header>
+
+<style>
+  /* Reference-genre nav: small caps, wide tracking. Arabic gets no letterspacing
+     (tracking breaks connected script) and its own face via :lang. */
+  .nav-caps {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .nav-caps:lang(ar) {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+    font-size: 0.9375rem;
+  }
+</style>
 
 <script>
   // Close open <details> menus when clicking elsewhere.

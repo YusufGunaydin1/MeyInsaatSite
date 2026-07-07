@@ -49,11 +49,19 @@ test('tr page does NOT download the Arabic face; ar does', async ({ page }) => {
   expect(arRequests.filter((u) => u.includes('ibm-plex-sans-arabic')).length).toBeGreaterThan(0);
 });
 
-test('ru headline falls back to Plex Sans (Condensed has no Cyrillic)', async ({ page }) => {
+test('ru headline uses Oswald natively (variable font ships full Cyrillic)', async ({ page }) => {
   await page.goto(u('/ru'));
   await page.waitForLoadState('networkidle');
-  const h1 = page.locator('h1');
+  // The visible display heading (home's h1 is sr-only for outline sanity)
+  const h1 = page.locator('.t-display-xl').first();
   const family = await h1.evaluate((el) => getComputedStyle(el).fontFamily);
-  expect(family.split(',')[0]).toContain('IBM Plex Sans');
-  expect(family.split(',')[0]).not.toContain('Condensed');
+  expect(family.split(',')[0]).toContain('Oswald');
+  // The Cyrillic subset must actually be DOWNLOADED, not just named in the stack —
+  // otherwise RU silently renders in the fallback face.
+  const cyrillicLoaded = await h1.evaluate(() =>
+    [...document.fonts].some(
+      (f) => f.family.includes('Oswald') && f.status === 'loaded'
+    )
+  );
+  expect(cyrillicLoaded).toBe(true);
 });

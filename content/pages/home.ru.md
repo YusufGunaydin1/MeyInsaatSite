@@ -10,6 +10,8 @@ hero:
     срок.
   primaryCta: "Смотреть проекты"
   secondaryCta: "Контакты"
+  mediaTag: "СДАН · 6 ЭТАЖЕЙ"
+  mediaAlt: "Сданный жилой проект MEY — угловой фасад"
 sections:
   projects:
     eyebrow: "02 — ПРОЕКТЫ"

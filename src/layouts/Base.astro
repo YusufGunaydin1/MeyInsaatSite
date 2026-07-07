@@ -5,10 +5,11 @@ import { seo, ui } from '../lib/content';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-import condensedLatin from '@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-600-normal.woff2?url';
-import condensedLatinExt from '@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-ext-600-normal.woff2?url';
-// Plex Sans Condensed has NO basic-Cyrillic glyphs (only cyrillic-ext) —
-// Russian display falls back to Plex Sans 600 by design (see global.css :lang(ru)).
+// Display = Oswald variable (500–700), self-hosted. Latin-ext carries the Turkish
+// glyphs (ğ ş İ ı); cyrillic carries RU display natively (no more Plex fallback).
+import oswaldLatin from '../assets/fonts/oswald-latin.woff2?url';
+import oswaldLatinExt from '../assets/fonts/oswald-latin-ext.woff2?url';
+import oswaldCyrillic from '../assets/fonts/oswald-cyrillic.woff2?url';
 import sansCyrillic from '@fontsource/ibm-plex-sans/files/ibm-plex-sans-cyrillic-600-normal.woff2?url';
 import arabicBold from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-700-normal.woff2?url';
 import arabicRegular from '@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-arabic-400-normal.woff2?url';
@@ -35,9 +36,9 @@ const canonical = site + localePath(locale, path);
 const ogImage = site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/og-default.jpg';
 
 const PRELOADS: Record<Locale, string[]> = {
-  tr: [condensedLatin, condensedLatinExt],
-  en: [condensedLatin],
-  ru: [sansCyrillic, condensedLatin],
+  tr: [oswaldLatin, oswaldLatinExt],
+  en: [oswaldLatin],
+  ru: [oswaldCyrillic, sansCyrillic],
   ar: [arabicBold, arabicRegular],
 };
 

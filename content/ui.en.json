@@ -59,7 +59,12 @@
       "floor": "FLOOR"
     },
     "loading": "LOADING",
-    "reducedMotionNote": "Animation off: the completed structure and the construction stages are listed below."
+    "reducedMotionNote": "Animation off: the completed structure and the construction stages are listed below.",
+    "hud": {
+      "source": "REAL SITE TIME-LAPSE",
+      "scroll": "SCROLL = TIME",
+      "datum": "LEVEL"
+    }
   },
   "stats": {
     "groupYears": "Years of group experience",

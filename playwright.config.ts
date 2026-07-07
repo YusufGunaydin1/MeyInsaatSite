@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/** Tests run against the production build served by `astro preview` (base /MeyInsaatSite). */
+/** Tests run against the production build served by `astro preview` (base /, meyinsaat.com). */
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -10,12 +10,12 @@ export default defineConfig({
   use: {
     // Trailing slash matters: specs use RELATIVE paths ('kurumsal', 'ar/') so the
     // /MeyInsaatSite base survives URL resolution (a leading '/' would drop it).
-    baseURL: 'http://localhost:4321/MeyInsaatSite/',
+    baseURL: 'http://localhost:4321/',
     trace: 'on-first-retry',
   },
   webServer: {
     command: 'npm run preview',
-    url: 'http://localhost:4321/MeyInsaatSite',
+    url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
   },
