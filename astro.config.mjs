@@ -13,7 +13,8 @@ export default defineConfig({
   site: SITE,
   base: BASE,
   trailingSlash: 'ignore',
-  integrations: [react(), sitemap()],
+  // /showcases = dahili tasarım vitrini: sitemap dışı (sayfa ayrıca noindex)
+  integrations: [react(), sitemap({ filter: (page) => !page.includes('/showcases') })],
   i18n: {
     locales: ['tr', 'en', 'ru', 'ar'],
     defaultLocale: 'tr',
