@@ -2,12 +2,11 @@
 locale: en
 machineTranslated: true
 hero:
-  eyebrow: "01 — ISTANBUL · RESIDENTIAL"
-  headline: "WE BUILD\nWHAT WE DRAW."
+  eyebrow: "REAL SITE · ISTANBUL"
+  headline: "WE BUILD YOUR LIVING\nSPACES WITH CARE."
   sub: >-
-    MEY İnşaat develops modern residential projects in Istanbul, backed by
-    MEY Group's 23-year track record. We deliver the quality we promise, at
-    the time we promise.
+    With MEY Group's 23 years of experience, we build modern homes where
+    families live in comfort.
   primaryCta: "View projects"
   secondaryCta: "Contact"
   mediaTag: "DELIVERED · 6 STOREYS"

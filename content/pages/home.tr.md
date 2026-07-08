@@ -2,12 +2,11 @@
 locale: tr
 machineTranslated: false
 hero:
-  eyebrow: "01 — İSTANBUL · KONUT"
-  headline: "ÇİZDİĞİMİZİ\nİNŞA EDERİZ."
+  eyebrow: "GERÇEK ŞANTİYE · İSTANBUL"
+  headline: "YAŞAM ALANLARINIZI\nÖZENLE İNŞA EDERİZ."
   sub: >-
-    MEY İnşaat, 23 yıllık MEY Grubu güvencesiyle İstanbul'da modern konut
-    projeleri geliştirir. Söz verdiğimiz kaliteyi, söz verdiğimiz zamanda
-    teslim ederiz.
+    23 yıllık MEY Grubu deneyimiyle, ailelerin huzurla yaşayacağı modern
+    konutlar üretiyoruz.
   primaryCta: "Projeleri gör"
   secondaryCta: "İletişim"
   mediaTag: "TESLİM EDİLDİ · 6 KAT"

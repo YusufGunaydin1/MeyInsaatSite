@@ -1,0 +1,134 @@
+---
+/*
+  HOME HERO — dark cinematic cover (2026-07, owner-directed; the /showcases
+  hero-lab "koyu kapak" pick). Fuses with the dark header: a real delivered MEY
+  building full-bleed, graphite scrim + faint teal blueprint, the friendly
+  headline (the page's one h1) + sub + CTAs, a mono delivered-tag. The
+  scroll-to-build signature follows immediately as the second beat.
+  Copy comes from content/pages/home.<loc>.md so all four locales stay in sync.
+*/
+import { Image } from 'astro:assets';
+import { localePath, type Locale } from '../lib/i18n';
+import { pageContent } from '../lib/content';
+import heroImg from '../assets/photos/hero-residential-corner-building.webp';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const fm = pageContent('home', locale)?.frontmatter ?? {};
+const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
+---
+
+<section class="theatre blueprint-grid home-hero" aria-label={fm.hero?.mediaAlt}>
+  <!-- The delivered building. Decorative (the headline carries meaning); the LCP
+       image, so eager + high priority. -->
+  <Image
+    src={heroImg}
+    alt=""
+    aria-hidden="true"
+    widths={[768, 1280, 1600, 2048]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    class="home-hero-bg"
+  />
+  <div class="home-hero-scrim" aria-hidden="true"></div>
+
+  <div class="container-site home-hero-inner">
+    <!-- The red guide-line marks the content edge (brief §7/§8 hero wireframe);
+         RTL-mirrors for free via border-inline-start. -->
+    <div class="home-hero-copy guide-line-v">
+      <p class="t-tech home-hero-eyebrow">{fm.hero?.eyebrow}</p>
+      <h1 class="t-display-xl uppercase home-hero-title">
+        {headlineLines.map((line: string, i: number) => (
+          <>
+            {line}
+            {i < headlineLines.length - 1 && <br />}
+          </>
+        ))}
+      </h1>
+      <p class="t-body-l home-hero-sub">{fm.hero?.sub}</p>
+      <div class="home-hero-cta">
+        <a href={localePath(locale, '/projeler')} class="btn-primary">
+          {fm.hero?.primaryCta}
+          <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span>
+        </a>
+        <a href={localePath(locale, '/iletisim')} class="btn-ghost">{fm.hero?.secondaryCta}</a>
+      </div>
+    </div>
+  </div>
+
+  {fm.hero?.mediaTag && (
+    <div class="t-tech home-hero-tag" aria-hidden="true">{fm.hero.mediaTag}</div>
+  )}
+</section>
+
+<style>
+  .home-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: min(84svh, 720px);
+    display: flex;
+    align-items: flex-end;
+    padding-block: clamp(3rem, 9vh, 6rem);
+  }
+  .home-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Graphite scrim: heavy at the bottom-left (type), clearing to the top-right so
+     the real building stays visible (brief §10 duotone-lite). No red level-line —
+     it reads as meaning only in the scroll-to-build, decoration on a static hero. */
+  .home-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgb(14 15 17 / 0.86) 0%, rgb(14 15 17 / 0.4) 32%, rgb(14 15 17 / 0.08) 62%, rgb(14 15 17 / 0) 100%),
+      linear-gradient(to right, rgb(14 15 17 / 0.45) 0%, rgb(14 15 17 / 0) 58%);
+  }
+  .home-hero-inner {
+    position: relative;
+  }
+  /* Guide-line at the content edge; recolored to the theatre-safe red on dark.
+     A restrained text-shadow keeps the eyebrow/headline legible where the scrim
+     clears over the building's brighter facade (the cinematic-hero exception to
+     the flat rule; buttons opt out below). */
+  .home-hero-copy {
+    padding-inline-start: 1.5rem;
+    border-inline-start-color: var(--color-red-on-dark);
+    text-shadow: 0 1px 8px rgb(14 15 17 / 0.55);
+  }
+  .home-hero-eyebrow {
+    color: var(--color-red-on-dark);
+  }
+  .home-hero-title {
+    margin-top: 1rem;
+    max-width: 18ch;
+  }
+  .home-hero-sub {
+    margin-top: 1.25rem;
+    max-width: 46ch;
+    color: rgb(244 244 242 / 0.82);
+  }
+  .home-hero-cta {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    text-shadow: none;
+  }
+  .home-hero-tag {
+    position: absolute;
+    inset-inline-end: max(1rem, calc((100vw - 1320px) / 2 + 1.5rem));
+    bottom: 1.25rem;
+    background: rgb(14 15 17 / 0.85);
+    color: #fff;
+    padding: 0.3rem 0.55rem;
+    border-radius: var(--radius-brand);
+  }
+</style>

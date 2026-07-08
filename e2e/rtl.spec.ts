@@ -52,7 +52,7 @@ test('tr page does NOT download the Arabic face; ar does', async ({ page }) => {
 test('ru headline uses Oswald natively (variable font ships full Cyrillic)', async ({ page }) => {
   await page.goto(u('/ru'));
   await page.waitForLoadState('networkidle');
-  // The visible display heading (home's h1 is sr-only for outline sanity)
+  // The hero display heading — now the page's visible h1 (the dark cinematic cover)
   const h1 = page.locator('.t-display-xl').first();
   const family = await h1.evaluate((el) => getComputedStyle(el).fontFamily);
   expect(family.split(',')[0]).toContain('Oswald');

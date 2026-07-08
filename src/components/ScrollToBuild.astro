@@ -84,14 +84,15 @@ const poster = frameUrls[frameUrls.length - 1];
             <span data-mobile-stage>{t.signature.stages[0].no} {t.signature.stages[0].name}</span>
           </div>
           <div class="scrub-canvas-box" data-canvas-box>
-            <!-- Poster is the LCP element now that the theatre is the hero -->
+            <!-- Second beat below the HomeHero cover: no longer the page LCP, so
+                 it yields load priority to the hero's building image above it. -->
             <img
               src={poster}
               width="720"
               height="1120"
               alt={t.a11y.buildAnimation}
               loading="eager"
-              fetchpriority="high"
+              fetchpriority="low"
               decoding="async"
               class="scrub-poster"
               data-poster
