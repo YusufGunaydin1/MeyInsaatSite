@@ -28,7 +28,7 @@ test('before/after band shows a decoded composite with both tags', async ({ page
 test('on-site journey renders six real stages with decoded imagery', async ({ page }) => {
   await page.goto(u('/'));
   await expect(page.locator('.cj-stage')).toHaveCount(6);
-  await expect(page.getByText('03 — ŞANTİYEDEN')).toBeVisible();
+  await expect(page.getByText('02 — ŞANTİYEDEN')).toBeVisible();
   await expect(page.locator('.cj-stage').first()).toContainText('Kazı & Zemin');
   await decodes(page, '.cj-img');
 });

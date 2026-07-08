@@ -18,15 +18,11 @@ const t = pageContent('home', locale)?.frontmatter?.sections?.transform ?? {};
 ---
 
 <section class="container-site section-pad">
-  <div class="max-w-2xl reveal">
-    {t.eyebrow && <p class="t-tech text-mey-red mb-3">{t.eyebrow}</p>}
-    <h2 class="t-display-l">{t.title}</h2>
-  </div>
-
-  <figure class="ba-band reveal mt-10">
+  <figure class="ba-band reveal">
+    <!-- Decorative: the visible ÖNCE / SONRA · TESLİM tags carry the meaning. -->
     <Image
       src={beforeAfter}
-      alt={t.alt}
+      alt=""
       widths={[768, 1280, 1600]}
       sizes="100vw"
       class="ba-img"

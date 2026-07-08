@@ -13,17 +13,14 @@ hero:
   mediaAlt: "Teslim edilmiş MEY konut projesi — köşe cephe"
 sections:
   transform:
-    eyebrow: "01 — DÖNÜŞÜM"
-    title: "Önce, sonra"
     before: "ÖNCE"
     after: "SONRA · TESLİM"
-    alt: "Önce inşaat halinde, sonra tamamlanmış MEY konut projesi"
   projects:
-    eyebrow: "02 — PROJELER"
+    eyebrow: "01 — PROJELER"
     title: "İşlerimiz"
     intro: "Her projemiz, teslim ettiğimiz bir sözdür."
   journey:
-    eyebrow: "03 — ŞANTİYEDEN"
+    eyebrow: "02 — ŞANTİYEDEN"
     title: "Her aşama, gerçek"
     intro: "Kazıdan teslime, her adımı gerçek şantiye kareleriyle belgeleriz."
     stages:
@@ -34,13 +31,13 @@ sections:
       - "Tamamlanan Cephe"
       - "Teslim"
   services:
-    eyebrow: "04 — HİZMETLER"
+    eyebrow: "03 — HİZMETLER"
     title: "Ne yapıyoruz"
     intro: >-
       Arsa değerlendirmeden anahtar teslime: konut projelerini baştan sona
       tek elden yürütürüz.
   materials:
-    eyebrow: "05 — MALZEME"
+    eyebrow: "04 — MALZEME"
     title: "Malzeme & doku"
     intro: "Kalite detayda: seçilmiş malzeme, özenli planlama, teslim kalitesi."
     items:
@@ -51,7 +48,7 @@ sections:
       - tag: "İÇ MEKAN"
         name: "Ortak alan & teslim kalitesi"
   why:
-    eyebrow: "06 — NEDEN MEY"
+    eyebrow: "05 — NEDEN MEY"
     title: "Sözünü tutan bir grup"
     groupLabel: "YIL MEY GRUBU GÜVENCESİ"
     constructionLabel: "YIL MEY İNŞAAT DENEYİMİ"
@@ -61,7 +58,7 @@ sections:
       - value: "ŞEFFAF"
         label: "GERÇEK ŞANTİYE, GERÇEK GÖRSEL"
   contact:
-    eyebrow: "07 — İLETİŞİM"
+    eyebrow: "06 — İLETİŞİM"
     title: "Projenizi konuşalım"
     intro: "Telefon, WhatsApp veya e-posta ile doğrudan ulaşın."
 ---
