@@ -16,6 +16,8 @@ type Demo = {
   href: string;
 };
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const demos: Demo[] = [
   {
     title: 'v1 — Oswald · Koyu Header · Hero Scrub',
@@ -25,6 +27,26 @@ const demos: Demo[] = [
     status: 'live',
     meta: 'commit 3f6fdc1 · yayın 07.07.2026',
     href: import.meta.env.BASE_URL,
+  },
+  {
+    title: 'Hero Lab — 3 varyant (ışık split · koyu kapak · pafta künye)',
+    desc:
+      'Ana sayfa hero’su için 3 yaratıcı varyant, alt alta: (A) sakin ışık split + kırmızı kot çizgili ' +
+      'gerçek proje fotoğrafı, (B) gerçek binayla koyu sinematik kapak, (C) Oswald başlık + mono endeksli ' +
+      'proje künyesi (Ali · El Ele · Şanbağları). Birini seç → üretime.',
+    status: 'proposal',
+    meta: 'gerçek görseller · MEY token · noindex',
+    href: base + '/showcases/hero-lab',
+  },
+  {
+    title: 'Banner Lab — 3 varyant (kot bandı · proje şeridi · kırmızı çağrı)',
+    desc:
+      'Ana sayfa tam-genişlik bandı için 3 varyant: (A) tek bina + kot çizgisi rafine kanıt bandı, ' +
+      '(B) üç gerçek proje yan yana triptik şerit (hover), (C) kırmızı mimari çizgili koyu CTA bandı. ' +
+      'Gerçek binalar: Ali · El Ele Apartmanı · Şanbağları.',
+    status: 'proposal',
+    meta: 'gerçek görseller · MEY token · noindex',
+    href: base + '/showcases/banner-lab',
   },
 ];
 ---

@@ -1,0 +1,412 @@
+---
+/*
+  HERO LAB — dahili tasarım vitrini (/showcases/hero-lab).
+  Ana sayfa HERO'su için 3 yaratıcı varyant, alt alta, karşılaştırılabilir.
+  Gerçek site token'larıyla (global.css) + gerçek proje görselleriyle. RedApple
+  gezer, birini seçer → üretime alınır. Navigasyonda YOK, noindex, sitemap dışı.
+
+  Varyantlar (tek cümle "neden"):
+  A · IŞIK SPLIT   — sakin kurumsal split; solda Oswald manifesto, sağda kırmızı
+                     kot çizgili gerçek proje fotoğrafı (brief §8 ışık hero'sunun tam hali).
+  B · KOYU KAPAK   — tek "gür" an; gerçek bina tam-genişlik, grafit scrim + teal
+                     blueprint, header ile kaynaşan sinematik statik kapak.
+  C · PAFTA KÜNYE  — tip öne çıkar; dev Oswald başlık + çizim paftası başlık bloğu
+                     gibi mono endeksli gerçek proje künyesi (Ali · El Ele · Şanbağları).
+*/
+import Base from '../../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import heroCorner from '../../assets/photos/hero-residential-corner-building.webp';
+import ali from '../../assets/showcase/ali.webp';
+import elEle from '../../assets/showcase/el-ele-apartmani.webp';
+import sanbaglari from '../../assets/showcase/sanbaglari.webp';
+
+const projectIndex = [
+  { idx: '01', name: 'ALİ', type: 'KONUT · İSTANBUL', image: ali },
+  { idx: '02', name: 'EL ELE APARTMANI', type: 'KONUT · İSTANBUL', image: elEle },
+  { idx: '03', name: 'ŞANBAĞLARI', type: 'KONUT · İSTANBUL', image: sanbaglari },
+];
+---
+
+<Base locale="tr" page="home" path="/showcases/hero-lab" title="Hero Lab — Tasarım Vitrini" noindex>
+  <!-- LAB INTRO -->
+  <section class="theatre blueprint-grid lab-intro">
+    <div class="container-site">
+      <p class="t-tech" style="color: var(--color-red-on-dark);">MEY İnşaat · Dahili · Hero Lab</p>
+      <h1 class="t-display-l mt-2">Hero — Tasarım Varyantları</h1>
+      <p class="t-body-l mt-4 max-w-2xl" style="color: rgb(244 244 242 / 0.72);">
+        Ana sayfa hero'su için 3 varyant, alt alta. Beğendiğini seç — seçilen üretime alınır.
+        Her varyant gerçek MEY token'ları ve gerçek proje görselleriyle çizildi.
+      </p>
+      <a class="t-tech lab-back mt-6" href="/showcases">
+        <span aria-hidden="true">←</span> Vitrine dön
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================ HERO / A — IŞIK SPLIT ============================ -->
+  <article class="lab-item">
+    <div class="lab-cap">
+      <div class="container-site lab-cap-row">
+        <span class="t-tech lab-cap-id">HERO / A</span>
+        <div>
+          <p class="t-tech lab-cap-name">Işık split — vaziyet planı</p>
+          <p class="lab-cap-why t-caption">
+            Sakin kurumsal split: solda Oswald manifesto + kırmızı kot çizgili gerçek proje
+            fotoğrafı. Brief §8 ışık hero'sunun tam hali — güven öncelikli, fotoğraf odaklı.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="lab-stage">
+      <section class="hero-a">
+        <div class="container-site hero-a-grid">
+          <div class="hero-a-copy guide-line-v">
+            <p class="t-tech text-mey-red">01 — İSTANBUL · KONUT</p>
+            <h2 class="t-display-xl uppercase hero-a-title">ÇİZDİĞİMİZİ<br />İNŞA EDERİZ.</h2>
+            <p class="t-body-l hero-a-sub">
+              MEY İnşaat, 23 yıllık MEY Grubu güvencesiyle İstanbul'da modern konut projeleri
+              geliştirir. Söz verdiğimiz kaliteyi, söz verdiğimiz zamanda teslim ederiz.
+            </p>
+            <div class="hero-a-cta">
+              <a href="/projeler" class="btn-primary">
+                Projeleri gör <span aria-hidden="true">→</span>
+              </a>
+              <a href="/iletisim" class="btn-ghost">İletişim</a>
+            </div>
+            <p class="t-tech hero-a-meta">23 YIL MEY GRUBU · 6 YIL İNŞAAT · İSTANBUL</p>
+          </div>
+          <figure class="hero-a-media">
+            <Image
+              src={ali}
+              alt="MEY konut projesi — Ali"
+              widths={[440, 640, 880]}
+              sizes="(min-width: 1024px) 44vw, 92vw"
+              loading="eager"
+              class="hero-a-img"
+            />
+            <figcaption class="hero-a-level">
+              <span class="t-tech">MEY · KONUT PROJESİ</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+    </div>
+  </article>
+
+  <!-- ============================ HERO / B — KOYU KAPAK ============================ -->
+  <article class="lab-item">
+    <div class="lab-cap">
+      <div class="container-site lab-cap-row">
+        <span class="t-tech lab-cap-id">HERO / B</span>
+        <div>
+          <p class="t-tech lab-cap-name">Koyu kapak — sinematik tiyatro</p>
+          <p class="lab-cap-why t-caption">
+            Tek "gür" an: gerçek bina tam-genişlik, grafit scrim + teal blueprint; koyu header
+            ile kaynaşan statik sinematik kapak — scroll-to-build istenmeyen anlar için.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="lab-stage">
+      <section class="theatre blueprint-grid hero-b">
+        <Image
+          src={heroCorner}
+          alt=""
+          aria-hidden="true"
+          widths={[768, 1280, 1728]}
+          sizes="100vw"
+          loading="eager"
+          class="hero-b-bg"
+        />
+        <div class="hero-b-scrim" aria-hidden="true"></div>
+        <div class="container-site hero-b-inner">
+          <p class="t-tech hero-b-eyebrow">GERÇEK ŞANTİYE · İSTANBUL</p>
+          <h2 class="t-display-xl uppercase hero-b-title">ÇİZDİĞİMİZİ İNŞA EDERİZ.</h2>
+          <p class="t-body-l hero-b-sub">
+            23 yıllık MEY Grubu güvencesiyle, çizdiğimiz her projeyi zamanında teslim ederiz.
+          </p>
+          <div class="hero-b-cta">
+            <a href="/projeler" class="btn-primary">
+              Projeleri gör <span aria-hidden="true">→</span>
+            </a>
+            <a href="/iletisim" class="btn-ghost">İletişim</a>
+          </div>
+        </div>
+        <div class="hero-b-level" aria-hidden="true">
+          <span class="t-tech">TESLİM EDİLDİ · 6 KAT</span>
+        </div>
+      </section>
+    </div>
+  </article>
+
+  <!-- ============================ HERO / C — PAFTA KÜNYE ============================ -->
+  <article class="lab-item">
+    <div class="lab-cap">
+      <div class="container-site lab-cap-row">
+        <span class="t-tech lab-cap-id">HERO / C</span>
+        <div>
+          <p class="t-tech lab-cap-name">Pafta künye — editoryal endeks</p>
+          <p class="lab-cap-why t-caption">
+            Tip öne çıkar: dev Oswald başlık + çizim paftası başlık bloğu gibi mono endeksli
+            gerçek proje künyesi (Ali · El Ele · Şanbağları) — "çizdiğimizi inşa ederiz" bir pafta gibi.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="lab-stage">
+      <section class="hero-c">
+        <div class="container-site hero-c-grid">
+          <div class="hero-c-copy guide-line-v">
+            <p class="t-tech text-mey-red">PROJE KÜNYESİ · 2026</p>
+            <h2 class="t-display-xl uppercase hero-c-title">ÇİZDİĞİMİZİ İNŞA EDERİZ.</h2>
+            <p class="t-body-l hero-c-sub">
+              Her projeyi paftadaki söz gibi görürüz: çizeriz, inşa ederiz, teslim ederiz.
+            </p>
+            <a href="/projeler" class="btn-primary hero-c-cta">
+              Projeleri gör <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="hero-c-block">
+            <p class="t-tech hero-c-block-h">PROJE KÜNYESİ · İSTANBUL</p>
+            <ol class="hero-c-list">
+              {projectIndex.map((p) => (
+                <li class="hero-c-row">
+                  <span class="t-tech hero-c-idx">{p.idx}</span>
+                  <span class="hero-c-thumb">
+                    <Image
+                      src={p.image}
+                      alt={`MEY konut projesi — ${p.name}`}
+                      widths={[96, 192]}
+                      sizes="88px"
+                      class="hero-c-thumb-img"
+                    />
+                  </span>
+                  <span class="hero-c-meta">
+                    <span class="hero-c-name">{p.name}</span>
+                    <span class="t-tech hero-c-type">{p.type}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
+</Base>
+
+<style>
+  /* ---- Lab chrome (shared) ---- */
+  .lab-intro {
+    padding-block: clamp(2.5rem, 6vh, 4.5rem);
+  }
+  .lab-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-mey-teal);
+  }
+  .lab-back:hover { color: #fff; }
+
+  .lab-item {
+    border-top: 1px solid var(--color-line);
+  }
+  .lab-cap {
+    background: var(--color-night-800);
+    border-block: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .lab-cap-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem 1.25rem;
+    align-items: start;
+    padding-block: 0.9rem;
+  }
+  .lab-cap-id {
+    color: var(--color-red-on-dark);
+    border: 1px solid rgb(242 85 90 / 0.35);
+    border-radius: var(--radius-brand);
+    padding: 0.25rem 0.55rem;
+    align-self: start;
+    white-space: nowrap;
+  }
+  .lab-cap-name { color: #fff; }
+  .lab-cap-why {
+    color: rgb(244 244 242 / 0.6);
+    margin-top: 0.35rem;
+    max-width: 62ch;
+  }
+
+  /* ================= HERO / A — light split ================= */
+  .hero-a {
+    background: var(--color-concrete-050);
+    padding-block: clamp(3rem, 8vh, 6rem);
+  }
+  .hero-a-grid {
+    display: grid;
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero-a-grid { grid-template-columns: 1.05fr 0.95fr; }
+  }
+  .hero-a-copy { padding-inline-start: 1.5rem; }
+  .hero-a-title { margin-top: 1.25rem; }
+  .hero-a-sub { margin-top: 1.5rem; max-width: 34ch; }
+  .hero-a-cta {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero-a-meta {
+    margin-top: 1.75rem;
+    color: var(--color-graphite-400);
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .hero-a-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+  }
+  .hero-a-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-a-level {
+    position: absolute;
+    inset-inline: 0;
+    top: 38%;
+    border-top: 2px solid var(--color-mey-red);
+  }
+  .hero-a-level span {
+    position: absolute;
+    inset-inline-start: 0.75rem;
+    top: 0.4rem;
+    background: rgb(23 24 26 / 0.88);
+    color: #fff;
+    padding: 0.28rem 0.55rem;
+    border-radius: var(--radius-brand);
+  }
+
+  /* ================= HERO / B — dark cinematic cover ================= */
+  .hero-b {
+    position: relative;
+    overflow: hidden;
+    min-height: min(84svh, 720px);
+    display: flex;
+    align-items: flex-end;
+    padding-block: clamp(3rem, 9vh, 6rem);
+  }
+  .hero-b-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Graphite scrim: heavy at the bottom-left where the type sits, clearing toward
+     the top-right so the real building stays visible (brief §10 duotone-lite). */
+  .hero-b-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgb(14 15 17 / 0.86) 0%, rgb(14 15 17 / 0.4) 32%, rgb(14 15 17 / 0.08) 62%, rgb(14 15 17 / 0) 100%),
+      linear-gradient(to right, rgb(14 15 17 / 0.45) 0%, rgb(14 15 17 / 0) 58%);
+  }
+  .hero-b-inner { position: relative; }
+  .hero-b-eyebrow { color: var(--color-red-on-dark); }
+  .hero-b-title { margin-top: 1rem; max-width: 16ch; }
+  .hero-b-sub {
+    margin-top: 1.25rem;
+    max-width: 46ch;
+    color: rgb(244 244 242 / 0.82);
+  }
+  .hero-b-cta {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero-b-level {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 12%;
+    border-top: 2px solid var(--color-red-on-dark);
+    pointer-events: none;
+  }
+  .hero-b-level span {
+    position: absolute;
+    inset-inline-end: max(1rem, calc((100vw - 1320px) / 2 + 1.5rem));
+    top: 0.45rem;
+    background: rgb(14 15 17 / 0.85);
+    color: var(--color-red-on-dark);
+    padding: 0.28rem 0.55rem;
+    border-radius: var(--radius-brand);
+  }
+
+  /* ================= HERO / C — editorial title-block index ================= */
+  .hero-c {
+    background: var(--color-concrete-050);
+    padding-block: clamp(3rem, 8vh, 6rem);
+  }
+  .hero-c-grid {
+    display: grid;
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero-c-grid { grid-template-columns: 1.1fr 0.9fr; }
+  }
+  .hero-c-copy { padding-inline-start: 1.5rem; }
+  .hero-c-title { margin-top: 1.25rem; max-width: 12ch; }
+  .hero-c-sub { margin-top: 1.5rem; max-width: 40ch; }
+  .hero-c-cta { margin-top: 2rem; }
+  .hero-c-block {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: #fff;
+  }
+  .hero-c-block-h {
+    color: var(--color-graphite-400);
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .hero-c-list { list-style: none; }
+  .hero-c-row {
+    display: grid;
+    grid-template-columns: auto 64px 1fr;
+    gap: 0.9rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+  }
+  .hero-c-row + .hero-c-row { border-top: 1px solid var(--color-line); }
+  .hero-c-idx { color: var(--color-mey-red); }
+  .hero-c-thumb {
+    display: block;
+    width: 64px;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+    background: var(--color-concrete-100);
+  }
+  .hero-c-thumb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-c-meta { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+  .hero-c-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--color-graphite-900);
+    transition: color 200ms ease-out;
+  }
+  .hero-c-row:hover .hero-c-name { color: var(--color-mey-red); }
+  .hero-c-type { color: var(--color-graphite-400); }
+</style>

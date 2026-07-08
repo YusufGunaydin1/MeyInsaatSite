@@ -18,6 +18,7 @@ const FRAMES_IN = path.join(
 );
 const FRAMES_OUT = path.join(ROOT, 'src/assets/frames');
 const PHOTOS_OUT = path.join(ROOT, 'src/assets/photos');
+const SHOWCASE_OUT = path.join(ROOT, 'src/assets/showcase');
 const BRAND_OUT = path.join(ROOT, 'src/assets/brand');
 const PUBLIC = path.join(ROOT, 'public');
 
@@ -65,6 +66,28 @@ async function convertPhotos() {
   }
 }
 
+// /showcases/*-lab demo images (internal design vitrine). Real MEY project
+// buildings + a brand-line background, curated from the library exactly like
+// PHOTOS so the committed footprint stays small webp (not raw multi-MB source).
+const SHOWCASE = [
+  ['Buildings_Main_Images/Ali.png', 'ali.webp', 1600, 80],
+  ['Buildings_Main_Images/El_Ele_Apartmani.jpeg', 'el-ele-apartmani.webp', 1600, 80],
+  ['Buildings_Main_Images/Spanbaglari.png', 'sanbaglari.webp', 1600, 80],
+  ['backgrounds/minimal-red-architectural-lines.png', 'minimal-red-architectural-lines.webp', 1600, 80],
+];
+
+async function convertShowcase() {
+  await mkdir(SHOWCASE_OUT, { recursive: true });
+  for (const [src, dst, width, quality] of SHOWCASE) {
+    const out = path.join(SHOWCASE_OUT, dst);
+    await sharp(path.join(LIB, src))
+      .resize({ width, withoutEnlargement: true })
+      .webp({ quality })
+      .toFile(out);
+    console.log(`showcase: ${dst} ${((await stat(out)).size / 1024).toFixed(0)} KB`);
+  }
+}
+
 async function convertBrand() {
   await mkdir(BRAND_OUT, { recursive: true });
   await mkdir(PUBLIC, { recursive: true });
@@ -99,4 +122,5 @@ async function convertBrand() {
 
 await convertFrames();
 await convertPhotos();
+await convertShowcase();
 await convertBrand();
