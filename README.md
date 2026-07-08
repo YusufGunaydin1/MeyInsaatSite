@@ -63,4 +63,10 @@ on push to `main`. When the custom domain is ready: set `site`/`base` in
 
 ---
 
-© MEY İnşaat. All rights reserved.
+## License
+
+The **source code** in this repository is released under the [MIT License](LICENSE).
+
+The **MEY İnşaat** name, logo, brand identity, written copy, and project imagery
+are © 2026 MEY İnşaat and are **not** covered by the MIT license — all rights
+reserved.
