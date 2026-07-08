@@ -84,9 +84,7 @@ const projectIndex = [
               loading="eager"
               class="hero-a-img"
             />
-            <figcaption class="hero-a-level">
-              <span class="t-tech">MEY · KONUT PROJESİ</span>
-            </figcaption>
+            <figcaption class="t-tech hero-a-tag">MEY · KONUT PROJESİ</figcaption>
           </figure>
         </div>
       </section>
@@ -132,9 +130,7 @@ const projectIndex = [
             <a href="/iletisim" class="btn-ghost">İletişim</a>
           </div>
         </div>
-        <div class="hero-b-level" aria-hidden="true">
-          <span class="t-tech">TESLİM EDİLDİ · 6 KAT</span>
-        </div>
+        <div class="t-tech hero-b-tag" aria-hidden="true">TESLİM EDİLDİ · 6 KAT</div>
       </section>
     </div>
   </article>
@@ -279,19 +275,13 @@ const projectIndex = [
     height: 100%;
     object-fit: cover;
   }
-  .hero-a-level {
-    position: absolute;
-    inset-inline: 0;
-    top: 38%;
-    border-top: 2px solid var(--color-mey-red);
-  }
-  .hero-a-level span {
+  .hero-a-tag {
     position: absolute;
     inset-inline-start: 0.75rem;
-    top: 0.4rem;
-    background: rgb(23 24 26 / 0.88);
+    bottom: 0.75rem;
+    background: rgb(23 24 26 / 0.85);
     color: #fff;
-    padding: 0.28rem 0.55rem;
+    padding: 0.3rem 0.55rem;
     border-radius: var(--radius-brand);
   }
 
@@ -334,20 +324,13 @@ const projectIndex = [
     flex-wrap: wrap;
     gap: 0.75rem;
   }
-  .hero-b-level {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 12%;
-    border-top: 2px solid var(--color-red-on-dark);
-    pointer-events: none;
-  }
-  .hero-b-level span {
+  .hero-b-tag {
     position: absolute;
     inset-inline-end: max(1rem, calc((100vw - 1320px) / 2 + 1.5rem));
-    top: 0.45rem;
+    bottom: 1.25rem;
     background: rgb(14 15 17 / 0.85);
-    color: var(--color-red-on-dark);
-    padding: 0.28rem 0.55rem;
+    color: #fff;
+    padding: 0.3rem 0.55rem;
     border-radius: var(--radius-brand);
   }
 
