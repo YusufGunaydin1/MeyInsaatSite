@@ -74,6 +74,13 @@ const SHOWCASE = [
   ['Buildings_Main_Images/El_Ele_Apartmani.jpeg', 'el-ele-apartmani.webp', 1600, 80],
   ['Buildings_Main_Images/Spanbaglari.png', 'sanbaglari.webp', 1600, 80],
   ['backgrounds/minimal-red-architectural-lines.png', 'minimal-red-architectural-lines.webp', 1600, 80],
+  ['backgrounds/before-after-residential-render.png', 'before-after.webp', 1600, 80],
+  ['process-scroll/01-site-preparation-groundworks.png', 'process-1.webp', 1280, 78],
+  ['process-scroll/02-concrete-structural-frame.png', 'process-2.webp', 1280, 78],
+  ['process-scroll/03-brick-infill-structure.png', 'process-3.webp', 1280, 78],
+  ['process-scroll/04-facade-insulation-stage.png', 'process-4.webp', 1280, 78],
+  ['process-scroll/05-completed-front-elevation.png', 'process-5.webp', 1280, 78],
+  ['process-scroll/06-completed-side-elevation.png', 'process-6.webp', 1280, 78],
 ];
 
 async function convertShowcase() {
@@ -85,6 +92,16 @@ async function convertShowcase() {
       .webp({ quality })
       .toFile(out);
     console.log(`showcase: ${dst} ${((await stat(out)).size / 1024).toFixed(0)} KB`);
+  }
+  // Custom 3D service icons keep messy source names → icon-<n>.webp (on white).
+  const icons = (await readdir(path.join(LIB, 'Unique_icons')))
+    .filter((f) => /\(\d+\)\.png$/.test(f))
+    .sort((a, b) => Number(a.match(/\((\d+)\)/)[1]) - Number(b.match(/\((\d+)\)/)[1]));
+  for (const f of icons) {
+    const n = f.match(/\((\d+)\)/)[1];
+    const out = path.join(SHOWCASE_OUT, `icon-${n}.webp`);
+    await sharp(path.join(LIB, 'Unique_icons', f)).resize({ width: 480 }).webp({ quality: 82 }).toFile(out);
+    console.log(`showcase: icon-${n}.webp ${((await stat(out)).size / 1024).toFixed(0)} KB`);
   }
 }
 

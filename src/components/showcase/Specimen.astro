@@ -1,0 +1,56 @@
+---
+/* Shared specimen wrapper: a dark mono caption bar (id · name · one-line why)
+   above the rendered variant. Used by every /showcases/*-lab page (DRY chrome). */
+interface Props {
+  id: string;
+  name: string;
+  why: string;
+}
+const { id, name, why } = Astro.props;
+---
+
+<article class="lab-item">
+  <div class="lab-cap">
+    <div class="container-site lab-cap-row">
+      <span class="t-tech lab-cap-id">{id}</span>
+      <div>
+        <p class="t-tech lab-cap-name">{name}</p>
+        <p class="lab-cap-why t-caption">{why}</p>
+      </div>
+    </div>
+  </div>
+  <div class="lab-stage"><slot /></div>
+</article>
+
+<style>
+  .lab-item {
+    border-top: 1px solid var(--color-line);
+  }
+  .lab-cap {
+    background: var(--color-night-800);
+    border-block: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .lab-cap-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem 1.25rem;
+    align-items: start;
+    padding-block: 0.9rem;
+  }
+  .lab-cap-id {
+    color: var(--color-red-on-dark);
+    border: 1px solid rgb(242 85 90 / 0.35);
+    border-radius: var(--radius-brand);
+    padding: 0.25rem 0.55rem;
+    align-self: start;
+    white-space: nowrap;
+  }
+  .lab-cap-name {
+    color: #fff;
+  }
+  .lab-cap-why {
+    color: rgb(244 244 242 / 0.6);
+    margin-top: 0.35rem;
+    max-width: 62ch;
+  }
+</style>

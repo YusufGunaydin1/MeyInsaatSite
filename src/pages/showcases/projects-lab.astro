@@ -1,0 +1,169 @@
+---
+/*
+  PROJELER LAB — /showcases/projects-lab. Ana sayfa "İşlerimiz" bölümü için 3
+  yaratıcı varyant, gerçek projelerle (Ali · El Ele Apartmanı · Şanbağları).
+  Paylaşılan LabIntro + Specimen chrome'u; gerçek MEY token'ları. noindex.
+*/
+import Base from '../../layouts/Base.astro';
+import LabIntro from '../../components/showcase/LabIntro.astro';
+import Specimen from '../../components/showcase/Specimen.astro';
+import { Image } from 'astro:assets';
+import ali from '../../assets/showcase/ali.webp';
+import elEle from '../../assets/showcase/el-ele-apartmani.webp';
+import sanbaglari from '../../assets/showcase/sanbaglari.webp';
+
+const projects = [
+  { idx: '01', name: 'ALİ', type: 'KONUT · İSTANBUL', image: ali },
+  { idx: '02', name: 'EL ELE APARTMANI', type: 'KONUT · İSTANBUL', image: elEle },
+  { idx: '03', name: 'ŞANBAĞLARI', type: 'KONUT · İSTANBUL', image: sanbaglari },
+];
+const W = [440, 720, 960];
+---
+
+<Base locale="tr" page="home" path="/showcases/projects-lab" title="Projeler Lab — Tasarım Vitrini" noindex>
+  <LabIntro
+    kicker="MEY İnşaat · Dahili · Projeler Lab"
+    title="Projeler — Tasarım Varyantları"
+    desc="Ana sayfa 'İşlerimiz' bölümü için 3 varyant, gerçek projelerle: Ali · El Ele Apartmanı · Şanbağları. Beğendiğini seç — üretime alınır."
+  />
+
+  <!-- A — asymmetric featured grid -->
+  <Specimen
+    id="PROJELER / A"
+    name="Asimetrik vitrin — öne çıkan proje"
+    why="Bir büyük öne çıkan proje + iki küçük; hiyerarşiyle anlatan editoryal grid. Amiral projeyi öne alır."
+  >
+    <section class="container-site section-pad">
+      <p class="t-tech text-mey-red">02 — PROJELER</p>
+      <h2 class="t-display-l mt-2 mb-8">İşlerimiz</h2>
+      <div class="pl-a">
+        <a href="/projeler" class="pl-tile pl-a-feat group">
+          <Image src={ali} alt="MEY konut projesi — Ali" widths={W} sizes="(min-width:1024px) 55vw, 100vw" class="pl-img" />
+          <span class="pl-scrim" aria-hidden="true"></span>
+          <span class="t-tech pl-idx">01</span>
+          <span class="pl-cap"><span class="pl-name">ALİ</span><span class="t-tech pl-type">KONUT · İSTANBUL</span></span>
+        </a>
+        {projects.slice(1).map((p) => (
+          <a href="/projeler" class="pl-tile pl-a-cell group">
+            <Image src={p.image} alt={`MEY konut projesi — ${p.name}`} widths={W} sizes="(min-width:1024px) 40vw, 100vw" class="pl-img" />
+            <span class="pl-scrim" aria-hidden="true"></span>
+            <span class="t-tech pl-idx">{p.idx}</span>
+            <span class="pl-cap"><span class="pl-name">{p.name}</span><span class="t-tech pl-type">{p.type}</span></span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </Specimen>
+
+  <!-- B — drawing-sheet register -->
+  <Specimen
+    id="PROJELER / B"
+    name="Proje registiri — pafta listesi"
+    why="Çizim paftası mantığı: mono endeksli, satır satır proje künyesi + hover'da 'Detay →'. Tip öne çıkar, ölçekle büyür."
+  >
+    <section class="container-site section-pad">
+      <p class="t-tech text-mey-red">02 — PROJELER</p>
+      <h2 class="t-display-l mt-2 mb-8">Proje registiri</h2>
+      <div class="pl-b">
+        <div class="t-tech pl-b-head">
+          <span>ENDEKS</span><span>PROJE</span><span class="pl-b-hide">TÜR · KONUM</span><span class="pl-b-act">DETAY</span>
+        </div>
+        {projects.map((p) => (
+          <a href="/projeler" class="pl-b-row group">
+            <span class="t-tech pl-b-idx">{p.idx}</span>
+            <span class="pl-b-thumb"><Image src={p.image} alt={`MEY konut projesi — ${p.name}`} widths={[96, 192]} sizes="72px" class="pl-b-thumb-img" /></span>
+            <span class="pl-b-name">{p.name}</span>
+            <span class="t-tech pl-b-type pl-b-hide">{p.type}</span>
+            <span class="t-tech pl-b-detay">Detay <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </Specimen>
+
+  <!-- C — alternating magazine rows -->
+  <Specimen
+    id="PROJELER / C"
+    name="Dönüşümlü şeritler — dergi"
+    why="Her proje tam-genişlik bir 'hikâye satırı': görsel bir yanda, mono künye diğer yanda, zigzag. Az sayıda projeyi büyük ve anlatısal gösterir."
+  >
+    <section class="pl-c section-pad">
+      <div class="container-site">
+        <p class="t-tech text-mey-red">02 — PROJELER</p>
+        <h2 class="t-display-l mt-2 mb-8">İşlerimiz</h2>
+      </div>
+      {projects.map((p, i) => (
+        <div class={`pl-c-row ${i % 2 === 1 ? 'pl-c-rev' : ''}`}>
+          <a href="/projeler" class="pl-c-media group">
+            <Image src={p.image} alt={`MEY konut projesi — ${p.name}`} widths={W} sizes="(min-width:768px) 52vw, 100vw" class="pl-img" />
+          </a>
+          <div class="pl-c-copy guide-line-v">
+            <p class="t-tech text-mey-red">{p.idx}</p>
+            <h3 class="pl-c-name">{p.name}</h3>
+            <p class="t-tech text-graphite-400 mt-1">{p.type}</p>
+            <a href="/projeler" class="t-tech pl-c-link mt-4">Projeyi gör <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      ))}
+    </section>
+  </Specimen>
+</Base>
+
+<style>
+  /* shared tile bits (A) */
+  .pl-tile { position: relative; display: block; overflow: hidden; border-radius: var(--radius-brand); background: var(--color-night-950); }
+  .pl-img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease-out; }
+  .pl-tile:hover .pl-img, .pl-c-media:hover .pl-img { transform: scale(1.02); }
+  .pl-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgb(14 15 17 / 0.82) 0%, rgb(14 15 17 / 0.1) 45%, transparent 68%); }
+  .pl-idx { position: absolute; top: 0.75rem; inset-inline-start: 0.75rem; background: rgb(14 15 17 / 0.8); color: var(--color-red-on-dark); padding: 0.25rem 0.5rem; border-radius: var(--radius-brand); }
+  .pl-cap { position: absolute; inset-inline: 0; bottom: 0; padding: 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
+  .pl-name { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.1rem, 2vw, 1.6rem); letter-spacing: 0.01em; text-transform: uppercase; color: #fff; line-height: 1.05; }
+  .pl-type { color: rgb(244 244 242 / 0.75); }
+
+  /* A grid */
+  .pl-a { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  .pl-a-feat { aspect-ratio: 4 / 3; }
+  .pl-a-cell { aspect-ratio: 16 / 10; }
+  @media (min-width: 1024px) {
+    .pl-a { grid-template-columns: 1.35fr 1fr; grid-template-rows: 1fr 1fr; }
+    .pl-a-feat { grid-row: span 2; aspect-ratio: auto; }
+    .pl-a-cell { aspect-ratio: auto; }
+  }
+
+  /* B register */
+  .pl-b { border: 1px solid var(--color-line); border-radius: var(--radius-brand); background: #fff; overflow: hidden; }
+  .pl-b-head { display: grid; grid-template-columns: 3.5rem 72px 1fr auto; gap: 1rem; align-items: center; padding: 0.85rem 1.1rem; color: var(--color-graphite-400); border-bottom: 1px solid var(--color-line); }
+  .pl-b-head span:nth-child(3) { justify-self: start; }
+  .pl-b-row { display: grid; grid-template-columns: 3.5rem 72px 1fr auto; gap: 1rem; align-items: center; padding: 0.85rem 1.1rem; }
+  .pl-b-row + .pl-b-row { border-top: 1px solid var(--color-line); }
+  .pl-b-row:hover { background: var(--color-concrete-100); }
+  .pl-b-idx { color: var(--color-mey-red); }
+  .pl-b-thumb { width: 72px; aspect-ratio: 4 / 3; border-radius: var(--radius-brand); overflow: hidden; background: var(--color-concrete-100); }
+  .pl-b-thumb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pl-b-name { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; letter-spacing: 0.01em; text-transform: uppercase; color: var(--color-graphite-900); transition: color 200ms ease-out; }
+  .pl-b-row:hover .pl-b-name { color: var(--color-mey-red); }
+  .pl-b-type { color: var(--color-graphite-400); }
+  .pl-b-detay, .pl-b-act { color: var(--color-mey-red); opacity: 0; transition: opacity 200ms ease-out; text-align: end; }
+  .pl-b-act { opacity: 1; color: var(--color-graphite-400); }
+  .pl-b-row:hover .pl-b-detay { opacity: 1; }
+  @media (max-width: 640px) {
+    .pl-b-hide { display: none; }
+    .pl-b-head, .pl-b-row { grid-template-columns: 2.5rem 56px 1fr auto; gap: 0.75rem; }
+    .pl-b-thumb { width: 56px; }
+  }
+
+  /* C magazine rows */
+  .pl-c-row { display: grid; grid-template-columns: 1fr; gap: 1.25rem 2.5rem; align-items: center; margin-top: 2.5rem; }
+  .pl-c-row:first-of-type { margin-top: 0; }
+  .pl-c-media { display: block; overflow: hidden; border-radius: var(--radius-brand); aspect-ratio: 16 / 10; }
+  .pl-c-copy { padding-inline-start: 1.5rem; }
+  .pl-c-name { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.75rem, 4vw, 2.75rem); letter-spacing: 0.01em; text-transform: uppercase; color: var(--color-graphite-900); line-height: 1; }
+  .pl-c-link { display: inline-flex; gap: 0.4rem; color: var(--color-mey-red); }
+  @media (min-width: 768px) {
+    .pl-c-row { grid-template-columns: 1.15fr 0.85fr; }
+    .pl-c-row .pl-c-media { grid-column: 1; }
+    .pl-c-row .pl-c-copy { grid-column: 2; }
+    .pl-c-rev .pl-c-media { grid-column: 2; }
+    .pl-c-rev .pl-c-copy { grid-column: 1; }
+  }
+</style>
