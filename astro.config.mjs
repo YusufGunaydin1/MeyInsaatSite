@@ -4,14 +4,15 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// GitHub Pages project URL until the custom domain lands.
-// When the domain is live: set site to it, set base to '/', add public/CNAME.
-const SITE = process.env.SITE_URL ?? 'https://meyinsaat.com';
-const BASE = process.env.SITE_BASE ?? '/';
+// Live on the custom domain meyinsaat.com → served at the ROOT. Base is hardcoded
+// to '/' on purpose: the old SITE_BASE env override (a github.io project-URL relic)
+// kept getting left in a shell and silently forced local dev onto '/MeyInsaatSite',
+// 404-ing the whole site. No env override → that class of bug can't recur.
+const SITE = 'https://meyinsaat.com';
 
 export default defineConfig({
   site: SITE,
-  base: BASE,
+  base: '/',
   trailingSlash: 'ignore',
   // /showcases = dahili tasarım vitrini: sitemap dışı (sayfa ayrıca noindex)
   integrations: [react(), sitemap({ filter: (page) => !page.includes('/showcases') })],
