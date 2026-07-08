@@ -20,7 +20,7 @@ test('friendly Oswald h1 over a decoded building, CTAs wired', async ({ page }) 
   await expect(h1).toHaveCount(1);
   await expect(h1).toBeVisible();
   await expect(h1).toContainText('YAŞAM ALANLARINIZI');
-  await expect(h1).toContainText('ÖZENLE İNŞA EDERİZ');
+  await expect(h1).toContainText('ÖZENLE İNŞA EDİYORUZ');
   await expect(h1).not.toContainText('ÇİZDİĞİMİZİ');
 
   // Display face is actually Oswald (not the Plex fallback).

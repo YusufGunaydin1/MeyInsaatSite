@@ -3,7 +3,7 @@ locale: tr
 machineTranslated: false
 hero:
   eyebrow: "GERÇEK ŞANTİYE · İSTANBUL"
-  headline: "YAŞAM ALANLARINIZI\nÖZENLE İNŞA EDERİZ."
+  headline: "YAŞAM ALANLARINIZI\nÖZENLE İNŞA EDİYORUZ."
   sub: >-
     23 yıllık MEY Grubu deneyimiyle, ailelerin huzurla yaşayacağı modern
     konutlar üretiyoruz.
