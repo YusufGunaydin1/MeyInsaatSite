@@ -52,6 +52,16 @@ const PHOTOS = [
   ['interiors/lobby-elevator-stairwell.png', 'lobby-elevator-stairwell.webp', 1600, 80],
   ['boards/planning-design-desk.png', 'planning-design-desk.webp', 1600, 80],
   ['boards/materials-finish-palette.png', 'materials-finish-palette.webp', 1600, 80],
+  // Adopted into the homepage (2026-07): before/after transformation, the red
+  // architectural-lines CTA backdrop, and the six real construction stages.
+  ['backgrounds/before-after-residential-render.png', 'before-after.webp', 1600, 80],
+  ['backgrounds/minimal-red-architectural-lines.png', 'red-architectural-lines.webp', 1600, 80],
+  ['process-scroll/01-site-preparation-groundworks.png', 'process-1.webp', 1280, 78],
+  ['process-scroll/02-concrete-structural-frame.png', 'process-2.webp', 1280, 78],
+  ['process-scroll/03-brick-infill-structure.png', 'process-3.webp', 1280, 78],
+  ['process-scroll/04-facade-insulation-stage.png', 'process-4.webp', 1280, 78],
+  ['process-scroll/05-completed-front-elevation.png', 'process-5.webp', 1280, 78],
+  ['process-scroll/06-completed-side-elevation.png', 'process-6.webp', 1280, 78],
 ];
 
 async function convertPhotos() {
@@ -69,18 +79,13 @@ async function convertPhotos() {
 // /showcases/*-lab demo images (internal design vitrine). Real MEY project
 // buildings + a brand-line background, curated from the library exactly like
 // PHOTOS so the committed footprint stays small webp (not raw multi-MB source).
+// Showcase-only sources (the /showcases/*-lab demos). Real project buildings for
+// the projects/services variants; the icon set is globbed below. Anything adopted
+// into production graduates to PHOTOS above.
 const SHOWCASE = [
   ['Buildings_Main_Images/Ali.png', 'ali.webp', 1600, 80],
   ['Buildings_Main_Images/El_Ele_Apartmani.jpeg', 'el-ele-apartmani.webp', 1600, 80],
   ['Buildings_Main_Images/Spanbaglari.png', 'sanbaglari.webp', 1600, 80],
-  ['backgrounds/minimal-red-architectural-lines.png', 'minimal-red-architectural-lines.webp', 1600, 80],
-  ['backgrounds/before-after-residential-render.png', 'before-after.webp', 1600, 80],
-  ['process-scroll/01-site-preparation-groundworks.png', 'process-1.webp', 1280, 78],
-  ['process-scroll/02-concrete-structural-frame.png', 'process-2.webp', 1280, 78],
-  ['process-scroll/03-brick-infill-structure.png', 'process-3.webp', 1280, 78],
-  ['process-scroll/04-facade-insulation-stage.png', 'process-4.webp', 1280, 78],
-  ['process-scroll/05-completed-front-elevation.png', 'process-5.webp', 1280, 78],
-  ['process-scroll/06-completed-side-elevation.png', 'process-6.webp', 1280, 78],
 ];
 
 async function convertShowcase() {

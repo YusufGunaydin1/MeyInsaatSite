@@ -12,21 +12,56 @@ hero:
   mediaTag: "DELIVERED · 6 STOREYS"
   mediaAlt: "Completed MEY residential project — corner façade"
 sections:
+  transform:
+    eyebrow: "01 — TRANSFORMATION"
+    title: "Before, after"
+    before: "BEFORE"
+    after: "AFTER · DELIVERED"
+    alt: "First under construction, then the completed MEY residential project"
   projects:
     eyebrow: "02 — PROJECTS"
     title: "Our work"
     intro: "Each of our projects is a promise delivered."
+  journey:
+    eyebrow: "03 — ON SITE"
+    title: "Every stage, real"
+    intro: "From excavation to handover, we document every step with real site photography."
+    stages:
+      - "Excavation & Ground"
+      - "Structure"
+      - "Walls & Infill"
+      - "Façade & Insulation"
+      - "Completed Façade"
+      - "Handover"
   services:
-    eyebrow: "03 — SERVICES"
+    eyebrow: "04 — SERVICES"
     title: "What we do"
     intro: >-
       From land assessment to turnkey delivery: we run residential projects
       end to end, under one roof.
-  stats:
-    eyebrow: "04 — NUMBERS"
-    title: "MEY in numbers"
+  materials:
+    eyebrow: "05 — MATERIALS"
+    title: "Materials & texture"
+    intro: "Quality is in the detail: selected materials, careful planning, delivery quality."
+    items:
+      - tag: "MATERIAL & FINISH"
+        name: "Selected material palette"
+      - tag: "PLANNING"
+        name: "From plan to site"
+      - tag: "INTERIORS"
+        name: "Common areas & delivery quality"
+  why:
+    eyebrow: "06 — WHY MEY"
+    title: "A group that keeps its word"
+    groupLabel: "YEARS OF MEY GROUP TRUST"
+    constructionLabel: "YEARS OF MEY İNŞAAT EXPERIENCE"
+    points:
+      - value: "TURNKEY"
+        label: "FROM LAND TO KEYS"
+      - value: "TRANSPARENT"
+        label: "REAL SITE, REAL IMAGERY"
   contact:
-    eyebrow: "05 — CONTACT"
+    eyebrow: "07 — CONTACT"
     title: "Let's talk about your project"
     intro: "Reach us directly by phone, WhatsApp, or email."
 ---

@@ -1,0 +1,90 @@
+---
+/*
+  MATERIALS & TEXTURE — a three-tile mood board (material palette · planning ·
+  interiors) that says "quality is in the detail" with real imagery. Textural
+  proof for trust. Copy from content/pages/home.<loc>.md (sections.materials.items).
+*/
+import { Image } from 'astro:assets';
+import { pageContent } from '../lib/content';
+import type { Locale } from '../lib/i18n';
+import materials from '../assets/photos/materials-finish-palette.webp';
+import planningDesk from '../assets/photos/planning-design-desk.webp';
+import lobby from '../assets/photos/lobby-elevator-stairwell.webp';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const s = pageContent('home', locale)?.frontmatter?.sections?.materials ?? {};
+const imgs = [materials, planningDesk, lobby];
+const items = (s.items ?? []).map((it: { tag: string; name: string }, i: number) => ({
+  ...it,
+  img: imgs[i],
+}));
+const SW = [400, 720, 960];
+---
+
+<section class="container-site section-pad">
+  <div class="max-w-2xl reveal">
+    {s.eyebrow && <p class="t-tech text-mey-red mb-3">{s.eyebrow}</p>}
+    <h2 class="t-display-l">{s.title}</h2>
+    {s.intro && <p class="t-body-l mt-4">{s.intro}</p>}
+  </div>
+
+  <div class="mm-grid reveal mt-10">
+    {items.map((m) => (
+      <figure class="mm-cell group">
+        <Image src={m.img} alt={m.name} widths={SW} sizes="(min-width:768px) 32vw, 100vw" class="mm-img" />
+        <figcaption class="mm-cap">
+          <span class="t-tech mm-tag">{m.tag}</span>
+          <span class="mm-name">{m.name}</span>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .mm-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 300ms ease-out;
+  }
+  .mm-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 768px) { .mm-grid { grid-template-columns: repeat(3, 1fr); } }
+  .mm-cell {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-brand);
+    aspect-ratio: 4 / 5;
+    background: var(--color-night-950);
+  }
+  .mm-cell:hover .mm-img { transform: scale(1.02); }
+  .mm-cap {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: 1rem;
+    background: linear-gradient(to top, rgb(14 15 17 / 0.85), transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .mm-tag { color: var(--color-mey-teal); }
+  .mm-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1.1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mm-img { transition: none; }
+    .mm-cell:hover .mm-img { transform: none; }
+  }
+</style>

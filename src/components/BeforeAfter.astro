@@ -1,0 +1,74 @@
+---
+/*
+  BEFORE / AFTER — a single composite render (construction → delivered) as a
+  contained band with mono ÖNCE / SONRA tags and a red divider. The urban-renewal
+  story at a glance. Copy from content/pages/home.<loc>.md (sections.transform).
+*/
+import { Image } from 'astro:assets';
+import { pageContent } from '../lib/content';
+import type { Locale } from '../lib/i18n';
+import beforeAfter from '../assets/photos/before-after.webp';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = pageContent('home', locale)?.frontmatter?.sections?.transform ?? {};
+---
+
+<section class="container-site section-pad">
+  <div class="max-w-2xl reveal">
+    {t.eyebrow && <p class="t-tech text-mey-red mb-3">{t.eyebrow}</p>}
+    <h2 class="t-display-l">{t.title}</h2>
+  </div>
+
+  <figure class="ba-band reveal mt-10">
+    <Image
+      src={beforeAfter}
+      alt={t.alt}
+      widths={[768, 1280, 1600]}
+      sizes="100vw"
+      class="ba-img"
+    />
+    <span class="ba-divider" aria-hidden="true"></span>
+    <span class="t-tech ba-tag ba-before">{t.before}</span>
+    <span class="t-tech ba-tag ba-after">{t.after}</span>
+  </figure>
+</section>
+
+<style>
+  .ba-band {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    aspect-ratio: 16 / 9;
+  }
+  @media (max-width: 640px) {
+    .ba-band { aspect-ratio: 4 / 3; }
+  }
+  .ba-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ba-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: var(--color-mey-red);
+    opacity: 0.85;
+  }
+  /* Physical left/right (NOT logical inset-inline): the composite photo is LTR
+     content in every locale — construction on the left, delivered on the right —
+     so the tags must not mirror in RTL. */
+  .ba-tag {
+    position: absolute;
+    top: 1rem;
+    background: rgb(14 15 17 / 0.82);
+    color: #fff;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-brand);
+  }
+  .ba-before { left: 1rem; }
+  .ba-after { right: 1rem; color: var(--color-mey-teal); }
+</style>

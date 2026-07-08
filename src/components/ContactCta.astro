@@ -1,0 +1,103 @@
+---
+/*
+  CONTACT CTA — the page's closing gesture: MEY's red architectural lines on the
+  dark theatre, a large title + channel row + primary/ghost actions. Contact
+  facts come from company.json (null → visible placeholder, never invented);
+  copy from content/pages/home.<loc>.md (sections.contact) + ui labels.
+*/
+import { Image } from 'astro:assets';
+import { localePath, type Locale } from '../lib/i18n';
+import { ui, company, pageContent } from '../lib/content';
+import PlaceholderChip from './PlaceholderChip.astro';
+import redLines from '../assets/photos/red-architectural-lines.webp';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale);
+const s = pageContent('home', locale)?.frontmatter?.sections?.contact ?? {};
+const c = company.contact;
+
+const channels = [
+  {
+    label: t.contact.phone,
+    value: c.phone,
+    href: c.phone ? `tel:${String(c.phone).replace(/\s/g, '')}` : null,
+  },
+  {
+    label: t.contact.whatsapp,
+    value: c.whatsapp,
+    href: c.whatsapp ? `https://wa.me/${String(c.whatsapp).replace(/\D/g, '')}` : null,
+  },
+  {
+    label: t.contact.email,
+    value: c.email,
+    href: c.email ? `mailto:${c.email}` : null,
+  },
+];
+---
+
+<section class="theatre blueprint-grid cc" aria-labelledby="cc-title">
+  <Image src={redLines} alt="" aria-hidden="true" widths={[768, 1280, 1600]} sizes="100vw" class="cc-bg" />
+  <div class="cc-scrim" aria-hidden="true"></div>
+
+  <div class="container-site cc-inner reveal">
+    {s.eyebrow && <p class="t-tech cc-eyebrow">{s.eyebrow}</p>}
+    <h2 id="cc-title" class="t-display-l mt-2">{s.title}</h2>
+    {s.intro && <p class="t-body-l mt-4 max-w-xl cc-sub">{s.intro}</p>}
+
+    <div class="cc-channels">
+      {channels.map((ch) => (
+        <div class="cc-ch">
+          <span class="t-tech cc-ch-l">{ch.label}</span>
+          {ch.href ? (
+            <a class="t-tech cc-ch-v" href={ch.href}>{ch.value}</a>
+          ) : (
+            <PlaceholderChip locale={locale} onDark />
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div class="cc-actions">
+      <a href={localePath(locale, '/iletisim')} class="btn-primary">
+        {t.cta.contact}
+        <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span>
+      </a>
+      <a href={localePath(locale, '/projeler')} class="btn-ghost">{t.cta.viewProjects}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cc {
+    position: relative;
+    overflow: hidden;
+    min-height: min(56svh, 480px);
+    display: flex;
+    align-items: center;
+    padding-block: clamp(3rem, 8vh, 5.5rem);
+  }
+  .cc-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
+  /* Darkest on the inline-start edge (where the copy sits); mirror for RTL so the
+     type keeps its scrim under it in Arabic. */
+  .cc-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgb(14 15 17 / 0.92) 0%, rgb(14 15 17 / 0.7) 50%, rgb(14 15 17 / 0.45) 100%);
+  }
+  :global([dir='rtl']) .cc-scrim {
+    background: linear-gradient(to left, rgb(14 15 17 / 0.92) 0%, rgb(14 15 17 / 0.7) 50%, rgb(14 15 17 / 0.45) 100%);
+  }
+  .cc-inner { position: relative; }
+  .cc-eyebrow { color: var(--color-red-on-dark); }
+  .cc-sub { color: rgb(244 244 242 / 0.82); }
+  .cc-channels { display: flex; flex-wrap: wrap; gap: 1.75rem; margin-top: 1.75rem; }
+  .cc-ch { display: flex; flex-direction: column; gap: 0.25rem; }
+  .cc-ch-l { color: var(--color-mey-teal); }
+  .cc-ch-v { color: rgb(244 244 242 / 0.85); text-transform: none; }
+  .cc-ch-v:hover { color: #fff; }
+  .cc-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+</style>

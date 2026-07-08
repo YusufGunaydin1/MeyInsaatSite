@@ -1,0 +1,88 @@
+---
+/*
+  WHY MEY — a trust strip on the dark theatre: two real numbers (group years,
+  construction years — sourced from company.json, never fabricated) + two
+  qualitative promises. Replaces the old placeholder-heavy stats grid.
+  Labels + qualitative points from content/pages/home.<loc>.md (sections.why).
+*/
+import { pageContent, company } from '../lib/content';
+import type { Locale } from '../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const s = pageContent('home', locale)?.frontmatter?.sections?.why ?? {};
+
+// Numbers are the single source of truth in company.json; content owns only the
+// labels + the two qualitative cells.
+const cells: { num?: number; word?: string; label: string }[] = [
+  { num: company.groupYears, label: s.groupLabel },
+  { num: company.constructionYears, label: s.constructionLabel },
+  ...(s.points ?? []).map((p: { value: string; label: string }) => ({
+    word: p.value,
+    label: p.label,
+  })),
+];
+---
+
+<section class="theatre blueprint-grid section-pad">
+  <div class="container-site">
+    <div class="max-w-2xl reveal">
+      {s.eyebrow && <p class="t-tech wm-eyebrow mb-3">{s.eyebrow}</p>}
+      <h2 class="t-display-l">{s.title}</h2>
+    </div>
+
+    <div class="wm-grid reveal mt-10">
+      {cells.map((c) => (
+        <div class="wm-cell">
+          {c.num != null ? (
+            <span class="wm-num tabular-nums">{c.num}</span>
+          ) : (
+            <span class="wm-word">{c.word}</span>
+          )}
+          <span class="t-tech wm-lbl">{c.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .wm-eyebrow { color: var(--color-red-on-dark); }
+  .wm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+  }
+  @media (min-width: 900px) { .wm-grid { grid-template-columns: repeat(4, 1fr); } }
+  .wm-cell {
+    background: var(--color-night-800);
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .wm-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(3rem, 7vw, 4.5rem);
+    line-height: 0.9;
+    color: var(--color-red-on-dark);
+  }
+  .wm-word {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .wm-lbl { color: rgb(244 244 242 / 0.6); }
+</style>

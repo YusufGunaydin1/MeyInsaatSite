@@ -1,0 +1,98 @@
+---
+/*
+  ON SITE — six real construction stages side by side (excavation → handover),
+  mono-numbered on the dark theatre. The documented, transparency proof: distinct
+  from the stylized scroll-to-build signature — these are real site photos.
+  Copy from content/pages/home.<loc>.md (sections.journey.stages).
+*/
+import { Image } from 'astro:assets';
+import { pageContent } from '../lib/content';
+import type { Locale } from '../lib/i18n';
+import p1 from '../assets/photos/process-1.webp';
+import p2 from '../assets/photos/process-2.webp';
+import p3 from '../assets/photos/process-3.webp';
+import p4 from '../assets/photos/process-4.webp';
+import p5 from '../assets/photos/process-5.webp';
+import p6 from '../assets/photos/process-6.webp';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const s = pageContent('home', locale)?.frontmatter?.sections?.journey ?? {};
+const imgs = [p1, p2, p3, p4, p5, p6];
+const stages = (s.stages ?? []).map((name: string, i: number) => ({
+  no: String(i + 1).padStart(2, '0'),
+  name,
+  img: imgs[i],
+}));
+const SW = [400, 720, 960];
+---
+
+<section class="theatre blueprint-grid section-pad">
+  <div class="container-site">
+    <div class="max-w-2xl reveal">
+      {s.eyebrow && <p class="t-tech cj-eyebrow mb-3">{s.eyebrow}</p>}
+      <h2 class="t-display-l">{s.title}</h2>
+      {s.intro && <p class="t-body-l mt-4 text-concrete-100/80">{s.intro}</p>}
+    </div>
+
+    <ol class="cj-journey reveal mt-10">
+      {stages.map((st) => (
+        <li class="cj-stage">
+          <span class="cj-media">
+            <Image src={st.img} alt={st.name} widths={SW} sizes="(min-width:768px) 30vw, 78vw" class="cj-img" />
+          </span>
+          <span class="t-tech cj-no">{st.no}</span>
+          <span class="cj-name">{st.name}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .cj-eyebrow { color: var(--color-red-on-dark); }
+  .cj-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cj-journey {
+    list-style: none;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 78%;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x mandatory;
+  }
+  .cj-stage { position: relative; scroll-snap-align: start; }
+  .cj-media {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-brand);
+    border: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .cj-no { display: inline-block; margin-top: 0.75rem; color: var(--color-red-on-dark); }
+  .cj-name {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-top: 0.15rem;
+  }
+  /* 3-up on desktop (not 6) so each stage image stays big enough to read the
+     actual phase — the source shots carry a lot of surrounding street. */
+  @media (min-width: 768px) {
+    .cj-journey {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-columns: auto;
+      overflow: visible;
+      gap: 1.75rem 1.25rem;
+    }
+  }
+</style>

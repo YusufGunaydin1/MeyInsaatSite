@@ -3,9 +3,12 @@ import Base from '../layouts/Base.astro';
 import HomeHero from '../components/HomeHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ScrollToBuild from '../components/ScrollToBuild.astro';
-import StatsStrip from '../components/StatsStrip.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import ConstructionJourney from '../components/ConstructionJourney.astro';
+import MaterialsMood from '../components/MaterialsMood.astro';
+import WhyMey from '../components/WhyMey.astro';
+import ContactCta from '../components/ContactCta.astro';
 import ProjectTile from '../components/ProjectTile.astro';
-import ContactChannels from '../components/ContactChannels.astro';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui, pageContent } from '../lib/content';
 import type { ImageMetadata } from 'astro';
@@ -42,7 +45,10 @@ const previewTiles = [
   <!-- SIGNATURE — scroll-to-build (the one spectacular gesture) -->
   <ScrollToBuild locale={locale} />
 
-  <!-- PROJECTS PREVIEW -->
+  <!-- 01 — TRANSFORMATION (before / after band) -->
+  <BeforeAfter locale={locale} />
+
+  <!-- 02 — PROJECTS PREVIEW -->
   <section class="container-site section-pad">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <SectionHeading
@@ -69,7 +75,10 @@ const previewTiles = [
     </div>
   </section>
 
-  <!-- SERVICES / CAPABILITIES -->
+  <!-- 03 — ON SITE (real construction stages) -->
+  <ConstructionJourney locale={locale} />
+
+  <!-- 04 — SERVICES / CAPABILITIES -->
   <section class="bg-concrete-100 border-y border-line">
     <div class="container-site section-pad">
       <SectionHeading
@@ -94,28 +103,12 @@ const previewTiles = [
     </div>
   </section>
 
-  <!-- STATS -->
-  <section class="container-site section-pad">
-    <SectionHeading
-      eyebrow={fm.sections?.stats?.eyebrow}
-      title={fm.sections?.stats?.title}
-    />
-    <div class="mt-10 reveal">
-      <StatsStrip locale={locale} />
-    </div>
-  </section>
+  <!-- 05 — MATERIALS & TEXTURE -->
+  <MaterialsMood locale={locale} />
 
-  <!-- CONTACT CTA -->
-  <section class="bg-concrete-100 border-t border-line">
-    <div class="container-site section-pad">
-      <SectionHeading
-        eyebrow={fm.sections?.contact?.eyebrow}
-        title={fm.sections?.contact?.title}
-        intro={fm.sections?.contact?.intro}
-      />
-      <div class="mt-10 reveal">
-        <ContactChannels locale={locale} />
-      </div>
-    </div>
-  </section>
+  <!-- 06 — WHY MEY (real numbers + promises, replaces the old stats grid) -->
+  <WhyMey locale={locale} />
+
+  <!-- 07 — CONTACT CTA (closing gesture) -->
+  <ContactCta locale={locale} />
 </Base>
