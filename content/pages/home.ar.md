@@ -12,9 +12,6 @@ hero:
   mediaTag: "تم التسليم · 6 طوابق"
   mediaAlt: "مشروع سكني مكتمل من MEY — واجهة الزاوية"
 sections:
-  transform:
-    before: "قبل"
-    after: "بعد · تم التسليم"
   projects:
     eyebrow: "01 — المشاريع"
     title: "أعمالنا"

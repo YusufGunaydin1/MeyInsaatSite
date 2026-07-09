@@ -3,14 +3,13 @@ import Base from '../layouts/Base.astro';
 import HomeHero from '../components/HomeHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ScrollToBuild from '../components/ScrollToBuild.astro';
-import BeforeAfter from '../components/BeforeAfter.astro';
 import ConstructionJourney from '../components/ConstructionJourney.astro';
 import MaterialsMood from '../components/MaterialsMood.astro';
 import WhyMey from '../components/WhyMey.astro';
 import ContactCta from '../components/ContactCta.astro';
 import ProjectTile from '../components/ProjectTile.astro';
 import { localePath, type Locale } from '../lib/i18n';
-import { ui, pageContent } from '../lib/content';
+import { ui, pageContent, projects } from '../lib/content';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
@@ -22,18 +21,13 @@ const t = ui(locale);
 const page = pageContent('home', locale);
 const fm = page?.frontmatter ?? {};
 
-const photos = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/photos/*.webp',
+const covers = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/projects/*.webp',
   { eager: true }
 );
-const photo = (name: string) =>
-  photos[`../assets/photos/${name}.webp`]!.default;
-
-const previewTiles = [
-  { image: photo('residential-entrance-closeup'), index: '01' },
-  { image: photo('balcony-facade-closeup'), index: '02' },
-  { image: photo('facade-grid-detail'), index: '03' },
-];
+const cover = (name: string) =>
+  covers[`../assets/projects/${name}.webp`]!.default;
+const projectList = projects(locale);
 ---
 
 <Base locale={locale} page="home" path="/">
@@ -45,10 +39,7 @@ const previewTiles = [
   <!-- SIGNATURE — scroll-to-build (the one spectacular gesture) -->
   <ScrollToBuild locale={locale} />
 
-  <!-- 01 — TRANSFORMATION (before / after band) -->
-  <BeforeAfter locale={locale} />
-
-  <!-- 02 — PROJECTS PREVIEW -->
+  <!-- 01 — PROJECTS PREVIEW: the real portfolio, same tiles as /projeler -->
   <section class="container-site section-pad">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <SectionHeading
@@ -59,26 +50,26 @@ const previewTiles = [
       <a href={localePath(locale, '/projeler')} class="btn-ghost reveal">{t.cta.allProjects}</a>
     </div>
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-10">
-      {previewTiles.map((tile, i) => (
+      {projectList.map((p, i) => (
         <div class="reveal" style={`transition-delay: ${i * 70}ms`}>
           <ProjectTile
-            index={tile.index}
-            title={t.projects.empty.split('.')[0]}
-            caption={t.placeholder.representativeImage}
-            badge={t.placeholder.chip}
-            image={tile.image}
-            alt={t.placeholder.representativeImage}
-            href={localePath(locale, '/projeler')}
+            index={String(i + 1).padStart(2, '0')}
+            title={p.md?.frontmatter?.name ?? p.slug}
+            caption={p.md?.frontmatter?.summary}
+            image={cover(p.data.cover)}
+            alt={p.md?.frontmatter?.name ?? p.slug}
+            href={localePath(locale, `/projeler/${p.slug}`)}
+            portrait
           />
         </div>
       ))}
     </div>
   </section>
 
-  <!-- 03 — ON SITE (real construction stages) -->
+  <!-- 02 — ON SITE (real construction stages) -->
   <ConstructionJourney locale={locale} />
 
-  <!-- 04 — SERVICES / CAPABILITIES -->
+  <!-- 03 — SERVICES / CAPABILITIES -->
   <section class="bg-concrete-100 border-y border-line">
     <div class="container-site section-pad">
       <SectionHeading
@@ -103,12 +94,12 @@ const previewTiles = [
     </div>
   </section>
 
-  <!-- 05 — MATERIALS & TEXTURE -->
+  <!-- 04 — MATERIALS & TEXTURE -->
   <MaterialsMood locale={locale} />
 
-  <!-- 06 — WHY MEY (real numbers + promises, replaces the old stats grid) -->
+  <!-- 05 — WHY MEY (real numbers + promises, replaces the old stats grid) -->
   <WhyMey locale={locale} />
 
-  <!-- 07 — CONTACT CTA (closing gesture) -->
+  <!-- 06 — CONTACT CTA (closing gesture) -->
   <ContactCta locale={locale} />
 </Base>

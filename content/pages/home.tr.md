@@ -12,9 +12,6 @@ hero:
   mediaTag: "TESLİM EDİLDİ · 6 KAT"
   mediaAlt: "Teslim edilmiş MEY konut projesi — köşe cephe"
 sections:
-  transform:
-    before: "ÖNCE"
-    after: "SONRA · TESLİM"
   projects:
     eyebrow: "01 — PROJELER"
     title: "İşlerimiz"

@@ -42,7 +42,7 @@ const SW = [400, 720, 960];
       {stages.map((st) => (
         <li class="cj-stage">
           <span class="cj-media">
-            <Image src={st.img} alt={st.name} widths={SW} sizes="(min-width:768px) 30vw, 78vw" class="cj-img" />
+            <Image src={st.img} alt={st.name} widths={SW} sizes="(min-width:1024px) 15vw, (min-width:768px) 30vw, 78vw" class="cj-img" />
           </span>
           <span class="t-tech cj-no">{st.no}</span>
           <span class="cj-name">{st.name}</span>
@@ -84,8 +84,8 @@ const SW = [400, 720, 960];
     color: #fff;
     margin-top: 0.15rem;
   }
-  /* 3-up on desktop (not 6) so each stage image stays big enough to read the
-     actual phase — the source shots carry a lot of surrounding street. */
+  /* Tablet: 3-up. Desktop: all six stages in ONE row — a filmstrip that reads
+     left-to-right as a single timeline (smaller images by design). */
   @media (min-width: 768px) {
     .cj-journey {
       grid-auto-flow: row;
@@ -94,5 +94,10 @@ const SW = [400, 720, 960];
       overflow: visible;
       gap: 1.75rem 1.25rem;
     }
+  }
+  @media (min-width: 1024px) {
+    .cj-journey { grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+    .cj-no { margin-top: 0.6rem; }
+    .cj-name { font-size: 0.85rem; letter-spacing: 0.02em; }
   }
 </style>

@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test';
 import { u } from './util';
 
 /*
-  Home content sections adopted 2026-07 from the /showcases labs: before/after,
-  on-site journey, materials, why-MEY, contact CTA. Prove what the visitor sees —
-  real copy, images that actually decode, and the real 23/6 numbers (no
-  fabricated stats, no leftover placeholders where facts exist).
+  Home content sections: real-projects preview, on-site journey, materials,
+  why-MEY, contact CTA. Prove what the visitor sees — real copy, images that
+  actually decode, and the real 23/6 numbers (no fabricated stats, no leftover
+  placeholders where facts exist). The before/after band was removed 2026-07.
 */
 
 async function decodes(page, selector: string) {
@@ -16,13 +16,22 @@ async function decodes(page, selector: string) {
     .toBeGreaterThan(0);
 }
 
-test('before/after band shows a decoded composite with both tags', async ({ page }) => {
+test('projects preview shows the three real buildings linked to their pages', async ({ page }) => {
   await page.goto(u('/'));
-  const band = page.locator('.ba-band');
-  await expect(band).toBeVisible();
-  await decodes(page, '.ba-img');
-  await expect(band.locator('.ba-before')).toHaveText('ÖNCE');
-  await expect(band.locator('.ba-after')).toContainText('SONRA');
+  const tiles = page.locator('main a.card[href*="/projeler/"]');
+  await expect(tiles).toHaveCount(3);
+  for (const name of ['Ali Apartmanı', 'El Ele Apartmanı', 'Sapanbağları']) {
+    await expect(page.getByRole('heading', { name })).toBeVisible();
+  }
+  await decodes(page, 'main a.card img');
+  // The generic placeholder tiles ("Proje portföyü hazırlanıyor") are gone.
+  await expect(page.locator('main')).not.toContainText('Proje portföyü hazırlanıyor');
+});
+
+test('before/after band is gone from home', async ({ page }) => {
+  await page.goto(u('/'));
+  await expect(page.locator('.ba-band')).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText('SONRA · TESLİM');
 });
 
 test('on-site journey renders six real stages with decoded imagery', async ({ page }) => {
@@ -31,6 +40,19 @@ test('on-site journey renders six real stages with decoded imagery', async ({ pa
   await expect(page.getByText('02 — ŞANTİYEDEN')).toBeVisible();
   await expect(page.locator('.cj-stage').first()).toContainText('Kazı & Zemin');
   await decodes(page, '.cj-img');
+});
+
+test('journey is a single six-across row on desktop', async ({ page, viewport }) => {
+  test.skip(!viewport || viewport.width < 1024, 'desktop only');
+  await page.goto(u('/'));
+  const cols = await page
+    .locator('.cj-journey')
+    .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length);
+  expect(cols).toBe(6);
+  const tops = await page
+    .locator('.cj-stage')
+    .evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+  expect(new Set(tops).size, 'all six stages share one row').toBe(1);
 });
 
 test('materials mood board renders three decoded tiles', async ({ page }) => {

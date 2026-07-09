@@ -14,6 +14,7 @@ const { locale, path } = Astro.props;
 const t = ui(locale);
 
 const items = [
+  { href: '/', label: t.nav.home },
   { href: '/projeler', label: t.nav.projects },
   { href: '/kurumsal', label: t.nav.corporate },
   { href: '/hizmetler', label: t.nav.services },

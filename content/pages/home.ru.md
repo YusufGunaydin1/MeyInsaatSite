@@ -12,9 +12,6 @@ hero:
   mediaTag: "СДАН · 6 ЭТАЖЕЙ"
   mediaAlt: "Сданный жилой проект MEY — угловой фасад"
 sections:
-  transform:
-    before: "ДО"
-    after: "ПОСЛЕ · СДАН"
   projects:
     eyebrow: "01 — ПРОЕКТЫ"
     title: "Наши работы"

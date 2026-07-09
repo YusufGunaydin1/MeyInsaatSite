@@ -20,14 +20,24 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const demos: Demo[] = [
   {
-    title: 'CANLI — Koyu sinematik ana sayfa (9 bölüm)',
+    title: 'CANLI — Koyu sinematik ana sayfa (8 bölüm)',
     desc:
-      'Koyu sinematik hero → imza scroll-to-build → önce/sonra dönüşüm → projeler → şantiyeden 6 aşama → ' +
+      'Koyu sinematik hero → imza scroll-to-build → gerçek 3 proje → şantiyeden 6 aşama (desktop tek sıra) → ' +
       'hizmetler → malzeme & doku → “Neden MEY” (23 yıl · 6 yıl, gerçek) → koyu kırmızı-çizgi iletişim çağrısı. ' +
-      'Parçalar Lab + CTA/A varyantı buraya alındı; lab sayfaları emekliye ayrıldı.',
+      'Önce/sonra bandı kaldırıldı; proje önizlemesi gerçek portföye bağlandı.',
     status: 'live',
     meta: 'canlı ana sayfa · Oswald display',
     href: import.meta.env.BASE_URL,
+  },
+  {
+    title: 'Künye & Süreç Lab — 3+3 varyant (antet · ray · seviye / kot · ray · endeks)',
+    desc:
+      'Proje künyesi (spec tablosu) ve “Nasıl çalışırız” adımları için jenerik-olmayan alternatifler: ' +
+      'çizim anteti, yatay künye rayı, guide-line seviye listesi; yükselen kotlar, çentikli zaman çizgisi, ' +
+      'devasa numara endeksi. Eksik bilgi tek dipnota iner.',
+    status: 'proposal',
+    meta: 'künye + süreç · noindex',
+    href: base + '/showcases/kunye-surec-lab',
   },
   {
     title: 'Hizmetler Lab — 3 varyant (3D ikon · süreç rayı · liste)',

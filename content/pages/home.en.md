@@ -12,9 +12,6 @@ hero:
   mediaTag: "DELIVERED · 6 STOREYS"
   mediaAlt: "Completed MEY residential project — corner façade"
 sections:
-  transform:
-    before: "BEFORE"
-    after: "AFTER · DELIVERED"
   projects:
     eyebrow: "01 — PROJECTS"
     title: "Our work"
