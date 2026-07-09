@@ -8,7 +8,7 @@ const LOCALES = [
   { code: 'ar', prefix: '/ar', dir: 'rtl' },
 ];
 
-const ROUTES = ['/', '/kurumsal', '/hizmetler', '/projeler', '/projeler/ornek-proje', '/iletisim'];
+const ROUTES = ['/', '/kurumsal', '/hizmetler', '/projeler', '/projeler/el-ele-apartmani', '/iletisim'];
 
 for (const locale of LOCALES) {
   for (const route of ROUTES) {

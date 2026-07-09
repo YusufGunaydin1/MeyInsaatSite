@@ -19,6 +19,7 @@ const FRAMES_IN = path.join(
 const FRAMES_OUT = path.join(ROOT, 'src/assets/frames');
 const PHOTOS_OUT = path.join(ROOT, 'src/assets/photos');
 const SHOWCASE_OUT = path.join(ROOT, 'src/assets/showcase');
+const PROJECTS_OUT = path.join(ROOT, 'src/assets/projects');
 const BRAND_OUT = path.join(ROOT, 'src/assets/brand');
 const PUBLIC = path.join(ROOT, 'public');
 
@@ -110,6 +111,47 @@ async function convertShowcase() {
   }
 }
 
+// The three real MEY buildings delivered so far. Each has a finished render
+// (Buildings_Main_Images) and — for two of them — a real construction time-lapse
+// (frames_for_3d/<Building>) powering the per-project "kazıdan teslime" story.
+const PROJECT_RENDERS = [
+  ['Buildings_Main_Images/Ali.png', 'ali.webp', 1200, 82],
+  ['Buildings_Main_Images/El_Ele_Apartmani.jpeg', 'el-ele-apartmani.webp', 1200, 82],
+  ['Buildings_Main_Images/Spanbaglari.png', 'sapanbaglari.webp', 1200, 82],
+];
+// Curated stage frames (excavation → delivered) from each building's own
+// sequence. Bottom watermark cropped (same top-crop trick as the hero frames).
+// Frame picks tuned so each stage frame actually shows its named phase (kazı →
+// kaba inşaat → duvar → cephe → tamamlanma), not one phase behind the label.
+const PROJECT_STAGES = [
+  ['El_Ele_Building', 'el-ele', [2, 11, 16, 20, 24]],
+  ['Sapanbaglari_Building', 'sapanbaglari', [2, 12, 17, 22, 26]],
+];
+
+async function convertProjects() {
+  await mkdir(PROJECTS_OUT, { recursive: true });
+  for (const [src, dst, width, quality] of PROJECT_RENDERS) {
+    const out = path.join(PROJECTS_OUT, dst);
+    await sharp(path.join(LIB, src))
+      .resize({ width, withoutEnlargement: true })
+      .webp({ quality })
+      .toFile(out);
+    console.log(`project: ${dst} ${((await stat(out)).size / 1024).toFixed(0)} KB`);
+  }
+  for (const [dir, prefix, frames] of PROJECT_STAGES) {
+    for (let i = 0; i < frames.length; i++) {
+      const n = String(frames[i]).padStart(3, '0');
+      const out = path.join(PROJECTS_OUT, `${prefix}-stage-${i + 1}.webp`);
+      await sharp(path.join(LIB, 'frames_for_3d', dir, `frame_${n}.jpg`))
+        .extract({ left: 0, top: 0, width: 720, height: 1120 })
+        .resize({ width: 900, withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toFile(out);
+      console.log(`project: ${prefix}-stage-${i + 1}.webp ${((await stat(out)).size / 1024).toFixed(0)} KB`);
+    }
+  }
+}
+
 async function convertBrand() {
   await mkdir(BRAND_OUT, { recursive: true });
   await mkdir(PUBLIC, { recursive: true });
@@ -145,4 +187,5 @@ async function convertBrand() {
 await convertFrames();
 await convertPhotos();
 await convertShowcase();
+await convertProjects();
 await convertBrand();

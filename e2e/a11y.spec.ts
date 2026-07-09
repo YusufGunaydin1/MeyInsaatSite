@@ -25,7 +25,7 @@ test('skip link jumps to main content', async ({ page }) => {
 });
 
 test('every visible image has alt text', async ({ page }) => {
-  for (const path of ['/', '/kurumsal', '/projeler/ornek-proje']) {
+  for (const path of ['/', '/kurumsal', '/projeler/el-ele-apartmani']) {
     await page.goto(u(path));
     const missing = await page.evaluate(() =>
       Array.from(document.querySelectorAll('img'))

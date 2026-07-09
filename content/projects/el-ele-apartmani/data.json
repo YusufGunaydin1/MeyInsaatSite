@@ -1,0 +1,20 @@
+{
+  "_comment": "Gerçek MEY projesi. Sert gerçekler (konum/yıl/daire) MEY'den gelene kadar null → site görünür [Bilgi bekleniyor] rozetiyle gösterir. Görseller AI-render (gerçek foto değil); gerçek fotoğraf geldiğinde değişecek.",
+  "slug": "el-ele-apartmani",
+  "location": null,
+  "district": null,
+  "type": "konut",
+  "status": "completed",
+  "year": null,
+  "units": null,
+  "areaM2": null,
+  "cover": "el-ele-apartmani",
+  "gallery": [],
+  "stages": [
+    "el-ele-stage-1",
+    "el-ele-stage-2",
+    "el-ele-stage-3",
+    "el-ele-stage-4",
+    "el-ele-stage-5"
+  ]
+}

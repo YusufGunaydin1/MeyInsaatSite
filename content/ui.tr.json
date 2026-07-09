@@ -83,6 +83,7 @@
   },
   "projects": {
     "empty": "Proje portföyü hazırlanıyor. Gerçek proje bilgileri ve fotoğrafları yakında burada olacak.",
+    "lead": "MEY İnşaat'ın bugüne kadar tamamladığı konut projeleri.",
     "filters": {
       "all": "Tümü",
       "type": "Tür",
@@ -103,6 +104,12 @@
     },
     "types": {
       "konut": "Konut"
+    },
+    "story": {
+      "eyebrow": "ŞANTİYE KAYITLARI",
+      "title": "Kazıdan teslime",
+      "intro": "Bu binanın gerçek inşaat kareleri — ilk kazıdan tamamlanmaya.",
+      "stages": ["Kazı & Temel", "Kaba İnşaat", "Duvar & Dolgu", "Cephe", "Tamamlanma"]
     }
   },
   "contact": {

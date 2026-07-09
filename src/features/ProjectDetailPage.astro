@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import PlaceholderChip from '../components/PlaceholderChip.astro';
-import { type Locale } from '../lib/i18n';
+import ProjectStory from '../components/ProjectStory.astro';
+import { localePath, type Locale } from '../lib/i18n';
 import { ui, project } from '../lib/content';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -18,14 +19,15 @@ if (!entry) throw new Error(`Unknown project slug: ${slug}`);
 const { data } = entry;
 const fm = entry.md?.frontmatter ?? {};
 const Content = entry.md?.Content;
-const isSample = data.placeholder === true;
 
-const photos = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/photos/*.webp',
+const imgs = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/projects/*.webp',
   { eager: true }
 );
-const photo = (name: string) =>
-  photos[`../assets/photos/${name}.webp`]!.default;
+const img = (name: string) => imgs[`../assets/projects/${name}.webp`]?.default;
+const cover = img(data.cover);
+const gallery = (data.gallery ?? []).map(img).filter(Boolean) as ImageMetadata[];
+const stages: string[] = data.stages ?? [];
 
 const specs = [
   { label: t.projects.specs.location, value: data.location },
@@ -42,52 +44,107 @@ const specs = [
   path={`/projeler/${slug}`}
   title={`${fm.name ?? slug} — MEY İnşaat`}
   description={fm.summary}
-  noindex={isSample}
 >
+  <!-- HERO — editorial split: the finished building (a tall render) beside the
+       name + honest specs. The building is the star. -->
   <section class="container-site section-pad">
-    {isSample && (
-      <div class="border border-dashed border-graphite-400/60 rounded-brand bg-concrete-100 px-5 py-4 mb-10 max-w-3xl">
-        <p class="t-tech text-mey-red">{t.placeholder.sampleProject}</p>
-        <p class="t-caption mt-1">{t.placeholder.sampleProjectNote}</p>
-      </div>
-    )}
+    <a href={localePath(locale, '/projeler')} class="t-tech pd-back">
+      <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">←</span> {t.cta.allProjects}
+    </a>
 
-    <div class="guide-line-v ps-6 sm:ps-10">
-      <p class="t-tech text-mey-red mb-4">{t.nav.projects.toUpperCase()}</p>
-      <h1 class="t-display-l">{fm.name}</h1>
-      <p class="t-body-l mt-4 max-w-2xl">{fm.summary}</p>
-    </div>
-
-    <dl class="grid grid-cols-2 md:grid-cols-5 gap-px bg-line border border-line rounded-brand overflow-hidden mt-12">
-      {specs.map((s) => (
-        <div class="bg-white p-4">
-          <dt class="t-tech text-graphite-400">{s.label}</dt>
-          <dd class="t-heading-s mt-1 tabular-nums">
-            {s.value ?? <PlaceholderChip locale={locale} />}
-          </dd>
-        </div>
-      ))}
-    </dl>
-
-    <div class="grid gap-4 sm:grid-cols-2 mt-12">
-      {(data.gallery ?? []).map((name: string) => (
-        <figure class="card overflow-hidden">
+    <div class="pd-hero mt-6">
+      <figure class="pd-hero-media reveal">
+        {cover && (
           <Image
-            src={photo(name)}
-            alt={t.placeholder.representativeImage}
-            widths={[640, 1024, 1600]}
-            sizes="(min-width: 1024px) 640px, 100vw"
-            class="w-full aspect-[4/3] object-cover"
+            src={cover}
+            alt={fm.name ?? slug}
+            widths={[600, 900, 1200]}
+            sizes="(min-width: 900px) 44vw, 100vw"
+            loading="eager"
+            class="pd-hero-img"
           />
-          <figcaption class="t-tech text-graphite-400 px-4 py-2 border-t border-line bg-white">
-            {t.placeholder.representativeImage}
-          </figcaption>
-        </figure>
-      ))}
-    </div>
+        )}
+      </figure>
 
-    <article class="mt-12 max-w-3xl t-body">
-      {Content && <Content />}
-    </article>
+      <div class="pd-hero-info guide-line-v reveal">
+        <p class="t-tech text-mey-red mb-3">{t.nav.projects.toUpperCase()}</p>
+        <h1 class="t-display-l">{fm.name}</h1>
+        <p class="t-body-l mt-4">{fm.summary}</p>
+
+        <dl class="pd-specs mt-8">
+          {specs.map((s) => (
+            <div class="pd-spec">
+              <dt class="t-tech text-graphite-400">{s.label}</dt>
+              <dd class="t-heading-s mt-1 tabular-nums">
+                {s.value ?? <PlaceholderChip locale={locale} />}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
   </section>
+
+  <!-- CONSTRUCTION STORY — this building's real time-lapse (skipped if no frames) -->
+  {stages.length > 0 && <ProjectStory locale={locale} stages={stages} />}
+
+  <!-- GALLERY — only when real extra photos exist (none yet; forward-compatible) -->
+  {gallery.length > 0 && (
+    <section class="container-site section-pad">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {gallery.map((g) => (
+          <figure class="card overflow-hidden reveal">
+            <Image src={g} alt={fm.name ?? slug} widths={[480, 800, 1200]} sizes="(min-width:1024px) 420px, 100vw" class="w-full aspect-[4/3] object-cover" />
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- STORY / PROSE -->
+  {Content && (
+    <section class="container-site pd-prose-pad">
+      <article class="max-w-3xl t-body guide-line-v ps-6 sm:ps-10 reveal">
+        <Content />
+      </article>
+    </section>
+  )}
 </Base>
+
+<style>
+  .pd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-graphite-400);
+  }
+  .pd-back:hover { color: var(--color-mey-red); }
+
+  .pd-hero { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+  @media (min-width: 900px) {
+    .pd-hero { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); gap: 3.5rem; align-items: start; }
+  }
+  .pd-hero-media {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: var(--color-concrete-100);
+  }
+  .pd-hero-img { width: 100%; height: auto; display: block; aspect-ratio: 3 / 4; object-fit: cover; }
+  .pd-hero-info { padding-inline-start: 1.5rem; }
+  @media (min-width: 900px) { .pd-hero-info { position: sticky; top: 6rem; } }
+
+  .pd-specs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--color-line);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+  }
+  @media (min-width: 480px) { .pd-specs { grid-template-columns: repeat(3, 1fr); } }
+  .pd-spec { background: #fff; padding: 1rem; }
+
+  .pd-prose-pad { padding-block: clamp(2.5rem, 6vh, 4.5rem) clamp(4rem, 10vh, 8rem); }
+</style>

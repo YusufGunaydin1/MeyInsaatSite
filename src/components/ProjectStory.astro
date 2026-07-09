@@ -1,0 +1,103 @@
+---
+/*
+  PROJECT STORY — a building's own construction time-lapse (excavation → handover)
+  as a mono-numbered filmstrip on the dark theatre. Real stage frames of THIS
+  building; labels from ui.projects.story. Rendered only when the project carries
+  a `stages` list (Ali has none → this section is skipped).
+*/
+import { Image } from 'astro:assets';
+import { ui } from '../lib/content';
+import type { Locale } from '../lib/i18n';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  locale: Locale;
+  stages: string[];
+}
+
+const { locale, stages } = Astro.props;
+const t = ui(locale);
+const story = t.projects.story;
+
+const imgs = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/projects/*.webp',
+  { eager: true }
+);
+const img = (name: string) => imgs[`../assets/projects/${name}.webp`]?.default;
+
+const items = stages
+  .map((name, i) => ({
+    img: img(name),
+    no: String(i + 1).padStart(2, '0'),
+    label: story.stages?.[i] ?? '',
+  }))
+  .filter((s) => s.img);
+const SW = [360, 640, 900];
+---
+
+{items.length > 0 && (
+  <section class="theatre blueprint-grid section-pad">
+    <div class="container-site">
+      <div class="max-w-2xl reveal">
+        <p class="t-tech ps-eyebrow mb-3">{story.eyebrow}</p>
+        <h2 class="t-display-l">{story.title}</h2>
+        <p class="t-body-l mt-4 text-concrete-100/80">{story.intro}</p>
+      </div>
+
+      <ol class="ps-strip reveal mt-10">
+        {items.map((s) => (
+          <li class="ps-stage">
+            <span class="ps-media">
+              <Image src={s.img} alt={s.label} widths={SW} sizes="(min-width:768px) 18vw, 60vw" class="ps-img" />
+            </span>
+            <span class="t-tech ps-no">{s.no}</span>
+            <span class="ps-name">{s.label}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+)}
+
+<style>
+  .ps-eyebrow { color: var(--color-red-on-dark); }
+  .ps-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ps-strip {
+    list-style: none;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 60%;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x mandatory;
+  }
+  .ps-stage { position: relative; scroll-snap-align: start; }
+  .ps-media {
+    display: block;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: var(--radius-brand);
+    border: 1px solid rgb(255 255 255 / 0.08);
+  }
+  .ps-no { display: inline-block; margin-top: 0.75rem; color: var(--color-red-on-dark); }
+  .ps-name {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-top: 0.15rem;
+  }
+  @media (min-width: 768px) {
+    .ps-strip {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(5, 1fr);
+      grid-auto-columns: auto;
+      overflow: visible;
+      gap: 1.5rem 1rem;
+    }
+  }
+</style>

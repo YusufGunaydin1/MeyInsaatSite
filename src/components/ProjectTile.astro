@@ -1,5 +1,6 @@
 ---
-/* Image-led project tile: mono red index, 4:3, 1px line border, hover scale 1.02 (brief §9). */
+/* Image-led project tile: mono red index, 1px line border, hover scale 1.02 (brief §9).
+   Default 4:3; `portrait` switches to 3:4 for tall building renders. */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -11,14 +12,15 @@ interface Props {
   alt: string;
   href?: string;
   badge?: string;
+  portrait?: boolean;
 }
 
-const { index, title, caption, image, alt, href, badge } = Astro.props;
+const { index, title, caption, image, alt, href, badge, portrait = false } = Astro.props;
 const Tag = href ? 'a' : 'div';
 ---
 
 <Tag href={href} class="group card block overflow-hidden reveal">
-  <div class="relative aspect-[4/3] overflow-hidden">
+  <div class:list={['relative overflow-hidden', portrait ? 'aspect-[3/4]' : 'aspect-[4/3]']}>
     <Image
       src={image}
       alt={alt}

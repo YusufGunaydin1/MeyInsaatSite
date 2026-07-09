@@ -14,15 +14,16 @@ const t = ui(locale);
 const list = projects(locale);
 
 const photos = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/photos/*.webp',
+  '../assets/projects/*.webp',
   { eager: true }
 );
 const photo = (name: string) =>
-  photos[`../assets/photos/${name}.webp`]!.default;
+  photos[`../assets/projects/${name}.webp`]!.default;
 
 /*
-  Filter bar (type/status/location) intentionally deferred: with a single sample
-  template it filters nothing — add when real projects land (utility gate).
+  Filter bar (type/status/location) intentionally deferred: three real projects
+  all share type=konut / status=completed — nothing to filter yet (utility gate).
+  Add when the portfolio diversifies.
 */
 ---
 
@@ -31,7 +32,7 @@ const photo = (name: string) =>
     <div class="guide-line-v ps-6 sm:ps-10">
       <p class="t-tech text-mey-red mb-4">{t.nav.projects.toUpperCase()}</p>
       <h1 class="t-display-xl">{t.nav.projects}</h1>
-      <p class="t-body-l mt-6 max-w-2xl">{t.projects.empty}</p>
+      <p class="t-body-l mt-6 max-w-2xl">{t.projects.lead}</p>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-14">
@@ -39,11 +40,11 @@ const photo = (name: string) =>
         <ProjectTile
           index={String(i + 1).padStart(2, '0')}
           title={p.md?.frontmatter?.name ?? p.slug}
-          caption={p.data.placeholder ? t.placeholder.sampleProjectNote : undefined}
-          badge={p.data.placeholder ? t.placeholder.sampleProject : undefined}
+          caption={p.md?.frontmatter?.summary}
           image={photo(p.data.cover)}
           alt={p.md?.frontmatter?.name ?? p.slug}
           href={localePath(locale, `/projeler/${p.slug}`)}
+          portrait
         />
       ))}
     </div>

@@ -83,6 +83,7 @@
   },
   "projects": {
     "empty": "The project portfolio is being prepared. Real project information and photos will be here soon.",
+    "lead": "Residential projects completed by MEY İnşaat to date.",
     "filters": {
       "all": "All",
       "type": "Type",
@@ -103,6 +104,12 @@
     },
     "types": {
       "konut": "Residential"
+    },
+    "story": {
+      "eyebrow": "SITE RECORDS",
+      "title": "From excavation to handover",
+      "intro": "This building's real construction frames — from the first dig to completion.",
+      "stages": ["Excavation & Foundation", "Structure", "Walls & Infill", "Façade", "Completion"]
     }
   },
   "contact": {
