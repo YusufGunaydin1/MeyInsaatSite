@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PlaceholderChip from '../components/PlaceholderChip.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
 import { type Locale } from '../lib/i18n';
 import { ui, pageContent } from '../lib/content';
 import { Image } from 'astro:assets';
@@ -46,15 +47,9 @@ const photo = (name: string) =>
   <section class="bg-concrete-100 border-y border-line">
     <div class="container-site section-pad">
       <h2 class="t-display-l reveal">{fm.process?.title}</h2>
-      <ol class="grid gap-px sm:grid-cols-2 lg:grid-cols-4 bg-line border border-line rounded-brand overflow-hidden mt-10 reveal">
-        {(fm.process?.steps ?? []).map((step: any, i: number) => (
-          <li class="bg-white p-5">
-            <p class="t-tech text-mey-red">{String(i + 1).padStart(2, '0')}</p>
-            <h3 class="t-heading-s mt-3">{step.name}</h3>
-            <p class="t-caption mt-2">{step.desc}</p>
-          </li>
-        ))}
-      </ol>
+      <div class="mt-12">
+        <ProcessSteps steps={fm.process?.steps ?? []} />
+      </div>
 
       <div class="grid gap-4 sm:grid-cols-2 mt-10">
         {['planning-design-desk', 'materials-finish-palette'].map((name) => (

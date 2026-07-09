@@ -55,6 +55,21 @@ test('journey is a single six-across row on desktop', async ({ page, viewport })
   expect(new Set(tops).size, 'all six stages share one row').toBe(1);
 });
 
+test('process steps render as four rising levels on home and services', async ({ page }) => {
+  for (const path of ['/', '/hizmetler']) {
+    await page.goto(u(path));
+    const steps = page.locator('.ps-step');
+    await expect(steps, `steps on ${path}`).toHaveCount(4);
+    await expect(steps.first()).toContainText('Değerlendirme ve tasarım');
+    // The old white-card grid is gone; the red level line carries the design.
+    const border = await steps
+      .first()
+      .locator('.ps-level')
+      .evaluate((el) => getComputedStyle(el).borderTopColor);
+    expect(border).toBe('rgb(181, 35, 35)'); // --mey-red
+  }
+});
+
 test('materials mood board renders three decoded tiles', async ({ page }) => {
   await page.goto(u('/'));
   await expect(page.locator('.mm-cell')).toHaveCount(3);

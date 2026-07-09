@@ -11,6 +11,8 @@ import Base from '../../layouts/Base.astro';
 import LabIntro from '../../components/showcase/LabIntro.astro';
 import Specimen from '../../components/showcase/Specimen.astro';
 import { pageContent, project, ui } from '../../lib/content';
+import { Image } from 'astro:assets';
+import aliCover from '../../assets/projects/ali.webp';
 
 const t = ui('tr');
 const ali = project('ali', 'tr');
@@ -37,7 +39,7 @@ const steps: { name: string; desc: string }[] =
   <LabIntro
     kicker="MEY İnşaat · Dahili · Künye & Süreç Lab"
     title="Künye & Süreç — Tasarım Varyantları"
-    desc="Proje künyesi (spec tablosu) ve 'Nasıl çalışırız' adımları için jenerik-olmayan alternatifler. Eksik gerçek bilgi görünür kalır ama tek dipnota iner; kutu-ızgara yerine inşaat diline yaslanan formlar."
+    desc="Proje künyesi (spec tablosu) ve 'Nasıl çalışırız' adımları için jenerik-olmayan alternatifler. 2. tur: SÜREÇ/A onaylanıp canlıya alındı; künye için D/E/F, beğenilen kot-çizgisi dilinde ve detay-hero bağlamında eklendi. Eksik gerçek bilgi görünür kalır ama tek dipnota iner."
   />
 
   <!-- ─────────────── KÜNYE / A — çizim anteti ─────────────── -->
@@ -126,11 +128,95 @@ const steps: { name: string; desc: string }[] =
     </section>
   </Specimen>
 
-  <!-- ─────────────── SÜREÇ / A — yükselen kotlar ─────────────── -->
+  <!-- ─────────────── KÜNYE / D — kot çizgileri (SÜREÇ/A dili) ─────────────── -->
+  <Specimen
+    id="KÜNYE / D"
+    name="Kot çizgileri — seviye künyesi (tam sayfa bağlamında)"
+    why="Onaylanan 'yükselen kotlar' dili künyeye taşınır: her alan bir kırmızı seviye çizgisi, mono etiket çizginin üstünde süzülür, değer altta güçlü. Kutu yok, çip yok; detay hero'sunun yanında gerçek bağlamıyla."
+  >
+    <section class="container-site section-pad">
+      <div class="kh">
+        <figure class="kh-media">
+          <Image src={aliCover} alt={aliName} widths={[480, 800]} sizes="(min-width:900px) 40vw, 100vw" class="kh-img" />
+        </figure>
+        <div class="kh-info guide-line-v">
+          <p class="t-tech text-mey-red mb-3">PROJELER</p>
+          <h2 class="t-display-l">{aliName}</h2>
+          <p class="t-body-l mt-4">{aliSummary}</p>
+
+          <div class="kd-grid mt-10">
+            {specs.map((s) => (
+              <div class="kd-item">
+                <span class="kd-line"><span class="t-tech kd-label">{s.label}</span></span>
+                <p class:list={['kd-value', !s.value && 'kd-missing']}>{s.value ?? '—'}</p>
+              </div>
+            ))}
+          </div>
+          <p class="t-caption ka-note-plain mt-4">{missingNote}</p>
+        </div>
+      </div>
+    </section>
+  </Specimen>
+
+  <!-- ─────────────── KÜNYE / E — foto üstü survey etiketleri ─────────────── -->
+  <Specimen
+    id="KÜNYE / E"
+    name="Cephe etiketi — künye fotoğrafın üzerinde"
+    why="Bina yıldızsa künye onun üzerinde okunmalı: fotoğrafın kenarında kırmızı bir nivo direği, bilinen gerçekler şantiye etiketi gibi asılır (hero'daki 'TESLİM EDİLDİ · 6 KAT' diliyle). Bilinmeyenler tek soluk etikete iner; yan sütun nefes alır."
+  >
+    <section class="container-site section-pad">
+      <div class="kh">
+        <figure class="kh-media ke-media">
+          <Image src={aliCover} alt={aliName} widths={[480, 800]} sizes="(min-width:900px) 40vw, 100vw" class="kh-img" />
+          <span class="ke-pole" aria-hidden="true"></span>
+          <span class="ke-tag t-tech" style="--kt: 14%;">{(t.projects.types?.[d.type] ?? d.type).toUpperCase()}</span>
+          <span class="ke-tag t-tech" style="--kt: 38%;">{(t.projects.status?.[d.status] ?? d.status).toUpperCase()}</span>
+          <span class="ke-tag ke-tag-pending t-tech" style="--kt: 62%;">KONUM · YIL · DAİRE — DOĞRULANIYOR</span>
+        </figure>
+        <div class="kh-info guide-line-v">
+          <p class="t-tech text-mey-red mb-3">PROJELER</p>
+          <h2 class="t-display-l">{aliName}</h2>
+          <p class="t-body-l mt-4">{aliSummary}</p>
+          <p class="t-caption ka-note-plain mt-6">Künye fotoğrafın üzerinde; bu sütun hikâyeye kalır.</p>
+        </div>
+      </div>
+    </section>
+  </Specimen>
+
+  <!-- ─────────────── KÜNYE / F — sadece bilinenler ─────────────── -->
+  <Specimen
+    id="KÜNYE / F"
+    name="Sadece bilinenler — tek mono satır"
+    why="En sakin dürüstlük: boş alan hiç çizilmez. Bilinen iki gerçek tek mono satırda (kırmızı ara noktayla), eksikler tek cümlelik notta. Veri geldikçe satır uzar; sayfa hiçbir gün 'eksik şablon' gibi görünmez."
+  >
+    <section class="container-site section-pad">
+      <div class="kh">
+        <figure class="kh-media">
+          <Image src={aliCover} alt={aliName} widths={[480, 800]} sizes="(min-width:900px) 40vw, 100vw" class="kh-img" />
+        </figure>
+        <div class="kh-info guide-line-v">
+          <p class="t-tech text-mey-red mb-3">PROJELER</p>
+          <h2 class="t-display-l">{aliName}</h2>
+          <p class="t-body-l mt-4">{aliSummary}</p>
+
+          <p class="kf-line mt-8">
+            <span>{t.projects.types?.[d.type] ?? d.type}</span>
+            <span class="kf-dot" aria-hidden="true">·</span>
+            <span>{t.projects.status?.[d.status] ?? d.status}</span>
+          </p>
+          <p class="t-caption ka-note-plain mt-3">
+            Konum, teslim yılı ve daire sayısı MEY tarafından doğrulandığında eklenecek.
+          </p>
+        </div>
+      </div>
+    </section>
+  </Specimen>
+
+  <!-- ─────────────── SÜREÇ / A — yükselen kotlar (CANLIDA) ─────────────── -->
   <Specimen
     id="SÜREÇ / A"
-    name="Yükselen kotlar — kat kat süreç"
-    why="Dört adım, dört kot: her adım bir öncekinden yukarıda biter, kırmızı seviye çizgisi katı işaretler — süreç bir binanın yükselişi gibi okunur. Kutu yok; zemin hairline'ı ve seviye çizgileri taşır."
+    name="Yükselen kotlar — CANLIDA (ana sayfa 03 + hizmetler)"
+    why="Onaylandı ve production'a alındı (ProcessSteps.astro). Dört adım, dört kot: her adım bir öncekinden yukarıda biter, kırmızı seviye çizgisi katı işaretler — süreç bir binanın yükselişi gibi okunur."
   >
     <section class="bg-concrete-100 border-y border-line">
       <div class="container-site section-pad">
@@ -278,6 +364,89 @@ const steps: { name: string; desc: string }[] =
   }
   .kc-value { font-weight: 600; color: var(--color-graphite-900); font-variant-numeric: tabular-nums; }
   .kc-missing { color: var(--color-graphite-400); font-weight: 400; }
+
+  /* D/E/F ortak bağlam: detay-hero düzeni (foto + bilgi sütunu) */
+  .kh { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+  @media (min-width: 900px) {
+    .kh { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); gap: 3.5rem; align-items: start; }
+  }
+  .kh-media {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: var(--color-concrete-100);
+  }
+  .kh-img { width: 100%; height: auto; display: block; aspect-ratio: 3 / 4; object-fit: cover; }
+  .kh-info { padding-inline-start: 1.5rem; }
+
+  /* D — kot çizgileri künyesi */
+  .kd-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.25rem 2rem;
+    padding-top: 1.4rem;
+  }
+  .kd-line { display: block; border-top: 2px solid var(--color-mey-red); position: relative; }
+  .kd-label { position: absolute; top: -1.5rem; inset-inline-start: 0; color: var(--color-graphite-400); }
+  .kd-value {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--color-graphite-900);
+    margin-top: 0.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .kd-missing { color: var(--color-graphite-400); font-weight: 400; }
+
+  /* E — foto üstü survey etiketleri */
+  .ke-pole {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 1.25rem;
+    width: 2px;
+    background: var(--color-mey-red);
+    opacity: 0.9;
+  }
+  .ke-tag {
+    position: absolute;
+    top: var(--kt);
+    inset-inline-start: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgb(14 15 17 / 0.85);
+    color: #fff;
+    padding: 0.3rem 0.6rem 0.3rem 1rem;
+    border-radius: var(--radius-brand);
+    white-space: nowrap;
+  }
+  /* nivo çentiği: direkten etikete kısa kırmızı tik */
+  .ke-tag::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    width: 0.65rem;
+    height: 2px;
+    background: var(--color-mey-red);
+  }
+  .ke-tag-pending { color: rgb(244 244 242 / 0.55); border: 1px dashed rgb(244 244 242 / 0.25); background: rgb(14 15 17 / 0.7); }
+
+  /* F — sadece bilinenler, tek mono satır */
+  .kf-line {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-graphite-900);
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    border-block: 1px solid var(--color-line);
+    padding-block: 0.85rem;
+  }
+  .kf-dot { color: var(--color-mey-red); }
 
   /* SÜREÇ A — yükselen kotlar */
   .pa { list-style: none; display: grid; grid-template-columns: 1fr; gap: 2rem; }

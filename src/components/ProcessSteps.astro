@@ -1,0 +1,57 @@
+---
+/*
+  Process steps as rising levels: each step tops out one level above the
+  previous, so the four-step process reads like a building going up — red
+  level line + floating mono number, no card boxes. Sits on a light
+  concrete-100 band; the shared ground line is the desktop baseline.
+*/
+interface Step {
+  name: string;
+  desc: string;
+}
+interface Props {
+  steps: Step[];
+}
+const { steps } = Astro.props;
+---
+
+<ol class="ps-steps reveal">
+  {steps.map((s, i) => (
+    <li class="ps-step">
+      <span class="ps-level"><span class="t-tech ps-no">{String(i + 1).padStart(2, '0')}</span></span>
+      <h3 class="t-heading-s mt-3">{s.name}</h3>
+      <p class="t-caption text-graphite-600 mt-2">{s.desc}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .ps-steps {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    /* headroom for the mono number floating above the first level line */
+    padding-top: 1.75rem;
+  }
+  .ps-level { display: block; border-top: 2px solid var(--color-mey-red); position: relative; }
+  .ps-no {
+    position: absolute;
+    top: -1.6rem;
+    inset-inline-start: 0;
+    color: var(--color-mey-red);
+  }
+  @media (min-width: 900px) {
+    .ps-steps {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0 2rem;
+      align-items: end;
+      border-bottom: 1px solid var(--color-graphite-400);
+    }
+    /* each step ends one level above the previous — the rising-build silhouette */
+    .ps-step:nth-child(1) { padding-bottom: 1.5rem; }
+    .ps-step:nth-child(2) { padding-bottom: 4rem; }
+    .ps-step:nth-child(3) { padding-bottom: 6.5rem; }
+    .ps-step:nth-child(4) { padding-bottom: 9rem; }
+  }
+</style>

@@ -5,6 +5,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import ScrollToBuild from '../components/ScrollToBuild.astro';
 import ConstructionJourney from '../components/ConstructionJourney.astro';
 import MaterialsMood from '../components/MaterialsMood.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
 import WhyMey from '../components/WhyMey.astro';
 import ContactCta from '../components/ContactCta.astro';
 import ProjectTile from '../components/ProjectTile.astro';
@@ -77,16 +78,10 @@ const projectList = projects(locale);
         title={fm.sections?.services?.title}
         intro={fm.sections?.services?.intro}
       />
-      <div class="grid gap-px sm:grid-cols-2 lg:grid-cols-4 bg-line border border-line rounded-brand overflow-hidden mt-10 reveal">
-        {(pageContent('hizmetler', locale)?.frontmatter?.process?.steps ?? []).map(
-          (step: any, i: number) => (
-            <div class="bg-white p-5">
-              <p class="t-tech text-mey-red">{String(i + 1).padStart(2, '0')}</p>
-              <h3 class="t-heading-s mt-3">{step.name}</h3>
-              <p class="t-caption text-graphite-600 mt-2">{step.desc}</p>
-            </div>
-          )
-        )}
+      <div class="mt-12">
+        <ProcessSteps
+          steps={pageContent('hizmetler', locale)?.frontmatter?.process?.steps ?? []}
+        />
       </div>
       <div class="mt-8">
         <a href={localePath(locale, '/hizmetler')} class="btn-ghost">{t.nav.services}</a>
