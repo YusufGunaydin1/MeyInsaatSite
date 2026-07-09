@@ -6,9 +6,25 @@
   generator watermark; static camera makes a uniform crop safe).
   Budget: 26 frames <= ~1.2MB total (brief §11).
 */
-import { mkdir, readdir, stat } from 'node:fs/promises';
+import { access, mkdir, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
+
+/* The library evolves (dirs get reorganized/removed); a missing source must not
+   abort the whole run — skip it loudly and keep the existing curated output. */
+async function exists(p) {
+  try {
+    await access(p);
+    return true;
+  } catch {
+    return false;
+  }
+}
+async function requireSrc(p) {
+  if (await exists(p)) return true;
+  console.warn(`SKIP (source missing): ${path.relative(LIB, p)}`);
+  return false;
+}
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const LIB = path.join(ROOT, 'images');
@@ -26,6 +42,7 @@ const PUBLIC = path.join(ROOT, 'public');
 const FRAME_QUALITY = 61;
 
 async function convertFrames() {
+  if (!(await requireSrc(FRAMES_IN))) return;
   await mkdir(FRAMES_OUT, { recursive: true });
   const files = (await readdir(FRAMES_IN))
     .filter((f) => /^frame_\d{3}\.jpg$/.test(f))
@@ -53,9 +70,8 @@ const PHOTOS = [
   ['interiors/lobby-elevator-stairwell.png', 'lobby-elevator-stairwell.webp', 1600, 80],
   ['boards/planning-design-desk.png', 'planning-design-desk.webp', 1600, 80],
   ['boards/materials-finish-palette.png', 'materials-finish-palette.webp', 1600, 80],
-  // Adopted into the homepage (2026-07): before/after transformation, the red
-  // architectural-lines CTA backdrop, and the six real construction stages.
-  ['backgrounds/before-after-residential-render.png', 'before-after.webp', 1600, 80],
+  // Adopted into the homepage (2026-07): the red architectural-lines CTA
+  // backdrop and the six real construction stages. (before-after retired.)
   ['backgrounds/minimal-red-architectural-lines.png', 'red-architectural-lines.webp', 1600, 80],
   ['process-scroll/01-site-preparation-groundworks.png', 'process-1.webp', 1280, 78],
   ['process-scroll/02-concrete-structural-frame.png', 'process-2.webp', 1280, 78],
@@ -68,6 +84,7 @@ const PHOTOS = [
 async function convertPhotos() {
   await mkdir(PHOTOS_OUT, { recursive: true });
   for (const [src, dst, width, quality] of PHOTOS) {
+    if (!(await requireSrc(path.join(LIB, src)))) continue;
     const out = path.join(PHOTOS_OUT, dst);
     await sharp(path.join(LIB, src))
       .resize({ width, withoutEnlargement: true })
@@ -118,6 +135,12 @@ const PROJECT_RENDERS = [
   ['Buildings_Main_Images/Ali.png', 'ali.webp', 1200, 82],
   ['Buildings_Main_Images/El_Ele_Apartmani.jpeg', 'el-ele-apartmani.webp', 1200, 82],
   ['Buildings_Main_Images/Spanbaglari.png', 'sapanbaglari.webp', 1200, 82],
+  // Cutaway ("x-ray") twins of the covers above: same camera, same 1086x1448
+  // frame, facade removed to show furnished flats. Pixel-aligned with the base
+  // render so a hover lens can reveal the interior at the exact cursor spot.
+  ['Buildings_Main_Images/hover/ali.png', 'ali-xray.webp', 1200, 82],
+  ['Buildings_Main_Images/hover/elele.png', 'el-ele-apartmani-xray.webp', 1200, 82],
+  ['Buildings_Main_Images/hover/sapanbaglari.png', 'sapanbaglari-xray.webp', 1200, 82],
 ];
 // Curated stage frames (excavation → delivered) from each building's own
 // sequence. Bottom watermark cropped (same top-crop trick as the hero frames).
@@ -131,6 +154,7 @@ const PROJECT_STAGES = [
 async function convertProjects() {
   await mkdir(PROJECTS_OUT, { recursive: true });
   for (const [src, dst, width, quality] of PROJECT_RENDERS) {
+    if (!(await requireSrc(path.join(LIB, src)))) continue;
     const out = path.join(PROJECTS_OUT, dst);
     await sharp(path.join(LIB, src))
       .resize({ width, withoutEnlargement: true })
