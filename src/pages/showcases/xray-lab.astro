@@ -1,11 +1,12 @@
 ---
 /*
-  RÖNTGEN LAB — /showcases/xray-lab. Bina kapak render'ı + aynı kadrajlı "kesit"
-  (cephe kalkmış, daireler döşeli) ikizi piksel-hizalı: imleç nereye gelirse
-  oradaki dairenin içi görünür. Tam görsel değişimi YOK — sadece imleç altındaki
-  bölge. CSS clip-path/mask + ~30 satır JS; kütüphane yok, WebGL yok.
-  Dokunmatik: parmakla sürükleme. Klavye/erişilebilirlik: KESİT AÇ düğmesi tam
-  kesiti gösterir. noindex.
+  RÖNTGEN LAB — /showcases/xray-lab. KARAR (2026-07): "Yumuşak geçiş" (eski B)
+  KAZANDI; halka (A) ve kat bandı (C) varyantları silindi. Bu sayfa artık yalnız
+  kazanan mekaniğin iyileştirme varyantlarını sunar — hepsi istenen şekilde
+  DAHA KÜÇÜK alan gösterir. Mekanik: kapak render'ı + aynı kadrajlı kesit ikizi
+  piksel-hizalı üst üste; kesit yalnız imleç çevresinde, tüylü kenarla görünür.
+  CSS mask + ~30 satır JS; kütüphane yok. Dokunmatik: parmakla sürükleme.
+  Klavye/dokunmatik garantisi: KESİT düğmesi tam kesiti açar. noindex.
 */
 import Base from '../../layouts/Base.astro';
 import LabIntro from '../../components/showcase/LabIntro.astro';
@@ -23,107 +24,132 @@ const tiles = [
   { name: 'El Ele Apartmanı', base: elele, xray: eleleXray },
   { name: 'Sapanbağları', base: sapan, xray: sapanXray },
 ];
+
+/* B-iyileştirmeleri karşılaştırılabilir olsun diye dördü de aynı binada (El Ele). */
 ---
 
 <Base locale="tr" page="home" path="/showcases/xray-lab" title="Röntgen Lab — Tasarım Vitrini" noindex>
   <LabIntro
-    kicker="MEY İnşaat · Dahili · Röntgen Lab"
-    title="Cephe Röntgeni — imlecin altındaki daire"
-    desc="Kapak render'ı ile aynı kadrajdaki kesit ikizi üst üste durur; imleç hangi dairenin üzerindeyse yalnız o bölge iç mekâna açılır. Görsel toptan değişmez. Dokunmatikte parmakla sürüklenir; 'KESİT' düğmesi klavye ve dokunmatik için tam kesiti açar."
+    kicker="MEY İnşaat · Dahili · Röntgen Lab · 2. tur"
+    title="Yumuşak mercek kazandı — küçültülmüş iyileştirmeler"
+    desc="Karar: halkasız, tüylü kenarlı yumuşak geçiş. Bu turda mercek alanı küçültüldü ve dört ince iyileştirme sunuluyor; dördü de karşılaştırma kolay olsun diye aynı binada. Dokunmatikte parmak sürükler; KESİT düğmesi tam kesiti açar."
   />
 
-  <!-- ─────────────── RÖNTGEN / A — kesit halkası ─────────────── -->
+  <!-- ─────────────── B1 — küçültülmüş taban ─────────────── -->
   <Specimen
-    id="RÖNTGEN / A"
-    name="Mercek — kırmızı kesit halkası"
-    why="Keskin dairesel mercek + 1px kırmızı halka + mono 'KESİT' etiketi: bir teknik aletle bakıyormuş hissi. Sınır nettir; neyin render neyin gerçek olduğu karışmaz. Marka dili: guide-line kırmızısı, 2px köşe, mono."
+    id="RÖNTGEN / B1"
+    name="Küçük yumuşak mercek — kazananın küçültülmüşü"
+    why="Beğenilen efektin birebir kendisi, yalnız alan küçültüldü (190px → 130px yarıçap): tek seferde aşağı yukarı tek daire görünür. Başka hiçbir şey eklenmedi — sıfır süsleme referansı."
   >
     <section class="container-site section-pad">
       <div class="xh">
-        <figure class="xr" data-xray="ring" style="--r: 120px;">
-          <Image src={ali} alt="Ali Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
-          <Image src={aliXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
-          <span class="xr-ring" aria-hidden="true"><span class="t-tech xr-ring-tag">KESİT</span></span>
-          <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
-        </figure>
-        <div class="xh-info guide-line-v">
-          <p class="t-tech text-mey-red mb-3">DENE</p>
-          <h2 class="t-heading-m">İmleci dairelerin üzerinde gezdir</h2>
-          <p class="t-body mt-3 text-graphite-600">
-            Mercek imleci izler; hangi dairenin üzerindeysen onun içi görünür.
-            Fotoğrafın geri kalanı dış cephe kalır.
-          </p>
-        </div>
-      </div>
-    </section>
-  </Specimen>
-
-  <!-- ─────────────── RÖNTGEN / B — yumuşak reveal ─────────────── -->
-  <Specimen
-    id="RÖNTGEN / B"
-    name="Yumuşak geçiş — halkasız, tüylü kenar"
-    why="Aynı mekanik, sessiz sunum: kenarı tüylenmiş daha geniş bir alan, çizgisiz. 'Sakin galeri' tonuna en yakın olan; ama kesitin sınırı belirsizleştiği için render/gerçek ayrımı A kadar net okunmaz."
-  >
-    <section class="container-site section-pad">
-      <div class="xh">
-        <figure class="xr" data-xray="soft" style="--r: 190px;">
+        <figure class="xr" data-xray="soft" style="--r: 130px;">
           <Image src={elele} alt="El Ele Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
           <Image src={eleleXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
           <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
         </figure>
         <div class="xh-info guide-line-v">
-          <p class="t-tech text-mey-red mb-3">DENE</p>
-          <h2 class="t-heading-m">Aynı efekt, çerçevesiz</h2>
+          <p class="t-tech text-mey-red mb-3">B1 · TABAN</p>
+          <h2 class="t-heading-m">Aynı efekt, daha dar alan</h2>
           <p class="t-body mt-3 text-graphite-600">
-            Kenar tüylü, geçiş yumuşak. Halka ve etiket yok — daha sinematik,
-            daha az teknik.
+            Yarıçap küçüldü; imleç neredeyse yalnız oradaki daire açılır.
+            Diğer üç varyant bunun üzerine birer ince dokunuş ekler.
           </p>
         </div>
       </div>
     </section>
   </Specimen>
 
-  <!-- ─────────────── RÖNTGEN / C — kat bandı ─────────────── -->
+  <!-- ─────────────── B2 — odak karartması ─────────────── -->
   <Specimen
-    id="RÖNTGEN / C"
-    name="Kat bandı — seviye çizgili yatay kesit"
-    why="Mercek yerine mimari kat kesiti: imlecin bulunduğu kat, iki kırmızı seviye çizgisi arasında TÜM genişlikte açılır. Onaylanan 'yükselen kotlar' diliyle aynı aile — çizim gibi okunur; daire daire değil kat kat gezdirir."
+    id="RÖNTGEN / B2"
+    name="Odak karartması — çevre hafif söner"
+    why="Mercek aynı; aktifken cephenin geri kalanına çok hafif bir karartma iner. Göz kendiliğinden açılan daireye gider — sınır çizgisi çizmeden odak hissi verir. Karartma %25 opaklıkta, sakin."
   >
     <section class="container-site section-pad">
       <div class="xh">
-        <figure class="xr" data-xray="band" style="--band: 9.5%;">
-          <Image src={sapan} alt="Sapanbağları — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
-          <Image src={sapanXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
-          <span class="xr-line xr-line-a" aria-hidden="true"><span class="t-tech xr-line-tag">KAT KESİTİ</span></span>
-          <span class="xr-line xr-line-b" aria-hidden="true"></span>
+        <figure class="xr" data-xray="soft" style="--r: 120px;">
+          <Image src={elele} alt="El Ele Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
+          <span class="xr-veil" aria-hidden="true"></span>
+          <Image src={eleleXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
           <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
         </figure>
         <div class="xh-info guide-line-v">
-          <p class="t-tech text-mey-red mb-3">DENE</p>
-          <h2 class="t-heading-m">Yukarı-aşağı gezdir: kat kat kesit</h2>
+          <p class="t-tech text-mey-red mb-3">B2 · ODAK</p>
+          <h2 class="t-heading-m">Çevre kısılır, daire parlar</h2>
           <p class="t-body mt-3 text-graphite-600">
-            İmlecin yüksekliğindeki kat, tüm genişlikte açılır; iki kırmızı
-            seviye çizgisi bandı işaretler.
+            Sinema karartması gibi: dış cephe %25 kısılır, mercek içi tam
+            parlaklıkta kalır. Efekt bittiğinde iz bırakmaz.
           </p>
         </div>
       </div>
     </section>
   </Specimen>
 
-  <!-- ─────────────── RÖNTGEN / D — proje kartı ölçeği ─────────────── -->
+  <!-- ─────────────── B3 — keskin çekirdek, geniş tüy ─────────────── -->
   <Specimen
-    id="RÖNTGEN / D"
-    name="Kart ölçeğinde — /projeler ızgarasında mercek"
-    why="Aynı A merceği proje kartlarında: liste sayfasında gezinirken bile daireler içten görülebilir. Yarıçap kart ölçeğine indirildi; üç binada da kesit ikizi hazır."
+    id="RÖNTGEN / B3"
+    name="Keskin çekirdek — iki kademeli tüy"
+    why="Merceğin ortası (≈%45) tam net, kenara doğru iki kademede erir: imlecin altındaki daire kesin okunur, komşu daireler yarı saydam 'ipucu' olarak sezilir. Net alan küçüktür; hissedilen derinlik artar."
+  >
+    <section class="container-site section-pad">
+      <div class="xh">
+        <figure class="xr" data-xray="soft-core" style="--r: 150px;">
+          <Image src={elele} alt="El Ele Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
+          <Image src={eleleXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
+          <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
+        </figure>
+        <div class="xh-info guide-line-v">
+          <p class="t-tech text-mey-red mb-3">B3 · ÇEKİRDEK</p>
+          <h2 class="t-heading-m">Ortada kesin, kenarda sezgi</h2>
+          <p class="t-body mt-3 text-graphite-600">
+            Net görünen alan B1'den de dar; ama kenardaki yarı saydam kuşak
+            komşu dairelerin varlığını hissettirir.
+          </p>
+        </div>
+      </div>
+    </section>
+  </Specimen>
+
+  <!-- ─────────────── B4 — mono etiket eşliği ─────────────── -->
+  <Specimen
+    id="RÖNTGEN / B4"
+    name="Mono etiket — merceğin altında 'İÇ GÖRÜNÜM'"
+    why="Mercek B1 ile aynı; altında imleci izleyen küçük bir mono etiket süzülür. Çizgisiz kalır ama teknik bir imza ekler — ziyaretçiye bunun bilinçli bir 'kesit aracı' olduğunu söyler (render/gerçek ayrımı netleşir)."
+  >
+    <section class="container-site section-pad">
+      <div class="xh">
+        <figure class="xr" data-xray="soft" style="--r: 125px;">
+          <Image src={elele} alt="El Ele Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
+          <Image src={eleleXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
+          <span class="t-tech xr-tag" aria-hidden="true">İÇ GÖRÜNÜM</span>
+          <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
+        </figure>
+        <div class="xh-info guide-line-v">
+          <p class="t-tech text-mey-red mb-3">B4 · ETİKET</p>
+          <h2 class="t-heading-m">Sessiz bir teknik imza</h2>
+          <p class="t-body mt-3 text-graphite-600">
+            Etiket merceğin altında, imleçle birlikte gezer. Halka kadar sert
+            değil; ama "bu bir iç görünüm" bilgisini görünür kılar.
+          </p>
+        </div>
+      </div>
+    </section>
+  </Specimen>
+
+  <!-- ─────────────── KART ÖLÇEĞİ — kazanan mercek /projeler ızgarasında ─────────────── -->
+  <Specimen
+    id="RÖNTGEN / KART"
+    name="Kart ölçeğinde — yumuşak mercek proje kartlarında"
+    why="Seçilen iyileştirme hangisi olursa olsun kart ölçeğinde de çalışacak; burada B1 mekaniği kart boyutuna indirildi (70px). Üç binanın da kesit ikizi hazır."
   >
     <section class="container-site section-pad">
       <div class="xd-grid">
         {tiles.map((tl) => (
           <figure class="card xd-tile">
-            <div class="xr xd-media" data-xray="ring" style="--r: 80px;">
+            <div class="xr xd-media" data-xray="soft" style="--r: 70px;">
               <Image src={tl.base} alt={`${tl.name} — dış cephe`} widths={[480, 800]} sizes="(min-width:1024px) 30vw, 100vw" class="xr-img" />
               <Image src={tl.xray} alt="" aria-hidden="true" widths={[480, 800]} sizes="(min-width:1024px) 30vw, 100vw" class="xr-img xr-top" />
-              <span class="xr-ring" aria-hidden="true"><span class="t-tech xr-ring-tag">KESİT</span></span>
               <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
             </div>
             <figcaption class="xd-cap t-heading-s">{tl.name}</figcaption>
@@ -164,90 +190,59 @@ const tiles = [
     position: absolute;
     inset: 0;
     height: 100%;
+    opacity: 0;
+  }
+  .xr.active :global(.xr-top) { opacity: 1; }
+
+  /* Kazanan mekanik: tüylü kenarlı yumuşak mercek (tek kademe) */
+  [data-xray='soft'] :global(.xr-top) {
+    -webkit-mask-image: radial-gradient(circle var(--r, 130px) at var(--x, 50%) var(--y, 50%), #000 58%, transparent 100%);
+    mask-image: radial-gradient(circle var(--r, 130px) at var(--x, 50%) var(--y, 50%), #000 58%, transparent 100%);
   }
 
-  /* A/D — keskin dairesel mercek */
-  [data-xray='ring'] :global(.xr-top) {
-    clip-path: circle(0px at var(--x, 50%) var(--y, 50%));
+  /* B3 — keskin çekirdek + iki kademeli tüy: orta tam net, kenar yarı saydam ipucu */
+  [data-xray='soft-core'] :global(.xr-top) {
+    -webkit-mask-image: radial-gradient(circle var(--r, 150px) at var(--x, 50%) var(--y, 50%), #000 45%, rgb(0 0 0 / 0.38) 68%, transparent 100%);
+    mask-image: radial-gradient(circle var(--r, 150px) at var(--x, 50%) var(--y, 50%), #000 45%, rgb(0 0 0 / 0.38) 68%, transparent 100%);
   }
-  [data-xray='ring'].active :global(.xr-top) {
-    clip-path: circle(var(--r, 110px) at var(--x, 50%) var(--y, 50%));
+
+  /* B2 — odak karartması: mercek dışında kalan cepheye hafif perde */
+  .xr-veil {
+    position: absolute;
+    inset: 0;
+    background: rgb(14 15 17 / 0.25);
+    -webkit-mask-image: radial-gradient(circle calc(var(--r, 120px) * 1.25) at var(--x, 50%) var(--y, 50%), transparent 55%, #000 100%);
+    mask-image: radial-gradient(circle calc(var(--r, 120px) * 1.25) at var(--x, 50%) var(--y, 50%), transparent 55%, #000 100%);
+    opacity: 0;
+    transition: opacity 180ms ease-out;
+    pointer-events: none;
   }
-  .xr-ring {
+  .xr.active .xr-veil { opacity: 1; }
+  .xr.open .xr-veil { opacity: 0; }
+
+  /* B4 — merceği izleyen mono etiket */
+  .xr-tag {
     position: absolute;
     left: var(--x, 50%);
-    top: var(--y, 50%);
-    width: calc(var(--r, 110px) * 2);
-    height: calc(var(--r, 110px) * 2);
-    transform: translate(-50%, -50%);
-    border: 1px solid var(--color-mey-red);
-    border-radius: 9999px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 150ms ease-out;
-  }
-  .xr.active .xr-ring { opacity: 1; }
-  .xr.open .xr-ring { opacity: 0; }
-  .xr-ring-tag {
-    position: absolute;
-    bottom: -0.4rem;
-    left: 50%;
-    transform: translate(-50%, 100%);
+    top: calc(var(--y, 50%) + var(--r, 125px) + 0.5rem);
+    transform: translateX(-50%);
     background: rgb(14 15 17 / 0.85);
-    color: var(--color-red-on-dark);
+    color: var(--color-mey-teal);
     padding: 0.2rem 0.5rem;
     border-radius: var(--radius-brand);
     white-space: nowrap;
-  }
-
-  /* B — tüylü kenarlı yumuşak reveal */
-  [data-xray='soft'] :global(.xr-top) {
-    -webkit-mask-image: radial-gradient(circle var(--r, 190px) at var(--x, 50%) var(--y, 50%), #000 58%, transparent 100%);
-    mask-image: radial-gradient(circle var(--r, 190px) at var(--x, 50%) var(--y, 50%), #000 58%, transparent 100%);
-    opacity: 0;
-  }
-  [data-xray='soft'].active :global(.xr-top) { opacity: 1; }
-
-  /* C — kat bandı: imleç yüksekliğinde tam genişlik yatay kesit */
-  [data-xray='band'] :global(.xr-top) {
-    clip-path: inset(50% 0 50% 0);
-  }
-  [data-xray='band'].active :global(.xr-top) {
-    clip-path: inset(
-      clamp(0%, calc(var(--y, 50%) - var(--band, 9.5%)), 100%) 0
-      clamp(0%, calc(100% - var(--y, 50%) - var(--band, 9.5%)), 100%) 0
-    );
-  }
-  .xr-line {
-    position: absolute;
-    inset-inline: 0;
-    height: 1px;
-    background: var(--color-mey-red);
     pointer-events: none;
     opacity: 0;
     transition: opacity 150ms ease-out;
   }
-  .xr-line-a { top: clamp(0%, calc(var(--y, 50%) - var(--band, 9.5%)), 100%); }
-  .xr-line-b { top: clamp(0%, calc(var(--y, 50%) + var(--band, 9.5%)), 100%); }
-  .xr.active .xr-line { opacity: 1; }
-  .xr.open .xr-line { opacity: 0; }
-  .xr-line-tag {
-    position: absolute;
-    inset-inline-end: 0.75rem;
-    top: 0;
-    transform: translateY(-100%);
-    background: rgb(14 15 17 / 0.85);
-    color: var(--color-red-on-dark);
-    padding: 0.2rem 0.5rem;
-    border-radius: var(--radius-brand);
-  }
+  .xr.active .xr-tag { opacity: 1; }
+  .xr.open .xr-tag { opacity: 0; }
 
-  /* Tam kesit (klavye + dokunmatik garantisi): düğme her katmanı açar */
+  /* Tam kesit (klavye + dokunmatik garantisi): düğme katmanı bütünüyle açar */
   .xr.open :global(.xr-top) {
-    clip-path: inset(0) !important;
+    opacity: 1 !important;
     -webkit-mask-image: none !important;
     mask-image: none !important;
-    opacity: 1 !important;
   }
   .xr-toggle {
     position: absolute;
@@ -262,7 +257,7 @@ const tiles = [
   }
   .xr-toggle:hover { color: var(--color-red-on-dark); }
 
-  /* D — kart ızgarası: dış kart çerçeveyi taşır, .xr yalnız medya kutusudur */
+  /* Kart ızgarası: dış kart çerçeveyi taşır, .xr yalnız medya kutusudur */
   .xd-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
   @media (min-width: 640px) { .xd-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1024px) { .xd-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -277,9 +272,9 @@ const tiles = [
 
 <script>
   /*
-    Mercek takibi: imleç konumu iki CSS değişkenine (%) yazılır; hangi varyantın
-    nasıl açılacağı tamamen CSS'te. Fare: hover. Dokunmatik: parmak sürükler
-    (touch-action: none). Düğme: tam kesit aç/kapat (klavye erişimi).
+    Mercek takibi: imleç konumu iki CSS değişkenine (%) yazılır; görünüm tamamen
+    CSS'te. Fare: hover. Dokunmatik: parmak sürükler (touch-action: none).
+    Düğme: tam kesit aç/kapat (klavye erişimi).
   */
   for (const el of document.querySelectorAll<HTMLElement>('[data-xray]')) {
     const track = (e: PointerEvent) => {
