@@ -205,8 +205,8 @@ const DIMY = [
     /* fragment ends above the ÇELİK callout row — its dim string must not
        collide with the leader lines */
     top: 2%;
-    left: 44%;
-    width: 32%;
+    left: 46%;
+    width: 28%;
     color: #fff;
     opacity: 0.09;
     pointer-events: none;
@@ -373,31 +373,18 @@ const DIMY = [
   /* ---- desktop poster layout ---- */
   @media (min-width: 1024px) {
     .mp-plan { display: block; }
-    /* columns stretch to equal height so the bottom-pinned intro lands on the
-       photo-caption row */
+    /* columns stretch to equal height; the board sinks to the column bottom so
+       its base + dim chain land on the photo's lower edge, intro right below */
     .mp-grid { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 2.5rem; }
-    .mp-intro { font-size: 1rem; max-width: 34ch; margin-top: auto; padding-top: 1.5rem; }
-    /* the still-life rises beside the title, artwork-style; the pull grows
-       with the viewport (a fixed -8rem drove the brick label into the title
-       on 1024–1366 screens) */
-    .mp-board { margin-top: -3rem; margin-bottom: 2rem; width: 100%; }
-    /* RTL flips the column but the board's callout geometry stays physical:
-       a raised board would hang the steel label into the right-aligned title.
-       Keep the board below the header there. */
-    /* extra bottom room: the composite label drops below the base and would
-       otherwise land on the bottom-pinned intro */
-    :global(html[dir='rtl']) .mp-board { margin-top: 1.5rem; margin-bottom: 5rem; }
+    .mp-intro { font-size: 1rem; max-width: 34ch; margin-top: 0; }
+    /* bottom margin reserves room for the dim rows + composite label that
+       hang below the image (they'd land on the intro otherwise) */
+    .mp-board { margin-top: auto; margin-bottom: 6rem; width: 100%; }
     /* gutters host the hanging labels; dims live inside/below the stage */
     .mp-stage { margin-inline: 10rem 7.5rem; }
     .mp-lines, .mp-sq, .mp-dimx { display: block; }
     .mp-note, .mp-dimy { display: flex; }
     .mp-legend { display: none; }
     .mp-photo { margin-top: 0.75rem; }
-  }
-  @media (min-width: 1280px) {
-    .mp-board { margin-top: -5rem; }
-  }
-  @media (min-width: 1440px) {
-    .mp-board { margin-top: -7.5rem; }
   }
 </style>
