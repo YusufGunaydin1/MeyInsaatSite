@@ -1,14 +1,20 @@
 ---
 /*
-  MATERIALS & TEXTURE — a three-tile mood board (material palette · planning ·
-  interiors) that says "quality is in the detail" with real imagery. Textural
-  proof for trust. Copy from content/pages/home.<loc>.md (sections.materials.items).
+  MATERIALS & TEXTURE — dark theatre board: annotated material still-life
+  (cutout PNG, transparent bg) with construction-drawing callouts + dimension
+  lines on the left, framed interior photo on the right. Copy from
+  content/pages/home.<loc>.md (sections.materials.callouts / .interior).
+
+  Callout geometry is tied to the cutout image (materials-palette-cutout.webp):
+  coordinates are % of the image box and map 1:1 to the SVG viewBox (0 0 100 100,
+  preserveAspectRatio="none" — safe because every leader line is axis-aligned).
+  callouts[i] in content must stay in this order: glass, steel, brick,
+  concrete, composite.
 */
 import { Image } from 'astro:assets';
 import { pageContent } from '../lib/content';
 import type { Locale } from '../lib/i18n';
-import materials from '../assets/photos/materials-finish-palette.webp';
-import planningDesk from '../assets/photos/planning-design-desk.webp';
+import palette from '../assets/boards/materials-palette-cutout.webp';
 import lobby from '../assets/photos/lobby-elevator-stairwell.webp';
 
 interface Props {
@@ -17,74 +23,285 @@ interface Props {
 
 const { locale } = Astro.props;
 const s = pageContent('home', locale)?.frontmatter?.sections?.materials ?? {};
-const imgs = [materials, planningDesk, lobby];
-const items = (s.items ?? []).map((it: { tag: string; name: string }, i: number) => ({
-  ...it,
-  img: imgs[i],
-}));
-const SW = [400, 720, 960];
+const callouts: { name: string; desc: string }[] = s.callouts ?? [];
+
+/* sq = marker on the material; end = leader endpoint the label hangs from.
+   side: which edge of the label touches `end`. */
+const GEO = [
+  { sq: [45, 7], end: [30, -9], side: 'start' },   // glass
+  { sq: [86, 20], end: [104, 20], side: 'end' },   // steel
+  { sq: [29, 38], end: [-5, 38], side: 'start' },  // brick
+  { sq: [15, 84], end: [-5, 84], side: 'start' },  // concrete
+  { sq: [84, 81], end: [104, 81], side: 'end' },   // composite
+];
+const notes = callouts.slice(0, GEO.length).map((c, i) => ({ ...c, ...GEO[i] }));
+const linePoints = notes.map((n) =>
+  n.sq[0] === n.end[0] || n.sq[1] === n.end[1]
+    ? `${n.sq[0]},${n.sq[1]} ${n.end[0]},${n.end[1]}`
+    : `${n.sq[0]},${n.sq[1]} ${n.sq[0]},${n.end[1]} ${n.end[0]},${n.end[1]}`
+);
+
+/* Decorative plan dimensions (mm-style, matches the still-life proportions) */
+const DIMX = [
+  { n: '160', w: 26.7 },
+  { n: '300', w: 50 },
+  { n: '140', w: 23.3 },
+];
+const DIMY = [
+  { n: '270', h: 56 },
+  { n: '120', h: 25 },
+  { n: '90', h: 19 },
+];
 ---
 
-<section class="container-site section-pad">
-  <div class="max-w-2xl reveal">
-    {s.eyebrow && <p class="t-tech text-mey-red mb-3">{s.eyebrow}</p>}
-    <h2 class="t-display-l">{s.title}</h2>
-    {s.intro && <p class="t-body-l mt-4">{s.intro}</p>}
-  </div>
+<section class="theatre blueprint-grid mp-section">
+  <div class="container-site section-pad">
+    <div class="mp-grid">
+      <div class="mp-left">
+        <div class="max-w-2xl reveal">
+          {s.eyebrow && <p class="t-tech mp-eyebrow mb-3">{s.eyebrow}</p>}
+          <h2 class="t-display-l mp-title">{s.title}</h2>
+          <span class="mp-rule" aria-hidden="true"></span>
+          {s.intro && <p class="t-body-l mp-intro mt-5">{s.intro}</p>}
+        </div>
 
-  <div class="mm-grid reveal mt-10">
-    {items.map((m) => (
-      <figure class="mm-cell group">
-        <Image src={m.img} alt={m.name} widths={SW} sizes="(min-width:768px) 32vw, 100vw" class="mm-img" />
-        <figcaption class="mm-cap">
-          <span class="t-tech mm-tag">{m.tag}</span>
-          <span class="mm-name">{m.name}</span>
-        </figcaption>
+        <figure class="mp-board reveal" dir="ltr">
+          <div class="mp-stage">
+            <Image
+              src={palette}
+              alt={s.paletteAlt ?? ''}
+              widths={[480, 760, 1100, 1600]}
+              sizes="(min-width:1024px) 34vw, 92vw"
+              format="webp"
+              quality={85}
+              class="mp-img"
+            />
+            <svg class="mp-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              {linePoints.map((p) => (
+                <polyline points={p} vector-effect="non-scaling-stroke" />
+              ))}
+            </svg>
+            {notes.map((n) => (
+              <span class="mp-sq" style={`left:${n.sq[0]}%;top:${n.sq[1]}%`} aria-hidden="true"></span>
+            ))}
+            {notes.map((n) => (
+              <div
+                class:list={['mp-note', n.side === 'end' ? 'mp-note-end' : 'mp-note-start']}
+                style={`left:${n.end[0]}%;top:${n.end[1]}%`}
+              >
+                <span class="t-tech mp-note-name">{n.name}</span>
+                <span class="mp-note-desc">{n.desc}</span>
+              </div>
+            ))}
+
+            <div class="mp-dimx" aria-hidden="true">
+              <div class="mp-dimx-row">
+                {DIMX.map((d) => (
+                  <span class="mp-dimx-seg" style={`width:${d.w}%`}>
+                    <i></i><b>{d.n}</b><i></i>
+                  </span>
+                ))}
+              </div>
+              <div class="mp-dimx-row">
+                <span class="mp-dimx-seg" style="width:100%">
+                  <i></i><b>600</b><i></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="mp-dimy" aria-hidden="true">
+              {DIMY.map((d) => (
+                <span class="mp-dimy-seg" style={`height:${d.h}%`}>
+                  <i></i><b>{d.n}</b><i></i>
+                </span>
+              ))}
+            </div>
+          </div>
+        </figure>
+
+        <dl class="mp-legend reveal">
+          {notes.map((n) => (
+            <div class="mp-legend-row">
+              <dt class="t-tech mp-note-name">{n.name}</dt>
+              <dd class="mp-note-desc">{n.desc}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <figure class="mp-photo reveal">
+        <Image
+          src={lobby}
+          alt={s.interior?.name ?? ''}
+          widths={[420, 720, 1000]}
+          sizes="(min-width:1024px) 34vw, 92vw"
+          class="mp-photo-img"
+        />
+        {s.interior && (
+          <figcaption class="mp-photo-cap">
+            <span class="t-tech mp-photo-tag">{s.interior.tag}</span>
+            <span class="mp-photo-name">{s.interior.name}</span>
+          </figcaption>
+        )}
       </figure>
-    ))}
+    </div>
   </div>
 </section>
 
 <style>
-  .mm-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .mp-section :global(h2) { color: #fff; }
+  /* two-line lockup like the board artwork: "Malzeme / & doku" */
+  .mp-title { max-width: 7ch; }
+  .mp-eyebrow { color: var(--color-red-on-dark); }
+  .mp-rule {
     display: block;
-    transition: transform 300ms ease-out;
+    width: 2.5rem;
+    height: 2px;
+    margin-top: 1.25rem;
+    background: var(--color-mey-red);
   }
-  .mm-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-  @media (min-width: 768px) { .mm-grid { grid-template-columns: repeat(3, 1fr); } }
-  .mm-cell {
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-brand);
-    aspect-ratio: 4 / 5;
-    background: var(--color-night-950);
+  .mp-intro {
+    color: rgb(236 236 233 / 0.78);
+    max-width: 24ch;
   }
-  .mm-cell:hover .mm-img { transform: scale(1.02); }
-  .mm-cap {
+
+  .mp-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+
+  /* ---- annotated board (desktop) ---- */
+  .mp-board { margin-top: 3rem; }
+  .mp-stage { position: relative; }
+  .mp-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* seat the cutout on the dark ground like a lit object */
+    filter: drop-shadow(0 22px 30px rgb(0 0 0 / 0.45));
+  }
+
+  .mp-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .mp-lines polyline { fill: none; stroke: rgb(255 255 255 / 0.55); stroke-width: 1px; }
+
+  .mp-sq {
     position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    padding: 1rem;
-    background: linear-gradient(to top, rgb(14 15 17 / 0.85), transparent);
+    width: 8px;
+    height: 8px;
+    transform: translate(-50%, -50%);
+    border: 1px solid #fff;
+    background: rgb(14 15 17 / 0.55);
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.35);
+  }
+
+  .mp-note {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
+    /* fixed width: an abs-pos box hung outside its containing block (left>100%)
+       otherwise shrinks to min-content and wraps one word per line */
+    width: 10rem;
+    pointer-events: none;
   }
-  .mm-tag { color: var(--color-mey-teal); }
-  .mm-name {
+  .mp-note-start { transform: translate(-100%, -50%); padding-right: 0.75rem; text-align: right; align-items: flex-end; }
+  .mp-note-end { transform: translateY(-50%); padding-left: 0.75rem; text-align: left; }
+  .mp-note-name { color: #fff; font-size: 0.8125rem; }
+  .mp-note-desc { font-size: 0.8125rem; line-height: 1.35; color: rgb(236 236 233 / 0.66); }
+
+  /* Annotations & dims only exist at board scale */
+  .mp-lines, .mp-sq, .mp-note, .mp-dimx, .mp-dimy { display: none; }
+
+  /* ---- dimension lines ---- */
+  .mp-dimx { position: absolute; top: calc(100% + 1.1rem); left: 1%; right: 3%; }
+  .mp-dimx-row { display: flex; }
+  .mp-dimx-row + .mp-dimx-row { margin-top: 0.9rem; }
+  .mp-dimx-seg { display: flex; align-items: center; gap: 0.5rem; position: relative; }
+  .mp-dimx-seg > i { flex: 1; border-top: 1px solid rgb(255 255 255 / 0.28); }
+  .mp-dimx-seg::before, .mp-dimx-seg::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 1px;
+    height: 9px;
+    transform: translateY(-50%);
+    background: rgb(255 255 255 / 0.4);
+  }
+  .mp-dimx-seg::before { left: 0; }
+  .mp-dimx-seg::after { right: 0; }
+
+  .mp-dimy {
+    position: absolute;
+    top: 4%;
+    bottom: 8%;
+    right: calc(100% + 1.4rem);
+    /* display comes from the ≥1024px block — a display here would defeat the
+       grouped display:none above and leak the strip into small viewports */
+    flex-direction: column;
+  }
+  .mp-dimy-seg { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; width: 1px; }
+  .mp-dimy-seg > i { flex: 1; border-left: 1px solid rgb(255 255 255 / 0.28); }
+  .mp-dimy-seg::before, .mp-dimy-seg::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 9px;
+    height: 1px;
+    transform: translateX(-50%);
+    background: rgb(255 255 255 / 0.4);
+  }
+  .mp-dimy-seg::before { top: 0; }
+  .mp-dimy-seg::after { bottom: 0; }
+
+  .mp-dimx-seg > b, .mp-dimy-seg > b {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+    color: rgb(255 255 255 / 0.55);
+  }
+  .mp-dimy-seg > b { writing-mode: vertical-rl; transform: rotate(180deg); }
+
+  /* ---- mobile/tablet legend fallback ---- */
+  .mp-legend { display: grid; grid-template-columns: 1fr; gap: 0; margin-top: 2rem; }
+  @media (min-width: 480px) { .mp-legend { grid-template-columns: 1fr 1fr; column-gap: 2rem; } }
+  .mp-legend-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-block: 0.7rem;
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  /* ---- interior photo ---- */
+  .mp-photo { display: flex; flex-direction: column; gap: 1rem; }
+  .mp-photo-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 1px solid rgb(255 255 255 / 0.4);
+    border-radius: var(--radius-brand);
+  }
+  .mp-photo-cap { display: flex; flex-direction: column; gap: 0.3rem; }
+  .mp-photo-tag { color: var(--color-mey-teal); }
+  .mp-photo-name {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     letter-spacing: 0.01em;
     text-transform: uppercase;
     color: #fff;
-    line-height: 1.1;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .mm-img { transition: none; }
-    .mm-cell:hover .mm-img { transform: none; }
+  .mp-photo-name:lang(ar) { font-family: var(--font-arabic); font-weight: 700; letter-spacing: 0; }
+
+  /* ---- desktop board layout ---- */
+  @media (min-width: 1024px) {
+    .mp-grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 2.5rem; align-items: center; }
+    .mp-board { margin-top: 4.5rem; margin-bottom: 4.5rem; }
+    /* gutters host the hanging labels + y-dims */
+    .mp-stage { margin-inline: 9.5rem 8.5rem; }
+    .mp-lines, .mp-sq, .mp-dimx { display: block; }
+    .mp-note, .mp-dimy { display: flex; }
+    .mp-legend { display: none; }
+    .mp-photo { align-self: stretch; justify-content: center; }
   }
 </style>

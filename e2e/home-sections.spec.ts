@@ -70,11 +70,33 @@ test('process steps render as four rising levels on home and services', async ({
   }
 });
 
-test('materials mood board renders three decoded tiles', async ({ page }) => {
+test('materials board: annotated palette + interior photo on the dark panel', async ({ page }, testInfo) => {
   await page.goto(u('/'));
-  await expect(page.locator('.mm-cell')).toHaveCount(3);
-  await decodes(page, '.mm-img');
-  await expect(page.locator('.mm-tag').first()).toContainText('MALZEME');
+  const section = page.locator('.mp-section');
+  await section.scrollIntoViewIfNeeded();
+
+  // both images actually decode (cutout PNG + lobby photo)
+  await decodes(page, '.mp-img');
+  await decodes(page, '.mp-photo-img');
+
+  // five material callouts exist twice: floating notes (desktop) and legend (small screens)
+  await expect(section.locator('.mp-note')).toHaveCount(5);
+  await expect(section.locator('.mp-legend-row')).toHaveCount(5);
+  const floating = section.locator('.mp-note').first();
+  const legend = section.locator('.mp-legend');
+  if (testInfo.project.name === 'mobile-360') {
+    await expect(legend).toBeVisible();
+    await expect(floating).toBeHidden();
+  } else {
+    await expect(floating).toBeVisible();
+    await expect(legend).toBeHidden();
+  }
+  await expect(section.locator('.mp-note-name').first()).toHaveText('CAM');
+  await expect(section.locator('.mp-photo-tag')).toContainText('İÇ MEKAN');
+
+  // it is the dark theatre panel, not a light card grid
+  const bg = await section.evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(bg).toBe('rgb(14, 15, 17)');
 });
 
 test('why-MEY shows the real 23/6 numbers, no placeholder chips', async ({ page }) => {

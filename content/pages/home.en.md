@@ -37,13 +37,21 @@ sections:
     eyebrow: "04 — MATERIALS"
     title: "Materials & texture"
     intro: "Quality is in the detail: selected materials, careful planning, delivery quality."
-    items:
-      - tag: "MATERIAL & FINISH"
-        name: "Selected material palette"
-      - tag: "PLANNING"
-        name: "From plan to site"
-      - tag: "INTERIORS"
-        name: "Common areas & delivery quality"
+    paletteAlt: "Selected material palette — brick, concrete, glass, steel and composite samples"
+    callouts:
+      - name: "GLASS"
+        desc: "Thermal & acoustic insulation"
+      - name: "STEEL"
+        desc: "Structural durability"
+      - name: "BRICK"
+        desc: "Natural texture and strength"
+      - name: "CONCRETE"
+        desc: "Uncompromising strength, long life"
+      - name: "COMPOSITE"
+        desc: "Aesthetic accent and detail"
+    interior:
+      tag: "INTERIORS"
+      name: "Common areas & delivery quality"
   why:
     eyebrow: "05 — WHY MEY"
     title: "A group that keeps its word"

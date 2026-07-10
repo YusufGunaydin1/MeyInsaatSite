@@ -37,13 +37,21 @@ sections:
     eyebrow: "04 — MALZEME"
     title: "Malzeme & doku"
     intro: "Kalite detayda: seçilmiş malzeme, özenli planlama, teslim kalitesi."
-    items:
-      - tag: "MALZEME & FİNİŞ"
-        name: "Seçilmiş malzeme paleti"
-      - tag: "PLANLAMA"
-        name: "Projeden sahaya"
-      - tag: "İÇ MEKAN"
-        name: "Ortak alan & teslim kalitesi"
+    paletteAlt: "Seçilmiş malzeme paleti — tuğla, beton, cam, çelik ve kompozit örnekleri"
+    callouts:
+      - name: "CAM"
+        desc: "Isı & ses yalıtımı"
+      - name: "ÇELİK"
+        desc: "Yapısal dayanıklılık"
+      - name: "TUĞLA"
+        desc: "Doğal doku ve dayanım"
+      - name: "BETON"
+        desc: "Tavizsiz güç ve uzun ömür"
+      - name: "KOMPOZİT"
+        desc: "Estetik vurgu ve detay"
+    interior:
+      tag: "İÇ MEKAN"
+      name: "Ortak alan & teslim kalitesi"
   why:
     eyebrow: "05 — NEDEN MEY"
     title: "Sözünü tutan bir grup"
