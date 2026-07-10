@@ -1,7 +1,7 @@
 ---
 /*
   THE signature section (design brief §11, staged full-viewport since 2026-07):
-  scroll = time. A pinned full-screen theatre scrubs 26 time-lapse frames
+  scroll = time. A pinned full-screen theatre scrubs 20 time-lapse frames
   (excavation -> topping-out) with inter-frame crossfade, while a red level-line,
   a giant floor counter and a mono readout track the rising building. Everything
   else on the site stays calm so this one gesture can be loud.
@@ -88,8 +88,8 @@ const poster = frameUrls[frameUrls.length - 1];
                  it yields load priority to the hero's building image above it. -->
             <img
               src={poster}
-              width="720"
-              height="1120"
+              width="900"
+              height="1600"
               alt={t.a11y.buildAnimation}
               loading="eager"
               fetchpriority="low"
@@ -98,8 +98,8 @@ const poster = frameUrls[frameUrls.length - 1];
               data-poster
             />
             <canvas
-              width="720"
-              height="1120"
+              width="900"
+              height="1600"
               class="scrub-canvas"
               aria-hidden="true"
               data-canvas
@@ -220,25 +220,25 @@ const poster = frameUrls[frameUrls.length - 1];
   /*
     The canvas column must have a DEFINITE width: inside the grid's `auto` track a
     percentage width is circular and collapses to 0. Bound by 580px (respects the
-    720px source — mild upscale only) and by viewport height so 9:14 fits the pin.
+    900px source — mild upscale only) and by viewport height so 9:16 fits the pin.
   */
   .scrub-canvas-col {
-    width: min(100%, 84vw, calc((100svh - 12rem) * 0.643));
+    width: min(100%, 84vw, calc((100svh - 12rem) * 0.5625));
     margin-inline: auto;
   }
   @media (min-width: 1024px) {
     .scrub-canvas-col {
-      width: min(580px, calc((100svh - 9.5rem) * 0.643));
+      width: min(580px, calc((100svh - 9.5rem) * 0.5625));
       margin-inline: 0;
       justify-self: center;
     }
   }
+  /* Frames carry alpha (sky removed): no box chrome, the building floats on the
+     theatre and the blurred backdrop shows through where the sky was. */
   .scrub-canvas-box {
     position: relative;
-    aspect-ratio: 9 / 14;
+    aspect-ratio: 9 / 16;
     width: 100%;
-    background: var(--color-night-800);
-    border: 1px solid rgb(255 255 255 / 0.08);
     border-radius: var(--radius-brand);
     overflow: hidden;
   }
@@ -421,8 +421,8 @@ const poster = frameUrls[frameUrls.length - 1];
     }
 
     // Stage thresholds tuned by reviewing the real frames:
-    // 1-5 excavation · 6-12 foundation+frame · 13-20 infill mass · 21-26 topping-out
-    const STAGE_FROM_FRAME = [5, 12, 20, 26];
+    // 1-5 excavation · 6-12 foundation+frame · 13-17 infill mass · 18-20 topping-out
+    const STAGE_FROM_FRAME = [5, 12, 17, 20];
     const labels = {
       excavation: root.dataset.labelExcavation ?? 'KAZI',
       foundation: root.dataset.labelFoundation ?? 'TEMEL',
@@ -443,13 +443,13 @@ const poster = frameUrls[frameUrls.length - 1];
     }
 
     function floorOf(frame: number): number {
-      return Math.min(6, Math.max(1, Math.round((frame - 8) / 2)));
+      return Math.min(6, Math.max(1, Math.round((frame - 6) / 2)));
     }
 
     // One source for every HUD element: big label, elevation, level-line height
     function meta(frame: number): { big: string; elev: string; lvl: number } {
       if (frame <= 5) return { big: labels.excavation, elev: '−4.50 M', lvl: 8 };
-      if (frame <= 8) return { big: labels.foundation, elev: '±0.00 M', lvl: 12 };
+      if (frame <= 7) return { big: labels.foundation, elev: '±0.00 M', lvl: 12 };
       const kat = floorOf(frame);
       const h = ((kat * 18.4) / 6).toFixed(2);
       return { big: `${labels.floor} ${kat}`, elev: `+${h} M`, lvl: 15 + (kat / 6) * 70 };
@@ -467,6 +467,9 @@ const poster = frameUrls[frameUrls.length - 1];
       if (!bmp) return;
       bgFrame = frame;
       try {
+        // Alpha frames: clear first or the previous (taller) building ghosts
+        // through the transparent sky when scrubbing backward.
+        bctx.clearRect(0, 0, bgfx.width, bgfx.height);
         bctx.filter = 'blur(14px) brightness(0.55)';
         bctx.drawImage(
           bmp as CanvasImageSource,
@@ -486,8 +489,11 @@ const poster = frameUrls[frameUrls.length - 1];
       const b = bitmaps[base + 1];
       if (a) {
         ctx.globalAlpha = 1;
+        // Alpha frames: clear first — without it a taller building from a later
+        // frame stays visible through the transparent sky on upward scroll.
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(a as CanvasImageSource, 0, 0, canvas.width, canvas.height);
-        // Crossfade to the next frame: 26 frames scrub like a continuous take
+        // Crossfade to the next frame: 20 frames scrub like a continuous take
         if (b && frac > 0.01) {
           ctx.globalAlpha = frac;
           ctx.drawImage(b as CanvasImageSource, 0, 0, canvas.width, canvas.height);
@@ -557,7 +563,7 @@ const poster = frameUrls[frameUrls.length - 1];
 
     async function load() {
       let done = 0;
-      // Concurrency-limited so the ~1.1MB sequence never floods the connection.
+      // Concurrency-limited so the ~1.8MB sequence never floods the connection.
       const results: (ImageBitmap | HTMLImageElement)[] = new Array(urls.length);
       let next = 0;
       async function worker() {

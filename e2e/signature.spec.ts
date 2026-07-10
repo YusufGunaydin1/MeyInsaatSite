@@ -3,7 +3,7 @@ import { u } from './util';
 
 /*
   The scroll-to-build scrub must actually scrub: frame index measured at multiple
-  scroll positions must rise monotonically 1 -> 26 (prove the behavior, not the DOM).
+  scroll positions must rise monotonically 1 -> 20 (prove the behavior, not the DOM).
   Under prefers-reduced-motion the section degrades to a static poster + stage list.
 */
 
@@ -43,7 +43,7 @@ test.describe('scroll-to-build signature', () => {
     }
 
     expect(samples[0]).toBe(1);
-    expect(samples[samples.length - 1]).toBe(26);
+    expect(samples[samples.length - 1]).toBe(20);
     for (let i = 1; i < samples.length; i++) {
       expect(samples[i], `frame at sample ${i} >= previous`).toBeGreaterThanOrEqual(samples[i - 1]);
     }
