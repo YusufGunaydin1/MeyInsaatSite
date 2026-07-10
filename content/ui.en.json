@@ -64,7 +64,21 @@
       "source": "REAL SITE TIME-LAPSE",
       "scroll": "SCROLL = TIME",
       "datum": "LEVEL"
-    }
+    },
+    "values": [
+      {
+        "name": "SOLID STRUCTURE",
+        "desc": "Sound foundations, built to engineering and quality standards."
+      },
+      {
+        "name": "LAYER BY LAYER",
+        "desc": "Each stage bears on the one before; the building rises safely."
+      },
+      {
+        "name": "FLOW OF TIME",
+        "desc": "Transparent site management — full control on the road to delivery."
+      }
+    ]
   },
   "stats": {
     "groupYears": "Years of group experience",

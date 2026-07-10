@@ -64,7 +64,21 @@
       "source": "GERÇEK ŞANTİYE ZAMAN AKIŞI",
       "scroll": "KAYDIR = ZAMAN",
       "datum": "KOT"
-    }
+    },
+    "values": [
+      {
+        "name": "GÜVENLİ YAPI",
+        "desc": "Mühendislik ve kalite standartlarına uygun, sağlam temeller."
+      },
+      {
+        "name": "KATMAN KATMAN İLERLEME",
+        "desc": "Her aşama bir öncekine dayanır; yapı güvenle yükselir."
+      },
+      {
+        "name": "ZAMANIN AKIŞI",
+        "desc": "Şeffaf süreç yönetimiyle teslimata giden yolda tam kontrol."
+      }
+    ]
   },
   "stats": {
     "groupYears": "Yıllık grup deneyimi",

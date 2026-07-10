@@ -1,10 +1,13 @@
 ---
 /*
-  THE signature section (design brief §11, staged full-viewport since 2026-07):
-  scroll = time. A pinned full-screen theatre scrubs 17 time-lapse frames
-  (excavation -> topping-out) with inter-frame crossfade, while a red level-line,
-  a giant floor counter and a mono readout track the rising building. Everything
-  else on the site stays calm so this one gesture can be loud.
+  THE signature section (design brief §11; drawing-sheet staging since 2026-07-10):
+  scroll = time. A pinned full-viewport theatre scrubs 17 time-lapse frames
+  (excavation -> topping-out) with inter-frame crossfade. Desktop composes like a
+  construction sheet: title + company values inline-start, the building centred
+  beside a vertical survey RULER (stage ticks 01–04, red fill + datum dot rising
+  with scroll), and the four stages inline-end — visually roof-down (04 on top) so
+  each stage sits at its height on the building, dashed leader lines pointing in.
+  The in-canvas red level-line + mono readout stay (guide-line device, brief §7).
 
   Fallbacks (mandatory): prefers-reduced-motion, Save-Data, or no JS render the
   final-state poster + the four stages as plain text. Stage list is real text always.
@@ -28,25 +31,48 @@ const frameUrls = Object.keys(frameModules)
   .sort()
   .map((k) => frameModules[k] as unknown as string);
 const poster = frameUrls[frameUrls.length - 1];
+
+/*
+  Stage boundaries (last frame of each stage), tuned by reviewing the real frames:
+  1-2 excavation · 3-9 foundation+frame · 10-14 infill mass · 15-17 topping-out.
+  Single source of truth: serialized to data-stage-bounds for the scrub script and
+  used here to place each ruler tick at its stage's centre frame.
+*/
+const STAGE_FROM_FRAME = [2, 9, 14, 17];
+const lastPos = frameUrls.length - 1;
+const tickPct = STAGE_FROM_FRAME.map((max, i) => {
+  const start = i === 0 ? 0 : STAGE_FROM_FRAME[i - 1];
+  return (((start + max - 1) / 2 / lastPos) * 100).toFixed(2);
+});
+
+const values: { name: string; desc: string }[] = t.signature.values ?? [];
+/* Outline icon paths (24px grid, stroke): shield-check · layers · clock */
+const valueIcons: string[][] = [
+  ['M12 3.5 19 6.2v5c0 4.4-2.9 7.8-7 9.3-4.1-1.5-7-4.9-7-9.3v-5L12 3.5Z', 'm9 11.6 2.1 2.1 4.1-4.2'],
+  ['m12 3.5 8.5 4.7L12 12.9 3.5 8.2 12 3.5Z', 'm3.5 12.4 8.5 4.7 8.5-4.7', 'm3.5 16.4 8.5 4.7 8.5-4.7'],
+  ['M12 20.5a8.5 8.5 0 1 1 0-17 8.5 8.5 0 0 1 0 17Z', 'M12 8.5V13l3 2'],
+];
 ---
 
 <section
   class="theatre blueprint-grid"
   data-scrub
   data-frames={JSON.stringify(frameUrls)}
+  data-stage-bounds={JSON.stringify(STAGE_FROM_FRAME)}
   data-label-excavation={t.signature.readout.excavation}
   data-label-foundation={t.signature.readout.foundation}
   data-label-floor={t.signature.readout.floor}
   data-label-datum={t.signature.hud?.datum ?? 'KOT'}
   aria-labelledby="scroll-to-build-title"
 >
-  <div class="container-site pt-16 sm:pt-20">
+  <!-- Small screens + static mode keep the classic heading above the theatre;
+       on desktop the title lives INSIDE the pinned sheet (inline-start column). -->
+  <div class="container-site pt-16 sm:pt-20 lg:hidden">
     <SectionHeading
       eyebrow={t.signature.eyebrow}
       title={t.signature.title}
       intro={t.signature.sub}
       onDark
-      id="scroll-to-build-title"
     />
   </div>
 
@@ -62,59 +88,105 @@ const poster = frameUrls[frameUrls.length - 1];
       </div>
 
       <div class="scrub-grid container-site h-full">
-        <!-- Stage list: real text, SEO/a11y-safe. Vertical rail on desktop; sr-only on small screens (a compact active-stage line replaces it visually). -->
-        <ol class="scrub-stages space-y-6 lg:space-y-8" data-stage-list>
+        <!-- Title column (desktop): eyebrow, display title, guide-rule, intro,
+             values. This h2 names the section in EVERY viewport (aria-labelledby
+             resolves display:none refs); small screens SHOW the heading above. -->
+        <div class="scrub-title-col">
+          <p class="t-tech text-mey-teal mb-3">{t.signature.eyebrow}</p>
+          <h2 id="scroll-to-build-title" class="t-display-l">{t.signature.title}</h2>
+          <span class="scrub-title-rule" aria-hidden="true"></span>
+          <p class="t-body-l text-concrete-100/80 scrub-title-sub">{t.signature.sub}</p>
+          {values.length > 0 && (
+            <ul class="scrub-values" role="list">
+              {values.map((v, i) => (
+                <li class="scrub-value">
+                  <svg
+                    class="scrub-value-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    {valueIcons[i % valueIcons.length].map((d) => (
+                      <path d={d} />
+                    ))}
+                  </svg>
+                  <div>
+                    <p class="t-tech scrub-value-name">{v.name}</p>
+                    <p class="t-caption scrub-value-desc">{v.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <!-- Stage list: real text, SEO/a11y-safe. DOM keeps construction order
+             01→04; desktop reverses it VISUALLY so 04 sits at the roof. sr-only on
+             small screens (a compact active-stage line replaces it visually). -->
+        <ol class="scrub-stages" data-stage-list>
           {t.signature.stages.map((s: any, i: number) => (
-            <li
-              class="scrub-stage-item grid grid-cols-[auto_1fr] gap-x-4 max-w-md"
-              data-stage-item={i}
-            >
-              <span class="t-tech scrub-stage-no text-base" aria-hidden="true">{s.no}</span>
-              <div>
-                <h3 class="t-heading-s scrub-stage-name text-concrete-100/60">{s.name}</h3>
-                <p class="t-caption text-concrete-100/50 mt-1 scrub-stage-desc">{s.desc}</p>
+            <li class="scrub-stage-item" data-stage-item={i}>
+              <span class="scrub-stage-leader" aria-hidden="true"></span>
+              <span class="scrub-stage-no tabular-nums" aria-hidden="true">{s.no}</span>
+              <div class="scrub-stage-body">
+                <h3 class="scrub-stage-name">{s.name}</h3>
+                <p class="t-caption scrub-stage-desc">{s.desc}</p>
               </div>
             </li>
           ))}
         </ol>
 
-        <div class="scrub-canvas-col">
-          <!-- Compact mobile stage indicator (visual duplicate of the list's active row) -->
-          <div class="scrub-mobile-stage t-tech text-concrete-100/90 lg:hidden" aria-hidden="true">
-            <span data-mobile-stage>{t.signature.stages[0].no} {t.signature.stages[0].name}</span>
-          </div>
-          <div class="scrub-canvas-box" data-canvas-box>
-            <!-- Second beat below the HomeHero cover: no longer the page LCP, so
-                 it yields load priority to the hero's building image above it. -->
-            <img
-              src={poster}
-              width="900"
-              height="1600"
-              alt={t.a11y.buildAnimation}
-              loading="eager"
-              fetchpriority="low"
-              decoding="async"
-              class="scrub-poster"
-              data-poster
-            />
-            <canvas
-              width="900"
-              height="1600"
-              class="scrub-canvas"
-              aria-hidden="true"
-              data-canvas
-            ></canvas>
-            <div class="scrub-level" data-level aria-hidden="true">
-              <span class="t-tech scrub-readout" data-readout>{t.signature.readout.excavation} · −4.50 M</span>
+        <div class="scrub-center">
+          <!-- Survey ruler: a builder's level staff for the whole scrub — stage
+               ticks at their centre frames, red fill + datum dot rise with scroll. -->
+          <div class="scrub-ruler" aria-hidden="true">
+            <span class="t-tech scrub-ruler-cap">{t.signature.stages[3].name}</span>
+            <div class="scrub-ruler-track">
+              <i class="scrub-ruler-fill" data-ruler-fill></i>
+              {t.signature.stages.map((s: any, i: number) => (
+                <span class="scrub-ruler-tick" style={`bottom: ${tickPct[i]}%`}>{s.no}</span>
+              ))}
+              <i class="scrub-ruler-dot" data-ruler-dot></i>
             </div>
-            <p class="t-tech scrub-loader" data-loader aria-hidden="true">{t.signature.loading} <span data-loader-pct>0%</span></p>
+            <span class="t-tech scrub-ruler-cap">{t.signature.readout.foundation}</span>
           </div>
-        </div>
 
-        <!-- The giant counter: the one place monumental type narrates data -->
-        <div class="scrub-counter" aria-hidden="true">
-          <span class="scrub-counter-big" data-counter-big>{t.signature.readout.excavation}</span>
-          <span class="t-tech scrub-counter-sub" data-counter-sub>−4.50 M · {t.signature.hud?.datum ?? 'KOT'}</span>
+          <div class="scrub-canvas-col">
+            <!-- Compact mobile stage indicator (visual duplicate of the list's active row) -->
+            <div class="scrub-mobile-stage t-tech text-concrete-100/90 lg:hidden" aria-hidden="true">
+              <span data-mobile-stage>{t.signature.stages[0].no} {t.signature.stages[0].name}</span>
+            </div>
+            <div class="scrub-canvas-box" data-canvas-box>
+              <!-- Second beat below the HomeHero cover: no longer the page LCP, so
+                   it yields load priority to the hero's building image above it. -->
+              <img
+                src={poster}
+                width="900"
+                height="1600"
+                alt={t.a11y.buildAnimation}
+                loading="eager"
+                fetchpriority="low"
+                decoding="async"
+                class="scrub-poster"
+                data-poster
+              />
+              <canvas
+                width="900"
+                height="1600"
+                class="scrub-canvas"
+                aria-hidden="true"
+                data-canvas
+              ></canvas>
+              <div class="scrub-level" data-level aria-hidden="true">
+                <span class="t-tech scrub-readout" data-readout>{t.signature.readout.excavation} · −4.50 M</span>
+              </div>
+              <p class="t-tech scrub-loader" data-loader aria-hidden="true">{t.signature.loading} <span data-loader-pct>0%</span></p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -161,7 +233,6 @@ const poster = frameUrls[frameUrls.length - 1];
   }
   [data-static] .scrub-bgfx,
   [data-static] .scrub-hud,
-  [data-static] .scrub-counter,
   [data-static] .scrub-progress {
     display: none;
   }
@@ -212,9 +283,77 @@ const poster = frameUrls[frameUrls.length - 1];
   @media (min-width: 1024px) {
     .scrub-grid {
       grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      gap: clamp(1.5rem, 3.5vw, 4rem);
+      gap: clamp(1.25rem, 3vw, 3.5rem);
       justify-items: start;
     }
+    /* Explicit placement: DOM keeps reading order title → stages → building,
+       while the sheet composes title | building | stages. */
+    .scrub-title-col { grid-column: 1; grid-row: 1; }
+    .scrub-center { grid-column: 2; grid-row: 1; }
+    .scrub-stages { grid-column: 3; grid-row: 1; }
+  }
+
+  /* ---- Title column (desktop-only; small screens use the heading above the pin) */
+  .scrub-title-col {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .scrub-title-col {
+      display: block;
+      max-width: 24rem;
+    }
+  }
+  /* The guide-line as a title underscore (brief §7) */
+  .scrub-title-rule {
+    display: block;
+    width: 2.75rem;
+    height: 2px;
+    background: var(--color-red-on-dark);
+    margin-block: 1.4rem;
+  }
+  .scrub-title-sub {
+    max-width: 30ch;
+  }
+  .scrub-values {
+    display: grid;
+    gap: 1.35rem;
+    margin-block-start: 2.25rem;
+  }
+  .scrub-value {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.9rem;
+    align-items: start;
+  }
+  .scrub-value-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--color-red-on-dark);
+    margin-block-start: 0.1rem;
+  }
+  .scrub-value-name {
+    color: rgb(244 244 242 / 0.92);
+  }
+  /* Plex Mono has no Arabic — the technical layer switches face per-locale */
+  .scrub-value-name:lang(ar) {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+  }
+  .scrub-value-desc {
+    color: rgb(244 244 242 / 0.55);
+    margin-block-start: 0.3rem;
+    max-width: 30ch;
+  }
+
+  /* ---- Centre: survey ruler + canvas */
+  .scrub-center {
+    display: flex;
+    align-items: stretch;
+    gap: 1.1rem;
+    width: 100%;
+  }
+  @media (min-width: 1024px) {
+    .scrub-center { width: auto; }
   }
 
   /*
@@ -223,14 +362,13 @@ const poster = frameUrls[frameUrls.length - 1];
     900px source — mild upscale only) and by viewport height so 9:16 fits the pin.
   */
   .scrub-canvas-col {
-    width: min(100%, 84vw, calc((100svh - 12rem) * 0.5625));
+    width: min(100%, 84vw, calc((100svh - 9.5rem) * 0.5625));
     margin-inline: auto;
   }
   @media (min-width: 1024px) {
     .scrub-canvas-col {
       width: min(580px, calc((100svh - 9.5rem) * 0.5625));
       margin-inline: 0;
-      justify-self: center;
     }
   }
   /* Frames carry alpha (sky removed): no box chrome, the building floats on the
@@ -260,6 +398,90 @@ const poster = frameUrls[frameUrls.length - 1];
   }
   [data-ready] .scrub-poster {
     visibility: hidden;
+  }
+
+  /* ---- Survey ruler (desktop scrub only) */
+  .scrub-ruler {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .scrub-ruler {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+      /* room for the tick numerals hanging off the inline-start side */
+      padding-inline-start: 2.4rem;
+    }
+    [data-static] .scrub-ruler {
+      display: none;
+    }
+  }
+  .scrub-ruler-cap {
+    color: rgb(244 244 242 / 0.55);
+  }
+  .scrub-ruler-cap:lang(ar) {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+  }
+  .scrub-ruler-track {
+    position: relative;
+    flex: 1;
+    width: 2px;
+    background: rgb(255 255 255 / 0.16);
+  }
+  /* End caps of the level staff (physical centring — symmetric, RTL-safe) */
+  .scrub-ruler-track::before,
+  .scrub-ruler-track::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 11px;
+    height: 1px;
+    background: rgb(255 255 255 / 0.4);
+  }
+  .scrub-ruler-track::before { top: 0; }
+  .scrub-ruler-track::after { bottom: 0; }
+  .scrub-ruler-fill {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 0%;
+    background: var(--color-red-on-dark);
+  }
+  .scrub-ruler-dot {
+    position: absolute;
+    left: 50%;
+    bottom: 0%;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--color-red-on-dark);
+    border: 2px solid var(--color-night-950);
+    transform: translate(-50%, 50%);
+  }
+  .scrub-ruler-tick {
+    position: absolute;
+    inset-inline-end: calc(100% + 1rem);
+    transform: translateY(50%);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: rgb(242 85 90 / 0.8);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Tick dash bridging numeral → track */
+  .scrub-ruler-tick::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    inset-inline-start: calc(100% + 0.3rem);
+    width: 0.7rem;
+    height: 1px;
+    background: rgb(255 255 255 / 0.4);
   }
 
   .scrub-level {
@@ -296,43 +518,7 @@ const poster = frameUrls[frameUrls.length - 1];
     display: none;
   }
 
-  .scrub-counter {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.9rem;
-    justify-content: center;
-  }
-  @media (min-width: 1024px) {
-    .scrub-counter {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.4rem;
-      justify-self: start;
-    }
-  }
-  .scrub-counter-big {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(2.25rem, 8vw, 3rem);
-    line-height: 0.95;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    color: #fff;
-    font-variant-numeric: tabular-nums;
-  }
-  .scrub-counter-big:lang(ar) {
-    font-family: var(--font-arabic);
-  }
-  @media (min-width: 1024px) {
-    .scrub-counter-big {
-      font-size: clamp(3.5rem, 12vh, 7.5rem);
-    }
-  }
-  .scrub-counter-sub {
-    color: var(--color-mey-teal);
-  }
-
+  /* Thin progress line: small screens only — the ruler owns progress on desktop */
   .scrub-progress {
     position: absolute;
     inset-inline: 0;
@@ -346,16 +532,108 @@ const poster = frameUrls[frameUrls.length - 1];
     width: 0;
     background: var(--color-red-on-dark);
   }
+  @media (min-width: 1024px) {
+    .scrub-progress {
+      display: none;
+    }
+  }
+
+  /* ---- Stage list */
+  .scrub-stages {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 28rem;
+  }
+  @media (min-width: 1024px) {
+    .scrub-stages {
+      /* Roof-down: 04 at the top — each stage reads at its height on the
+         building. DOM stays 01→04 so readers and SEO get construction order. */
+      flex-direction: column-reverse;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-self: stretch;
+      max-width: none;
+      padding-block: 1.25rem;
+    }
+  }
+  .scrub-stage-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.9rem;
+  }
+  @media (min-width: 1024px) {
+    .scrub-stage-item {
+      /* leader line | numeral | text — text column fixed so all four align */
+      grid-template-columns: minmax(0.75rem, 1fr) auto minmax(0, 15rem);
+    }
+  }
+
+  .scrub-stage-leader {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .scrub-stage-leader {
+      display: block;
+      position: relative;
+      align-self: start;
+      /* optical centre of the numeral's first line */
+      margin-block-start: 0.8rem;
+      border-block-start: 1px dashed rgb(244 244 242 / 0.22);
+    }
+    /* Terminal dot on the building side */
+    .scrub-stage-leader::before {
+      content: '';
+      position: absolute;
+      inset-inline-start: -2px;
+      top: -3.5px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgb(244 244 242 / 0.35);
+    }
+    .scrub-stage-item[data-active] .scrub-stage-leader {
+      border-color: rgb(242 85 90 / 0.6);
+    }
+    .scrub-stage-item[data-active] .scrub-stage-leader::before {
+      background: var(--color-red-on-dark);
+    }
+  }
 
   .scrub-stage-no {
-    /* 0.55 keeps ~5.2:1 on night-950 (WCAG AA); 0.4 failed at 3.59:1 */
-    color: rgb(244 244 242 / 0.55);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: clamp(1.35rem, 1.6vw, 1.75rem);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    /* dimmed red — decorative numeral (aria-hidden), full red when active */
+    color: rgb(242 85 90 / 0.55);
   }
   .scrub-stage-item[data-active] .scrub-stage-no {
     color: var(--color-red-on-dark);
   }
+  .scrub-stage-name {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    /* 0.6 keeps ~5.9:1 on night-950 (WCAG AA) */
+    color: rgb(244 244 242 / 0.6);
+    margin-block-start: 0.4rem;
+  }
+  .scrub-stage-name:lang(ar) {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+  }
   .scrub-stage-item[data-active] .scrub-stage-name {
     color: #fff;
+  }
+  .scrub-stage-desc {
+    color: rgb(244 244 242 / 0.5);
+    margin-block-start: 0.35rem;
+    max-width: 34ch;
   }
   .scrub-stage-item[data-active] .scrub-stage-desc {
     color: rgb(244 244 242 / 0.75);
@@ -405,8 +683,8 @@ const poster = frameUrls[frameUrls.length - 1];
     const readout = root.querySelector<HTMLElement>('[data-readout]')!;
     const loaderPct = root.querySelector<HTMLElement>('[data-loader-pct]')!;
     const mobileStage = root.querySelector<HTMLElement>('[data-mobile-stage]')!;
-    const counterBig = root.querySelector<HTMLElement>('[data-counter-big]')!;
-    const counterSub = root.querySelector<HTMLElement>('[data-counter-sub]')!;
+    const rulerFill = root.querySelector<HTMLElement>('[data-ruler-fill]')!;
+    const rulerDot = root.querySelector<HTMLElement>('[data-ruler-dot]')!;
     const progressBar = root.querySelector<HTMLElement>('[data-progress-bar]')!;
     const stageItems = Array.from(
       root.querySelectorAll<HTMLElement>('[data-stage-item]')
@@ -420,9 +698,11 @@ const poster = frameUrls[frameUrls.length - 1];
       return;
     }
 
-    // Stage thresholds tuned by reviewing the real frames:
-    // 1-2 excavation · 3-9 foundation+frame · 10-14 infill mass · 15-17 topping-out
-    const STAGE_FROM_FRAME = [2, 9, 14, 17];
+    // Stage thresholds: single source is the component frontmatter (it also
+    // places the ruler ticks) — serialized through data-stage-bounds.
+    const STAGE_FROM_FRAME: number[] = JSON.parse(
+      root.dataset.stageBounds || '[2, 9, 14, 17]'
+    );
     const labels = {
       excavation: root.dataset.labelExcavation ?? 'KAZI',
       foundation: root.dataset.labelFoundation ?? 'TEMEL',
@@ -502,7 +782,11 @@ const poster = frameUrls[frameUrls.length - 1];
       }
 
       const frame = Math.round(pos) + 1;
-      progressBar.style.width = `${((pos / (urls.length - 1)) * 100).toFixed(2)}%`;
+      // One progress value drives every indicator: mobile bar, ruler fill + dot
+      const pct = ((pos / (urls.length - 1)) * 100).toFixed(2);
+      progressBar.style.width = `${pct}%`;
+      rulerFill.style.height = `${pct}%`;
+      rulerDot.style.bottom = `${pct}%`;
       drawBg(frame);
       if (frame === currentFrame) return;
       currentFrame = frame;
@@ -510,8 +794,6 @@ const poster = frameUrls[frameUrls.length - 1];
       const m = meta(frame);
       level.style.bottom = `${m.lvl}%`;
       readout.textContent = `${m.big} · ${m.elev}`;
-      counterBig.textContent = m.big;
-      counterSub.textContent = `${m.elev} · ${labels.datum}`;
       const active = stageOf(frame);
       stageItems.forEach((el, i) => {
         if (i === active) {
