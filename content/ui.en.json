@@ -74,10 +74,6 @@
     "builtAreaM2": "m² built area",
     "region": "Operating region"
   },
-  "xray": {
-    "open": "Show interior",
-    "close": "Hide interior"
-  },
   "placeholder": {
     "chip": "Information pending",
     "value": "—",

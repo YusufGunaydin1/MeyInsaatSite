@@ -74,10 +74,6 @@
     "builtAreaM2": "m² inşa alanı",
     "region": "Faaliyet bölgesi"
   },
-  "xray": {
-    "open": "İç görünümü aç",
-    "close": "İç görünümü kapat"
-  },
   "placeholder": {
     "chip": "Bilgi bekleniyor",
     "value": "—",
@@ -113,7 +109,13 @@
       "eyebrow": "ŞANTİYE KAYITLARI",
       "title": "Kazıdan teslime",
       "intro": "Bu binanın gerçek inşaat kareleri — ilk kazıdan tamamlanmaya.",
-      "stages": ["Kazı & Temel", "Kaba İnşaat", "Duvar & Dolgu", "Cephe", "Tamamlanma"]
+      "stages": [
+        "Kazı & Temel",
+        "Kaba İnşaat",
+        "Duvar & Dolgu",
+        "Cephe",
+        "Tamamlanma"
+      ]
     }
   },
   "contact": {

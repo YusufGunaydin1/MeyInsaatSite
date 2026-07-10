@@ -6,8 +6,9 @@
   hovering a flat shows that flat's interior. The whole image never swaps.
   Radius owner-calibrated: ~85px at hero scale (one flat), 55px on tiles.
   The lens follows the cursor for hover-capable pointers (mouse/pen) ONLY —
-  on touch it is off by default so the image never hijacks page scrolling;
-  the toggle button is the touch (and keyboard) path to the full cutaway.
+  on touch it is off so the image never hijacks page scrolling. There is NO
+  explicit open/close control anywhere (owner call 2026-07: a button kills
+  the magic; touch simply doesn't get the interior view).
   Pure CSS mask + a few lines of JS, no libraries.
 */
 import { Image } from 'astro:assets';
@@ -20,9 +21,6 @@ interface Props {
   widths: number[];
   sizes: string;
   radius?: number;
-  /** Both labels present -> render the full-cutaway toggle button. */
-  openLabel?: string;
-  closeLabel?: string;
   eager?: boolean;
   class?: string;
 }
@@ -33,12 +31,9 @@ const {
   widths,
   sizes,
   radius = 85,
-  openLabel,
-  closeLabel,
   eager = false,
   class: className,
 } = Astro.props;
-const toggle = Boolean(openLabel && closeLabel);
 ---
 
 <div class:list={['xrv', className]} data-xray style={`--r: ${radius}px;`}>
@@ -59,15 +54,6 @@ const toggle = Boolean(openLabel && closeLabel);
     class="xrv-img xrv-top"
   />
   <slot />
-  {toggle && (
-    <button
-      type="button"
-      class="t-tech xrv-toggle"
-      aria-pressed="false"
-      data-open={openLabel}
-      data-close={closeLabel}
-    >{openLabel}</button>
-  )}
 </div>
 
 <style>
@@ -92,52 +78,22 @@ const toggle = Boolean(openLabel && closeLabel);
     mask-image: radial-gradient(circle var(--r, 85px) at var(--x, 50%) var(--y, 50%), #000 65%, transparent 95%);
   }
   .xrv.active :global(.xrv-top) { opacity: 1; }
-  .xrv.open :global(.xrv-top) {
-    opacity: 1;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  .xrv-toggle {
-    position: absolute;
-    bottom: 0.75rem;
-    inset-inline-start: 0.75rem;
-    z-index: 2;
-    background: rgb(14 15 17 / 0.85);
-    color: #fff;
-    padding: 0.35rem 0.7rem;
-    border-radius: var(--radius-brand);
-    cursor: pointer;
-  }
-  .xrv-toggle:hover { color: var(--color-red-on-dark); }
 </style>
 
 <script>
   // Cursor position -> two CSS vars (%); the reveal itself is pure CSS.
   // Hover-capable pointers (mouse/pen) only: touch must scroll the page, not
-  // drive the lens — on touch the toggle button is the way in.
+  // drive the lens — touch gets no interior view at all.
   for (const el of document.querySelectorAll<HTMLElement>('.xrv[data-xray]')) {
-    const track = (e: PointerEvent) => {
+    el.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') return;
       const r = el.getBoundingClientRect();
       const x = Math.min(100, Math.max(0, ((e.clientX - r.left) / r.width) * 100));
       const y = Math.min(100, Math.max(0, ((e.clientY - r.top) / r.height) * 100));
       el.style.setProperty('--x', x.toFixed(2) + '%');
       el.style.setProperty('--y', y.toFixed(2) + '%');
-    };
-    const onToggle = (e: Event) => !!(e.target as HTMLElement).closest('.xrv-toggle');
-    el.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'touch') return;
-      if (el.classList.contains('open') || onToggle(e)) return;
       el.classList.add('active');
-      track(e);
     });
     el.addEventListener('pointerleave', () => el.classList.remove('active'));
-
-    const btn = el.querySelector<HTMLButtonElement>('.xrv-toggle');
-    btn?.addEventListener('click', () => {
-      const open = el.classList.toggle('open');
-      el.classList.remove('active');
-      btn.setAttribute('aria-pressed', String(open));
-      btn.textContent = open ? btn.dataset.close! : btn.dataset.open!;
-    });
   }
 </script>
