@@ -27,12 +27,15 @@ const callouts: { name: string; desc: string }[] = s.callouts ?? [];
 
 /* sq = marker on the material; end = leader endpoint carrying the label square.
    side 'start': text hangs left of the end square; 'end': text runs right. */
+/* End overhangs stay within ±2% of the stage: hanging labels are sized to the
+   fixed gutters, so a larger % overhang would push them past the column (they
+   clipped at the viewport edge on 1024–1366 screens). */
 const GEO = [
-  { sq: [41.5, 2], end: [53, -9], side: 'end' },     // glass — elbow up, label beside the title zone
-  { sq: [92, 22], end: [104.5, 22], side: 'end' },   // steel — out into the right gutter
-  { sq: [24.5, 40], end: [-8, 40], side: 'start' },  // brick — left rail, under the intro
-  { sq: [12, 84], end: [-8, 84], side: 'start' },    // concrete — left rail, bottom
-  { sq: [75, 91], end: [86, 112], side: 'end' },     // composite — drops below the base
+  { sq: [41.5, 2], end: [53, -9], side: 'end' },    // glass — elbow up, label beside the title zone
+  { sq: [92, 22], end: [102, 22], side: 'end' },    // steel — out into the right gutter
+  { sq: [24.5, 40], end: [-1, 40], side: 'start' }, // brick — left rail
+  { sq: [12, 84], end: [-1, 84], side: 'start' },   // concrete — left rail, bottom
+  { sq: [75, 91], end: [86, 112], side: 'end' },    // composite — drops below the base
 ];
 const notes = callouts.slice(0, GEO.length).map((c, i) => ({ ...c, ...GEO[i] }));
 const linePoints = notes.map((n) =>
@@ -85,7 +88,6 @@ const DIMY = [
           {s.eyebrow && <p class="t-tech mp-eyebrow mb-3">{s.eyebrow}</p>}
           <h2 class="t-display-l mp-title">{s.title}</h2>
           <span class="mp-rule" aria-hidden="true"></span>
-          {s.intro && <p class="mp-intro mt-5">{s.intro}</p>}
         </div>
 
         <figure class="mp-board reveal" dir="ltr">
@@ -144,6 +146,8 @@ const DIMY = [
             </div>
           </div>
         </figure>
+
+        {s.intro && <p class="mp-intro reveal">{s.intro}</p>}
 
         <dl class="mp-legend reveal">
           {notes.map((n) => (
@@ -218,11 +222,13 @@ const DIMY = [
     margin-top: 1.25rem;
     background: var(--color-mey-red);
   }
+  .mp-left { display: flex; flex-direction: column; }
   .mp-intro {
     color: rgb(236 236 233 / 0.78);
     font-size: 1.0625rem;
     line-height: 1.6;
-    max-width: 24ch;
+    max-width: 30ch;
+    margin-top: 1.5rem;
   }
 
   /* ---- annotated board ---- */
@@ -258,8 +264,10 @@ const DIMY = [
     flex-direction: column;
     gap: 0.2rem;
     /* fixed width: an abs-pos box hung outside its containing block (left>100%)
-       otherwise shrinks to min-content and wraps one word per line */
-    width: 10rem;
+       otherwise shrinks to min-content and wraps one word per line.
+       9.5rem = left gutter minus the max end-overhang, so hanging labels never
+       leave the column */
+    width: 9.5rem;
     pointer-events: none;
   }
   .mp-note-start { transform: translate(-100%, -50%); padding-right: 0.9rem; text-align: right; align-items: flex-end; }
@@ -358,19 +366,29 @@ const DIMY = [
   /* ---- desktop poster layout ---- */
   @media (min-width: 1024px) {
     .mp-plan { display: block; }
-    .mp-grid { grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr); gap: 2.5rem; align-items: start; }
-    .mp-intro { font-size: 1rem; max-width: 17ch; }
-    /* the still-life rises beside the intro column, artwork-style */
-    .mp-board { margin-top: -6.5rem; margin-bottom: 4.5rem; }
+    /* columns stretch to equal height so the bottom-pinned intro lands on the
+       photo-caption row */
+    .mp-grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 2.5rem; }
+    .mp-intro { font-size: 1rem; max-width: 34ch; margin-top: auto; padding-top: 1.5rem; }
+    /* the still-life rises beside the title, artwork-style; the pull grows
+       with the viewport (a fixed -8rem drove the brick label into the title
+       on 1024–1366 screens) */
+    .mp-board { margin-top: -3rem; margin-bottom: 2.75rem; width: 100%; }
     /* RTL flips the column but the board's callout geometry stays physical:
-       a raised board would hang the steel label into the right-aligned intro.
+       a raised board would hang the steel label into the right-aligned title.
        Keep the board below the header there. */
     :global(html[dir='rtl']) .mp-board { margin-top: 1.5rem; }
     /* gutters host the hanging labels; dims live inside/below the stage */
-    .mp-stage { margin-inline: 9rem 7.5rem; }
+    .mp-stage { margin-inline: 10rem 7.5rem; }
     .mp-lines, .mp-sq, .mp-dimx { display: block; }
     .mp-note, .mp-dimy { display: flex; }
     .mp-legend { display: none; }
-    .mp-photo { align-self: start; margin-top: 0.75rem; }
+    .mp-photo { margin-top: 0.75rem; }
+  }
+  @media (min-width: 1280px) {
+    .mp-board { margin-top: -5rem; }
+  }
+  @media (min-width: 1440px) {
+    .mp-board { margin-top: -7.5rem; }
   }
 </style>
