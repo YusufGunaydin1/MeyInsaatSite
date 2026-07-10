@@ -1,9 +1,9 @@
 ---
 /*
-  MATERIALS & TEXTURE — dark theatre board: annotated material still-life
-  (cutout PNG, transparent bg) with construction-drawing callouts + dimension
-  lines on the left, framed interior photo on the right. Copy from
-  content/pages/home.<loc>.md (sections.materials.callouts / .interior).
+  MATERIALS & TEXTURE — dark poster board modeled on the approved artwork:
+  big annotated material still-life (cutout, transparent bg) rising beside the
+  title, faint architectural plan linework behind, tall framed interior photo
+  on the right. Copy from content/pages/home.<loc>.md (sections.materials).
 
   Callout geometry is tied to the cutout image (materials-palette-cutout.webp):
   coordinates are % of the image box and map 1:1 to the SVG viewBox (0 0 100 100,
@@ -25,14 +25,14 @@ const { locale } = Astro.props;
 const s = pageContent('home', locale)?.frontmatter?.sections?.materials ?? {};
 const callouts: { name: string; desc: string }[] = s.callouts ?? [];
 
-/* sq = marker on the material; end = leader endpoint the label hangs from.
-   side: which edge of the label touches `end`. */
+/* sq = marker on the material; end = leader endpoint carrying the label square.
+   side 'start': text hangs left of the end square; 'end': text runs right. */
 const GEO = [
-  { sq: [45, 7], end: [30, -9], side: 'start' },   // glass
-  { sq: [86, 20], end: [104, 20], side: 'end' },   // steel
-  { sq: [29, 38], end: [-5, 38], side: 'start' },  // brick
-  { sq: [15, 84], end: [-5, 84], side: 'start' },  // concrete
-  { sq: [84, 81], end: [104, 81], side: 'end' },   // composite
+  { sq: [41.5, 2], end: [53, -9], side: 'end' },     // glass — elbow up, label beside the title zone
+  { sq: [92, 22], end: [104.5, 22], side: 'end' },   // steel — out into the right gutter
+  { sq: [24.5, 40], end: [-8, 40], side: 'start' },  // brick — left rail, under the intro
+  { sq: [12, 84], end: [-8, 84], side: 'start' },    // concrete — left rail, bottom
+  { sq: [75, 91], end: [86, 112], side: 'end' },     // composite — drops below the base
 ];
 const notes = callouts.slice(0, GEO.length).map((c, i) => ({ ...c, ...GEO[i] }));
 const linePoints = notes.map((n) =>
@@ -41,7 +41,8 @@ const linePoints = notes.map((n) =>
     : `${n.sq[0]},${n.sq[1]} ${n.sq[0]},${n.end[1]} ${n.end[0]},${n.end[1]}`
 );
 
-/* Decorative plan dimensions (mm-style, matches the still-life proportions) */
+/* Decorative plan dimensions (mm-style, matches the still-life proportions).
+   The x-chain stops short of the composite drop line on the right. */
 const DIMX = [
   { n: '160', w: 26.7 },
   { n: '300', w: 50 },
@@ -55,14 +56,36 @@ const DIMY = [
 ---
 
 <section class="theatre blueprint-grid mp-section">
-  <div class="container-site section-pad">
+  <div class="container-site mp-pad">
+    <!-- faint stair-plan linework, as on a construction drawing (desktop only) -->
+    <svg class="mp-plan" viewBox="0 0 520 340" aria-hidden="true">
+      <g fill="none" stroke="currentColor">
+        <path d="M20 30 H 480 M480 30 V 300" />
+        <rect x="20" y="30" width="150" height="110" />
+        <path d="M34 30 V140 M48 30 V140 M62 30 V140 M76 30 V140 M90 30 V140 M104 30 V140 M118 30 V140 M132 30 V140 M146 30 V140" />
+        <path d="M20 85 H150 l-8 -5 m8 5 l-8 5" />
+        <rect x="200" y="30" width="64" height="74" />
+        <path d="M200 30 L264 104 M264 30 L200 104" />
+        <path d="M200 140 H380 V300" stroke-dasharray="5 4" />
+        <path d="M300 140 V30" stroke-dasharray="2 4" />
+        <path d="M20 320 H380 M20 314 V326 M380 314 V326 M200 314 V326" />
+      </g>
+      <g class="mp-plan-text" fill="currentColor" stroke="none">
+        <text x="22" y="158">MERDİVEN</text>
+        <text x="198" y="122">ASANSÖR</text>
+        <text x="290" y="226">KAT HOLÜ</text>
+        <text x="96" y="334">270</text>
+        <text x="284" y="334">210</text>
+      </g>
+    </svg>
+
     <div class="mp-grid">
       <div class="mp-left">
         <div class="max-w-2xl reveal">
           {s.eyebrow && <p class="t-tech mp-eyebrow mb-3">{s.eyebrow}</p>}
           <h2 class="t-display-l mp-title">{s.title}</h2>
           <span class="mp-rule" aria-hidden="true"></span>
-          {s.intro && <p class="t-body-l mp-intro mt-5">{s.intro}</p>}
+          {s.intro && <p class="mp-intro mt-5">{s.intro}</p>}
         </div>
 
         <figure class="mp-board reveal" dir="ltr">
@@ -71,7 +94,7 @@ const DIMY = [
               src={palette}
               alt={s.paletteAlt ?? ''}
               widths={[480, 760, 1100, 1600]}
-              sizes="(min-width:1024px) 34vw, 92vw"
+              sizes="(min-width:1024px) 40vw, 92vw"
               format="webp"
               quality={85}
               class="mp-img"
@@ -82,7 +105,10 @@ const DIMY = [
               ))}
             </svg>
             {notes.map((n) => (
-              <span class="mp-sq" style={`left:${n.sq[0]}%;top:${n.sq[1]}%`} aria-hidden="true"></span>
+              <>
+                <span class="mp-sq" style={`left:${n.sq[0]}%;top:${n.sq[1]}%`} aria-hidden="true"></span>
+                <span class="mp-sq" style={`left:${n.end[0]}%;top:${n.end[1]}%`} aria-hidden="true"></span>
+              </>
             ))}
             {notes.map((n) => (
               <div
@@ -133,8 +159,8 @@ const DIMY = [
         <Image
           src={lobby}
           alt={s.interior?.name ?? ''}
-          widths={[420, 720, 1000]}
-          sizes="(min-width:1024px) 34vw, 92vw"
+          widths={[420, 720, 1000, 1400]}
+          sizes="(min-width:1024px) 40vw, 92vw"
           class="mp-photo-img"
         />
         {s.interior && (
@@ -149,9 +175,41 @@ const DIMY = [
 </section>
 
 <style>
+  /* plaster-grain over the night surface — pure noise, no external asset */
+  .mp-section { position: relative; }
+  .mp-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  }
+
+  .mp-pad { position: relative; padding-block: clamp(3.5rem, 7vh, 5rem); }
+  .mp-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr; gap: 3rem; }
+
+  .mp-plan {
+    display: none;
+    position: absolute;
+    /* fragment ends above the ÇELİK callout row — its dim string must not
+       collide with the leader lines */
+    top: 2%;
+    left: 44%;
+    width: 32%;
+    color: #fff;
+    opacity: 0.09;
+    pointer-events: none;
+  }
+  .mp-plan-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
   .mp-section :global(h2) { color: #fff; }
-  /* two-line lockup like the board artwork: "Malzeme / & doku" */
-  .mp-title { max-width: 7ch; }
+  /* poster-scale two-line lockup: "Malzeme / & doku" — balance keeps the
+     connector on the second line in every locale (7ch orphaned EN's "&") */
+  .mp-title { max-width: 10ch; text-wrap: balance; font-size: clamp(2.5rem, 3.4vw, 4.1rem); }
   .mp-eyebrow { color: var(--color-red-on-dark); }
   .mp-rule {
     display: block;
@@ -162,27 +220,29 @@ const DIMY = [
   }
   .mp-intro {
     color: rgb(236 236 233 / 0.78);
+    font-size: 1.0625rem;
+    line-height: 1.6;
     max-width: 24ch;
   }
 
-  .mp-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; }
-
-  /* ---- annotated board (desktop) ---- */
+  /* ---- annotated board ---- */
   .mp-board { margin-top: 3rem; }
   .mp-stage { position: relative; }
   .mp-img {
+    position: relative;
+    z-index: 1; /* dims tuck behind the cutout (z0) like drawn-then-overlaid linework */
     width: 100%;
     height: auto;
     display: block;
-    /* seat the cutout on the dark ground like a lit object */
     filter: drop-shadow(0 22px 30px rgb(0 0 0 / 0.45));
   }
 
-  .mp-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-  .mp-lines polyline { fill: none; stroke: rgb(255 255 255 / 0.55); stroke-width: 1px; }
+  .mp-lines { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .mp-lines polyline { fill: none; stroke: rgb(255 255 255 / 0.6); stroke-width: 1px; }
 
   .mp-sq {
     position: absolute;
+    z-index: 2;
     width: 8px;
     height: 8px;
     transform: translate(-50%, -50%);
@@ -193,6 +253,7 @@ const DIMY = [
 
   .mp-note {
     position: absolute;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
@@ -201,20 +262,20 @@ const DIMY = [
     width: 10rem;
     pointer-events: none;
   }
-  .mp-note-start { transform: translate(-100%, -50%); padding-right: 0.75rem; text-align: right; align-items: flex-end; }
-  .mp-note-end { transform: translateY(-50%); padding-left: 0.75rem; text-align: left; }
+  .mp-note-start { transform: translate(-100%, -50%); padding-right: 0.9rem; text-align: right; align-items: flex-end; }
+  .mp-note-end { transform: translateY(-50%); padding-left: 0.9rem; text-align: left; }
   .mp-note-name { color: #fff; font-size: 0.8125rem; }
   .mp-note-desc { font-size: 0.8125rem; line-height: 1.35; color: rgb(236 236 233 / 0.66); }
 
   /* Annotations & dims only exist at board scale */
   .mp-lines, .mp-sq, .mp-note, .mp-dimx, .mp-dimy { display: none; }
 
-  /* ---- dimension lines ---- */
-  .mp-dimx { position: absolute; top: calc(100% + 1.1rem); left: 1%; right: 3%; }
+  /* ---- dimension lines (quiet, drawing-layer) ---- */
+  .mp-dimx { position: absolute; top: calc(100% + 0.9rem); left: 2%; right: 28%; }
   .mp-dimx-row { display: flex; }
-  .mp-dimx-row + .mp-dimx-row { margin-top: 0.9rem; }
+  .mp-dimx-row + .mp-dimx-row { margin-top: 0.85rem; }
   .mp-dimx-seg { display: flex; align-items: center; gap: 0.5rem; position: relative; }
-  .mp-dimx-seg > i { flex: 1; border-top: 1px solid rgb(255 255 255 / 0.28); }
+  .mp-dimx-seg > i { flex: 1; border-top: 1px solid rgb(255 255 255 / 0.22); }
   .mp-dimx-seg::before, .mp-dimx-seg::after {
     content: '';
     position: absolute;
@@ -222,22 +283,23 @@ const DIMY = [
     width: 1px;
     height: 9px;
     transform: translateY(-50%);
-    background: rgb(255 255 255 / 0.4);
+    background: rgb(255 255 255 / 0.32);
   }
   .mp-dimx-seg::before { left: 0; }
   .mp-dimx-seg::after { right: 0; }
 
   .mp-dimy {
     position: absolute;
-    top: 4%;
-    bottom: 8%;
-    right: calc(100% + 1.4rem);
+    top: 3%;
+    bottom: 9%;
+    left: -2%;
+    z-index: 0;
     /* display comes from the ≥1024px block — a display here would defeat the
        grouped display:none above and leak the strip into small viewports */
     flex-direction: column;
   }
   .mp-dimy-seg { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; width: 1px; }
-  .mp-dimy-seg > i { flex: 1; border-left: 1px solid rgb(255 255 255 / 0.28); }
+  .mp-dimy-seg > i { flex: 1; border-left: 1px solid rgb(255 255 255 / 0.22); }
   .mp-dimy-seg::before, .mp-dimy-seg::after {
     content: '';
     position: absolute;
@@ -245,7 +307,7 @@ const DIMY = [
     width: 9px;
     height: 1px;
     transform: translateX(-50%);
-    background: rgb(255 255 255 / 0.4);
+    background: rgb(255 255 255 / 0.32);
   }
   .mp-dimy-seg::before { top: 0; }
   .mp-dimy-seg::after { bottom: 0; }
@@ -255,7 +317,7 @@ const DIMY = [
     font-weight: 500;
     font-size: 0.625rem;
     letter-spacing: 0.06em;
-    color: rgb(255 255 255 / 0.55);
+    color: rgb(255 255 255 / 0.45);
   }
   .mp-dimy-seg > b { writing-mode: vertical-rl; transform: rotate(180deg); }
 
@@ -293,15 +355,22 @@ const DIMY = [
   }
   .mp-photo-name:lang(ar) { font-family: var(--font-arabic); font-weight: 700; letter-spacing: 0; }
 
-  /* ---- desktop board layout ---- */
+  /* ---- desktop poster layout ---- */
   @media (min-width: 1024px) {
-    .mp-grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 2.5rem; align-items: center; }
-    .mp-board { margin-top: 4.5rem; margin-bottom: 4.5rem; }
-    /* gutters host the hanging labels + y-dims */
-    .mp-stage { margin-inline: 9.5rem 8.5rem; }
+    .mp-plan { display: block; }
+    .mp-grid { grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr); gap: 2.5rem; align-items: start; }
+    .mp-intro { font-size: 1rem; max-width: 17ch; }
+    /* the still-life rises beside the intro column, artwork-style */
+    .mp-board { margin-top: -6.5rem; margin-bottom: 4.5rem; }
+    /* RTL flips the column but the board's callout geometry stays physical:
+       a raised board would hang the steel label into the right-aligned intro.
+       Keep the board below the header there. */
+    :global(html[dir='rtl']) .mp-board { margin-top: 1.5rem; }
+    /* gutters host the hanging labels; dims live inside/below the stage */
+    .mp-stage { margin-inline: 9rem 7.5rem; }
     .mp-lines, .mp-sq, .mp-dimx { display: block; }
     .mp-note, .mp-dimy { display: flex; }
     .mp-legend { display: none; }
-    .mp-photo { align-self: stretch; justify-content: center; }
+    .mp-photo { align-self: start; margin-top: 0.75rem; }
   }
 </style>
