@@ -151,13 +151,18 @@ const PROJECT_STAGES = [
   ['Sapanbaglari_Building', 'sapanbaglari', [2, 12, 17, 22, 26]],
 ];
 
+// The cutaway twins must coincide with the base covers pixel for pixel; AI
+// regenerations sometimes drift a row (e.g. 1086x1449) — force the canonical
+// cover frame so the lens overlay never misaligns.
+const XRAY_SIZE = { width: 1086, height: 1448, fit: 'cover' };
+
 async function convertProjects() {
   await mkdir(PROJECTS_OUT, { recursive: true });
   for (const [src, dst, width, quality] of PROJECT_RENDERS) {
     if (!(await requireSrc(path.join(LIB, src)))) continue;
     const out = path.join(PROJECTS_OUT, dst);
     await sharp(path.join(LIB, src))
-      .resize({ width, withoutEnlargement: true })
+      .resize(dst.includes('-xray') ? XRAY_SIZE : { width, withoutEnlargement: true })
       .webp({ quality })
       .toFile(out);
     console.log(`project: ${dst} ${((await stat(out)).size / 1024).toFixed(0)} KB`);
