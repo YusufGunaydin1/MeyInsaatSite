@@ -38,22 +38,23 @@ const tiles = [
   <!-- ─────────────── B1 — küçültülmüş taban ─────────────── -->
   <Specimen
     id="RÖNTGEN / B1"
-    name="Küçük yumuşak mercek — kazananın küçültülmüşü"
-    why="Beğenilen efektin birebir kendisi, yalnız alan küçültüldü (190px → 130px yarıçap): tek seferde aşağı yukarı tek daire görünür. Başka hiçbir şey eklenmedi — sıfır süsleme referansı."
+    name="Küçük yumuşak mercek — daire ölçeği"
+    why="Beğenilen efektin kendisi, mercek bu kez gerçekten daire ölçeğinde: ~85px yarıçap + sıkılaştırılmış tüy — açılan alan bir dairenin salonunu geçmez. Sürgüyle yarıçapı canlı ayarlayıp tam istediğin değeri bulabilirsin."
   >
     <section class="container-site section-pad">
       <div class="xh">
-        <figure class="xr" data-xray="soft" style="--r: 130px;">
+        <figure class="xr" data-xray="soft" style="--r: 85px;">
           <Image src={elele} alt="El Ele Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
           <Image src={eleleXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
           <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
+          <label class="t-tech xr-size"><span class="xr-size-val">R 85</span><input type="range" min="45" max="200" step="5" value="85" aria-label="Mercek yarıçapı" /></label>
         </figure>
         <div class="xh-info guide-line-v">
           <p class="t-tech text-mey-red mb-3">B1 · TABAN</p>
-          <h2 class="t-heading-m">Aynı efekt, daha dar alan</h2>
+          <h2 class="t-heading-m">Daire ölçeğinde mercek + canlı ayar</h2>
           <p class="t-body mt-3 text-graphite-600">
-            Yarıçap küçüldü; imleç neredeyse yalnız oradaki daire açılır.
-            Diğer üç varyant bunun üzerine birer ince dokunuş ekler.
+            Açılan alan tek dairelik. Sağ alttaki sürgü yarıçapı canlı değiştirir
+            — beğendiğin değeri söyle, production'a o sayıyla girsin.
           </p>
         </div>
       </div>
@@ -68,11 +69,12 @@ const tiles = [
   >
     <section class="container-site section-pad">
       <div class="xh">
-        <figure class="xr" data-xray="soft" style="--r: 120px;">
+        <figure class="xr" data-xray="soft" style="--r: 80px;">
           <Image src={elele} alt="El Ele Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
           <span class="xr-veil" aria-hidden="true"></span>
           <Image src={eleleXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
           <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
+          <label class="t-tech xr-size"><span class="xr-size-val">R 80</span><input type="range" min="45" max="200" step="5" value="80" aria-label="Mercek yarıçapı" /></label>
         </figure>
         <div class="xh-info guide-line-v">
           <p class="t-tech text-mey-red mb-3">B2 · ODAK</p>
@@ -94,10 +96,11 @@ const tiles = [
   >
     <section class="container-site section-pad">
       <div class="xh">
-        <figure class="xr" data-xray="soft-core" style="--r: 150px;">
+        <figure class="xr" data-xray="soft-core" style="--r: 95px;">
           <Image src={elele} alt="El Ele Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
           <Image src={eleleXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
           <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
+          <label class="t-tech xr-size"><span class="xr-size-val">R 95</span><input type="range" min="45" max="200" step="5" value="95" aria-label="Mercek yarıçapı" /></label>
         </figure>
         <div class="xh-info guide-line-v">
           <p class="t-tech text-mey-red mb-3">B3 · ÇEKİRDEK</p>
@@ -119,11 +122,12 @@ const tiles = [
   >
     <section class="container-site section-pad">
       <div class="xh">
-        <figure class="xr" data-xray="soft" style="--r: 125px;">
+        <figure class="xr" data-xray="soft" style="--r: 85px;">
           <Image src={elele} alt="El Ele Apartmanı — dış cephe" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img" />
           <Image src={eleleXray} alt="" aria-hidden="true" widths={[600, 1086]} sizes="(min-width:900px) 40vw, 100vw" class="xr-img xr-top" />
           <span class="t-tech xr-tag" aria-hidden="true">İÇ GÖRÜNÜM</span>
           <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
+          <label class="t-tech xr-size"><span class="xr-size-val">R 85</span><input type="range" min="45" max="200" step="5" value="85" aria-label="Mercek yarıçapı" /></label>
         </figure>
         <div class="xh-info guide-line-v">
           <p class="t-tech text-mey-red mb-3">B4 · ETİKET</p>
@@ -141,13 +145,13 @@ const tiles = [
   <Specimen
     id="RÖNTGEN / KART"
     name="Kart ölçeğinde — yumuşak mercek proje kartlarında"
-    why="Seçilen iyileştirme hangisi olursa olsun kart ölçeğinde de çalışacak; burada B1 mekaniği kart boyutuna indirildi (70px). Üç binanın da kesit ikizi hazır."
+    why="Seçilen iyileştirme hangisi olursa olsun kart ölçeğinde de çalışacak; burada B1 mekaniği kart boyutuna indirildi (55px). Üç binanın da kesit ikizi hazır."
   >
     <section class="container-site section-pad">
       <div class="xd-grid">
         {tiles.map((tl) => (
           <figure class="card xd-tile">
-            <div class="xr xd-media" data-xray="soft" style="--r: 70px;">
+            <div class="xr xd-media" data-xray="soft" style="--r: 55px;">
               <Image src={tl.base} alt={`${tl.name} — dış cephe`} widths={[480, 800]} sizes="(min-width:1024px) 30vw, 100vw" class="xr-img" />
               <Image src={tl.xray} alt="" aria-hidden="true" widths={[480, 800]} sizes="(min-width:1024px) 30vw, 100vw" class="xr-img xr-top" />
               <button type="button" class="t-tech xr-toggle" aria-pressed="false" data-open="KESİTİ AÇ" data-close="KESİTİ KAPAT">KESİTİ AÇ</button>
@@ -194,16 +198,17 @@ const tiles = [
   }
   .xr.active :global(.xr-top) { opacity: 1; }
 
-  /* Kazanan mekanik: tüylü kenarlı yumuşak mercek (tek kademe) */
+  /* Kazanan mekanik: tüylü kenarlı yumuşak mercek (tek kademe). Tüy sıkı
+     tutulur (%65→%95) ki algılanan alan çekirdeği aşmasın. */
   [data-xray='soft'] :global(.xr-top) {
-    -webkit-mask-image: radial-gradient(circle var(--r, 130px) at var(--x, 50%) var(--y, 50%), #000 58%, transparent 100%);
-    mask-image: radial-gradient(circle var(--r, 130px) at var(--x, 50%) var(--y, 50%), #000 58%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle var(--r, 85px) at var(--x, 50%) var(--y, 50%), #000 65%, transparent 95%);
+    mask-image: radial-gradient(circle var(--r, 85px) at var(--x, 50%) var(--y, 50%), #000 65%, transparent 95%);
   }
 
   /* B3 — keskin çekirdek + iki kademeli tüy: orta tam net, kenar yarı saydam ipucu */
   [data-xray='soft-core'] :global(.xr-top) {
-    -webkit-mask-image: radial-gradient(circle var(--r, 150px) at var(--x, 50%) var(--y, 50%), #000 45%, rgb(0 0 0 / 0.38) 68%, transparent 100%);
-    mask-image: radial-gradient(circle var(--r, 150px) at var(--x, 50%) var(--y, 50%), #000 45%, rgb(0 0 0 / 0.38) 68%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle var(--r, 95px) at var(--x, 50%) var(--y, 50%), #000 45%, rgb(0 0 0 / 0.38) 68%, transparent 100%);
+    mask-image: radial-gradient(circle var(--r, 95px) at var(--x, 50%) var(--y, 50%), #000 45%, rgb(0 0 0 / 0.38) 68%, transparent 100%);
   }
 
   /* B2 — odak karartması: mercek dışında kalan cepheye hafif perde */
@@ -257,6 +262,27 @@ const tiles = [
   }
   .xr-toggle:hover { color: var(--color-red-on-dark); }
 
+  /* Lab aracı: canlı yarıçap sürgüsü (production'a girmez) */
+  .xr-size {
+    position: absolute;
+    bottom: 0.75rem;
+    inset-inline-end: 0.75rem;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgb(14 15 17 / 0.85);
+    color: var(--color-mey-teal);
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-brand);
+  }
+  .xr-size-val { min-width: 3.2ch; font-variant-numeric: tabular-nums; }
+  .xr-size input {
+    width: 5.5rem;
+    accent-color: var(--color-mey-red);
+    cursor: pointer;
+  }
+
   /* Kart ızgarası: dış kart çerçeveyi taşır, .xr yalnız medya kutusudur */
   .xd-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
   @media (min-width: 640px) { .xd-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -284,13 +310,15 @@ const tiles = [
       el.style.setProperty('--x', x.toFixed(2) + '%');
       el.style.setProperty('--y', y.toFixed(2) + '%');
     };
+    const onControls = (e: Event) =>
+      !!(e.target as HTMLElement).closest('.xr-toggle, .xr-size');
     el.addEventListener('pointermove', (e) => {
-      if (el.classList.contains('open')) return;
+      if (el.classList.contains('open') || onControls(e)) return;
       el.classList.add('active');
       track(e);
     });
     el.addEventListener('pointerdown', (e) => {
-      if (el.classList.contains('open') || (e.target as HTMLElement).closest('.xr-toggle')) return;
+      if (el.classList.contains('open') || onControls(e)) return;
       el.classList.add('active');
       track(e);
     });
@@ -302,6 +330,14 @@ const tiles = [
       el.classList.remove('active');
       btn.setAttribute('aria-pressed', String(open));
       btn.textContent = open ? btn.dataset.close! : btn.dataset.open!;
+    });
+
+    // Lab aracı: yarıçap sürgüsü --r'yi canlı günceller, değeri gösterir
+    const size = el.querySelector<HTMLInputElement>('.xr-size input');
+    const sizeVal = el.querySelector<HTMLElement>('.xr-size-val');
+    size?.addEventListener('input', () => {
+      el.style.setProperty('--r', size.value + 'px');
+      if (sizeVal) sizeVal.textContent = 'R ' + size.value;
     });
   }
 </script>
