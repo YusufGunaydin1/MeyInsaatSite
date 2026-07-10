@@ -47,10 +47,10 @@ test('detail hero: cutaway hidden idle, revealed under cursor, toggle opens full
 
   // toggle: full cutaway for keyboard/touch users
   const btn = xr.locator('.xrv-toggle');
-  await expect(btn).toHaveText('Kesiti aç');
+  await expect(btn).toHaveText('İç görünümü aç');
   await btn.click();
   await expect(btn).toHaveAttribute('aria-pressed', 'true');
-  await expect(btn).toHaveText('Kesiti kapat');
+  await expect(btn).toHaveText('İç görünümü kapat');
   const openMask = await top.evaluate(
     (el) => getComputedStyle(el).maskImage || (getComputedStyle(el) as any).webkitMaskImage
   );
@@ -71,4 +71,30 @@ test('project tiles carry the lens on /projeler and home', async ({ page, viewpo
 test('toggle button is localized and present for touch users', async ({ page }) => {
   await page.goto(u('/en/projeler/ali'));
   await expect(page.locator('.pd-hero-media .xrv-toggle')).toHaveText('Show interior');
+});
+
+test('touch: lens is off by default, never blocks scrolling, button opens it', async ({ page, viewport }) => {
+  test.skip(!viewport || viewport.width > 500, 'touch behavior (mobile project)');
+  await page.goto(u('/projeler/ali'));
+  const xr = page.locator('.pd-hero-media .xrv');
+  const top = xr.locator('.xrv-top');
+  await xr.scrollIntoViewIfNeeded();
+
+  // The image must not claim touch gestures — page scroll stays free.
+  const touchAction = await xr.evaluate((el) => getComputedStyle(el).touchAction);
+  expect(touchAction).toBe('auto');
+
+  // A tap on the image itself reveals nothing (no lens on touch).
+  const box = (await xr.boundingBox())!;
+  await page.touchscreen.tap(box.x + box.width * 0.5, box.y + box.height * 0.3);
+  await expect(top).toHaveCSS('opacity', '0');
+
+  // The button is the on/off switch for the interior view.
+  const btn = xr.locator('.xrv-toggle');
+  await btn.tap();
+  await expect(top).toHaveCSS('opacity', '1');
+  await expect(btn).toHaveText('İç görünümü kapat');
+  await btn.tap();
+  await expect(top).toHaveCSS('opacity', '0');
+  await expect(btn).toHaveText('İç görünümü aç');
 });

@@ -5,8 +5,10 @@
   cutaway is revealed only in a small feathered circle around the cursor, so
   hovering a flat shows that flat's interior. The whole image never swaps.
   Radius owner-calibrated: ~85px at hero scale (one flat), 55px on tiles.
-  Touch drags the lens; the optional toggle button opens the full cutaway
-  (also the keyboard path). Pure CSS mask + a few lines of JS, no libraries.
+  The lens follows the cursor for hover-capable pointers (mouse/pen) ONLY —
+  on touch it is off by default so the image never hijacks page scrolling;
+  the toggle button is the touch (and keyboard) path to the full cutaway.
+  Pure CSS mask + a few lines of JS, no libraries.
 */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -73,7 +75,7 @@ const toggle = Boolean(openLabel && closeLabel);
     position: relative;
     overflow: hidden;
     aspect-ratio: 3 / 4; /* portrait covers; an explicit height (h-full) wins */
-    touch-action: none; /* touch drags the lens instead of scrolling over it */
+    /* No touch-action override: on touch the lens is off, scrolling stays free. */
   }
   .xrv :global(.xrv-img) {
     width: 100%;
@@ -111,7 +113,8 @@ const toggle = Boolean(openLabel && closeLabel);
 
 <script>
   // Cursor position -> two CSS vars (%); the reveal itself is pure CSS.
-  // Mouse: hover. Touch: drag (touch-action: none). Button: full cutaway.
+  // Hover-capable pointers (mouse/pen) only: touch must scroll the page, not
+  // drive the lens — on touch the toggle button is the way in.
   for (const el of document.querySelectorAll<HTMLElement>('.xrv[data-xray]')) {
     const track = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
@@ -122,11 +125,7 @@ const toggle = Boolean(openLabel && closeLabel);
     };
     const onToggle = (e: Event) => !!(e.target as HTMLElement).closest('.xrv-toggle');
     el.addEventListener('pointermove', (e) => {
-      if (el.classList.contains('open') || onToggle(e)) return;
-      el.classList.add('active');
-      track(e);
-    });
-    el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') return;
       if (el.classList.contains('open') || onToggle(e)) return;
       el.classList.add('active');
       track(e);
