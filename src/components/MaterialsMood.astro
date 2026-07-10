@@ -59,7 +59,7 @@ const DIMY = [
 ---
 
 <section class="theatre blueprint-grid mp-section">
-  <div class="container-site mp-pad">
+  <div class="mp-wrap mp-pad">
     <!-- faint stair-plan linework, as on a construction drawing (desktop only) -->
     <svg class="mp-plan" viewBox="0 0 520 340" aria-hidden="true">
       <g fill="none" stroke="currentColor">
@@ -189,6 +189,13 @@ const DIMY = [
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
   }
 
+  /* Poster panel: wider than the site container — at 1320px the stage
+     bottoms out near 480px and the board reads small next to the artwork */
+  .mp-wrap {
+    max-width: 1680px;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 3vw, 3rem);
+  }
   .mp-pad { position: relative; padding-block: clamp(3.5rem, 7vh, 5rem); }
   .mp-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr; gap: 3rem; }
 
@@ -368,16 +375,18 @@ const DIMY = [
     .mp-plan { display: block; }
     /* columns stretch to equal height so the bottom-pinned intro lands on the
        photo-caption row */
-    .mp-grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 2.5rem; }
+    .mp-grid { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 2.5rem; }
     .mp-intro { font-size: 1rem; max-width: 34ch; margin-top: auto; padding-top: 1.5rem; }
     /* the still-life rises beside the title, artwork-style; the pull grows
        with the viewport (a fixed -8rem drove the brick label into the title
        on 1024–1366 screens) */
-    .mp-board { margin-top: -3rem; margin-bottom: 2.75rem; width: 100%; }
+    .mp-board { margin-top: -3rem; margin-bottom: 2rem; width: 100%; }
     /* RTL flips the column but the board's callout geometry stays physical:
        a raised board would hang the steel label into the right-aligned title.
        Keep the board below the header there. */
-    :global(html[dir='rtl']) .mp-board { margin-top: 1.5rem; }
+    /* extra bottom room: the composite label drops below the base and would
+       otherwise land on the bottom-pinned intro */
+    :global(html[dir='rtl']) .mp-board { margin-top: 1.5rem; margin-bottom: 5rem; }
     /* gutters host the hanging labels; dims live inside/below the stage */
     .mp-stage { margin-inline: 10rem 7.5rem; }
     .mp-lines, .mp-sq, .mp-dimx { display: block; }
