@@ -19,6 +19,8 @@ const photos = import.meta.glob<{ default: ImageMetadata }>(
 );
 const photo = (name: string) =>
   photos[`../assets/projects/${name}.webp`]!.default;
+const xrayOf = (name: string) =>
+  photos[`../assets/projects/${name}-xray.webp`]?.default;
 
 /*
   Filter bar (type/status/location) intentionally deferred: three real projects
@@ -42,6 +44,7 @@ const photo = (name: string) =>
           title={p.md?.frontmatter?.name ?? p.slug}
           caption={p.md?.frontmatter?.summary}
           image={photo(p.data.cover)}
+          xray={xrayOf(p.data.cover)}
           alt={p.md?.frontmatter?.name ?? p.slug}
           href={localePath(locale, `/projeler/${p.slug}`)}
           portrait

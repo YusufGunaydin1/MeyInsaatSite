@@ -74,6 +74,10 @@
     "builtAreaM2": "m² inşa alanı",
     "region": "Faaliyet bölgesi"
   },
+  "xray": {
+    "open": "Kesiti aç",
+    "close": "Kesiti kapat"
+  },
   "placeholder": {
     "chip": "Bilgi bekleniyor",
     "value": "—",

@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PlaceholderChip from '../components/PlaceholderChip.astro';
 import ProjectStory from '../components/ProjectStory.astro';
+import XrayReveal from '../components/XrayReveal.astro';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui, project } from '../lib/content';
 import { Image } from 'astro:assets';
@@ -26,6 +27,8 @@ const imgs = import.meta.glob<{ default: ImageMetadata }>(
 );
 const img = (name: string) => imgs[`../assets/projects/${name}.webp`]?.default;
 const cover = img(data.cover);
+// Pixel-aligned cutaway twin (facade removed): powers the x-ray hover lens.
+const coverXray = img(`${data.cover}-xray`);
 const gallery = (data.gallery ?? []).map(img).filter(Boolean) as ImageMetadata[];
 const stages: string[] = data.stages ?? [];
 
@@ -54,7 +57,19 @@ const specs = [
 
     <div class="pd-hero mt-6">
       <figure class="pd-hero-media reveal">
-        {cover && (
+        {cover && coverXray ? (
+          <XrayReveal
+            base={cover}
+            xray={coverXray}
+            alt={fm.name ?? slug}
+            widths={[600, 900, 1200]}
+            sizes="(min-width: 900px) 44vw, 100vw"
+            radius={85}
+            openLabel={t.xray.open}
+            closeLabel={t.xray.close}
+            eager
+          />
+        ) : cover ? (
           <Image
             src={cover}
             alt={fm.name ?? slug}
@@ -63,7 +78,7 @@ const specs = [
             loading="eager"
             class="pd-hero-img"
           />
-        )}
+        ) : null}
       </figure>
 
       <div class="pd-hero-info guide-line-v reveal">

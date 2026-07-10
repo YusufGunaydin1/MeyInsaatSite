@@ -74,6 +74,10 @@
     "builtAreaM2": "m² built area",
     "region": "Operating region"
   },
+  "xray": {
+    "open": "Show interior",
+    "close": "Hide interior"
+  },
   "placeholder": {
     "chip": "Information pending",
     "value": "—",
@@ -109,7 +113,13 @@
       "eyebrow": "SITE RECORDS",
       "title": "From excavation to handover",
       "intro": "This building's real construction frames — from the first dig to completion.",
-      "stages": ["Excavation & Foundation", "Structure", "Walls & Infill", "Façade", "Completion"]
+      "stages": [
+        "Excavation & Foundation",
+        "Structure",
+        "Walls & Infill",
+        "Façade",
+        "Completion"
+      ]
     }
   },
   "contact": {

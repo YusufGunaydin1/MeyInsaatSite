@@ -28,6 +28,8 @@ const covers = import.meta.glob<{ default: ImageMetadata }>(
 );
 const cover = (name: string) =>
   covers[`../assets/projects/${name}.webp`]!.default;
+const xrayOf = (name: string) =>
+  covers[`../assets/projects/${name}-xray.webp`]?.default;
 const projectList = projects(locale);
 ---
 
@@ -58,6 +60,7 @@ const projectList = projects(locale);
             title={p.md?.frontmatter?.name ?? p.slug}
             caption={p.md?.frontmatter?.summary}
             image={cover(p.data.cover)}
+            xray={xrayOf(p.data.cover)}
             alt={p.md?.frontmatter?.name ?? p.slug}
             href={localePath(locale, `/projeler/${p.slug}`)}
             portrait

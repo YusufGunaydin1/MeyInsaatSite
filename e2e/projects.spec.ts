@@ -29,7 +29,8 @@ test('projects list shows the three real buildings with decoded covers', async (
 test('El Ele page: real name, decoded render, construction story, honest specs', async ({ page }) => {
   await page.goto(u('/projeler/el-ele-apartmani'));
   await expect(page.locator('h1')).toHaveText('El Ele Apartmanı');
-  await decodes(page, '.pd-hero-img');
+  // Hero renders through the x-ray lens component; the base cover is its first img.
+  await decodes(page, '.pd-hero-media img');
 
   // Per-building construction story: 5 real stage frames + labelled records.
   await expect(page.getByText('ŞANTİYE KAYITLARI')).toBeVisible();
@@ -43,7 +44,7 @@ test('El Ele page: real name, decoded render, construction story, honest specs',
 test('Ali page: decoded render, no fabricated construction story', async ({ page }) => {
   await page.goto(u('/projeler/ali'));
   await expect(page.locator('h1')).toHaveText('Ali Apartmanı');
-  await decodes(page, '.pd-hero-img');
+  await decodes(page, '.pd-hero-media img');
   // Ali has no stage sequence → the story section must be absent (not faked).
   await expect(page.locator('.ps-strip')).toHaveCount(0);
 });
