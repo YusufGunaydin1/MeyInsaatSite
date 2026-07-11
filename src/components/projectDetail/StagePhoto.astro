@@ -1,0 +1,95 @@
+---
+/*
+  Sol sütun: 3:4 bina fotoğrafı + canlı sitedeki survey-etiket dili (nivo direği,
+  tip/statü gerçek; bilinmeyenler tek "doğrulanıyor" etiketi). Cutaway ikizi varsa
+  X-ray hover merceği fotoğrafın üzerinde aynen çalışır; etiketler pointer-events
+  almaz ki mercek imleci kesintisiz izlesin.
+*/
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import XrayReveal from '../XrayReveal.astro';
+
+interface Props {
+  name: string;
+  typeLabel: string;
+  statusLabel: string;
+  pendingLabel: string;
+  cover: ImageMetadata;
+  coverXray?: ImageMetadata;
+}
+const { name, typeLabel, statusLabel, pendingLabel, cover, coverXray } = Astro.props;
+
+const widths = [480, 800, 1200];
+const sizes = '(min-width: 1024px) 28vw, 100vw';
+---
+
+<figure class="pds-photo" data-testid="pd-photo">
+  {coverXray ? (
+    <XrayReveal base={cover} xray={coverXray} alt={name} widths={widths} sizes={sizes} radius={85} eager class="pds-xr" />
+  ) : (
+    <Image src={cover} alt={name} widths={widths} sizes={sizes} loading="eager" class="pds-cover" />
+  )}
+  <span class="pds-pole" aria-hidden="true"></span>
+  <span class="pds-tag t-tech" style="--kt: 14%;">{typeLabel}</span>
+  <span class="pds-tag t-tech" style="--kt: 38%;">{statusLabel}</span>
+  <span class="pds-tag pds-tag-pending t-tech" style="--kt: 64%;">{pendingLabel}</span>
+</figure>
+
+<style>
+  .pds-photo {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: var(--color-concrete-100);
+    min-width: 0;
+  }
+  .pds-cover { width: 100%; height: auto; display: block; aspect-ratio: 3 / 4; object-fit: cover; }
+  /* İğneli modda foto sütun boyunu doldurur (sütun genişliği zaten 3:4'ten türetilir) */
+  :global(.pds-pinned) .pds-photo { height: 100%; }
+  :global(.pds-pinned) .pds-photo :global(.pds-xr) { height: 100%; aspect-ratio: auto; }
+  :global(.pds-pinned) .pds-cover { height: 100%; aspect-ratio: auto; }
+
+  /* Nivo direği + şantiye etiketleri; mercek imleci izleyebilsin diye tıklanmaz */
+  .pds-pole {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 1.25rem;
+    width: 2px;
+    background: var(--color-mey-red);
+    opacity: 0.9;
+    pointer-events: none;
+  }
+  .pds-tag {
+    position: absolute;
+    top: var(--kt);
+    inset-inline-start: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    background: rgb(14 15 17 / 0.85);
+    color: #fff;
+    padding-block: 0.3rem;
+    padding-inline: 1rem 0.6rem;
+    border-radius: var(--radius-brand);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .pds-tag::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    width: 0.65rem;
+    height: 2px;
+    background: var(--color-mey-red);
+  }
+  .pds-tag-pending {
+    color: rgb(244 244 242 / 0.6);
+    border: 1px dashed rgb(244 244 242 / 0.25);
+    background: rgb(14 15 17 / 0.7);
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    white-space: normal;
+    max-inline-size: calc(100% - 2.5rem);
+  }
+</style>

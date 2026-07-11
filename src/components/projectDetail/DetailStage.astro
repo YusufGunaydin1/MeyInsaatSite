@@ -1,0 +1,339 @@
+---
+/*
+  YATAY DETAY SAHNESİ — editoryal, sayfa ölçüsünde (tam-ekran tiyatro DEĞİL).
+  Sol foto hiç değişmez; sayfa dikey kaydıkça bölüm iğnelenir ve sağ pencere üç
+  kareyi 1:1 yatay tarar (scroll = ilerleme; imza bölümüyle aynı dil). RTL'de
+  pan işareti döner: kareler sağdan sola ilerler. Masaüstü + hareket-serbest
+  dışında (mobil, prefers-reduced-motion, no-JS) kareler DOM sırasıyla dikey
+  yığındadır; içerik hiçbir modda kilitli değil.
+  Pan pisti GERÇEK bir elemandır: position:sticky yalnız ebeveynin İÇERİK
+  kutusunda yol alır — padding pisti sessizce iğneyi öldürür (yaşanmış hata).
+*/
+import type { ImageMetadata } from 'astro';
+import type { Locale } from '../../lib/i18n';
+import { localePath } from '../../lib/i18n';
+import { ui } from '../../lib/content';
+import StagePhoto from './StagePhoto.astro';
+import FrameStory from './FrameStory.astro';
+import FrameSpaces from './FrameSpaces.astro';
+import FrameDossier from './FrameDossier.astro';
+
+export interface StageImages {
+  salon: ImageMetadata;
+  mutfak: ImageMetadata;
+  cephe: ImageMetadata;
+  izometrik: ImageMetadata;
+  vaziyet: ImageMetadata;
+  malzeme: ImageMetadata;
+  dokular: ImageMetadata[];
+}
+
+interface Props {
+  locale: Locale;
+  name: string;
+  typeLabel: string;
+  statusLabel: string;
+  cover: ImageMetadata;
+  coverXray?: ImageMetadata;
+  imgs: StageImages;
+}
+const { locale, name, typeLabel, statusLabel, cover, coverXray, imgs } = Astro.props;
+
+const t = ui(locale);
+const td = t.projects.detail;
+const eyebrow = String(t.nav.projects).toUpperCase();
+
+const frames = [
+  { id: 'hikaye', name: td.frames.story },
+  { id: 'mekan', name: td.frames.spaces },
+  { id: 'kunye', name: td.frames.dossier },
+];
+---
+
+<section class="pds" data-pd-stage data-testid="pd-stage">
+  <div class="pds-sticky">
+    <div class="pds-stage container-site">
+      <div class="pds-spread">
+        <div class="pds-left">
+          <StagePhoto
+            name={name}
+            typeLabel={typeLabel}
+            statusLabel={statusLabel}
+            pendingLabel={td.pendingTag}
+            cover={cover}
+            coverXray={coverXray}
+          />
+          <div class="pds-foot">
+            <span class="t-tech pds-label" data-pd-label data-testid="pd-progress">
+              01 / 03 — {frames[0].name}
+            </span>
+            <span class="pds-nav">
+              <button class="pds-btn" type="button" data-pd-prev aria-label={td.prev}>
+                <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">←</span>
+              </button>
+              <button class="pds-btn" type="button" data-pd-next aria-label={td.next}>
+                <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="pds-window">
+          <div class="pds-track" data-testid="pd-track">
+            <article class="pds-frame" data-name={frames[0].name} data-testid="pd-frame-hikaye">
+              <FrameStory
+                name={name}
+                statusLabel={statusLabel}
+                eyebrow={eyebrow}
+                t={td.story}
+                brand={td.brand}
+                salon={imgs.salon}
+                malzeme={imgs.malzeme}
+              />
+            </article>
+            <article class="pds-frame" data-name={frames[1].name} data-testid="pd-frame-mekan">
+              <FrameSpaces
+                typeLabel={typeLabel}
+                statusLabel={statusLabel}
+                t={td.spaces}
+                samples={td.samples}
+                cephe={imgs.cephe}
+                mutfak={imgs.mutfak}
+                salon={imgs.salon}
+                vaziyet={imgs.vaziyet}
+              />
+            </article>
+            <article class="pds-frame" data-name={frames[2].name} data-testid="pd-frame-kunye">
+              <FrameDossier
+                typeLabel={typeLabel}
+                statusLabel={statusLabel}
+                t={td.dossier}
+                samples={td.samples}
+                brand={td.brand}
+                ctaHref={localePath(locale, '/iletisim')}
+                izometrik={imgs.izometrik}
+                dokular={imgs.dokular}
+              />
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Pan pisti: gerçek eleman — sticky ebeveynin İÇERİK kutusunda yol alır -->
+  <div class="pds-runway" aria-hidden="true"></div>
+</section>
+
+<!-- Dürüstlük dipnotu: örnek/temsilî değerlerin TEK açıklaması -->
+<div class="container-site">
+  <p class="t-caption pds-note" data-testid="pd-note">{td.samplesNote}</p>
+</div>
+
+<style>
+  /* ---- Varsayılan: dikey yığın (mobil / reduced-motion / no-JS) ---- */
+  .pds-spread {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .pds-stage { padding-block: clamp(1.5rem, 4vh, 2.5rem); }
+  /* Yığın modunda 3:4 foto tam konteyneri kaplamasın (reduced-motion masaüstü) */
+  .pds-left { display: grid; gap: 0.65rem; align-content: start; min-width: 0; max-width: 32rem; }
+  .pds-pinned .pds-left { max-width: none; }
+  .pds-foot { display: none; }
+  .pds-runway { display: none; }
+  .pds-track {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  .pds-frame { min-width: 0; }
+  .pds-note {
+    color: var(--color-graphite-400);
+    max-width: 62ch;
+    margin-block: 0.5rem 0;
+  }
+
+  /* ---- İğneli yatay mod (JS + ≥1024 + hareket serbest → .pds-pinned) ---- */
+  .pds-pinned .pds-runway {
+    /* kare başına ~80svh dikey scroll (2 geçiş) */
+    display: block;
+    height: 160svh;
+  }
+  .pds-pinned .pds-sticky {
+    position: sticky;
+    /* JS, sahneyi görünür alanda dikey ortalayacak şekilde --pds-top yazar */
+    top: var(--pds-top, 5rem);
+  }
+  .pds-pinned .pds-spread {
+    /* B ölçüsü: sahne yüksekliği; foto 3:4 kalır (ilerleme satırı payı düşülür) */
+    --pds-h: clamp(30rem, 38vw, 34rem);
+    --pds-foot: 2.65rem;
+    grid-template-columns: calc((var(--pds-h) - var(--pds-foot)) * 3 / 4) minmax(0, 1fr);
+    grid-template-rows: var(--pds-h);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: stretch;
+  }
+  .pds-pinned .pds-left {
+    grid-template-rows: minmax(0, 1fr) 2rem;
+    min-height: 0;
+    height: 100%;
+  }
+  .pds-pinned .pds-window {
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+  }
+  .pds-pinned .pds-track {
+    flex-direction: row;
+    gap: 0;
+    height: 100%;
+    will-change: transform;
+  }
+  .pds-pinned .pds-frame {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    /* komşu kareye sızma yok; içerik sığmazsa kare kendi içinde kaydırır */
+    overflow: hidden auto;
+    /* kareler arasında nefes: geçiş anında içerikler dip dibe girmez */
+    padding-inline-end: clamp(2.5rem, 4vw, 4.5rem);
+  }
+
+  .pds-pinned .pds-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .pds-label { color: var(--color-graphite-400); }
+  .pds-nav { display: inline-flex; gap: 0.5rem; }
+  .pds-btn {
+    width: 2rem;
+    height: 2rem;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    color: var(--color-graphite-600);
+    background: #fff;
+    transition: border-color 200ms ease-out, color 200ms ease-out;
+  }
+  .pds-btn:hover { border-color: var(--color-mey-red); color: var(--color-mey-red); }
+
+  /* İğneli modda kare görselleri sabit oranı bırakıp satırı doldurur
+     (yığın modunda oranlar karelerin kendi scoped stillerinden gelir). */
+  .pds-pinned .pds-track :global(.pm-ch-media) {
+    aspect-ratio: auto;
+    height: 100%;
+    align-self: stretch;
+  }
+  /* Vaziyet dar rayda kare kırpım: yatay pafta şerit gibi ezilmesin */
+  .pds-pinned .pds-track :global(.pm-map-img) {
+    aspect-ratio: 1 / 1;
+    flex: none;
+  }
+  .pds-pinned .pds-track :global(.pk-iso-img) {
+    aspect-ratio: auto;
+  }
+</style>
+
+<script>
+  const roots = document.querySelectorAll<HTMLElement>('[data-pd-stage]');
+
+  roots.forEach((root) => {
+    const sticky = root.querySelector<HTMLElement>('.pds-sticky');
+    const track = root.querySelector<HTMLElement>('.pds-track');
+    const win = root.querySelector<HTMLElement>('.pds-window');
+    const label = root.querySelector<HTMLElement>('[data-pd-label]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-pd-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-pd-next]');
+    if (!sticky || !track || !win) return;
+
+    const frames = Array.from(track.children) as HTMLElement[];
+    const names = frames.map((p) => p.dataset.name ?? '');
+    const N = frames.length;
+    const mq = matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)');
+    /* RTL'de kareler sağdan sola akar: pan işareti döner */
+    const sign = document.documentElement.dir === 'rtl' ? 1 : -1;
+    let pinned = false;
+    let ticking = false;
+    let topOff = 0;
+
+    /* Sahne görünür alandan kısa: pin noktası = dikey ortalanmış konum */
+    const total = () => root.offsetHeight - sticky.offsetHeight;
+    const pan = () => track.scrollWidth - win.clientWidth;
+    const progress = () => {
+      const t = total();
+      if (t <= 0) return 0;
+      return Math.min(1, Math.max(0, (topOff - root.getBoundingClientRect().top) / t));
+    };
+
+    function apply() {
+      if (!pinned) return;
+      const p = progress();
+      track!.style.transform = `translate3d(${sign * p * pan()}px, 0, 0)`;
+      const idx = Math.min(N - 1, Math.round(p * (N - 1)));
+      if (label) {
+        label.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')} — ${names[idx]}`;
+      }
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        apply();
+      });
+    }
+
+    /** Kare atlama: ok düğmeleri sayfayı ilgili karenin scroll konumuna taşır. */
+    function jump(delta: number) {
+      const t = total();
+      if (t <= 0) return;
+      const step = t / (N - 1);
+      const target = Math.min(N - 1, Math.max(0, Math.round(progress() * (N - 1)) + delta));
+      const rootTop = root.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: rootTop - topOff + target * step, behavior: 'smooth' });
+    }
+
+    function setMode() {
+      pinned = mq.matches;
+      root.classList.toggle('pds-pinned', pinned);
+      if (pinned) {
+        topOff = Math.max(24, (window.innerHeight - sticky!.offsetHeight) / 2);
+        root.style.setProperty('--pds-top', `${topOff}px`);
+      } else {
+        track!.style.transform = '';
+      }
+      apply();
+    }
+
+    mq.addEventListener('change', setMode);
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', setMode, { passive: true });
+    prev?.addEventListener('click', () => jump(-1));
+    next?.addEventListener('click', () => jump(1));
+
+    /* Tarayıcı, odak/scrollIntoView ile overflow:hidden pencereyi kaydırabilir —
+       pan hizasını bozar; pencerenin kendi scroll'u daima sıfırda tutulur */
+    win.addEventListener('scroll', () => {
+      if (win.scrollLeft !== 0) win.scrollLeft = 0;
+      if (win.scrollTop !== 0) win.scrollTop = 0;
+    });
+
+    /* Klavye odağı ekran dışı karede kalmasın: odaklanan karenin konumuna atla */
+    track.addEventListener('focusin', (e) => {
+      if (!pinned || !(e.target instanceof Node)) return;
+      const i = frames.findIndex((p) => p.contains(e.target as Node));
+      if (i < 0) return;
+      const t = total();
+      const rootTop = root.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: rootTop - topOff + (i * t) / (N - 1) });
+    });
+
+    setMode();
+  });
+</script>

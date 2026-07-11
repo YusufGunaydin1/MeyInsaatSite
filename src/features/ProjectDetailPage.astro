@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import PlaceholderChip from '../components/PlaceholderChip.astro';
 import ProjectStory from '../components/ProjectStory.astro';
 import XrayReveal from '../components/XrayReveal.astro';
+import DetailStage from '../components/projectDetail/DetailStage.astro';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui, project } from '../lib/content';
 import { Image } from 'astro:assets';
@@ -39,6 +40,24 @@ const specs = [
   { label: t.projects.specs.year, value: data.year },
   { label: t.projects.specs.units, value: data.units },
 ];
+
+// Yatay detay sahnesi: galeri seti TAM olan projelerde (bugün yalnız Ali).
+// Eksik setli projeler dürüst basit hero'da kalır — asla temsilî dolgu yok.
+const stageImgs = {
+  salon: img(`${slug}-salon`)!,
+  mutfak: img(`${slug}-mutfak`)!,
+  cephe: img(`${slug}-cephe-cizim`)!,
+  izometrik: img(`${slug}-izometrik`)!,
+  vaziyet: img(`${slug}-vaziyet`)!,
+  malzeme: img(`${slug}-malzeme`)!,
+  dokular: ['beton', 'tugla', 'cam', 'metal'].map((d) => img(`${slug}-doku-${d}`)!),
+};
+const hasStage =
+  !!cover &&
+  Object.values(stageImgs).every(Boolean) &&
+  stageImgs.dokular.every(Boolean);
+const typeLabel = String(t.projects.types?.[data.type] ?? data.type).toLocaleUpperCase(locale);
+const statusLabel = String(t.projects.status[data.status] ?? data.status).toLocaleUpperCase(locale);
 ---
 
 <Base
@@ -48,55 +67,70 @@ const specs = [
   title={`${fm.name ?? slug} — MEY İnşaat`}
   description={fm.summary}
 >
-  <!-- HERO — editorial split: the finished building (a tall render) beside the
-       name + honest specs. The building is the star. -->
-  <section class="container-site section-pad">
+  <!-- Geri bağlantısı — her iki hero varyantının üstünde ortak -->
+  <div class="container-site pd-back-pad">
     <a href={localePath(locale, '/projeler')} class="t-tech pd-back">
       <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">←</span> {t.cta.allProjects}
     </a>
+  </div>
 
-    <div class="pd-hero mt-6">
-      <figure class="pd-hero-media reveal">
-        {cover && coverXray ? (
-          <XrayReveal
-            base={cover}
-            xray={coverXray}
-            alt={fm.name ?? slug}
-            widths={[600, 900, 1200]}
-            sizes="(min-width: 900px) 44vw, 100vw"
-            radius={85}
-            eager
-          />
-        ) : cover ? (
-          <Image
-            src={cover}
-            alt={fm.name ?? slug}
-            widths={[600, 900, 1200]}
-            sizes="(min-width: 900px) 44vw, 100vw"
-            loading="eager"
-            class="pd-hero-img"
-          />
-        ) : null}
-      </figure>
+  {/* Yatay detay sahnesi: foto sabit solda, sağ pencere scroll ile üç kareyi tarar.
+      Galeri seti eksikse dürüst basit hero (aşağıdaki) kalır. */}
+  {hasStage && cover ? (
+    <DetailStage
+      locale={locale}
+      name={fm.name ?? slug}
+      typeLabel={typeLabel}
+      statusLabel={statusLabel}
+      cover={cover}
+      coverXray={coverXray}
+      imgs={stageImgs}
+    />
+  ) : (
+    <section class="container-site pd-hero-pad">
+      <div class="pd-hero">
+        <figure class="pd-hero-media reveal">
+          {cover && coverXray ? (
+            <XrayReveal
+              base={cover}
+              xray={coverXray}
+              alt={fm.name ?? slug}
+              widths={[600, 900, 1200]}
+              sizes="(min-width: 900px) 44vw, 100vw"
+              radius={85}
+              eager
+            />
+          ) : cover ? (
+            <Image
+              src={cover}
+              alt={fm.name ?? slug}
+              widths={[600, 900, 1200]}
+              sizes="(min-width: 900px) 44vw, 100vw"
+              loading="eager"
+              class="pd-hero-img"
+            />
+          ) : null}
+        </figure>
 
-      <div class="pd-hero-info guide-line-v reveal">
-        <p class="t-tech text-mey-red mb-3">{t.nav.projects.toUpperCase()}</p>
-        <h1 class="t-display-l">{fm.name}</h1>
-        <p class="t-body-l mt-4">{fm.summary}</p>
+        <div class="pd-hero-info guide-line-v reveal">
+          <p class="t-tech text-mey-red mb-3">{t.nav.projects.toUpperCase()}</p>
+          <h1 class="t-display-l">{fm.name}</h1>
+          <p class="t-body-l mt-4">{fm.summary}</p>
 
-        <dl class="pd-specs mt-8">
-          {specs.map((s) => (
-            <div class="pd-spec">
-              <dt class="t-tech text-graphite-400">{s.label}</dt>
-              <dd class="t-heading-s mt-1 tabular-nums">
-                {s.value ?? <PlaceholderChip locale={locale} />}
-              </dd>
-            </div>
-          ))}
-        </dl>
+          <dl class="pd-specs mt-8">
+            {specs.map((s) => (
+              <div class="pd-spec">
+                <dt class="t-tech text-graphite-400">{s.label}</dt>
+                <dd class="t-heading-s mt-1 tabular-nums">
+                  {s.value ?? <PlaceholderChip locale={locale} />}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <!-- CONSTRUCTION STORY — this building's real time-lapse (skipped if no frames) -->
   {stages.length > 0 && <ProjectStory locale={locale} stages={stages} />}
@@ -132,6 +166,8 @@ const specs = [
     color: var(--color-graphite-400);
   }
   .pd-back:hover { color: var(--color-mey-red); }
+  .pd-back-pad { padding-block-start: clamp(2.5rem, 6vh, 4rem); }
+  .pd-hero-pad { padding-block: 1.5rem clamp(4rem, 10vh, 8rem); }
 
   .pd-hero { display: grid; grid-template-columns: 1fr; gap: 2rem; }
   @media (min-width: 900px) {

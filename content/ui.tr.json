@@ -130,6 +130,91 @@
         "Cephe",
         "Tamamlanma"
       ]
+    },
+    "detail": {
+      "pendingTag": "KONUM · YIL · DAİRE — DOĞRULANIYOR",
+      "brand": "MEY İNŞAAT",
+      "prev": "Önceki bölüm",
+      "next": "Sonraki bölüm",
+      "frames": {
+        "story": "HİKÂYE",
+        "spaces": "MEKÂN",
+        "dossier": "KÜNYE"
+      },
+      "story": {
+        "para": "Ali Apartmanı, modern aile yaşamının ihtiyaçları düşünülerek tasarlandı. Ferah iç mekânlar, bol gün ışığı alan yaşam alanları ve cam balkon detayları ile konforu estetikle buluşturuyor.",
+        "quote": "“Şehrin içinde,\nhuzurlu bir yaşam.”",
+        "features": ["Gün ışığı", "Cam balkon", "Merkezi konum"],
+        "salonAlt": "Salon — gün ışığı alan yaşam alanı (temsilî görsel)",
+        "malzemeAlt": "Cephe malzemeleri — tuğla, cam balkon, beton (temsilî kompozisyon)"
+      },
+      "spaces": {
+        "chapters": [
+          {
+            "name": "CEPHE",
+            "text": "Cam balkonlar ve dikey ritimle güçlenen modern cephe.",
+            "alt": "Cephe detayı — teknik çizim (temsilî)"
+          },
+          {
+            "name": "İÇ MEKÂN",
+            "text": "Gün ışığı ve sade malzeme diliyle tasarlanmış iç mekânlar.",
+            "alt": "Mutfak (temsilî görsel)"
+          },
+          {
+            "name": "YAŞAM",
+            "text": "Yeşil dokuyla çevrili balkonlar, huzurlu bir nefes alanı.",
+            "alt": "Salon ve balkon (temsilî görsel)"
+          }
+        ],
+        "floorsWord": "KAT",
+        "unitsWord": "DAİRE",
+        "mapAlt": "Vaziyet paftası — konum krokisi (temsilî)",
+        "mapCaption": "VAZİYET — TEMSİLİ"
+      },
+      "dossier": {
+        "summaryTitle": "PROJE ÖZETİ",
+        "labels": {
+          "type": "PROJE TİPİ",
+          "status": "STATÜ",
+          "place": "YER",
+          "year": "YIL",
+          "client": "MÜŞTERİ",
+          "contractor": "MÜTEAHHİT"
+        },
+        "clientSample": "ÖZEL",
+        "timelineTitle": "ZAMAN ÇİZELGESİ",
+        "timeline": [
+          {
+            "date": "03.2023",
+            "name": "Projelendirme",
+            "desc": "Proje ve ruhsat süreçleri tamamlandı."
+          },
+          {
+            "date": "07.2023",
+            "name": "Kaba İnşaat",
+            "desc": "Taşıyıcı sistem ve kaba inşaat tamamlandı."
+          },
+          {
+            "date": "06.2024",
+            "name": "Teslim",
+            "desc": "İnce işler ve kontroller tamamlanarak teslim edildi."
+          }
+        ],
+        "isoAlt": "Ali Apartmanı — aksonometrik çizim (temsilî)",
+        "isoCaption": "AKSONOMETRİ — TEMSİLİ",
+        "materialsTitle": "CEPHE & MALZEME",
+        "materials": ["BETON", "TUĞLA", "CAM", "METAL"],
+        "cta": "DETAYLI PROJE BİLGİSİ"
+      },
+      "samples": {
+        "place": "BAĞCILAR",
+        "city": "İSTANBUL",
+        "placeCity": "İSTANBUL · BAĞCILAR",
+        "floors": "6",
+        "units": "24",
+        "year": "2024"
+      },
+      "samplesNote": "Gri renkte gösterilen konum, yıl, kat, daire ve zaman çizelgesi değerleri örnek yerleşimdir; MEY İnşaat doğruladığında güncellenecek. İç mekân, vaziyet ve aksonometri görselleri temsilîdir."
     }
   },
   "contact": {

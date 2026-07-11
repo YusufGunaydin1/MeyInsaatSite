@@ -41,10 +41,12 @@ test('El Ele page: real name, decoded render, construction story, honest specs',
   await expect(page.locator('.pd-specs')).toContainText('Bilgi bekleniyor');
 });
 
-test('Ali page: decoded render, no fabricated construction story', async ({ page }) => {
+test('Ali page: horizontal stage hero, decoded cover, no fabricated story', async ({ page }) => {
   await page.goto(u('/projeler/ali'));
   await expect(page.locator('h1')).toHaveText('Ali Apartmanı');
-  await decodes(page, '.pd-hero-media img');
+  // Ali's full gallery set → the horizontal detail stage replaces the simple hero.
+  await expect(page.getByTestId('pd-stage')).toHaveCount(1);
+  await decodes(page, '[data-testid="pd-photo"] img');
   // Ali has no stage sequence → the story section must be absent (not faked).
   await expect(page.locator('.ps-strip')).toHaveCount(0);
 });

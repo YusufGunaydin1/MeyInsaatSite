@@ -10,10 +10,11 @@ import { u } from './util';
   coincide (0-delta boxes), and no toggle anywhere.
 */
 
-test('detail hero: cutaway hidden idle, revealed under cursor, no toggle', async ({ page, viewport }) => {
+test('detail stage photo: cutaway hidden idle, revealed under cursor, no toggle', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width < 900, 'desktop hover flow');
   await page.goto(u('/projeler/ali'));
-  const xr = page.locator('.pd-hero-media .xrv');
+  // Ali renders the horizontal stage; the lens lives on its fixed left photo.
+  const xr = page.locator('[data-testid="pd-photo"] .xrv');
   const top = xr.locator('.xrv-top');
   await xr.scrollIntoViewIfNeeded();
 
@@ -50,6 +51,18 @@ test('detail hero: cutaway hidden idle, revealed under cursor, no toggle', async
   await expect(xr.locator('.xrv-toggle')).toHaveCount(0);
 });
 
+test('classic hero (El Ele) keeps the lens: hidden idle, hover reveals', async ({ page, viewport }) => {
+  test.skip(!viewport || viewport.width < 900, 'desktop hover flow');
+  await page.goto(u('/projeler/el-ele-apartmani'));
+  const xr = page.locator('.pd-hero-media .xrv');
+  const top = xr.locator('.xrv-top');
+  await xr.scrollIntoViewIfNeeded();
+  await expect(top).toHaveCSS('opacity', '0');
+  const box = (await xr.boundingBox())!;
+  await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.4);
+  await expect(top).toHaveCSS('opacity', '1');
+});
+
 test('project tiles carry the lens on /projeler and home', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width < 900, 'desktop hover flow');
   for (const path of ['/projeler', '/']) {
@@ -71,7 +84,7 @@ test('no interior toggle exists on any locale', async ({ page }) => {
 test('touch: lens stays off and never blocks scrolling', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width > 500, 'touch behavior (mobile project)');
   await page.goto(u('/projeler/ali'));
-  const xr = page.locator('.pd-hero-media .xrv');
+  const xr = page.locator('[data-testid="pd-photo"] .xrv');
   const top = xr.locator('.xrv-top');
   await xr.scrollIntoViewIfNeeded();
 

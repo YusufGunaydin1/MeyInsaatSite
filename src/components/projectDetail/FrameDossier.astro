@@ -1,0 +1,195 @@
+---
+/*
+  KARE 03 — KÜNYE: mono proje özeti solda (tip/statü/müteahhit gerçek; yer/yıl/
+  müşteri örnek → gri), kırmızı raylı zaman çizelgesi ortada (örnek tarihler gri),
+  aksonometrik pafta sağda; kapanışta malzeme çipleri + kırmızı çerçeveli CTA.
+*/
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  typeLabel: string;
+  statusLabel: string;
+  t: Record<string, any>;
+  samples: Record<string, string>;
+  brand: string;
+  ctaHref: string;
+  izometrik: ImageMetadata;
+  dokular: ImageMetadata[];
+}
+const { typeLabel, statusLabel, t, samples, brand, ctaHref, izometrik, dokular } = Astro.props;
+
+const ozet = [
+  { k: t.labels.type, v: typeLabel, sample: false },
+  { k: t.labels.status, v: statusLabel, sample: false },
+  { k: t.labels.place, v: samples.placeCity, sample: true },
+  { k: t.labels.year, v: samples.year, sample: true },
+  { k: t.labels.client, v: t.clientSample, sample: true },
+  { k: t.labels.contractor, v: brand, sample: false },
+];
+
+const malzeme = (t.materials as string[]).map((ad, i) => ({ ad, img: dokular[i] }));
+---
+
+<div class="pk">
+  <div class="pk-cols">
+    <div class="pk-col">
+      <h3 class="t-tech text-mey-red pk-h">{t.summaryTitle}</h3>
+      <dl class="pk-ozet">
+        {ozet.map((o) => (
+          <div class="pk-ozet-row">
+            <dt class="t-tech pk-ozet-k">{o.k}</dt>
+            <dd class:list={['t-tech pk-ozet-v', o.sample && 'pk-sample']}>{o.v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="pk-col">
+      <h3 class="t-tech text-mey-red pk-h">{t.timelineTitle}</h3>
+      <ol class="pk-tl">
+        {t.timeline.map((z: { date: string; name: string; desc: string }) => (
+          <li class="pk-tl-item">
+            <p class="t-tech pk-sample">{z.date}</p>
+            <p class="t-heading-s pk-tl-ad">{z.name}</p>
+            <p class="t-caption pk-tl-d">{z.desc}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <figure class="pk-iso">
+      <Image
+        src={izometrik}
+        alt={t.isoAlt}
+        widths={[480, 800]}
+        sizes="(min-width: 1024px) 20vw, 60vw"
+        class="pk-iso-img"
+        data-testid="pd-iso"
+      />
+      <figcaption class="t-tech pk-cap">{t.isoCaption}</figcaption>
+    </figure>
+  </div>
+
+  <footer class="pk-foot">
+    <div class="pk-mat">
+      <h3 class="t-tech text-mey-red">{t.materialsTitle}</h3>
+      <ul class="pk-chips">
+        {malzeme.map((m) => (
+          <li class="pk-chip">
+            <Image src={m.img} alt={m.ad} widths={[176, 352]} sizes="48px" class="pk-chip-img" />
+            <p class="t-tech pk-chip-ad">{m.ad}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <a class="t-tech pk-cta" href={ctaHref} data-testid="pd-cta">
+      {t.cta} <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span>
+    </a>
+  </footer>
+</div>
+
+<style>
+  .pk {
+    height: 100%;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+  .pk-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    min-height: 0;
+  }
+  @media (min-width: 1024px) {
+    .pk-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr) minmax(0, 0.8fr); gap: clamp(1.5rem, 2.5vw, 2.5rem); }
+  }
+  .pk-col { min-width: 0; }
+  .pk-h { margin-block-end: 0.9rem; }
+
+  .pk-ozet { display: grid; gap: 0.6rem; }
+  .pk-ozet-row { display: grid; grid-template-columns: minmax(6.5rem, auto) 1fr; gap: 0.7rem; align-items: baseline; }
+  .pk-ozet-k { color: var(--color-graphite-400); }
+  .pk-ozet-k::after { content: " :"; }
+  .pk-ozet-v { color: var(--color-graphite-900); }
+  .pk-sample { color: var(--color-graphite-400); }
+
+  /* Malzeme paleti: kapanış şeridinde tek sıra 48px çipler */
+  .pk-mat { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+  .pk-chips { list-style: none; display: flex; gap: 1rem; }
+  .pk-chip { display: grid; gap: 0.25rem; justify-items: center; }
+  .pk-chip-img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    display: block;
+  }
+  .pk-chip-ad { color: var(--color-graphite-600); font-size: 0.625rem; }
+
+  .pk-tl { list-style: none; position: relative; padding-inline-start: 1.4rem; display: grid; gap: 1.3rem; }
+  .pk-tl::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 5px;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2px;
+    background: var(--color-mey-red);
+    opacity: 0.85;
+  }
+  .pk-tl-item { position: relative; }
+  .pk-tl-item::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -1.4rem;
+    top: 0.15rem;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--color-mey-red);
+    border-radius: 50%;
+    background: var(--color-concrete-050);
+  }
+  .pk-tl-ad { margin-block-start: 0.2rem; }
+  .pk-tl-d { color: var(--color-graphite-600); margin-block-start: 0.2rem; }
+
+  .pk-iso {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    min-height: 0;
+  }
+  .pk-iso-img { width: 100%; display: block; flex: 1; min-height: 0; object-fit: cover; aspect-ratio: 3 / 4; }
+  .pk-cap {
+    color: var(--color-graphite-400);
+    border-block-start: 1px solid var(--color-line);
+    padding: 0.4rem 0.6rem;
+  }
+
+  .pk-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+    border-block-start: 1px solid var(--color-line);
+    padding-block-start: 1rem;
+  }
+  .pk-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-mey-red);
+    border: 1px solid var(--color-mey-red);
+    border-radius: var(--radius-brand);
+    padding: 0.75rem 1.1rem;
+    transition: background-color 200ms ease-out, color 200ms ease-out;
+  }
+  .pk-cta:hover { background: var(--color-mey-red); color: #fff; }
+</style>

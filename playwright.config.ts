@@ -1,6 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/** Tests run against the production build served by `astro preview` (base /, meyinsaat.com). */
+/** Tests run against the production build served by `astro preview` (base /, meyinsaat.com).
+ *  PW_PORT overrides the port so a test run never reuses a dev server already on 4321. */
+const PORT = Number(process.env.PW_PORT ?? 4321);
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -10,12 +13,12 @@ export default defineConfig({
   use: {
     // Trailing slash matters: specs use RELATIVE paths ('kurumsal', 'ar/') so the
     // /MeyInsaatSite base survives URL resolution (a leading '/' would drop it).
-    baseURL: 'http://localhost:4321/',
+    baseURL: `http://localhost:${PORT}/`,
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npm run preview',
-    url: 'http://localhost:4321',
+    command: `npm run preview -- --port ${PORT}`,
+    url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
   },

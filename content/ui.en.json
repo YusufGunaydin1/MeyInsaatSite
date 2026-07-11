@@ -130,6 +130,91 @@
         "Façade",
         "Completion"
       ]
+    },
+    "detail": {
+      "pendingTag": "LOCATION · YEAR · UNITS — PENDING VERIFICATION",
+      "brand": "MEY İNŞAAT",
+      "prev": "Previous section",
+      "next": "Next section",
+      "frames": {
+        "story": "STORY",
+        "spaces": "SPACES",
+        "dossier": "FACT SHEET"
+      },
+      "story": {
+        "para": "Ali Apartmanı was designed around the needs of modern family life. Spacious interiors, daylight-filled living areas and glass-balcony details bring comfort and aesthetics together.",
+        "quote": "“A calm life,\nin the heart of the city.”",
+        "features": ["Daylight", "Glass balconies", "Central location"],
+        "salonAlt": "Living room — a daylight-filled living area (representative image)",
+        "malzemeAlt": "Façade materials — brick, glass balcony, concrete (representative composition)"
+      },
+      "spaces": {
+        "chapters": [
+          {
+            "name": "FAÇADE",
+            "text": "A modern façade strengthened by glass balconies and vertical rhythm.",
+            "alt": "Façade detail — technical drawing (representative)"
+          },
+          {
+            "name": "INTERIOR",
+            "text": "Interiors shaped by daylight and a restrained material language.",
+            "alt": "Kitchen (representative image)"
+          },
+          {
+            "name": "LIVING",
+            "text": "Balconies wrapped in greenery — a calm breathing space in the city.",
+            "alt": "Living room and balcony (representative image)"
+          }
+        ],
+        "floorsWord": "FLOORS",
+        "unitsWord": "UNITS",
+        "mapAlt": "Site plan — location sketch (representative)",
+        "mapCaption": "SITE PLAN — REPRESENTATIVE"
+      },
+      "dossier": {
+        "summaryTitle": "PROJECT SUMMARY",
+        "labels": {
+          "type": "PROJECT TYPE",
+          "status": "STATUS",
+          "place": "LOCATION",
+          "year": "YEAR",
+          "client": "CLIENT",
+          "contractor": "CONTRACTOR"
+        },
+        "clientSample": "PRIVATE",
+        "timelineTitle": "TIMELINE",
+        "timeline": [
+          {
+            "date": "03.2023",
+            "name": "Design & Permits",
+            "desc": "Design and permitting were completed."
+          },
+          {
+            "date": "07.2023",
+            "name": "Structural Shell",
+            "desc": "The load-bearing system and structural shell were completed."
+          },
+          {
+            "date": "06.2024",
+            "name": "Handover",
+            "desc": "Finishing works and inspections were completed and the building was handed over."
+          }
+        ],
+        "isoAlt": "Ali Apartmanı — axonometric drawing (representative)",
+        "isoCaption": "AXONOMETRIC — REPRESENTATIVE",
+        "materialsTitle": "FAÇADE & MATERIALS",
+        "materials": ["CONCRETE", "BRICK", "GLASS", "METAL"],
+        "cta": "DETAILED PROJECT INFO"
+      },
+      "samples": {
+        "place": "BAĞCILAR",
+        "city": "ISTANBUL",
+        "placeCity": "ISTANBUL · BAĞCILAR",
+        "floors": "6",
+        "units": "24",
+        "year": "2024"
+      },
+      "samplesNote": "Values shown in grey — location, year, floors, units and the timeline — are sample placements; they will be updated once MEY İnşaat confirms them. Interior, site-plan and axonometric visuals are representative."
     }
   },
   "contact": {
