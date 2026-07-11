@@ -1,11 +1,12 @@
 ---
 /*
-  HOME HERO — daylight sky cover (2026-07, owner-directed adaptation of a
-  designer concept). Three delivered MEY blocks under a blue sky; the copy sits
-  in the open sky on the left, dark-on-light. The copy block is pinned to the
-  PHYSICAL left in every locale — the sky is only on that side of the photo —
-  so RTL mirrors type alignment but not placement. The scroll-to-build
-  signature follows immediately as the second beat.
+  HOME HERO — sky cover under a dark scrim (2026-07, owner-directed). Three
+  delivered MEY blocks under a blue sky; the copy sits in the open sky on the
+  left, white over a graphite scrim that fuses with the dark header (the
+  owner kept the theatre treatment when the photo changed). The copy block is
+  pinned to the PHYSICAL left in every locale — the sky is only on that side
+  of the photo — so RTL mirrors type alignment but not placement. The
+  scroll-to-build signature follows immediately as the second beat.
   Copy comes from content/pages/home.<loc>.md so all four locales stay in sync.
 */
 import { Image } from 'astro:assets';
@@ -22,7 +23,7 @@ const fm = pageContent('home', locale)?.frontmatter ?? {};
 const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
 ---
 
-<section class="home-hero" aria-label={fm.hero?.mediaAlt}>
+<section class="theatre home-hero" aria-label={fm.hero?.mediaAlt}>
   <!-- The delivered blocks. Decorative (the headline carries meaning); the LCP
        image, so eager + high priority. -->
   <Image
@@ -35,7 +36,7 @@ const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
     fetchpriority="high"
     class="home-hero-bg"
   />
-  <div class="home-hero-veil" aria-hidden="true"></div>
+  <div class="home-hero-scrim" aria-hidden="true"></div>
 
   <div class="container-site home-hero-inner">
     <!-- The red guide-line marks the content edge (brief §7/§8 hero wireframe). -->
@@ -85,19 +86,23 @@ const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
     object-fit: cover;
     object-position: 22% 25%;
   }
-  /* White veil over the physical left: the gray tower rises into the text zone
-     below its roofline (and fills narrow crops), where graphite type would drop
-     under AA — the veil keeps the copy on pale ground at every width, like the
-     concept's washed-out left sky. */
-  .home-hero-veil {
+  /* Graphite scrim, heavy over the physical left where the copy sits: the
+     bright sky and the towers' pale facades would otherwise sink white type
+     below AA. A lighter bottom wash seats the delivered-tag and keeps the
+     duotone-lite mood (brief §10); the right stays clear so the blocks and
+     both MEY signs read. */
+  .home-hero-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      97deg,
-      rgb(250 251 252 / 0.92) 0%,
-      rgb(250 251 252 / 0.55) 34%,
-      rgb(250 251 252 / 0) 60%
-    );
+    background:
+      linear-gradient(
+        to right,
+        rgb(14 15 17 / 0.78) 0%,
+        rgb(14 15 17 / 0.52) 38%,
+        rgb(14 15 17 / 0.1) 66%,
+        rgb(14 15 17 / 0) 100%
+      ),
+      linear-gradient(to top, rgb(14 15 17 / 0.5) 0%, rgb(14 15 17 / 0.12) 32%, rgb(14 15 17 / 0) 55%);
   }
   .home-hero-inner {
     position: relative;
@@ -107,14 +112,19 @@ const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
   }
   /* margin-right (physical, not logical): pins the block to the left in RTL
      too — the photo's sky only exists on the left. Width fits the headline's
-     authored 2-line break; narrower wraps it to 4. */
+     authored 2-line break; narrower wraps it to 4. Guide-line recolored to the
+     theatre-safe red; a restrained text-shadow keeps type legible where the
+     scrim thins (the cinematic-hero exception to the flat rule; buttons opt
+     out below). */
   .home-hero-copy {
     max-width: 42rem;
     margin-right: auto;
     padding-inline-start: 1.5rem;
+    border-inline-start-color: var(--color-red-on-dark);
+    text-shadow: 0 1px 8px rgb(14 15 17 / 0.55);
   }
   .home-hero-eyebrow {
-    color: var(--color-mey-red);
+    color: var(--color-red-on-dark);
   }
   /* t-display-xl (108px cap) is sized for full-bleed covers; the sky pocket
      left of the towers fits ~600px lines — cap lower, keep the Oswald voice. */
@@ -125,13 +135,14 @@ const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
   .home-hero-sub {
     margin-top: 1.25rem;
     max-width: 42ch;
-    color: var(--color-graphite-600);
+    color: rgb(244 244 242 / 0.82);
   }
   .home-hero-cta {
     margin-top: 2rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+    text-shadow: none;
   }
   .home-hero-tag {
     position: absolute;
@@ -144,32 +155,38 @@ const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
   }
 
   /* RTL copy right-aligns inside the left-pinned block, landing on the
-     tower/facade seam — carry the veil further right so it stays on pale
-     ground there too. */
-  :global([dir='rtl']) .home-hero-veil {
-    background: linear-gradient(
-      97deg,
-      rgb(250 251 252 / 0.94) 0%,
-      rgb(250 251 252 / 0.66) 40%,
-      rgb(250 251 252 / 0) 70%
-    );
+     tower/facade seam — carry the scrim further right so white type stays on
+     dark ground there too. */
+  :global([dir='rtl']) .home-hero-scrim {
+    background:
+      linear-gradient(
+        to right,
+        rgb(14 15 17 / 0.8) 0%,
+        rgb(14 15 17 / 0.62) 46%,
+        rgb(14 15 17 / 0.16) 76%,
+        rgb(14 15 17 / 0) 100%
+      ),
+      linear-gradient(to top, rgb(14 15 17 / 0.5) 0%, rgb(14 15 17 / 0.12) 32%, rgb(14 15 17 / 0) 55%);
   }
 
   /* Portrait crops center on the gray facade; aim the frame at the open sky
      instead — the copy stays on sky, the towers hold the right edge. The copy
-     still brushes that edge, so the veil comes down from the top-left and
-     leaves only the lower third (trees, facade base) vivid. */
+     still brushes that edge, so the scrim comes down from the top-left and
+     leaves only the lower third (trees, facade base) clear. */
   @media (max-width: 768px) {
     .home-hero-bg {
       object-position: 0% 25%;
     }
-    .home-hero-veil {
-      background: linear-gradient(
-        165deg,
-        rgb(250 251 252 / 0.94) 0%,
-        rgb(250 251 252 / 0.78) 48%,
-        rgb(250 251 252 / 0) 74%
-      );
+    .home-hero-scrim {
+      background:
+        linear-gradient(
+          165deg,
+          rgb(14 15 17 / 0.8) 0%,
+          rgb(14 15 17 / 0.6) 50%,
+          rgb(14 15 17 / 0.14) 78%,
+          rgb(14 15 17 / 0) 100%
+        ),
+        linear-gradient(to top, rgb(14 15 17 / 0.45) 0%, rgb(14 15 17 / 0) 40%);
     }
   }
 </style>
