@@ -1,0 +1,261 @@
+---
+/*
+  PANEL 02 — MEKÂN: numaralı üç bölüm (01 cephe · 02 iç mekân · 03 yaşam)
+  kısa şeritlerle solda; sağ rayda ikonlu sayılar + vaziyet paftası
+  (kullanıcının storyboard'undaki ikinci kare). Şerit yükseklikleri 1fr →
+  panel her zaman tek ekrana sığar. Gri değerler örnek yerleşim.
+*/
+import { Image } from 'astro:assets';
+import cephe from '../../../../assets/projects/ali-cephe-cizim.webp';
+import mutfak from '../../../../assets/projects/ali-mutfak.webp';
+import salon from '../../../../assets/projects/ali-salon.webp';
+import vaziyet from '../../../../assets/projects/ali-vaziyet.webp';
+
+interface Props {
+  typeLabel: string;
+  statusLabel: string;
+}
+const { typeLabel, statusLabel } = Astro.props;
+
+const chapters = [
+  {
+    no: '01',
+    ad: 'CEPHE',
+    img: cephe,
+    alt: 'Cephe detayı — teknik çizim (temsilî)',
+    text: 'Cam balkonlar ve dikey ritimle güçlenen modern cephe.',
+  },
+  {
+    no: '02',
+    ad: 'İÇ MEKÂN',
+    img: mutfak,
+    alt: 'Mutfak (temsilî görsel)',
+    text: 'Gün ışığı ve sade malzeme diliyle tasarlanmış iç mekânlar.',
+  },
+  {
+    no: '03',
+    ad: 'YAŞAM',
+    img: salon,
+    alt: 'Salon ve balkon (temsilî görsel)',
+    text: 'Yeşil dokuyla çevrili balkonlar, huzurlu bir nefes alanı.',
+  },
+];
+---
+
+<div class="pm">
+  <div class="pm-main">
+    <ol class="pm-chapters">
+      {chapters.map((c) => (
+        <li class="pm-ch">
+          <div class="pm-ch-info">
+            <span class="pm-no" aria-hidden="true">{c.no}</span>
+            <h3 class="t-tech pm-ch-name">{c.ad}</h3>
+            <p class="t-caption pm-ch-text">{c.text}</p>
+          </div>
+          <figure class="pm-ch-media">
+            <Image
+              src={c.img}
+              alt={c.alt}
+              widths={[640, 1024]}
+              sizes="(min-width: 1024px) 38vw, 100vw"
+              class="pm-ch-img"
+              data-testid="pm-strip"
+            />
+          </figure>
+        </li>
+      ))}
+    </ol>
+
+    <p class="t-tech pm-meta">
+      <span class="pm-sample">BAĞCILAR</span>
+      <span class="pm-dot" aria-hidden="true">·</span>
+      <span class="pm-sample">6 KAT</span>
+      <span class="pm-dot" aria-hidden="true">·</span>
+      <span class="pm-sample">24 DAİRE</span>
+      <span class="pm-dot" aria-hidden="true">·</span>
+      <span>{statusLabel}</span>
+    </p>
+  </div>
+
+  <aside class="pm-rail">
+    <div class="pm-stats">
+      <div class="pm-stat">
+        <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M3 11.5 12 4l9 7.5" />
+          <path d="M5.5 10v10h13V10" />
+          <path d="M10 20v-5.5h4V20" />
+        </svg>
+        <p class="pm-stat-v">{typeLabel}</p>
+      </div>
+      <div class="pm-stat">
+        <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="m12 3-9 4.5 9 4.5 9-4.5L12 3Z" />
+          <path d="m3 12 9 4.5 9-4.5" />
+          <path d="m3 16.5 9 4.5 9-4.5" />
+        </svg>
+        <p class="pm-stat-v"><span class="pm-sample">6</span> KAT</p>
+      </div>
+      <div class="pm-stat">
+        <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" />
+          <path d="M4 13h8V4" />
+          <path d="M12 13h8" />
+          <path d="M12 13v7" />
+        </svg>
+        <p class="pm-stat-v"><span class="pm-sample">24</span> DAİRE</p>
+      </div>
+      <div class="pm-stat">
+        <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M12 21s-7-5.6-7-11a7 7 0 1 1 14 0c0 5.4-7 11-7 11Z" />
+          <circle cx="12" cy="10" r="2.5" />
+        </svg>
+        <p class="pm-stat-v pm-sample">BAĞCILAR<br />İSTANBUL</p>
+      </div>
+    </div>
+
+    <figure class="pm-map">
+      <Image
+        src={vaziyet}
+        alt="Vaziyet paftası — konum krokisi (temsilî)"
+        widths={[640, 1024]}
+        sizes="(min-width: 1024px) 22vw, 100vw"
+        class="pm-map-img"
+        data-testid="pm-map"
+      />
+      <figcaption class="t-tech pm-cap">VAZİYET — TEMSİLİ</figcaption>
+    </figure>
+  </aside>
+</div>
+
+<style>
+  .pm {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    min-width: 0;
+  }
+  @media (min-width: 1024px) {
+    .pm { grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr); gap: clamp(1.5rem, 2.5vw, 2.5rem); }
+  }
+
+  .pm-main {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 1.1rem;
+  }
+  .pm-chapters {
+    list-style: none;
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 1.1rem;
+    min-height: 0;
+  }
+  .pm-ch {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    align-items: stretch;
+    min-height: 0;
+  }
+  @media (min-width: 1024px) {
+    .pm-ch { grid-template-columns: 9.5rem minmax(0, 1fr); gap: 1.25rem; }
+  }
+  .pm-no {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-mey-red);
+    font-variant-numeric: tabular-nums;
+  }
+  .pm-ch-name {
+    color: var(--color-graphite-900);
+    border-block-end: 1px solid var(--color-line);
+    padding-block: 0.45rem;
+    margin-block-end: 0.45rem;
+  }
+  .pm-ch-text { color: var(--color-graphite-600); }
+  /* Yığın modu: genişlik rayı doldurur, yükseklik orandan gelir (taşma imkânsız);
+     iğneli modda YatayDetay :global ile oranı bırakıp satırı doldurur. */
+  .pm-ch-media {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: var(--color-concrete-100);
+    min-height: 0;
+    width: 100%;
+    height: auto;
+    align-self: start;
+    aspect-ratio: 12 / 5;
+  }
+  .pm-ch-img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+  .pm-meta {
+    color: var(--color-graphite-900);
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    border-block-start: 1px solid var(--color-line);
+    padding-block-start: 0.9rem;
+  }
+  .pm-sample { color: var(--color-graphite-400); }
+  .pm-dot { color: var(--color-mey-red); }
+
+  .pm-rail {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto auto;
+    align-content: start;
+    gap: 1.1rem;
+  }
+  .pm-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--color-line);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+  }
+  .pm-stat {
+    background: #fff;
+    padding: 0.85rem 0.7rem;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 0.45rem;
+    text-align: center;
+  }
+  .pm-ico { width: 22px; height: 22px; color: var(--color-mey-red); }
+  .pm-stat-v {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-graphite-900);
+    font-variant-numeric: tabular-nums;
+  }
+  .pm-stat-v .pm-sample { font-size: 1.15rem; }
+
+  .pm-map {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    min-height: 0;
+  }
+  .pm-map-img { width: 100%; display: block; flex: 1; min-height: 0; object-fit: cover; object-position: 62% 45%; aspect-ratio: 16 / 10; }
+  .pm-cap {
+    color: var(--color-graphite-400);
+    border-block-start: 1px solid var(--color-line);
+    padding: 0.4rem 0.6rem;
+  }
+</style>

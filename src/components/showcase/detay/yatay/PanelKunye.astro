@@ -1,0 +1,209 @@
+---
+/*
+  PANEL 03 — KÜNYE: dosya varyantının tek-ekran özü. Mono proje özeti +
+  malzeme paleti solda, kırmızı raylı zaman çizelgesi ortada, aksonometrik
+  pafta sağda; kapanış CTA'sı bu son karede. Gri değerler örnek yerleşim.
+*/
+import { Image } from 'astro:assets';
+import izometrik from '../../../../assets/projects/ali-izometrik.webp';
+import dokuBeton from '../../../../assets/projects/ali-doku-beton.webp';
+import dokuTugla from '../../../../assets/projects/ali-doku-tugla.webp';
+import dokuCam from '../../../../assets/projects/ali-doku-cam.webp';
+import dokuMetal from '../../../../assets/projects/ali-doku-metal.webp';
+
+interface Props {
+  typeLabel: string;
+  statusLabel: string;
+}
+const { typeLabel, statusLabel } = Astro.props;
+
+const ozet = [
+  { k: 'PROJE TİPİ', v: typeLabel, sample: false },
+  { k: 'STATÜ', v: statusLabel, sample: false },
+  { k: 'YER', v: 'İSTANBUL · BAĞCILAR', sample: true },
+  { k: 'YIL', v: '2024', sample: true },
+  { k: 'MÜŞTERİ', v: 'ÖZEL', sample: true },
+  { k: 'MÜTEAHHİT', v: 'MEY İNŞAAT', sample: false },
+];
+
+const zaman = [
+  { t: '03.2023', ad: 'Projelendirme', d: 'Proje ve ruhsat süreçleri tamamlandı.' },
+  { t: '07.2023', ad: 'Kaba İnşaat', d: 'Taşıyıcı sistem ve kaba inşaat tamamlandı.' },
+  { t: '06.2024', ad: 'Teslim', d: 'İnce işler ve kontroller tamamlanarak teslim edildi.' },
+];
+
+const malzeme = [
+  { img: dokuBeton, ad: 'BETON', ton: 'Açık Gri' },
+  { img: dokuTugla, ad: 'TUĞLA', ton: 'Kiremit' },
+  { img: dokuCam, ad: 'CAM', ton: 'Mavi' },
+  { img: dokuMetal, ad: 'METAL', ton: 'Antrasit' },
+];
+---
+
+<div class="pk">
+  <div class="pk-cols">
+    <div class="pk-col">
+      <h3 class="t-tech text-mey-red pk-h">PROJE ÖZETİ</h3>
+      <dl class="pk-ozet">
+        {ozet.map((o) => (
+          <div class="pk-ozet-row">
+            <dt class="t-tech pk-ozet-k">{o.k}</dt>
+            <dd class:list={['t-tech pk-ozet-v', o.sample && 'pk-sample']}>{o.v}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <h3 class="t-tech text-mey-red pk-h pk-h-2">CEPHE &amp; MALZEME</h3>
+      <ul class="pk-chips">
+        {malzeme.map((m) => (
+          <li class="pk-chip">
+            <Image src={m.img} alt={`${m.ad} — ${m.ton}`} widths={[176, 352]} sizes="72px" class="pk-chip-img" />
+            <p class="t-tech pk-chip-ad">{m.ad}</p>
+            <p class="t-caption pk-chip-ton">{m.ton}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="pk-col">
+      <h3 class="t-tech text-mey-red pk-h">ZAMAN ÇİZELGESİ</h3>
+      <ol class="pk-tl">
+        {zaman.map((z) => (
+          <li class="pk-tl-item">
+            <p class="t-tech pk-sample">{z.t}</p>
+            <p class="t-heading-s pk-tl-ad">{z.ad}</p>
+            <p class="t-caption pk-tl-d">{z.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <figure class="pk-iso">
+      <Image
+        src={izometrik}
+        alt="Ali Apartmanı — aksonometrik çizim (temsilî)"
+        widths={[480, 800]}
+        sizes="(min-width: 1024px) 20vw, 60vw"
+        class="pk-iso-img"
+        data-testid="pk-iso"
+      />
+      <figcaption class="t-tech pk-cap">AKSONOMETRİ — TEMSİLİ</figcaption>
+    </figure>
+  </div>
+
+  <footer class="pk-foot">
+    <p class="t-caption pk-note">Gri değerler örnek yerleşimdir — MEY doğruladığında güncellenecek.</p>
+    <a class="t-tech pk-cta" href="#" data-testid="pk-cta">
+      DETAYLI PROJE BİLGİSİ <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span>
+    </a>
+  </footer>
+</div>
+
+<style>
+  .pk {
+    height: 100%;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+  .pk-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    min-height: 0;
+  }
+  @media (min-width: 1024px) {
+    .pk-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr) minmax(0, 0.8fr); gap: clamp(1.5rem, 2.5vw, 2.5rem); }
+  }
+  .pk-col { min-width: 0; }
+  .pk-h { margin-block-end: 0.9rem; }
+  .pk-h-2 { margin-block-start: 1.75rem; }
+
+  .pk-ozet { display: grid; gap: 0.6rem; }
+  .pk-ozet-row { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.7rem; align-items: baseline; }
+  .pk-ozet-k { color: var(--color-graphite-400); }
+  .pk-ozet-k::after { content: " :"; }
+  .pk-ozet-v { color: var(--color-graphite-900); }
+  .pk-sample { color: var(--color-graphite-400); }
+
+  .pk-chips { list-style: none; display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 1rem; }
+  @media (min-width: 1024px) {
+    .pk-chips { grid-template-columns: repeat(2, auto); gap: 0.9rem 1.5rem; }
+  }
+  .pk-chip { display: grid; gap: 0.2rem; }
+  .pk-chip-img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    display: block;
+  }
+  .pk-chip-ad { color: var(--color-graphite-900); }
+  .pk-chip-ton { color: var(--color-graphite-400); }
+
+  .pk-tl { list-style: none; position: relative; padding-inline-start: 1.4rem; display: grid; gap: 1.3rem; }
+  .pk-tl::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 5px;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2px;
+    background: var(--color-mey-red);
+    opacity: 0.85;
+  }
+  .pk-tl-item { position: relative; }
+  .pk-tl-item::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -1.4rem;
+    top: 0.15rem;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--color-mey-red);
+    border-radius: 50%;
+    background: var(--color-concrete-050);
+  }
+  .pk-tl-ad { margin-block-start: 0.2rem; }
+  .pk-tl-d { color: var(--color-graphite-600); margin-block-start: 0.2rem; }
+
+  .pk-iso {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    min-height: 0;
+  }
+  .pk-iso-img { width: 100%; display: block; flex: 1; min-height: 0; object-fit: cover; aspect-ratio: 3 / 4; }
+  .pk-cap {
+    color: var(--color-graphite-400);
+    border-block-start: 1px solid var(--color-line);
+    padding: 0.4rem 0.6rem;
+  }
+
+  .pk-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+    border-block-start: 1px solid var(--color-line);
+    padding-block-start: 1rem;
+  }
+  .pk-note { color: var(--color-graphite-400); max-width: 46ch; }
+  .pk-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-mey-red);
+    border: 1px solid var(--color-mey-red);
+    border-radius: var(--radius-brand);
+    padding: 0.75rem 1.1rem;
+    transition: background-color 200ms ease-out, color 200ms ease-out;
+  }
+  .pk-cta:hover { background: var(--color-mey-red); color: #fff; }
+</style>
