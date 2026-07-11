@@ -9,8 +9,8 @@ hero:
     families live in comfort.
   primaryCta: "View projects"
   secondaryCta: "Contact"
-  mediaTag: "DELIVERED · 6 STOREYS"
-  mediaAlt: "Completed MEY residential project — corner façade"
+  mediaTag: "DELIVERED · 3 BLOCKS"
+  mediaAlt: "Three completed MEY residential blocks under a blue sky"
 sections:
   projects:
     eyebrow: "01 — PROJECTS"

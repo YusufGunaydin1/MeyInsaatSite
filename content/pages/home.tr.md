@@ -9,8 +9,8 @@ hero:
     konutlar üretiyoruz.
   primaryCta: "Projeleri gör"
   secondaryCta: "İletişim"
-  mediaTag: "TESLİM EDİLDİ · 6 KAT"
-  mediaAlt: "Teslim edilmiş MEY konut projesi — köşe cephe"
+  mediaTag: "TESLİM EDİLDİ · 3 BLOK"
+  mediaAlt: "Mavi gökyüzü altında üç teslim edilmiş MEY konut bloğu"
 sections:
   projects:
     eyebrow: "01 — PROJELER"

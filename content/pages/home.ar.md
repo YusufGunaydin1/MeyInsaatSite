@@ -9,8 +9,8 @@ hero:
     براحة.
   primaryCta: "عرض المشاريع"
   secondaryCta: "التواصل"
-  mediaTag: "تم التسليم · 6 طوابق"
-  mediaAlt: "مشروع سكني مكتمل من MEY — واجهة الزاوية"
+  mediaTag: "تم التسليم · 3 كتل"
+  mediaAlt: "ثلاث كتل سكنية مكتملة من MEY تحت سماء زرقاء"
 sections:
   projects:
     eyebrow: "01 — المشاريع"

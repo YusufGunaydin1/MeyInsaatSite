@@ -9,8 +9,8 @@ hero:
     живут в комфорте.
   primaryCta: "Смотреть проекты"
   secondaryCta: "Контакты"
-  mediaTag: "СДАН · 6 ЭТАЖЕЙ"
-  mediaAlt: "Сданный жилой проект MEY — угловой фасад"
+  mediaTag: "СДАНО · 3 КОРПУСА"
+  mediaAlt: "Три сданных жилых корпуса MEY под голубым небом"
 sections:
   projects:
     eyebrow: "01 — ПРОЕКТЫ"

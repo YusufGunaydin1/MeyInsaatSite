@@ -2,14 +2,15 @@ import { test, expect } from '@playwright/test';
 import { u } from './util';
 
 /*
-  Home hero — the dark cinematic cover (owner-directed from the /showcases
-  hero-lab "koyu kapak" pick). Prove what the visitor sees: a visible Oswald h1
+  Home hero — the daylight sky cover (owner-directed adaptation of a designer
+  concept): three delivered blocks under a blue sky, dark graphite copy sitting
+  in the open sky on the left. Prove what the visitor sees: a visible Oswald h1
   carrying the friendlier copy, a decoded building image behind it, both CTAs
   wired, and the scroll-to-build signature still sitting right below. Guards the
   old cold headline ("ÇİZDİĞİMİZİ İNŞA EDERİZ.") from creeping back.
 */
 
-test('friendly Oswald h1 over a decoded building, CTAs wired', async ({ page }) => {
+test('friendly Oswald h1 in the sky, dark-on-light, CTAs wired', async ({ page }) => {
   await page.goto(u('/'));
 
   const hero = page.locator('.home-hero');
@@ -26,6 +27,18 @@ test('friendly Oswald h1 over a decoded building, CTAs wired', async ({ page }) 
   // Display face is actually Oswald (not the Plex fallback).
   const font = await h1.evaluate((el) => getComputedStyle(el).fontFamily);
   expect(font.split(',')[0]).toContain('Oswald');
+
+  // Light cover: the h1 renders dark graphite (not the theatre's white).
+  const color = await h1.evaluate((el) => getComputedStyle(el).color);
+  expect(color).toBe('rgb(23, 24, 26)');
+
+  // On desktop the title sits in the open sky left of the towers.
+  const vw = page.viewportSize()!.width;
+  if (vw >= 1000) {
+    const box = (await h1.boundingBox())!;
+    expect(box.x).toBeLessThan(vw * 0.12);
+    expect(box.x + box.width).toBeLessThan(vw * 0.6);
+  }
 
   // The building behind the cover actually decodes (not just a URL in the DOM).
   const bg = hero.locator('.home-hero-bg');
