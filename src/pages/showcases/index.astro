@@ -1,0 +1,111 @@
+---
+/*
+  TASARIM VİTRİNİ — dahili sayfa (/showcases).
+  Üzerinde çalışılan tasarım iyileştirmeleri/varyasyonları burada sergilenir; onaylanan
+  varyant prod'a alınır ve kartı CANLIDA olur. Navigasyonda YOK, noindex, sitemap dışı
+  (astro.config'teki filter). Yeni demo eklerken: src/pages/showcases/<slug>.astro sayfası
+  (gerçek site bileşenleri/tokenlarıyla, varyantlar alt alta) + aşağıdaki demos dizisine kart.
+*/
+import Base from '../../layouts/Base.astro';
+
+type Demo = {
+  title: string;
+  desc: string;
+  status: 'live' | 'proposal';
+  meta: string;
+  href: string;
+};
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const demos: Demo[] = [
+  {
+    title: 'CANLI — Proje detay: kompakt yatay sahne',
+    desc:
+      'Korunan tasarım: 3:4 bina fotoğrafı solda sabit (survey etiketleri), dikey scroll sağ ' +
+      'pencereyi yatay tarar — 01 hikâye (ad + serif alıntı + özellik rayı) → 02 mekân ' +
+      '(numaralı bölümler + künye kartı + vaziyet) → 03 künye (özet · dosya · CTA). ' +
+      'Mobil/reduced-motion/JS\'siz dikey yığına düşer.',
+    status: 'live',
+    meta: 'DetailStage.astro · 3 proje sayfası',
+    href: base + '/projeler/ali',
+  },
+];
+---
+
+<Base locale="tr" page="home" path="/showcases" title="Tasarım Vitrini — MEY İnşaat" noindex>
+  <section class="theatre blueprint-grid sc-wrap">
+    <div class="container-site">
+      <p class="t-tech" style="color: var(--color-red-on-dark);">MEY İnşaat · Dahili</p>
+      <h1 class="t-display-l mt-2">Tasarım Vitrini</h1>
+      <p class="t-body-l mt-4 max-w-2xl text-concrete-100/70">
+        Tasarım iyileştirmeleri ve varyasyonlar burada sergilenir. Onaylanan varyant prod'a
+        alınır ve kartı <span class="t-tech" style="color:#7dd87d;">CANLIDA</span> olur.
+      </p>
+      <p class="t-tech sc-flow mt-6">
+        Akış: varyant vitrine eklenir → incelersin → onay → main'e commit → push → canlı
+      </p>
+
+      <div class="sc-grid mt-10">
+        {demos.map((d) => (
+          <article class="sc-card">
+            <span class:list={['t-tech sc-status', d.status]}>
+              {d.status === 'live' ? '● CANLIDA' : '○ ÖNERİ'}
+            </span>
+            <h2 class="t-heading-s sc-title">{d.title}</h2>
+            <p class="t-caption text-concrete-100/60">{d.desc}</p>
+            <p class="t-tech text-concrete-100/40">{d.meta}</p>
+            <a class="t-tech sc-open" href={d.href}>Aç <span aria-hidden="true">→</span></a>
+          </article>
+        ))}
+        <div class="sc-empty t-caption text-concrete-100/50">
+          Sonraki varyant burada görünecek — bir tasarım denemesi istediğinde bu vitrine eklenir.
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .sc-wrap {
+    min-height: calc(100vh - 6rem);
+    padding-block: clamp(3rem, 8vh, 6rem);
+  }
+  .sc-flow {
+    color: var(--color-mey-teal);
+    border: 1px dashed rgb(255 255 255 / 0.15);
+    border-radius: var(--radius-brand);
+    padding: 0.75rem 1rem;
+    display: inline-block;
+  }
+  .sc-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  .sc-card {
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: var(--radius-brand);
+    background: var(--color-night-800);
+    padding: 1.1rem 1.2rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .sc-title { color: #fff; }
+  .sc-status { align-self: flex-start; padding: 0.2rem 0.55rem; border-radius: var(--radius-brand); }
+  .sc-status.live { color: #7dd87d; border: 1px solid rgb(125 216 125 / 0.3); }
+  .sc-status.proposal { color: var(--color-red-on-dark); border: 1px solid rgb(242 85 90 / 0.3); }
+  .sc-open { color: var(--color-mey-teal); margin-top: auto; }
+  .sc-open:hover { color: #fff; }
+  .sc-empty {
+    border: 1px dashed rgb(255 255 255 / 0.15);
+    border-radius: var(--radius-brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 200px;
+    padding: 1rem;
+  }
+</style>
