@@ -1,0 +1,198 @@
+---
+/*
+  YATAY DETAY — ADIMLI VARYANT: aynı kompakt sayfa (foto solda sabit, sağ
+  pencere üç kareyi 1:1 gösterir) ama İĞNE YOK, scroll = ilerleme YOK. Sayfa
+  normal kayar; kareler yalnız ÖNCEKİ / SONRAKİ düğmeleriyle değişir.
+  Karşılaştırma noktası: scroll-pan (YatayDetay) vs adım düğmeleri (bu).
+  prefers-reduced-motion'da da çalışır (geçiş animasyonsuz, anında).
+  Mobil / no-JS: iki-sütun statik sayfa ↘ dar ekranda dikey yığın — kilit yok.
+*/
+import DetayHero from '../DetayHero.astro';
+import PanelHikaye from './PanelHikaye.astro';
+import PanelMekan from './PanelMekan.astro';
+import PanelKunye from './PanelKunye.astro';
+
+interface Props {
+  name: string;
+  typeLabel: string;
+  statusLabel: string;
+}
+const { name, typeLabel, statusLabel } = Astro.props;
+---
+
+<section class="yda" data-adimli data-testid="yatay-detay-adimli">
+  <div class="yda-stage container-site">
+    <div class="yda-spread">
+      <DetayHero name={name} typeLabel={typeLabel} statusLabel={statusLabel} fill />
+
+      <div class="yda-window">
+        <div class="yda-track" data-yda-track data-testid="yda-track">
+          <article class="yda-panel" data-ad="HİKÂYE" data-testid="yda-panel-hikaye">
+            <PanelHikaye name={name} statusLabel={statusLabel} />
+          </article>
+          <article class="yda-panel" data-ad="MEKÂN" data-testid="yda-panel-mekan">
+            <PanelMekan typeLabel={typeLabel} statusLabel={statusLabel} />
+          </article>
+          <article class="yda-panel" data-ad="KÜNYE" data-testid="yda-panel-kunye">
+            <PanelKunye typeLabel={typeLabel} statusLabel={statusLabel} />
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="yda-foot">
+      <span class="t-tech yda-label" data-yda-label data-testid="yda-progress">01 / 03 — HİKÂYE</span>
+      <span class="yda-nav">
+        <button class="t-tech yda-btn" type="button" data-yda-prev>
+          <span aria-hidden="true">←</span> Önceki
+        </button>
+        <button class="t-tech yda-btn" type="button" data-yda-next>
+          Sonraki <span aria-hidden="true">→</span>
+        </button>
+      </span>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---- Varsayılan: statik sayfa (mobil / no-JS) — dev fotoğraf YOK ---- */
+  .yda-spread {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .yda-stage { padding-block: clamp(1.5rem, 4vh, 2.5rem); }
+  .yda-foot { display: none; }
+  .yda-track {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  .yda-panel { min-width: 0; }
+
+  @media (min-width: 1024px) {
+    .yda:not(.yda-live) .yda-spread {
+      grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
+      gap: clamp(1.5rem, 3vw, 3rem);
+      align-items: start;
+    }
+    .yda:not(.yda-live) .yda-spread :global(.dh-col-fill) {
+      align-self: start;
+      position: sticky;
+      top: 5rem;
+    }
+    .yda:not(.yda-live) .yda-spread :global(.dh-col-fill .dh-media) { height: auto; }
+    .yda:not(.yda-live) .yda-spread :global(.dh-col-fill .dh-img) {
+      height: auto;
+      aspect-ratio: 3 / 4;
+    }
+  }
+
+  /* ---- Adımlı mod (JS + ≥1024 → .yda-live): tek kare + düğmeler ---- */
+  .yda-live .yda-spread {
+    --yda-h: clamp(30rem, 38vw, 34rem);
+    grid-template-columns: calc(var(--yda-h) * 3 / 4) minmax(0, 1fr);
+    grid-template-rows: var(--yda-h);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: stretch;
+  }
+  .yda-live .yda-window {
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+  }
+  .yda-live .yda-track {
+    flex-direction: row;
+    gap: 0;
+    height: 100%;
+    transition: transform 420ms cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .yda-live .yda-track { transition: none; }
+  }
+  .yda-live .yda-panel {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    overflow: hidden auto;
+    padding-inline-end: clamp(2.5rem, 4vw, 4.5rem);
+  }
+
+  .yda-live .yda-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block-start: 1rem;
+  }
+  .yda-label { color: var(--color-graphite-400); }
+  .yda-nav { display: inline-flex; gap: 0.5rem; }
+  .yda-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: transparent;
+    color: var(--color-graphite-600);
+    cursor: pointer;
+  }
+  .yda-btn:hover:not(:disabled) {
+    border-color: var(--color-mey-red);
+    color: var(--color-mey-red);
+  }
+  .yda-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+</style>
+
+<script>
+  const roots = document.querySelectorAll<HTMLElement>('[data-adimli]');
+
+  roots.forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-yda-track]');
+    const label = root.querySelector<HTMLElement>('[data-yda-label]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-yda-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-yda-next]');
+    if (!track || !prev || !next) return;
+
+    const panels = Array.from(track.children) as HTMLElement[];
+    const names = panels.map((p) => p.dataset.ad ?? '');
+    const N = panels.length;
+    const mq = matchMedia('(min-width: 1024px)');
+    let idx = 0;
+
+    function apply() {
+      track!.style.transform = mq.matches ? `translate3d(${-idx * 100}%, 0, 0)` : '';
+      if (label) {
+        label.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')} — ${names[idx]}`;
+      }
+      prev!.disabled = idx === 0;
+      next!.disabled = idx === N - 1;
+      // Görünmeyen kareler odak/okuyucu akışından çıkar
+      panels.forEach((p, i) => {
+        if (mq.matches && i !== idx) p.setAttribute('aria-hidden', 'true');
+        else p.removeAttribute('aria-hidden');
+      });
+    }
+
+    prev.addEventListener('click', () => {
+      idx = Math.max(0, idx - 1);
+      apply();
+    });
+    next.addEventListener('click', () => {
+      idx = Math.min(N - 1, idx + 1);
+      apply();
+    });
+
+    function setMode() {
+      root.classList.toggle('yda-live', mq.matches);
+      apply();
+    }
+    mq.addEventListener('change', setMode);
+    setMode();
+  });
+</script>

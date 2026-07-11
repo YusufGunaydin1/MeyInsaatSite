@@ -1,0 +1,45 @@
+---
+/*
+  PROJE DETAY ADIMLI LAB — /showcases/proje-detay-adimli-lab.
+  Korunan kompakt panelin (proje-detay-yatay-lab) DÜĞMELİ varyantı:
+  iğne ve scroll-pan yok, sayfa normal kayar; sağ pencere yalnız
+  Önceki/Sonraki düğmeleriyle kare değiştirir. Reduced-motion'da da
+  aynı deneyim (geçiş animasyonsuz). Karşılaştırmak için vitrine kart
+  eklendi. noindex.
+*/
+import '@fontsource/ibm-plex-serif/400.css';
+import Base from '../../layouts/Base.astro';
+import LabIntro from '../../components/showcase/LabIntro.astro';
+import Specimen from '../../components/showcase/Specimen.astro';
+import YatayDetayAdimli from '../../components/showcase/detay/yatay/YatayDetayAdimli.astro';
+import { project, ui } from '../../lib/content';
+
+const t = ui('tr');
+const ali = project('ali', 'tr');
+const name = ali?.md?.frontmatter?.name ?? 'Ali Apartmanı';
+const d = ali?.data ?? {};
+const typeLabel = String(t.projects.types?.[d.type] ?? d.type ?? 'Konut').toUpperCase();
+const statusLabel = String(t.projects.status?.[d.status] ?? d.status ?? 'Tamamlandı').toUpperCase();
+---
+
+<Base
+  locale="tr"
+  page="home"
+  path="/showcases/proje-detay-adimli-lab"
+  title="Proje Detay Adımlı Lab — Tasarım Vitrini"
+  noindex
+>
+  <LabIntro
+    kicker="MEY İnşaat · Dahili · Proje Detay Adımlı Lab"
+    title="Proje Detay — Adımlı Kurgu"
+    desc="Korunan kompakt panelin düğmeli varyantı: foto solda yine hiç değişmez, ama sayfa scroll'u karelere DOKUNMAZ — sağ pencere yalnız Önceki/Sonraki düğmeleriyle akar. İğne olmadığı için sayfa doğal kayar; reduced-motion kullanıcıları da aynı tek-kare deneyimini alır (geçiş animasyonsuz). Scroll-pan'lı orijinal: proje-detay-yatay-lab."
+  />
+
+  <Specimen
+    id="DETAY / ADIMLI"
+    name="Tek ekran × 3 kare — foto sabit, kareler düğmeyle"
+    why="Scroll = ilerleme dili güçlü ama iğne, sayfanın akışını 160svh boyunca kilitler. Bu varyantta ilerleme niyeti ziyaretçide: okur, hazır olunca Sonraki'ye basar. Hangi el daha doğal — karşılaştır."
+  >
+    <YatayDetayAdimli name={name} typeLabel={typeLabel} statusLabel={statusLabel} />
+  </Specimen>
+</Base>
