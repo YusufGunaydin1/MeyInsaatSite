@@ -29,25 +29,41 @@ test.describe('proje-detay yatay lab', () => {
     const track = page.getByTestId('yd-track');
     const label = page.getByTestId('yd-progress');
 
-    // Kare 1: ray sıfırda, etiket 01
-    await root.scrollIntoViewIfNeeded();
-    await expect.poll(async () => trackX(await track.evaluate((el) => getComputedStyle(el).transform))).toBe(0);
-    await expect(label).toContainText('01 / 03');
-
-    // Pin geometrisi: sahnenin sonuna kaydır → p=1 → ray tam (scrollWidth - pencere) kadar ötelenir
+    // Pin geometrisi: sahne viewport'tan kısa, pin noktası ortalanmış sticky top.
     const geo = await root.evaluate((el) => {
-      const rect = el.getBoundingClientRect();
-      const win = el.querySelector('.yd-window')!;
-      const track = el.querySelector('.yd-track')!;
+      const sticky = el.querySelector('.yd-sticky') as HTMLElement;
+      const win = el.querySelector('.yd-window') as HTMLElement;
+      const track = el.querySelector('.yd-track') as HTMLElement;
+      const topOff = parseFloat(getComputedStyle(sticky).top) || 0;
       return {
-        top: rect.top + window.scrollY,
-        total: el.getBoundingClientRect().height - window.innerHeight,
+        start: el.getBoundingClientRect().top + window.scrollY - topOff,
+        total: el.offsetHeight - sticky.offsetHeight,
         pan: track.scrollWidth - win.clientWidth,
       };
     });
     expect(geo.pan).toBeGreaterThan(500);
 
-    await page.evaluate((y) => window.scrollTo(0, y), geo.top + geo.total);
+    // Kare 1: pist başına kaydır → ray sıfırda, etiket 01
+    await page.evaluate((y) => window.scrollTo(0, y), geo.start);
+    await expect
+      .poll(async () => trackX(await track.evaluate((el) => getComputedStyle(el).transform)))
+      .toBeCloseTo(0, 0);
+    await expect(label).toContainText('01 / 03');
+
+    // Pist ortası: sahne GERÇEKTEN iğnelenmiş olmalı — sticky, viewport'ta
+    // hesaplanan ofsette durur (padding-runway hatası bunu sessizce kırmıştı)
+    await page.evaluate((y) => window.scrollTo(0, y), geo.start + geo.total * 0.5);
+    await expect
+      .poll(() =>
+        page
+          .locator('.yd-sticky')
+          .evaluate((el) => Math.abs(el.getBoundingClientRect().top - (parseFloat(getComputedStyle(el).top) || 0)))
+      )
+      .toBeLessThan(2);
+    await expect(label).toContainText('02 / 03');
+
+    // Pistin sonuna kaydır → p=1 → ray tam (scrollWidth - pencere) kadar ötelenir
+    await page.evaluate((y) => window.scrollTo(0, y), geo.start + geo.total);
     await expect
       .poll(async () => trackX(await track.evaluate((el) => getComputedStyle(el).transform)))
       .toBeCloseTo(-geo.pan, 0);
@@ -62,8 +78,12 @@ test.describe('proje-detay yatay lab', () => {
         .toBeGreaterThan(0);
     }
 
-    // Ortadaki kare: ok düğmesi geri götürür
-    await page.locator('[data-yd-prev]').click();
+    // Ortadaki kare: ok düğmesi geri götürür. dispatchEvent: Playwright'ın
+    // click öncesi scrollIntoView'u sticky düğmeyi DOKÜMAN konumuna kaydırıp
+    // p'yi bozuyor — gerçek kullanıcı tıklamasında ön-kaydırma yok.
+    await page.evaluate((y) => window.scrollTo(0, y), geo.start + geo.total);
+    await expect(label).toContainText('03 / 03');
+    await page.locator('[data-yd-prev]').dispatchEvent('click');
     await expect(label).toContainText('02 / 03');
   });
 

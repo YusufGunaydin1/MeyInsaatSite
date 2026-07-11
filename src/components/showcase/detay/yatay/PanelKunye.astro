@@ -53,16 +53,6 @@ const malzeme = [
         ))}
       </dl>
 
-      <h3 class="t-tech text-mey-red pk-h pk-h-2">CEPHE &amp; MALZEME</h3>
-      <ul class="pk-chips">
-        {malzeme.map((m) => (
-          <li class="pk-chip">
-            <Image src={m.img} alt={`${m.ad} — ${m.ton}`} widths={[176, 352]} sizes="72px" class="pk-chip-img" />
-            <p class="t-tech pk-chip-ad">{m.ad}</p>
-            <p class="t-caption pk-chip-ton">{m.ton}</p>
-          </li>
-        ))}
-      </ul>
     </div>
 
     <div class="pk-col">
@@ -92,7 +82,17 @@ const malzeme = [
   </div>
 
   <footer class="pk-foot">
-    <p class="t-caption pk-note">Gri değerler örnek yerleşimdir — MEY doğruladığında güncellenecek.</p>
+    <div class="pk-mat">
+      <h3 class="t-tech text-mey-red">CEPHE &amp; MALZEME</h3>
+      <ul class="pk-chips">
+        {malzeme.map((m) => (
+          <li class="pk-chip">
+            <Image src={m.img} alt={`${m.ad} — ${m.ton}`} widths={[176, 352]} sizes="48px" class="pk-chip-img" />
+            <p class="t-tech pk-chip-ad">{m.ad}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
     <a class="t-tech pk-cta" href="#" data-testid="pk-cta">
       DETAYLI PROJE BİLGİSİ <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span>
     </a>
@@ -118,7 +118,6 @@ const malzeme = [
   }
   .pk-col { min-width: 0; }
   .pk-h { margin-block-end: 0.9rem; }
-  .pk-h-2 { margin-block-start: 1.75rem; }
 
   .pk-ozet { display: grid; gap: 0.6rem; }
   .pk-ozet-row { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0.7rem; align-items: baseline; }
@@ -127,21 +126,19 @@ const malzeme = [
   .pk-ozet-v { color: var(--color-graphite-900); }
   .pk-sample { color: var(--color-graphite-400); }
 
-  .pk-chips { list-style: none; display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 1rem; }
-  @media (min-width: 1024px) {
-    .pk-chips { grid-template-columns: repeat(2, auto); gap: 0.9rem 1.5rem; }
-  }
-  .pk-chip { display: grid; gap: 0.2rem; }
+  /* Malzeme paleti: kapanış şeridinde tek sıra küçük çipler */
+  .pk-mat { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+  .pk-chips { list-style: none; display: flex; gap: 1rem; }
+  .pk-chip { display: grid; gap: 0.25rem; justify-items: center; }
   .pk-chip-img {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     object-fit: cover;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-brand);
     display: block;
   }
-  .pk-chip-ad { color: var(--color-graphite-900); }
-  .pk-chip-ton { color: var(--color-graphite-400); }
+  .pk-chip-ad { color: var(--color-graphite-600); font-size: 0.625rem; }
 
   .pk-tl { list-style: none; position: relative; padding-inline-start: 1.4rem; display: grid; gap: 1.3rem; }
   .pk-tl::before {
