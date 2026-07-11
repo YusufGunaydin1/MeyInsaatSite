@@ -144,7 +144,11 @@
       "story": {
         "para": "Ali Apartmanı, modern aile yaşamının ihtiyaçları düşünülerek tasarlandı. Ferah iç mekânlar, bol gün ışığı alan yaşam alanları ve cam balkon detayları ile konforu estetikle buluşturuyor.",
         "quote": "“Şehrin içinde,\nhuzurlu bir yaşam.”",
-        "features": ["Gün ışığı", "Cam balkon", "Merkezi konum"],
+        "features": [
+          "Gün ışığı",
+          "Cam balkon",
+          "Merkezi konum"
+        ],
         "salonAlt": "Salon — gün ışığı alan yaşam alanı (temsilî görsel)",
         "malzemeAlt": "Cephe malzemeleri — tuğla, cam balkon, beton (temsilî kompozisyon)"
       },
@@ -203,7 +207,12 @@
         "isoAlt": "Ali Apartmanı — aksonometrik çizim (temsilî)",
         "isoCaption": "AKSONOMETRİ — TEMSİLİ",
         "materialsTitle": "CEPHE & MALZEME",
-        "materials": ["BETON", "TUĞLA", "CAM", "METAL"],
+        "materials": [
+          "BETON",
+          "TUĞLA",
+          "CAM",
+          "METAL"
+        ],
         "cta": "DETAYLI PROJE BİLGİSİ"
       },
       "samples": {
@@ -214,7 +223,9 @@
         "units": "24",
         "year": "2024"
       },
-      "samplesNote": "Gri renkte gösterilen konum, yıl, kat, daire ve zaman çizelgesi değerleri örnek yerleşimdir; MEY İnşaat doğruladığında güncellenecek. İç mekân, vaziyet ve aksonometri görselleri temsilîdir."
+      "samplesNote": "Gri renkte gösterilen konum, yıl, kat, daire ve zaman çizelgesi değerleri örnek yerleşimdir; MEY İnşaat doğruladığında güncellenecek. İç mekân, vaziyet ve aksonometri görselleri temsilîdir.",
+      "prevShort": "Önceki",
+      "nextShort": "Sonraki"
     }
   },
   "contact": {

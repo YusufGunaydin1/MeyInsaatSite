@@ -6,14 +6,14 @@ import { u } from './util';
   noindex meta + sitemap dışı + ana navigasyonda linki yok.
 */
 
-test('showcases hub renders with the preserved-design card', async ({ page }) => {
+test('showcases hub renders with the adopted-design card', async ({ page }) => {
   await page.goto(u('showcases/'));
   await expect(page.locator('h1')).toContainText('Tasarım Vitrini');
-  // The compact panel (photo fixed, right window slides) is PRESERVED by user order.
+  // The stepped compact panel won (2026-07-11) and shipped to production.
   const card = page.locator('.sc-card').first();
-  await expect(card).toContainText('KORUNDU');
-  await expect(card).toContainText('Kompakt panel');
-  await expect(card.locator('a.sc-open')).toHaveAttribute('href', /proje-detay-yatay-lab/);
+  await expect(card).toContainText('CANLIDA');
+  await expect(card).toContainText('adımlı gezinme');
+  await expect(card.locator('a.sc-open')).toHaveAttribute('href', /projeler\/ali/);
   // noindex: arama motorlarına kapalı
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
 });

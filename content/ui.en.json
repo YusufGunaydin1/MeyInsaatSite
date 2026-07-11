@@ -144,7 +144,11 @@
       "story": {
         "para": "Ali Apartmanı was designed around the needs of modern family life. Spacious interiors, daylight-filled living areas and glass-balcony details bring comfort and aesthetics together.",
         "quote": "“A calm life,\nin the heart of the city.”",
-        "features": ["Daylight", "Glass balconies", "Central location"],
+        "features": [
+          "Daylight",
+          "Glass balconies",
+          "Central location"
+        ],
         "salonAlt": "Living room — a daylight-filled living area (representative image)",
         "malzemeAlt": "Façade materials — brick, glass balcony, concrete (representative composition)"
       },
@@ -203,7 +207,12 @@
         "isoAlt": "Ali Apartmanı — axonometric drawing (representative)",
         "isoCaption": "AXONOMETRIC — REPRESENTATIVE",
         "materialsTitle": "FAÇADE & MATERIALS",
-        "materials": ["CONCRETE", "BRICK", "GLASS", "METAL"],
+        "materials": [
+          "CONCRETE",
+          "BRICK",
+          "GLASS",
+          "METAL"
+        ],
         "cta": "DETAILED PROJECT INFO"
       },
       "samples": {
@@ -214,7 +223,9 @@
         "units": "24",
         "year": "2024"
       },
-      "samplesNote": "Values shown in grey — location, year, floors, units and the timeline — are sample placements; they will be updated once MEY İnşaat confirms them. Interior, site-plan and axonometric visuals are representative."
+      "samplesNote": "Values shown in grey — location, year, floors, units and the timeline — are sample placements; they will be updated once MEY İnşaat confirms them. Interior, site-plan and axonometric visuals are representative.",
+      "prevShort": "Previous",
+      "nextShort": "Next"
     }
   },
   "contact": {
