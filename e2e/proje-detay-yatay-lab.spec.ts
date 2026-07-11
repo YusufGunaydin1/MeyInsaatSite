@@ -99,6 +99,12 @@ test.describe('proje-detay yatay lab', () => {
       await page.getByTestId(tid).scrollIntoViewIfNeeded();
       await expect(page.getByTestId(tid)).toBeVisible();
     }
+    // Masaüstü statikte sayfa KOMPAKT kalır: foto asla konteyner genişliğine
+    // şişmez (ekran görüntüsü #12 regresyonu), kareler fotonun sağında durur.
+    const photo = (await root.locator('.dh-img').first().boundingBox())!;
+    expect(photo.width, 'foto sütun genişliğinde kalır').toBeLessThan(500);
+    const panel = (await page.getByTestId('yd-panel-hikaye').boundingBox())!;
+    expect(panel.x, 'kareler fotonun sağında').toBeGreaterThan(photo.x + photo.width);
   });
 
   test('mobil: yığın düzeni, yatay taşma yok, görseller yüklenir', async ({ page }) => {

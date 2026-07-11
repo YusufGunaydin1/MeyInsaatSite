@@ -77,6 +77,27 @@ const { name, typeLabel, statusLabel } = Astro.props;
   }
   .yd-panel { min-width: 0; }
 
+  /* Statik masaüstünde (reduced-motion / no-JS) sayfa tek sütuna düşüp fotoğrafı
+     ekran genişliğine şişiriyordu; kompakt sayfa iki sütun KALIR — foto solda
+     3:4 ve yapışkan, kareler sağda alt alta. Yalnız pan/iğne devre dışı. */
+  @media (min-width: 1024px) {
+    .yd:not(.yd-pinned) .yd-spread {
+      grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
+      gap: clamp(1.5rem, 3vw, 3rem);
+      align-items: start;
+    }
+    .yd:not(.yd-pinned) .yd-spread :global(.dh-col-fill) {
+      align-self: start;
+      position: sticky;
+      top: 5rem;
+    }
+    .yd:not(.yd-pinned) .yd-spread :global(.dh-col-fill .dh-media) { height: auto; }
+    .yd:not(.yd-pinned) .yd-spread :global(.dh-col-fill .dh-img) {
+      height: auto;
+      aspect-ratio: 3 / 4;
+    }
+  }
+
   /* ---- İğneli yatay mod (JS + masaüstü + hareket serbest → .yd-pinned) ---- */
   .yd-pinned .yd-runway {
     /* pan pisti: kare başına 80svh dikey scroll (2 geçiş) */
