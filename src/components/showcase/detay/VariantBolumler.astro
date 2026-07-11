@@ -1,0 +1,179 @@
+---
+/*
+  VARYANT A — BÖLÜMLER: sağ panel üç numaralı bölümle okunur
+  (01 CEPHE · 02 İÇ MEKÂN · 03 YAŞAM), her bölümün geniş bir şerit görseli var.
+  Alıntı sesi: IBM Plex Serif (superfamily içi) — brief §6'ya girmesi onaya bağlı deneme.
+  Gri meta değerleri örnek yerleşimdir (sayfa dipnotu açıklar).
+*/
+import { Image } from 'astro:assets';
+import DetayHero from './DetayHero.astro';
+import cephe from '../../../assets/projects/ali-cephe-cizim.webp';
+import mutfak from '../../../assets/projects/ali-mutfak.webp';
+import salon from '../../../assets/projects/ali-salon.webp';
+
+interface Props {
+  name: string;
+  typeLabel: string;
+  statusLabel: string;
+}
+const { name, typeLabel, statusLabel } = Astro.props;
+
+const chapters = [
+  {
+    no: '01',
+    ad: 'CEPHE',
+    img: cephe,
+    alt: 'Cephe detayı — teknik çizim (temsilî)',
+    text: 'Cam balkonlar ve dikey ritimle güçlenen modern cephe tasarımı.',
+  },
+  {
+    no: '02',
+    ad: 'İÇ MEKÂN',
+    img: mutfak,
+    alt: 'Mutfak (temsilî görsel)',
+    text: 'Ferahlık, gün ışığı ve sade malzeme diliyle tasarlanmış iç mekânlar.',
+  },
+  {
+    no: '03',
+    ad: 'YAŞAM',
+    img: salon,
+    alt: 'Salon ve balkon (temsilî görsel)',
+    text: 'Yeşil dokuyla çevrili balkonlar, şehirde huzurlu bir nefes alanı sunar.',
+  },
+];
+---
+
+<section class="container-site section-pad" data-testid="variant-bolumler">
+  <div class="va-grid">
+    <DetayHero name={name} typeLabel={typeLabel} statusLabel={statusLabel} />
+
+    <div class="va-panel">
+      <header class="va-head">
+        <div>
+          <p class="t-tech text-mey-red mb-3">PROJELER</p>
+          <h2 class="t-display-l">{name}</h2>
+        </div>
+        <p class="va-quote" data-testid="va-quote">“Şehrin ritmi,<br />evin huzuru.”</p>
+      </header>
+
+      <ol class="va-chapters">
+        {chapters.map((c) => (
+          <li class="va-ch">
+            <div class="va-ch-info">
+              <span class="va-no" aria-hidden="true">{c.no}</span>
+              <h3 class="t-tech va-ch-name">{c.ad}</h3>
+              <p class="t-caption va-ch-text">{c.text}</p>
+            </div>
+            <figure class="va-ch-media">
+              <Image
+                src={c.img}
+                alt={c.alt}
+                widths={[640, 1024, 1600]}
+                sizes="(min-width: 1024px) 46vw, 100vw"
+                class="va-ch-img"
+                data-testid="va-strip"
+              />
+            </figure>
+          </li>
+        ))}
+      </ol>
+
+      <footer class="va-foot">
+        <p class="t-tech va-meta">
+          <span class="va-sample">BAĞCILAR</span>
+          <span class="va-dot" aria-hidden="true">·</span>
+          <span class="va-sample">6 KAT</span>
+          <span class="va-dot" aria-hidden="true">·</span>
+          <span class="va-sample">24 DAİRE</span>
+          <span class="va-dot" aria-hidden="true">·</span>
+          <span>{statusLabel}</span>
+        </p>
+        <a class="va-cta" href="#">Projeyi keşfet <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span></a>
+      </footer>
+    </div>
+  </div>
+</section>
+
+<style>
+  .va-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+  @media (min-width: 1024px) {
+    .va-grid { grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr); gap: 3rem; align-items: start; }
+  }
+  .va-panel { min-width: 0; }
+
+  .va-head {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem 2rem;
+    align-items: start;
+    border-block-end: 1px solid var(--color-mey-red);
+    padding-block-end: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .va-head { grid-template-columns: 1fr auto; }
+  }
+  .va-quote {
+    font-family: "IBM Plex Serif", "IBM Plex Sans", serif;
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    line-height: 1.3;
+    color: var(--color-graphite-900);
+    text-align: end;
+  }
+
+  .va-chapters {
+    list-style: none;
+    display: grid;
+    gap: 2.25rem;
+    padding-block-start: 2.25rem;
+  }
+  .va-ch { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 768px) {
+    .va-ch { grid-template-columns: 13rem minmax(0, 1fr); gap: 2rem; align-items: start; }
+  }
+  .va-no {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.85rem;
+    line-height: 1;
+    color: var(--color-mey-red);
+    font-variant-numeric: tabular-nums;
+  }
+  .va-ch-name {
+    color: var(--color-graphite-900);
+    border-block-end: 1px solid var(--color-line);
+    padding-block: 0.6rem;
+    margin-block-end: 0.6rem;
+  }
+  .va-ch-text { color: var(--color-graphite-600); max-width: 26ch; }
+  .va-ch-media {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: var(--color-concrete-100);
+  }
+  .va-ch-img { width: 100%; height: auto; display: block; aspect-ratio: 12 / 5; object-fit: cover; }
+
+  .va-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: baseline;
+    justify-content: space-between;
+    border-block-start: 1px solid var(--color-line);
+    margin-block-start: 2.25rem;
+    padding-block-start: 1.25rem;
+  }
+  .va-meta { color: var(--color-graphite-900); display: inline-flex; flex-wrap: wrap; gap: 0.6rem; }
+  .va-sample { color: var(--color-graphite-400); }
+  .va-dot { color: var(--color-mey-red); }
+  .va-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    color: var(--color-mey-red);
+  }
+  .va-cta:hover { color: var(--color-mey-red-700); }
+</style>

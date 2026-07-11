@@ -1,0 +1,97 @@
+---
+/*
+  Proje-detay lab varyantlarının ortak sol sütunu: bina fotoğrafı + canlı sitedeki
+  survey-etiket dili (tip/statü gerçek; bilinmeyenler tek "doğrulanıyor" etiketi).
+  Masaüstünde sticky — nihai hedefteki "foto sabit, sağ panel akar" davranışını önizler.
+*/
+import { Image } from 'astro:assets';
+import cover from '../../../assets/projects/ali.webp';
+
+interface Props {
+  name: string;
+  typeLabel: string;
+  statusLabel: string;
+  /** Dosya varyantı: foto, paftanın tam yüksekliğini doldurur (masaüstü). */
+  fill?: boolean;
+}
+const { name, typeLabel, statusLabel, fill = false } = Astro.props;
+---
+
+<div class:list={['dh-col', fill && 'dh-col-fill']}>
+  <figure class="dh-media" data-testid="detay-hero-foto">
+    <Image
+      src={cover}
+      alt={name}
+      widths={[480, 800]}
+      sizes="(min-width: 1024px) 32vw, 100vw"
+      class="dh-img"
+    />
+    <span class="dh-pole" aria-hidden="true"></span>
+    <span class="dh-tag t-tech" style="--kt: 14%;">{typeLabel}</span>
+    <span class="dh-tag t-tech" style="--kt: 38%;">{statusLabel}</span>
+    <span class="dh-tag dh-tag-pending t-tech" style="--kt: 64%;">KONUM · YIL · DAİRE — DOĞRULANIYOR</span>
+  </figure>
+</div>
+
+<style>
+  .dh-col { min-width: 0; }
+  .dh-media {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: var(--color-concrete-100);
+  }
+  @media (min-width: 1024px) {
+    .dh-media { position: sticky; top: 5rem; }
+  }
+  .dh-img { width: 100%; height: auto; display: block; aspect-ratio: 3 / 4; object-fit: cover; }
+
+  /* Dosya modu: sütun boyu foto (mockup'taki tam-boy pafta fotoğrafı) */
+  @media (min-width: 1024px) {
+    .dh-col-fill { align-self: stretch; }
+    .dh-col-fill .dh-media { height: 100%; }
+    .dh-col-fill .dh-img { height: 100%; aspect-ratio: auto; }
+  }
+
+  /* Nivo direği + şantiye etiketleri (canlıdaki KÜNYE/E dili) */
+  .dh-pole {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 1.25rem;
+    width: 2px;
+    background: var(--color-mey-red);
+    opacity: 0.9;
+  }
+  .dh-tag {
+    position: absolute;
+    top: var(--kt);
+    inset-inline-start: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    background: rgb(14 15 17 / 0.85);
+    color: #fff;
+    padding: 0.3rem 0.6rem 0.3rem 1rem;
+    border-radius: var(--radius-brand);
+    white-space: nowrap;
+  }
+  .dh-tag::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    width: 0.65rem;
+    height: 2px;
+    background: var(--color-mey-red);
+  }
+  .dh-tag-pending {
+    color: rgb(244 244 242 / 0.6);
+    border: 1px dashed rgb(244 244 242 / 0.25);
+    background: rgb(14 15 17 / 0.7);
+    /* dar sütunlarda kırpılmasın: sıkı dizgi + gerekirse satır kır */
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    white-space: normal;
+    max-inline-size: calc(100% - 2.5rem);
+  }
+</style>
