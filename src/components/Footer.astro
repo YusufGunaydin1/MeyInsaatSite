@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { LOCALES, localePath, type Locale } from '../lib/i18n';
+import { LOCALES, LOCALE_NAMES, localePath, type Locale } from '../lib/i18n';
 import { ui, company, companyContent } from '../lib/content';
 import PlaceholderChip from './PlaceholderChip.astro';
 import logo from '../assets/brand/mey-logo-dark.png';
@@ -73,18 +73,18 @@ const items = [
 
       <div>
         <h2 class="t-tech text-concrete-100/50 mb-3">{t.footer.languages}</h2>
-        <ul class="space-y-2">
+        <ul class="space-y-1">
           {LOCALES.map((l) => (
             <li>
               <a
                 href={localePath(l, path)}
+                lang={l}
+                hreflang={l}
                 aria-current={l === locale ? 'true' : undefined}
-                class:list={[
-                  't-tech hover:text-white',
-                  l === locale ? 'text-red-on-dark' : 'text-concrete-100/70',
-                ]}
+                class="foot-lang"
               >
-                {l.toUpperCase()}
+                <span class="t-tech foot-lang-code" aria-hidden="true">{l.toUpperCase()}</span>
+                <span class="foot-lang-name">{LOCALE_NAMES[l]}</span>
               </a>
             </li>
           ))}
@@ -98,3 +98,38 @@ const items = [
     </div>
   </div>
 </footer>
+
+<style>
+  /* Language rows: mono code + endonym; active carries the red guide-line */
+  .foot-lang {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    column-gap: 0.6rem;
+    align-items: baseline;
+    padding-block: 0.2rem;
+  }
+  .foot-lang-code {
+    color: rgb(244 244 242 / 0.55);
+  }
+  .foot-lang-name {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: rgb(244 244 242 / 0.8);
+  }
+  /* The Arabic endonym uses Plex Arabic only where the page already ships it
+     (AR pages); elsewhere the system Arabic face renders this one row so
+     Latin/Cyrillic pages never download the Arabic subset (brief §6). */
+  :global(html:lang(ar)) .foot-lang-name:lang(ar) {
+    font-family: var(--font-arabic);
+  }
+  .foot-lang:hover .foot-lang-name {
+    color: #fff;
+  }
+  .foot-lang[aria-current] .foot-lang-code {
+    color: var(--color-red-on-dark);
+  }
+  .foot-lang[aria-current] .foot-lang-name {
+    color: #fff;
+  }
+</style>

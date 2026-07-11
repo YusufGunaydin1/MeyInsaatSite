@@ -2,6 +2,15 @@ export const LOCALES = ['tr', 'en', 'ru', 'ar'] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = 'tr';
 
+/** Native names (endonyms) shown beside the mono code in language switchers.
+    Each renders in its own script, so the map is locale-invariant by design. */
+export const LOCALE_NAMES: Record<Locale, string> = {
+  tr: 'Türkçe',
+  en: 'English',
+  ru: 'Русский',
+  ar: 'العربية',
+};
+
 export function dir(locale: Locale): 'ltr' | 'rtl' {
   return locale === 'ar' ? 'rtl' : 'ltr';
 }
