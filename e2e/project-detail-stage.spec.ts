@@ -35,6 +35,15 @@ test.describe('proje detay — adımlı sahne', () => {
     await expect(label).toContainText('01 / 03');
     await expect(page.locator('[data-pd-prev]')).toBeDisabled();
 
+    // Eylem düğmesi göze çarpar: marka kırmızısı zemin + beyaz yazı;
+    // pasif uç nötrdür (kırmızı DEĞİL) — tek kırmızı, basılabilir olandır
+    await expect(page.locator('[data-pd-next]')).toHaveCSS('background-color', 'rgb(181, 35, 35)');
+    await expect(page.locator('[data-pd-next]')).toHaveCSS('color', 'rgb(255, 255, 255)');
+    const prevBg = await page
+      .locator('[data-pd-prev]')
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(prevBg).not.toBe('rgb(181, 35, 35)');
+
     // Scroll kareyi DEĞİŞTİRMEZ (eski iğneli kurgudan ayrışma noktası)
     await page.mouse.wheel(0, 500);
     await page.waitForTimeout(250);
