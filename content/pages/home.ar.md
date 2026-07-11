@@ -10,7 +10,7 @@ hero:
   primaryCta: "عرض المشاريع"
   secondaryCta: "التواصل"
   mediaTag: "تم التسليم · 3 كتل"
-  mediaAlt: "ثلاث كتل سكنية مكتملة من MEY تحت سماء زرقاء"
+  mediaAlt: "مشاريع سكنية مكتملة من MEY"
 sections:
   projects:
     eyebrow: "01 — المشاريع"

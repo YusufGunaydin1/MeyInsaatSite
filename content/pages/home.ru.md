@@ -10,7 +10,7 @@ hero:
   primaryCta: "Смотреть проекты"
   secondaryCta: "Контакты"
   mediaTag: "СДАНО · 3 КОРПУСА"
-  mediaAlt: "Три сданных жилых корпуса MEY под голубым небом"
+  mediaAlt: "Сданные жилые проекты MEY"
 sections:
   projects:
     eyebrow: "01 — ПРОЕКТЫ"

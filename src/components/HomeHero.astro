@@ -9,10 +9,11 @@
   scroll-to-build signature follows immediately as the second beat.
   Copy comes from content/pages/home.<loc>.md so all four locales stay in sync.
 */
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import { localePath, type Locale } from '../lib/i18n';
 import { pageContent } from '../lib/content';
-import heroImg from '../assets/photos/hero-three-blocks-sky.webp';
+import heroSky from '../assets/photos/hero-three-blocks-sky.webp';
+import heroCorner from '../assets/photos/hero-residential-corner-building.webp';
 
 interface Props {
   locale: Locale;
@@ -21,21 +22,35 @@ interface Props {
 const { locale } = Astro.props;
 const fm = pageContent('home', locale)?.frontmatter ?? {};
 const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
+
+/* Art direction (owner-directed): the wide sky panorama collapses to a bland
+   facade sliver on portrait crops, so phones get the previous corner-building
+   cover instead. <Image> can't switch sources per breakpoint — build both
+   srcsets with getImage() and hand-author the <picture>. The 768px cut must
+   stay in lockstep with the scrim/object-position media query below. */
+const skyImg = await getImage({ src: heroSky, widths: [1280, 1600, 2048, 2880], format: 'webp' });
+const cornerImg = await getImage({ src: heroCorner, widths: [480, 768, 1080, 1440], format: 'webp' });
 ---
 
 <section class="theatre home-hero" aria-label={fm.hero?.mediaAlt}>
-  <!-- The delivered blocks. Decorative (the headline carries meaning); the LCP
-       image, so eager + high priority. -->
-  <Image
-    src={heroImg}
-    alt=""
-    aria-hidden="true"
-    widths={[768, 1280, 1600, 2048, 2880]}
-    sizes="100vw"
-    loading="eager"
-    fetchpriority="high"
-    class="home-hero-bg"
-  />
+  <!-- The delivered blocks (phones: the corner building). Decorative (the
+       headline carries meaning); the LCP image, so eager + high priority. -->
+  <picture>
+    <source media="(max-width: 768px)" srcset={cornerImg.srcSet.attribute} sizes="100vw" />
+    <img
+      src={skyImg.src}
+      srcset={skyImg.srcSet.attribute}
+      sizes="100vw"
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      width={skyImg.attributes.width}
+      height={skyImg.attributes.height}
+      class="home-hero-bg"
+    />
+  </picture>
   <div class="home-hero-scrim" aria-hidden="true"></div>
 
   <div class="container-site home-hero-inner">
@@ -169,13 +184,14 @@ const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
       linear-gradient(to top, rgb(14 15 17 / 0.5) 0%, rgb(14 15 17 / 0.12) 32%, rgb(14 15 17 / 0) 55%);
   }
 
-  /* Portrait crops center on the gray facade; aim the frame at the open sky
-     instead — the copy stays on sky, the towers hold the right edge. The copy
-     still brushes that edge, so the scrim comes down from the top-left and
-     leaves only the lower third (trees, facade base) clear. */
+  /* Phones show the corner-building cover (see the <picture> above): its own
+     framing centers the subject, so drop the panorama's left-aimed position.
+     The scrim comes down from the top-left over the copy and leaves the lower
+     third clear. The "3 BLOK" tag states what the desktop photo shows — hide
+     it over the single-building cover. */
   @media (max-width: 768px) {
     .home-hero-bg {
-      object-position: 0% 25%;
+      object-position: 50% 50%;
     }
     .home-hero-scrim {
       background:
@@ -187,6 +203,9 @@ const headlineLines: string[] = String(fm.hero?.headline ?? '').split('\n');
           rgb(14 15 17 / 0) 100%
         ),
         linear-gradient(to top, rgb(14 15 17 / 0.45) 0%, rgb(14 15 17 / 0) 40%);
+    }
+    .home-hero-tag {
+      display: none;
     }
   }
 </style>

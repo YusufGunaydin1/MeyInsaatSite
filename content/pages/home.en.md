@@ -10,7 +10,7 @@ hero:
   primaryCta: "View projects"
   secondaryCta: "Contact"
   mediaTag: "DELIVERED · 3 BLOCKS"
-  mediaAlt: "Three completed MEY residential blocks under a blue sky"
+  mediaAlt: "Completed MEY residential projects"
 sections:
   projects:
     eyebrow: "01 — PROJECTS"

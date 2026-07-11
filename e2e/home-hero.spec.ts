@@ -47,6 +47,15 @@ test('friendly Oswald h1 in the sky, white on scrim, CTAs wired', async ({ page 
     .poll(() => bg.evaluate((el: HTMLImageElement) => el.naturalWidth))
     .toBeGreaterThan(0);
 
+  // Art direction: phones get the corner-building cover, desktop the sky
+  // panorama — prove the browser actually picked the right source.
+  const currentSrc = await bg.evaluate((el: HTMLImageElement) => el.currentSrc);
+  if (page.viewportSize()!.width <= 768) {
+    expect(currentSrc).toContain('hero-residential-corner-building');
+  } else {
+    expect(currentSrc).toContain('hero-three-blocks-sky');
+  }
+
   // Both CTAs present and wired to the real routes.
   await expect(hero.locator('a.btn-primary')).toHaveAttribute('href', /\/projeler\/?$/);
   await expect(hero.locator('a.btn-ghost')).toHaveAttribute('href', /\/iletisim\/?$/);

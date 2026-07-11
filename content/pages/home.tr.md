@@ -10,7 +10,7 @@ hero:
   primaryCta: "Projeleri gör"
   secondaryCta: "İletişim"
   mediaTag: "TESLİM EDİLDİ · 3 BLOK"
-  mediaAlt: "Mavi gökyüzü altında üç teslim edilmiş MEY konut bloğu"
+  mediaAlt: "Teslim edilmiş MEY konut projeleri"
 sections:
   projects:
     eyebrow: "01 — PROJELER"
