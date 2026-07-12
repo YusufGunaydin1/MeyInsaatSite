@@ -28,6 +28,12 @@ const projectData = import.meta.glob<Dict>(
 const projectProse = import.meta.glob<Dict>('../../content/projects/*/*.md', {
   eager: true,
 });
+// Optional per-project, per-locale DetailStage text (overrides the shared
+// ui.projects.detail default). Absent for most projects → shared default stands.
+const projectDetail = import.meta.glob<Dict>(
+  '../../content/projects/*/detail.*.json',
+  { eager: true }
+);
 
 function byLocale(modules: Record<string, Dict>, tag: string, locale: Locale) {
   const want = Object.entries(modules).find(([p]) =>
@@ -85,4 +91,30 @@ export function projects(locale: Locale): ProjectEntry[] {
 
 export function project(slug: string, locale: Locale): ProjectEntry | undefined {
   return projects(locale).find((p) => p.slug === slug);
+}
+
+/**
+ * Per-project DetailStage text override (TR fallback), or {} when the project
+ * ships no detail file. Deep-merge this over ui(locale).projects.detail so a
+ * building tells its OWN story while inheriting shared chrome (frame names,
+ * labels, footnote). Keeps a single source per field: project wins, else shared.
+ */
+export function projectDetailOverride(slug: string, locale: Locale): Dict {
+  const pick = (loc: string) =>
+    Object.entries(projectDetail).find(([p]) =>
+      p.endsWith(`/${slug}/detail.${loc}.json`)
+    )?.[1];
+  const mod = pick(locale) ?? pick('tr');
+  return ((mod as Dict)?.default ?? mod ?? {}) as Dict;
+}
+
+/** Recursive merge: objects merge key-by-key; arrays & scalars replace wholesale. */
+export function mergeDeep<T>(base: T, over: unknown): T {
+  if (over === undefined || over === null) return base;
+  if (Array.isArray(over) || typeof over !== 'object') return over as T;
+  const out: Dict = { ...(base as unknown as Dict) };
+  for (const k of Object.keys(over as Dict)) {
+    out[k] = mergeDeep((base as unknown as Dict)?.[k], (over as Dict)[k]);
+  }
+  return out as unknown as T;
 }

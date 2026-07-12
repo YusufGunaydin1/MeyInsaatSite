@@ -1,0 +1,68 @@
+{
+  "_comment": "El Ele Apartmanı — DetailStage metni (bu dil). Paylaşımlı ui.projects.detail varsayılanının üzerine deep-merge edilen proje-bazlı override; yalnız binaya özgü alanlar. TR kaynaktan çevrildi (localize-elele-detail workflow). Gri (örnek) değerler MEY doğrulayana kadar temsilîdir.",
+  "story": {
+    "para": "El Ele Apartmanı brings the elegance of classic architecture together with modern comfort. Its white stucco façade, natural-stone moldings and hand-crafted wrought-iron balcony railings add lasting value to the fabric of the street.",
+    "quote": "“Classic elegance,\nlasting value.”",
+    "features": [
+      "Wrought-iron details",
+      "Natural-stone molding",
+      "Elegant white façade"
+    ],
+    "salonAlt": "Living room — bathed in daylight from a large window (representative image)",
+    "malzemeAlt": "Façade detail — wrought-iron railing and white-stucco craftsmanship (representative composition)"
+  },
+  "spaces": {
+    "chapters": [
+      {
+        "name": "FAÇADE",
+        "text": "A classic white façade given rhythm by wrought-iron railings and stone moldings.",
+        "alt": "Façade detail — wrought iron and stucco (representative)"
+      },
+      {
+        "name": "INTERIOR",
+        "text": "Airy interiors shaped by daylight and a restrained material language.",
+        "alt": "Interior — hall and staircase (representative image)"
+      },
+      {
+        "name": "LIVING",
+        "text": "Peaceful, light-filled living areas that open to the city through large windows.",
+        "alt": "Living room and window — living area (representative image)"
+      }
+    ],
+    "mapAlt": "Site plan — building and parcel layout (representative)"
+  },
+  "dossier": {
+    "isoAlt": "El Ele Apartmanı — axonometric view (representative)",
+    "materials": [
+      "WHITE STUCCO",
+      "NATURAL STONE",
+      "GLASS",
+      "WROUGHT IRON"
+    ],
+    "timeline": [
+      {
+        "date": "05.2022",
+        "name": "Design & Permits",
+        "desc": "Design and permitting were completed."
+      },
+      {
+        "date": "10.2022",
+        "name": "Structural Shell",
+        "desc": "The load-bearing system and structural shell were completed."
+      },
+      {
+        "date": "08.2023",
+        "name": "Handover",
+        "desc": "Finishing works and inspections were completed and the building was handed over."
+      }
+    ]
+  },
+  "samples": {
+    "place": "BAHÇELIEVLER",
+    "city": "ISTANBUL",
+    "placeCity": "ISTANBUL · BAHÇELIEVLER",
+    "floors": "6",
+    "units": "20",
+    "year": "2023"
+  }
+}

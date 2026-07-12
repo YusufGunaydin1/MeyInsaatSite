@@ -181,6 +181,61 @@ async function convertProjects() {
   }
 }
 
+// El Ele Apartmanı — DETAY SAHNESİ seti. Ali'nin yatay detay sahnesini bu bina
+// için de açar: hasStage, slug türevli 10 kareyi (salon/mutfak/cephe/izometrik/
+// vaziyet/malzeme + 4 malzeme çipi) ARAR. Kaynak = binanın kendi galerisi
+// (galllery/el_ele, git-ignored). Kareler yalnız YENİDEN BOYUTLANIR; her slotun
+// oranını sayfadaki CSS object-cover kırpar (Ali karelerindeki gibi). Malzeme
+// çipleri (48px) gerçek dokulardan kare kırpımdır. Rerunnable, additive.
+const ELELE_IN = path.join(LIB, 'Buildings_Main_Images/galllery/el_ele');
+const ELELE_SLUG = 'el-ele-apartmani';
+// Dağınık üretici adları → anlamlı slot eşlemesi (görsel içerikle doğrulandı).
+const ELELE_SRC = {
+  ferforje: 'ChatGPT Image Jul 12, 2026, 11_29_18 AM.png', // köşe ferforje detayı
+  facade: 'ChatGPT Image Jul 12, 2026, 11_29_23 AM.png', // geniş tekrar eden cephe
+  iso: 'ChatGPT Image Jul 12, 2026, 12_01_27 PM.png', // aksonometrik bina render (beyaz zemin)
+  stair: 'ChatGPT Image Jul 12, 2026, 12_01_44 PM.png', // merdiven / hol iç mekan
+  bath: 'ChatGPT Image Jul 12, 2026, 12_01_48 PM.png', // banyo (taş dokulu seramik, cam)
+  room: 'ChatGPT Image Jul 12, 2026, 12_01_52 PM.png', // manzaralı oda (yaşam)
+};
+
+async function eleleFit(src, name, width, quality = 80) {
+  const out = path.join(PROJECTS_OUT, `${ELELE_SLUG}-${name}.webp`);
+  await sharp(src).resize({ width, withoutEnlargement: true }).webp({ quality }).toFile(out);
+  return (await stat(out)).size;
+}
+// Ortalı kare doku çipi: kenar = min(W,H)*k, (fx,fy) oransal merkezde; kenara taşarsa kırpılır.
+async function eleleSwatch(src, name, fx, fy, k) {
+  const m = await sharp(src).metadata();
+  const side = Math.round(Math.min(m.width, m.height) * k);
+  const left = Math.max(0, Math.min(Math.round(fx * m.width - side / 2), m.width - side));
+  const top = Math.max(0, Math.min(Math.round(fy * m.height - side / 2), m.height - side));
+  const out = path.join(PROJECTS_OUT, `${ELELE_SLUG}-${name}.webp`);
+  await sharp(src).extract({ left, top, width: side, height: side }).resize({ width: 352 }).webp({ quality: 82 }).toFile(out);
+  return (await stat(out)).size;
+}
+
+async function convertElEleDetail() {
+  if (!(await requireSrc(ELELE_IN))) return;
+  await mkdir(PROJECTS_OUT, { recursive: true });
+  const S = (f) => path.join(ELELE_IN, f);
+  let total = 0;
+  // Ana kareler — yalnız resize; oranı slotun CSS'i kırpar.
+  total += await eleleFit(S(ELELE_SRC.room), 'salon', 1200);
+  total += await eleleFit(S(ELELE_SRC.stair), 'mutfak', 1200); // "İÇ MEKÂN" — hol/merdiven
+  total += await eleleFit(S(ELELE_SRC.facade), 'cephe-cizim', 1200);
+  total += await eleleFit(S(ELELE_SRC.iso), 'izometrik', 900);
+  total += await eleleFit(S(ELELE_SRC.iso), 'vaziyet', 1100);
+  total += await eleleFit(S(ELELE_SRC.ferforje), 'malzeme', 900);
+  // Malzeme paleti çipleri — gerçek dokulardan kare kırpım (fraksiyonlar
+  // üretilen çıktı 48px'te görsel doğrulandı: her çip malzemesini okutur).
+  total += await eleleSwatch(S(ELELE_SRC.room), 'doku-beton', 0.82, 0.3, 0.11); // beyaz sıva (düz duvar)
+  total += await eleleSwatch(S(ELELE_SRC.bath), 'doku-tugla', 0.6, 0.46, 0.13); // doğal taş (bej seramik)
+  total += await eleleSwatch(S(ELELE_SRC.room), 'doku-cam', 0.17, 0.38, 0.12); // cam (koyu doğrama + pencere)
+  total += await eleleSwatch(S(ELELE_SRC.ferforje), 'doku-metal', 0.45, 0.55, 0.26); // ferforje
+  console.log(`el-ele detail: 10 webp, total ${(total / 1024).toFixed(0)} KB`);
+}
+
 async function convertBrand() {
   await mkdir(BRAND_OUT, { recursive: true });
   await mkdir(PUBLIC, { recursive: true });
@@ -213,8 +268,15 @@ async function convertBrand() {
   console.log('brand: logo, favicon, apple-touch-icon, og-default done');
 }
 
-await convertFrames();
-await convertPhotos();
-await convertShowcase();
-await convertProjects();
-await convertBrand();
+// `--el-ele-detail`: yalnız El Ele detay setini üret (tam boru hattını çalıştırıp
+// diğer varlıkları yeniden yazmadan). Argümansız çağrı tüm varlıkları küratör eder.
+if (process.argv.includes('--el-ele-detail')) {
+  await convertElEleDetail();
+} else {
+  await convertFrames();
+  await convertPhotos();
+  await convertShowcase();
+  await convertProjects();
+  await convertBrand();
+  await convertElEleDetail();
+}

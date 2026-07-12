@@ -35,11 +35,14 @@ interface Props {
   cover: ImageMetadata;
   coverXray?: ImageMetadata;
   imgs: StageImages;
+  /* Çözümlenmiş DetailStage metni: paylaşımlı varsayılan + proje override
+     (ProjectDetailPage'de birleştirilir). Şablon yalnız sunum yapar. */
+  detail: Record<string, any>;
 }
-const { locale, name, typeLabel, statusLabel, cover, coverXray, imgs } = Astro.props;
+const { locale, name, typeLabel, statusLabel, cover, coverXray, imgs, detail } = Astro.props;
 
 const t = ui(locale);
-const td = t.projects.detail;
+const td = detail;
 const eyebrow = String(t.nav.projects).toUpperCase();
 
 const frames = [
