@@ -1,0 +1,59 @@
+{
+  "_comment": "Sapanbağları — DetailStage metni. Paylaşımlı ui.projects.detail (Ali türevli) VARSAYILANININ üzerine deep-merge edilen proje-bazlı override. Yalnız binaya özgü alanlar burada; frame/etiket/buton/dipnot gibi ORTAK arayüz metni ui.tr.json'dan miras alınır. Gri (örnek) değerler MEY doğrulayana kadar temsilîdir.",
+  "story": {
+    "para": "Sapanbağları, beyaz ve antrasit iki tonlu cephesiyle modern konut mimarisini yalın, net bir dile taşır. Geniş pencerelerinden bol gün ışığı alan daireleri, sade malzeme paleti ve keskin hatlarıyla sokağa çağdaş, dingin bir duruş sunar.",
+    "quote": "“Yalın hat,\naydınlık yaşam.”",
+    "features": ["Beyaz-antrasit cephe", "Geniş pencereler", "Net modern hatlar"],
+    "salonAlt": "Salon — geniş pencerelerden gün ışığı alan ferah yaşam alanı (temsilî görsel)",
+    "malzemeAlt": "Cephe detayı — beyaz beton, antrasit panel ve metal doğrama (temsilî kompozisyon)"
+  },
+  "spaces": {
+    "chapters": [
+      {
+        "name": "CEPHE",
+        "text": "Beyaz beton ve antrasit panelin ritmiyle kurulan, net hatlı modern cephe.",
+        "alt": "Cephe detayı — beyaz-antrasit iki ton (temsilî)"
+      },
+      {
+        "name": "İÇ MEKÂN",
+        "text": "Sıcak ahşap zemin ve sade yüzeylerle gün ışığına açılan iç mekânlar.",
+        "alt": "İç mekân — ahşap zeminli oda (temsilî görsel)"
+      },
+      {
+        "name": "YAŞAM",
+        "text": "Geniş pencerelerden şehre ve yeşile bakan, ferah ve aydınlık yaşam alanları.",
+        "alt": "Salon — geniş pencereli yaşam alanı (temsilî görsel)"
+      }
+    ],
+    "mapAlt": "Vaziyet — bina ve bahçe yerleşimi (temsilî)"
+  },
+  "dossier": {
+    "isoAlt": "Sapanbağları — aksonometrik görünüm (temsilî)",
+    "materials": ["BEYAZ BETON", "ANTRASİT PANEL", "CAM", "METAL"],
+    "timeline": [
+      {
+        "date": "03.2021",
+        "name": "Projelendirme",
+        "desc": "Proje ve ruhsat süreçleri tamamlandı."
+      },
+      {
+        "date": "09.2021",
+        "name": "Kaba İnşaat",
+        "desc": "Taşıyıcı sistem ve kaba inşaat tamamlandı."
+      },
+      {
+        "date": "07.2022",
+        "name": "Teslim",
+        "desc": "İnce işler ve kontroller tamamlanarak teslim edildi."
+      }
+    ]
+  },
+  "samples": {
+    "place": "ESENYURT",
+    "city": "İSTANBUL",
+    "placeCity": "İSTANBUL · ESENYURT",
+    "floors": "5",
+    "units": "18",
+    "year": "2022"
+  }
+}

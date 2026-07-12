@@ -51,10 +51,12 @@ test('detail stage photo: cutaway hidden idle, revealed under cursor, no toggle'
   await expect(xr.locator('.xrv-toggle')).toHaveCount(0);
 });
 
-test('classic hero (El Ele) keeps the lens: hidden idle, hover reveals', async ({ page, viewport }) => {
+test('detail stage (El Ele) keeps the lens: hidden idle, hover reveals', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width < 900, 'desktop hover flow');
   await page.goto(u('/projeler/el-ele-apartmani'));
-  const xr = page.locator('.pd-hero-media .xrv');
+  // El Ele now renders the horizontal stage (full gallery set) — the lens lives on
+  // its fixed left stage photo, like Ali, not the simple-hero figure.
+  const xr = page.locator('[data-testid="pd-photo"] .xrv');
   const top = xr.locator('.xrv-top');
   await xr.scrollIntoViewIfNeeded();
   await expect(top).toHaveCSS('opacity', '0');

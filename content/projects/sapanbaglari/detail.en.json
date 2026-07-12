@@ -1,0 +1,68 @@
+{
+  "_comment": "Sapanbağları — DetailStage metni (bu dil). Paylaşımlı ui.projects.detail varsayılanının üzerine deep-merge edilen proje-bazlı override; yalnız binaya özgü alanlar. TR kaynaktan çevrildi. Gri (örnek) değerler MEY doğrulayana kadar temsilîdir.",
+  "story": {
+    "para": "Sapanbağları offers a clean, precise reading of modern residential architecture through its two-tone white-and-anthracite façade. Its apartments draw generous daylight from large windows, while a restrained material palette and sharp lines give the street a contemporary, calm presence.",
+    "quote": "“Clean lines,\nbright living.”",
+    "features": [
+      "White-and-anthracite façade",
+      "Large windows",
+      "Clean modern lines"
+    ],
+    "salonAlt": "Living room — a spacious living area filled with daylight from large windows (representative image)",
+    "malzemeAlt": "Façade detail — white concrete, anthracite panel and metal joinery (representative composition)"
+  },
+  "spaces": {
+    "chapters": [
+      {
+        "name": "FAÇADE",
+        "text": "A clean-lined modern façade built on the rhythm of white concrete and anthracite panel.",
+        "alt": "Façade detail — white-and-anthracite two-tone (representative)"
+      },
+      {
+        "name": "INTERIOR",
+        "text": "Interiors that open to daylight through warm wood floors and restrained surfaces.",
+        "alt": "Interior — a room with wood flooring (representative image)"
+      },
+      {
+        "name": "LIVING",
+        "text": "Bright, spacious living areas that look out to the city and greenery through large windows.",
+        "alt": "Living room — a living area with large windows (representative image)"
+      }
+    ],
+    "mapAlt": "Site plan — building and garden layout (representative)"
+  },
+  "dossier": {
+    "isoAlt": "Sapanbağları — axonometric view (representative)",
+    "materials": [
+      "WHITE CONCRETE",
+      "ANTHRACITE PANEL",
+      "GLASS",
+      "METAL"
+    ],
+    "timeline": [
+      {
+        "date": "03.2021",
+        "name": "Design & Permits",
+        "desc": "Design and permitting were completed."
+      },
+      {
+        "date": "09.2021",
+        "name": "Structural Shell",
+        "desc": "The load-bearing system and structural shell were completed."
+      },
+      {
+        "date": "07.2022",
+        "name": "Handover",
+        "desc": "Finishing works and inspections were completed and the building was handed over."
+      }
+    ]
+  },
+  "samples": {
+    "place": "ESENYURT",
+    "city": "ISTANBUL",
+    "placeCity": "ISTANBUL · ESENYURT",
+    "floors": "5",
+    "units": "18",
+    "year": "2022"
+  }
+}

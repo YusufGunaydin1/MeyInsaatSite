@@ -236,6 +236,60 @@ async function convertElEleDetail() {
   console.log(`el-ele detail: 10 webp, total ${(total / 1024).toFixed(0)} KB`);
 }
 
+// Sapanbağları — DETAY SAHNESİ seti. El Ele ile AYNI desen: hasStage'in aradığı
+// slug türevli 10 kareyi (salon/mutfak/cephe/izometrik/vaziyet/malzeme + 4 malzeme
+// çipi) binanın kendi galerisinden üretir. Karakter KENDİNE ait: beyaz-antrasit
+// iki tonlu modern cephe (beyaz beton · antrasit panel · cam · metal). Ana kareler
+// yalnız YENİDEN BOYUTLANIR; her slotun oranını sayfadaki CSS object-cover kırpar.
+// Malzeme çipleri (48px) gerçek malzeme alanlarından kare kırpımdır. Rerunnable, additive.
+const SAPAN_IN = path.join(LIB, 'Buildings_Main_Images/galllery/Sapanbaglari');
+const SAPAN_SLUG = 'sapanbaglari';
+// Dağınık üretici adları → içerikle doğrulanmış slot eşlemesi.
+const SAPAN_SRC = {
+  facade: 'ChatGPT Image Jul 12, 2026, 08_39_45 PM.png', // beyaz+antrasit köşe cephe (cam korkuluk, metal doğrama)
+  roomWarm: 'ChatGPT Image Jul 12, 2026, 08_39_55 PM.png', // sıcak ışıklı salon, siyah balkon kapısı
+  roomWindow: 'ChatGPT Image Jul 12, 2026, 08_39_58 PM.png', // oda + net manzaralı pencere (cam)
+  salon: 'ChatGPT Image Jul 12, 2026, 08_41_56 PM.png', // geniş aydınlık salon, kaset tavan
+  roomGlass: 'ChatGPT Image Jul 12, 2026, 08_46_31 PM.png', // salon, cam korkuluklu kapı
+  iso: 'ChatGPT Image Jul 12, 2026, 08_56_58 PM.png', // aksonometrik bina render (beyaz zemin)
+};
+
+async function sapanFit(src, name, width, quality = 80) {
+  const out = path.join(PROJECTS_OUT, `${SAPAN_SLUG}-${name}.webp`);
+  await sharp(src).resize({ width, withoutEnlargement: true }).webp({ quality }).toFile(out);
+  return (await stat(out)).size;
+}
+// Ortalı kare doku çipi: kenar = min(W,H)*k, (fx,fy) oransal merkezde; kenara taşarsa kırpılır.
+async function sapanSwatch(src, name, fx, fy, k) {
+  const m = await sharp(src).metadata();
+  const side = Math.round(Math.min(m.width, m.height) * k);
+  const left = Math.max(0, Math.min(Math.round(fx * m.width - side / 2), m.width - side));
+  const top = Math.max(0, Math.min(Math.round(fy * m.height - side / 2), m.height - side));
+  const out = path.join(PROJECTS_OUT, `${SAPAN_SLUG}-${name}.webp`);
+  await sharp(src).extract({ left, top, width: side, height: side }).resize({ width: 352 }).webp({ quality: 82 }).toFile(out);
+  return (await stat(out)).size;
+}
+
+async function convertSapanbaglariDetail() {
+  if (!(await requireSrc(SAPAN_IN))) return;
+  await mkdir(PROJECTS_OUT, { recursive: true });
+  const S = (f) => path.join(SAPAN_IN, f);
+  let total = 0;
+  // Ana kareler — yalnız resize; oranı slotun CSS'i kırpar.
+  total += await sapanFit(S(SAPAN_SRC.salon), 'salon', 1200); // geniş salon (3:4 + YAŞAM şeridi)
+  total += await sapanFit(S(SAPAN_SRC.roomWarm), 'mutfak', 1200); // "İÇ MEKÂN" — sıcak ışıklı salon
+  total += await sapanFit(S(SAPAN_SRC.facade), 'cephe-cizim', 1200); // beyaz-antrasit cephe şeridi
+  total += await sapanFit(S(SAPAN_SRC.iso), 'izometrik', 900);
+  total += await sapanFit(S(SAPAN_SRC.iso), 'vaziyet', 1100); // iso'yu vaziyet için yeniden kullan (El Ele gibi)
+  total += await sapanFit(S(SAPAN_SRC.facade), 'malzeme', 900); // cephe detayı (1:1 kolaj)
+  // Malzeme paleti çipleri — gerçek malzeme alanlarından kare kırpım (48px'te doğrulandı).
+  total += await sapanSwatch(S(SAPAN_SRC.facade), 'doku-beton', 0.41, 0.55, 0.09); // beyaz beton (düz açık cephe dokusu)
+  total += await sapanSwatch(S(SAPAN_SRC.facade), 'doku-tugla', 0.75, 0.47, 0.09); // antrasit panel (düz koyu cephe)
+  total += await sapanSwatch(S(SAPAN_SRC.roomWindow), 'doku-cam', 0.24, 0.27, 0.15); // cam (manzaralı pencere camı)
+  total += await sapanSwatch(S(SAPAN_SRC.roomWarm), 'doku-metal', 0.26, 0.45, 0.1); // metal (siyah doğrama + kol)
+  console.log(`sapanbaglari detail: 10 webp, total ${(total / 1024).toFixed(0)} KB`);
+}
+
 async function convertBrand() {
   await mkdir(BRAND_OUT, { recursive: true });
   await mkdir(PUBLIC, { recursive: true });
@@ -268,10 +322,13 @@ async function convertBrand() {
   console.log('brand: logo, favicon, apple-touch-icon, og-default done');
 }
 
-// `--el-ele-detail`: yalnız El Ele detay setini üret (tam boru hattını çalıştırıp
-// diğer varlıkları yeniden yazmadan). Argümansız çağrı tüm varlıkları küratör eder.
+// `--el-ele-detail` / `--sapanbaglari-detail`: yalnız o binanın detay setini üret
+// (tam boru hattını çalıştırıp diğer varlıkları yeniden yazmadan). Argümansız çağrı
+// tüm varlıkları küratör eder.
 if (process.argv.includes('--el-ele-detail')) {
   await convertElEleDetail();
+} else if (process.argv.includes('--sapanbaglari-detail')) {
+  await convertSapanbaglariDetail();
 } else {
   await convertFrames();
   await convertPhotos();
@@ -279,4 +336,5 @@ if (process.argv.includes('--el-ele-detail')) {
   await convertProjects();
   await convertBrand();
   await convertElEleDetail();
+  await convertSapanbaglariDetail();
 }

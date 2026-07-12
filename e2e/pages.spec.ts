@@ -25,7 +25,10 @@ for (const locale of LOCALES) {
       await expect(page).toHaveTitle(/MEY/);
       await expect(page.locator('h1')).toBeVisible();
       await expect(page.locator('header')).toBeVisible();
-      await expect(page.locator('footer')).toBeVisible();
+      // Site footer landmark only: the detail stage's dossier card also renders a
+      // sectioning <footer> (inside <article>, not a contentinfo landmark), so a
+      // bare `footer` locator now matches two elements — target the page footer.
+      await expect(page.getByRole('contentinfo')).toBeVisible();
 
       // Prove images the user sees actually load (naturalWidth > 0), not just URLs in DOM.
       // The scrub poster is excluded: it flips to hidden when the canvas takes over

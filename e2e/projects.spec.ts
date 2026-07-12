@@ -44,6 +44,24 @@ test('El Ele page: horizontal stage hero, construction story, honest samples', a
   await expect(page.getByTestId('pd-note')).toHaveCount(1);
 });
 
+test('Sapanbağları page: horizontal stage hero, construction story, honest samples', async ({ page }) => {
+  await page.goto(u('/projeler/sapanbaglari'));
+  await expect(page.locator('h1')).toHaveText('Sapanbağları');
+  // Full gallery set → the horizontal detail stage replaces the simple hero (like Ali/El Ele).
+  await expect(page.getByTestId('pd-stage')).toHaveCount(1);
+  await decodes(page, '[data-testid="pd-photo"] img');
+
+  // Per-building construction story: 5 real stage frames + labelled records.
+  await expect(page.getByText('ŞANTİYE KAYITLARI')).toBeVisible();
+  await expect(page.locator('.ps-stage')).toHaveCount(5);
+  await decodes(page, '.ps-img');
+
+  // Facts not yet provided stay honest: the survey "pending" tag on the photo and
+  // the single footnote that flags the grey sample values as representative.
+  await expect(page.locator('.pds-tag-pending')).toContainText('DOĞRULANIYOR');
+  await expect(page.getByTestId('pd-note')).toHaveCount(1);
+});
+
 test('Ali page: horizontal stage hero, decoded cover, no fabricated story', async ({ page }) => {
   await page.goto(u('/projeler/ali'));
   await expect(page.locator('h1')).toHaveText('Ali Apartmanı');
