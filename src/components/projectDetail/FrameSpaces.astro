@@ -227,19 +227,16 @@ const chapters = (t.chapters as { name: string; text: string; alt: string }[]).m
   }
   .pm-stat-v .pm-sample { font-size: 1.15rem; }
 
+  /* Vaziyet = şeffaf render'in alt zemin/site bandı. KART YOK (arka plan yok):
+     bant sayfa zemininde durur, saydam kenarlar sayfaya karışır. */
   .pm-map {
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-brand);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    background: #fff;
     min-height: 0;
   }
-  .pm-map-img { width: 100%; display: block; flex: 1; min-height: 0; object-fit: cover; object-position: 62% 45%; aspect-ratio: 16 / 10; }
+  .pm-map-img { width: 100%; display: block; flex: 1; min-height: 0; object-fit: cover; object-position: 50% 50%; aspect-ratio: 16 / 10; }
   .pm-cap {
     color: var(--color-graphite-400);
-    border-block-start: 1px solid var(--color-line);
-    padding: 0.4rem 0.6rem;
+    padding-block-start: 0.5rem;
   }
 </style>

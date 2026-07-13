@@ -193,7 +193,6 @@ const ELELE_SLUG = 'el-ele-apartmani';
 const ELELE_SRC = {
   ferforje: 'ChatGPT Image Jul 12, 2026, 11_29_18 AM.png', // köşe ferforje detayı
   facade: 'ChatGPT Image Jul 12, 2026, 11_29_23 AM.png', // geniş tekrar eden cephe
-  iso: 'ChatGPT Image Jul 12, 2026, 12_01_27 PM.png', // aksonometrik bina render (beyaz zemin)
   stair: 'ChatGPT Image Jul 12, 2026, 12_01_44 PM.png', // merdiven / hol iç mekan
   bath: 'ChatGPT Image Jul 12, 2026, 12_01_48 PM.png', // banyo (taş dokulu seramik, cam)
   room: 'ChatGPT Image Jul 12, 2026, 12_01_52 PM.png', // manzaralı oda (yaşam)
@@ -224,8 +223,7 @@ async function convertElEleDetail() {
   total += await eleleFit(S(ELELE_SRC.room), 'salon', 1200);
   total += await eleleFit(S(ELELE_SRC.stair), 'mutfak', 1200); // "İÇ MEKÂN" — hol/merdiven
   total += await eleleFit(S(ELELE_SRC.facade), 'cephe-cizim', 1200);
-  total += await eleleFit(S(ELELE_SRC.iso), 'izometrik', 900);
-  total += await eleleFit(S(ELELE_SRC.iso), 'vaziyet', 1100);
+  // izometrik + vaziyet artık convert3dRenders()'ten (şeffaf 3D render).
   total += await eleleFit(S(ELELE_SRC.ferforje), 'malzeme', 900);
   // Malzeme paleti çipleri — gerçek dokulardan kare kırpım (fraksiyonlar
   // üretilen çıktı 48px'te görsel doğrulandı: her çip malzemesini okutur).
@@ -233,7 +231,7 @@ async function convertElEleDetail() {
   total += await eleleSwatch(S(ELELE_SRC.bath), 'doku-tugla', 0.6, 0.46, 0.13); // doğal taş (bej seramik)
   total += await eleleSwatch(S(ELELE_SRC.room), 'doku-cam', 0.17, 0.38, 0.12); // cam (koyu doğrama + pencere)
   total += await eleleSwatch(S(ELELE_SRC.ferforje), 'doku-metal', 0.45, 0.55, 0.26); // ferforje
-  console.log(`el-ele detail: 10 webp, total ${(total / 1024).toFixed(0)} KB`);
+  console.log(`el-ele detail: 8 webp, total ${(total / 1024).toFixed(0)} KB`);
 }
 
 // Sapanbağları — DETAY SAHNESİ seti. El Ele ile AYNI desen: hasStage'in aradığı
@@ -251,7 +249,6 @@ const SAPAN_SRC = {
   roomWindow: 'ChatGPT Image Jul 12, 2026, 08_39_58 PM.png', // oda + net manzaralı pencere (cam)
   salon: 'ChatGPT Image Jul 12, 2026, 08_41_56 PM.png', // geniş aydınlık salon, kaset tavan
   roomGlass: 'ChatGPT Image Jul 12, 2026, 08_46_31 PM.png', // salon, cam korkuluklu kapı
-  iso: 'ChatGPT Image Jul 12, 2026, 08_56_58 PM.png', // aksonometrik bina render (beyaz zemin)
 };
 
 async function sapanFit(src, name, width, quality = 80) {
@@ -279,15 +276,61 @@ async function convertSapanbaglariDetail() {
   total += await sapanFit(S(SAPAN_SRC.salon), 'salon', 1200); // geniş salon (3:4 + YAŞAM şeridi)
   total += await sapanFit(S(SAPAN_SRC.roomWarm), 'mutfak', 1200); // "İÇ MEKÂN" — sıcak ışıklı salon
   total += await sapanFit(S(SAPAN_SRC.facade), 'cephe-cizim', 1200); // beyaz-antrasit cephe şeridi
-  total += await sapanFit(S(SAPAN_SRC.iso), 'izometrik', 900);
-  total += await sapanFit(S(SAPAN_SRC.iso), 'vaziyet', 1100); // iso'yu vaziyet için yeniden kullan (El Ele gibi)
+  // izometrik + vaziyet artık convert3dRenders()'ten (şeffaf 3D render).
   total += await sapanFit(S(SAPAN_SRC.facade), 'malzeme', 900); // cephe detayı (1:1 kolaj)
   // Malzeme paleti çipleri — gerçek malzeme alanlarından kare kırpım (48px'te doğrulandı).
   total += await sapanSwatch(S(SAPAN_SRC.facade), 'doku-beton', 0.41, 0.55, 0.09); // beyaz beton (düz açık cephe dokusu)
   total += await sapanSwatch(S(SAPAN_SRC.facade), 'doku-tugla', 0.75, 0.47, 0.09); // antrasit panel (düz koyu cephe)
   total += await sapanSwatch(S(SAPAN_SRC.roomWindow), 'doku-cam', 0.24, 0.27, 0.15); // cam (manzaralı pencere camı)
   total += await sapanSwatch(S(SAPAN_SRC.roomWarm), 'doku-metal', 0.26, 0.45, 0.1); // metal (siyah doğrama + kol)
-  console.log(`sapanbaglari detail: 10 webp, total ${(total / 1024).toFixed(0)} KB`);
+  console.log(`sapanbaglari detail: 8 webp, total ${(total / 1024).toFixed(0)} KB`);
+}
+
+// Üç binanın 3D AKSONOMETRİ render'leri — ARKA PLAN ŞEFFAF. Site'deki eski
+// gömülü-zeminli render'lerin yerini alır; hem izometrik hem vaziyet slotlarının
+// TEK kaynağıdır (El Ele/Sapanbağları bloklarından buraya taşındı, Ali'nin eski
+// statik ikizlerini de ezer). Kaynak: 3d_image/{14,15,16}.png (4000² RGBA).
+//   izometrik = bütün bina; kartta object-fit:contain ile beyaz zeminde "yüzer".
+//   vaziyet   = aynı render'in ALT zemin/site bandı — aksonometriyi tekrar etmez.
+// Alfa korunur (webp, alphaQuality 100). Rerunnable, additive.
+const THREED_IN = path.join(LIB, 'Buildings_Main_Images/3d_image');
+// [dosya, slug, vaziyet bandı [topFrac, heightFrac]] — bant içerikle doğrulandı.
+const THREED = [
+  ['14.png', 'ali', [0.5, 0.5]],
+  ['15.png', 'el-ele-apartmani', [0.48, 0.52]],
+  ['16.png', 'sapanbaglari', [0.5, 0.5]],
+];
+
+async function threedIso(src, slug, width = 1100, quality = 82) {
+  const out = path.join(PROJECTS_OUT, `${slug}-izometrik.webp`);
+  await sharp(src).resize({ width, withoutEnlargement: true }).webp({ quality, alphaQuality: 100 }).toFile(out);
+  return (await stat(out)).size;
+}
+// vaziyet: render'in alt zemin/site bandı (tam genişlik, oransal dikey dilim).
+async function threedVaziyet(src, slug, topFrac, hFrac, width = 1100, quality = 82) {
+  const m = await sharp(src).metadata();
+  const top = Math.round(topFrac * m.height);
+  const height = Math.min(m.height - top, Math.round(hFrac * m.height));
+  const out = path.join(PROJECTS_OUT, `${slug}-vaziyet.webp`);
+  await sharp(src)
+    .extract({ left: 0, top, width: m.width, height })
+    .resize({ width, withoutEnlargement: true })
+    .webp({ quality, alphaQuality: 100 })
+    .toFile(out);
+  return (await stat(out)).size;
+}
+
+async function convert3dRenders() {
+  if (!(await requireSrc(THREED_IN))) return;
+  await mkdir(PROJECTS_OUT, { recursive: true });
+  let total = 0;
+  for (const [f, slug, [t, h]] of THREED) {
+    const src = path.join(THREED_IN, f);
+    if (!(await requireSrc(src))) continue;
+    total += await threedIso(src, slug);
+    total += await threedVaziyet(src, slug, t, h);
+  }
+  console.log(`3d renders: ${THREED.length * 2} transparent webp, total ${(total / 1024).toFixed(0)} KB`);
 }
 
 async function convertBrand() {
@@ -329,6 +372,8 @@ if (process.argv.includes('--el-ele-detail')) {
   await convertElEleDetail();
 } else if (process.argv.includes('--sapanbaglari-detail')) {
   await convertSapanbaglariDetail();
+} else if (process.argv.includes('--3d-renders')) {
+  await convert3dRenders();
 } else {
   await convertFrames();
   await convertPhotos();
@@ -337,4 +382,5 @@ if (process.argv.includes('--el-ele-detail')) {
   await convertBrand();
   await convertElEleDetail();
   await convertSapanbaglariDetail();
+  await convert3dRenders();
 }
