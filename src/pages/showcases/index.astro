@@ -20,14 +20,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const demos: Demo[] = [
   {
-    title: 'ÖNERİ — Proje detay: KOMPAKT MOBİL (2 varyant)',
+    title: 'CANLI — Proje detay mobil: Kompakt Akış',
     desc:
-      'Canlı mobil detay, kareleri tam-genişlik görsellerle alt alta yığıyor → çok ' +
-      'uzun/geniş. İki kompakt yaklaşım cihaz çerçevesinde yan yana: A) Kompakt Akış — ' +
-      'küçük çevrelenmiş görseller + sıkı satır/tipografi, tek yoğun kaydırma; B) Sekmeli — ' +
-      'hero sabit, segment kontrol tek bölüm gösterir (en az kaydırma). Birini seç → prod mobil.',
-    status: 'proposal',
-    meta: 'showcase/detay/mobil/* · lab: proje-detay-mobil-lab',
+      'Seçilen varyant prod\'a alındı: canlı mobil detayın tam-genişlik uzun yığını yerine ' +
+      'tek yoğun kaydırma — küçük çevrelenmiş görseller, sıkı satır/tipografi, bindirmeli ' +
+      'hero başlığı, bölüm satırları, yüzen şeffaf izometrik. Üç binada da DetailStage\'in ' +
+      '<1024px kolu bu bileşeni render eder (RTL/AR dahil). Vitrin: cihaz çerçevesinde Ali önizlemesi.',
+    status: 'live',
+    meta: 'projectDetail/mobile/MobileDetail.astro · 3 proje sayfası · lab: proje-detay-mobil-lab',
     href: base + '/showcases/proje-detay-mobil-lab',
   },
   {

@@ -1,18 +1,45 @@
 ---
 /*
   PROJE DETAY MOBİL LAB — /showcases/proje-detay-mobil-lab.
-  Canlı mobil detay (DetailStage dikey yığın) TAM-TAŞMA görsellerle çok uzun/geniş.
-  Bu lab, KOMPAKT iki mobil yaklaşımı cihaz çerçevesinde yan yana sunar:
-  A) Kompakt Akış — tek yoğun kaydırma; B) Sekmeli — tek seferde tek bölüm.
-  Ali verisi/görselleri. noindex. (Vitrin index'ine kart EKLENMEDİ — paralel ajan
-  o dosyayı düzenliyor; onaylanınca kart + prod taşıması yapılır.)
+  Seçilen varyant KOMPAKT AKIŞ artık CANLI: prod `DetailStage`'in <1024px kolu bu
+  bileşeni (`MobileDetail`) render eder — üç binada da. Bu vitrin, aynı bileşeni
+  masaüstünde cihaz çerçevesinde önizler (Ali verisi). noindex. (Index kartı: paralel
+  ajan o dosyayı düzenliyor; kart yerinde bırakıldı.)
 */
 import Base from '../../layouts/Base.astro';
 import LabIntro from '../../components/showcase/LabIntro.astro';
 import Specimen from '../../components/showcase/Specimen.astro';
 import PhoneFrame from '../../components/showcase/detay/mobil/PhoneFrame.astro';
-import MobilKompakt from '../../components/showcase/detay/mobil/MobilKompakt.astro';
-import MobilSekmeli from '../../components/showcase/detay/mobil/MobilSekmeli.astro';
+import MobileDetail from '../../components/projectDetail/mobile/MobileDetail.astro';
+import { project, ui, projectDetailOverride, mergeDeep } from '../../lib/content';
+import { localePath } from '../../lib/i18n';
+import type { ImageMetadata } from 'astro';
+
+const locale = 'tr';
+const slug = 'ali';
+const t = ui(locale);
+const entry = project(slug, locale);
+const data = entry?.data ?? {};
+const fm = entry?.md?.frontmatter ?? {};
+
+const glob = import.meta.glob<{ default: ImageMetadata }>('../../assets/projects/*.webp', { eager: true });
+const img = (n: string) => glob[`../../assets/projects/${n}.webp`]?.default;
+const cover = img(slug)!;
+const imgs = {
+  salon: img(`${slug}-salon`)!,
+  mutfak: img(`${slug}-mutfak`)!,
+  cephe: img(`${slug}-cephe-cizim`)!,
+  izometrik: img(`${slug}-izometrik`)!,
+  vaziyet: img(`${slug}-vaziyet`)!,
+  malzeme: img(`${slug}-malzeme`)!,
+  dokular: ['beton', 'tugla', 'cam', 'metal'].map((d) => img(`${slug}-doku-${d}`)!),
+};
+const detail = mergeDeep(t.projects.detail, projectDetailOverride(slug, locale));
+const name = fm.name ?? slug;
+const typeLabel = String(t.projects.types?.[data.type] ?? data.type ?? 'Konut').toUpperCase();
+const statusLabel = String(t.projects.status?.[data.status] ?? data.status ?? 'Tamamlandı').toUpperCase();
+const eyebrow = String(t.nav.projects).toUpperCase();
+const ctaHref = localePath(locale, '/iletisim');
 ---
 
 <Base
@@ -24,27 +51,32 @@ import MobilSekmeli from '../../components/showcase/detay/mobil/MobilSekmeli.ast
 >
   <LabIntro
     kicker="MEY İnşaat · Dahili · Proje Detay Mobil Lab"
-    title="Proje Detay — Kompakt Mobil"
-    desc="Canlı mobil detay sayfası, kareleri tam-genişlik görsellerle alt alta yığıyor → çok uzun ve 'geniş' duruyor. Burada iki KOMPAKT mobil yaklaşım cihaz çerçevesinde: A) Kompakt Akış — küçük çevrelenmiş görseller, sıkı satır/tipografi, tek yoğun kaydırma; B) Sekmeli — hero sabit, segment kontrol tek bölüm gösterir (en az kaydırma). Birini seç → prod mobil düzenine taşınır."
+    title="Proje Detay — Kompakt Mobil (CANLI)"
+    desc="Seçilen varyant KOMPAKT AKIŞ prod'a alındı: canlı mobil detayın tam-genişlik uzun yığını yerine tek yoğun kaydırma — küçük çevrelenmiş görseller, sıkı satır/tipografi, bindirmeli hero başlığı, bölüm satırları, yüzen şeffaf izometrik. Üç binada da `DetailStage`'in <1024px kolu bu bileşeni render eder. Aşağıda masaüstü cihaz çerçevesinde Ali önizlemesi; gerçeğini görmek için /projeler/ali'yi dar ekranda aç."
   />
 
   <Specimen
     id="DETAY / MOBİL"
-    name="Kompakt mobil detay — iki yaklaşım (390px cihaz)"
-    why="Aynı içerik, iki sıkıştırma dili. A yoğun ama tanıdık tek-akış; B en kompakt ama bölüm başına dokunuş ister. Hangisi mobilde daha okunur/hızlı — karşılaştır."
+    name="Kompakt Akış — prod mobil düzeni (390px cihaz önizleme)"
+    why="Canlı DetailStage'in <1024px kolu artık bu tek bileşen. Aynı bileşen üç binada da veri/locale ile çalışır (RTL/AR dahil); burada Ali verisiyle önizlenir."
   >
     <div class="mcmp container-site">
       <figure class="mcmp-item">
         <figcaption class="t-tech mcmp-cap">
-          <span class="mcmp-badge">A</span> Kompakt Akış — tek yoğun kaydırma
+          <span class="mcmp-badge">CANLI</span> Kompakt Akış — /projeler/&lt;bina&gt; &lt;1024px
         </figcaption>
-        <PhoneFrame><MobilKompakt /></PhoneFrame>
-      </figure>
-      <figure class="mcmp-item">
-        <figcaption class="t-tech mcmp-cap">
-          <span class="mcmp-badge">B</span> Sekmeli — tek seferde tek bölüm
-        </figcaption>
-        <PhoneFrame><MobilSekmeli /></PhoneFrame>
+        <PhoneFrame>
+          <MobileDetail
+            name={name}
+            typeLabel={typeLabel}
+            statusLabel={statusLabel}
+            eyebrow={eyebrow}
+            cover={cover}
+            imgs={imgs}
+            detail={detail}
+            ctaHref={ctaHref}
+          />
+        </PhoneFrame>
       </figure>
     </div>
   </Specimen>
@@ -52,8 +84,8 @@ import MobilSekmeli from '../../components/showcase/detay/mobil/MobilSekmeli.ast
 
 <style>
   .mcmp {
-    display: flex; flex-wrap: wrap; gap: 2.5rem;
-    justify-content: center; align-items: start;
+    display: flex;
+    justify-content: center;
     padding-block: clamp(1.5rem, 4vh, 3rem);
   }
   .mcmp-item { display: grid; gap: 0.9rem; justify-items: center; }
@@ -63,8 +95,8 @@ import MobilSekmeli from '../../components/showcase/detay/mobil/MobilSekmeli.ast
   }
   .mcmp-badge {
     display: inline-grid; place-items: center;
-    inline-size: 1.3rem; block-size: 1.3rem;
+    padding: 0.15rem 0.5rem;
     background: var(--color-mey-red); color: #fff;
-    border-radius: var(--radius-brand); font-size: 0.7rem;
+    border-radius: var(--radius-brand); font-size: 0.6rem;
   }
 </style>

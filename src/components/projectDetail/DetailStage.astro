@@ -16,6 +16,7 @@ import StagePhoto from './StagePhoto.astro';
 import FrameStory from './FrameStory.astro';
 import FrameSpaces from './FrameSpaces.astro';
 import FrameDossier from './FrameDossier.astro';
+import MobileDetail from './mobile/MobileDetail.astro';
 
 export interface StageImages {
   salon: ImageMetadata;
@@ -124,13 +125,32 @@ const frames = [
   </div>
 </section>
 
-<!-- Dürüstlük dipnotu: örnek/temsilî değerlerin TEK açıklaması -->
+{/* <1024px: masaüstü sahne gizlenir; yerine kompakt mobil akış (Variant A). */}
+<div class="pds-mobile">
+  <MobileDetail
+    name={name}
+    typeLabel={typeLabel}
+    statusLabel={statusLabel}
+    eyebrow={eyebrow}
+    cover={cover}
+    imgs={imgs}
+    detail={td}
+    ctaHref={localePath(locale, '/iletisim')}
+  />
+</div>
+
+<!-- Dürüstlük dipnotu: örnek/temsilî değerlerin TEK açıklaması (her iki düzende ortak) -->
 <div class="container-site">
   <p class="t-caption pds-note" data-testid="pd-note">{td.samplesNote}</p>
 </div>
 
 <style>
-  /* ---- Varsayılan: dikey yığın (dar ekran / no-JS) ---- */
+  /* <1024px: masaüstü sahne gizlenir, yerini kompakt mobil akış (MobileDetail) alır.
+     Dipnot (.pds-note) sahnenin DIŞINDA olduğu için her iki düzende de görünür. */
+  @media (max-width: 1023.98px) { .pds { display: none; } }
+  @media (min-width: 1024px) { .pds-mobile { display: none; } }
+
+  /* ---- Varsayılan yığın: yalnız ≥1024 no-JS geri dönüşü ---- */
   .pds-spread {
     display: grid;
     grid-template-columns: 1fr;

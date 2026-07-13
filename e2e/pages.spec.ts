@@ -23,7 +23,9 @@ for (const locale of LOCALES) {
       await expect(page.locator('html')).toHaveAttribute('lang', locale.code);
       await expect(page.locator('html')).toHaveAttribute('dir', locale.dir);
       await expect(page).toHaveTitle(/MEY/);
-      await expect(page.locator('h1')).toBeVisible();
+      // Detay sayfası iki düzende iki <h1> içerir (biri display:none → a11y ağacı
+      // dışında); role sorgusu yalnız GÖRÜNÜR h1'i eşler (her düzende tek).
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       await expect(page.locator('header')).toBeVisible();
       // Site footer landmark only: the detail stage's dossier card also renders a
       // sectioning <footer> (inside <article>, not a contentinfo landmark), so a

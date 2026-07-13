@@ -83,20 +83,18 @@ test('no interior toggle exists on any locale', async ({ page }) => {
   }
 });
 
-test('touch: lens stays off and never blocks scrolling', async ({ page, viewport }) => {
+test('touch: kompakt mobil kapakta lens yok, sayfa scroll serbest', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width > 500, 'touch behavior (mobile project)');
   await page.goto(u('/projeler/ali'));
-  const xr = page.locator('[data-testid="pd-photo"] .xrv');
-  const top = xr.locator('.xrv-top');
-  await xr.scrollIntoViewIfNeeded();
+  // Mobilde masaüstü sahne (X-ray lens dahil) gizli; kompakt akış kapağı düz görsel.
+  const cover = page.getByTestId('pdm-cover');
+  await cover.scrollIntoViewIfNeeded();
+  await expect(cover).toBeVisible();
 
-  // The image must not claim touch gestures — page scroll stays free.
-  const touchAction = await xr.evaluate((el) => getComputedStyle(el).touchAction);
+  // Kapak dokunma jestlerini sahiplenmez — sayfa scroll'u serbest kalır.
+  const touchAction = await cover.evaluate((el) => getComputedStyle(el).touchAction);
   expect(touchAction).toBe('auto');
 
-  // A tap on the image itself reveals nothing (no lens, no control on touch).
-  const box = (await xr.boundingBox())!;
-  await page.touchscreen.tap(box.x + box.width * 0.5, box.y + box.height * 0.3);
-  await expect(top).toHaveCSS('opacity', '0');
-  await expect(xr.locator('.xrv-toggle')).toHaveCount(0);
+  // Kompakt akışta lens/kontrol HİÇ yok (touch'ta iç görünüm reddedilir — sahne gizli).
+  await expect(page.locator('.pdm .xrv, .pdm .xrv-toggle')).toHaveCount(0);
 });

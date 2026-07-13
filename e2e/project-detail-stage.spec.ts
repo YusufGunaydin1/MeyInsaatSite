@@ -142,14 +142,16 @@ test.describe('proje detay — adımlı sahne', () => {
   test('mobil 360: yığın düzeni, yatay taşma yok, görseller yüklenir', async ({ page }) => {
     test.skip(test.info().project.name !== 'mobile-360', 'mobil proje');
     await page.goto(u(PAGE));
-    await expect(page.getByTestId('pd-stage')).not.toHaveClass(/pds-live/);
+    // <1024: masaüstü sahne gizli, kompakt mobil akış (Variant A) görünür
+    await expect(page.getByTestId('pd-stage')).toBeHidden();
+    await expect(page.getByTestId('pd-mobile')).toBeVisible();
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth
     );
     expect(overflow).toBeLessThanOrEqual(0);
 
-    for (const tid of ['pd-foto-1', 'pd-strip', 'pd-iso']) {
+    for (const tid of ['pdm-cover', 'pdm-strip', 'pdm-iso']) {
       const img = page.getByTestId(tid).first();
       await img.scrollIntoViewIfNeeded();
       await expect
