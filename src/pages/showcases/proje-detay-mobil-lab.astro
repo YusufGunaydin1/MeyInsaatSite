@@ -1,0 +1,70 @@
+---
+/*
+  PROJE DETAY MOBİL LAB — /showcases/proje-detay-mobil-lab.
+  Canlı mobil detay (DetailStage dikey yığın) TAM-TAŞMA görsellerle çok uzun/geniş.
+  Bu lab, KOMPAKT iki mobil yaklaşımı cihaz çerçevesinde yan yana sunar:
+  A) Kompakt Akış — tek yoğun kaydırma; B) Sekmeli — tek seferde tek bölüm.
+  Ali verisi/görselleri. noindex. (Vitrin index'ine kart EKLENMEDİ — paralel ajan
+  o dosyayı düzenliyor; onaylanınca kart + prod taşıması yapılır.)
+*/
+import Base from '../../layouts/Base.astro';
+import LabIntro from '../../components/showcase/LabIntro.astro';
+import Specimen from '../../components/showcase/Specimen.astro';
+import PhoneFrame from '../../components/showcase/detay/mobil/PhoneFrame.astro';
+import MobilKompakt from '../../components/showcase/detay/mobil/MobilKompakt.astro';
+import MobilSekmeli from '../../components/showcase/detay/mobil/MobilSekmeli.astro';
+---
+
+<Base
+  locale="tr"
+  page="home"
+  path="/showcases/proje-detay-mobil-lab"
+  title="Proje Detay Mobil Lab — Tasarım Vitrini"
+  noindex
+>
+  <LabIntro
+    kicker="MEY İnşaat · Dahili · Proje Detay Mobil Lab"
+    title="Proje Detay — Kompakt Mobil"
+    desc="Canlı mobil detay sayfası, kareleri tam-genişlik görsellerle alt alta yığıyor → çok uzun ve 'geniş' duruyor. Burada iki KOMPAKT mobil yaklaşım cihaz çerçevesinde: A) Kompakt Akış — küçük çevrelenmiş görseller, sıkı satır/tipografi, tek yoğun kaydırma; B) Sekmeli — hero sabit, segment kontrol tek bölüm gösterir (en az kaydırma). Birini seç → prod mobil düzenine taşınır."
+  />
+
+  <Specimen
+    id="DETAY / MOBİL"
+    name="Kompakt mobil detay — iki yaklaşım (390px cihaz)"
+    why="Aynı içerik, iki sıkıştırma dili. A yoğun ama tanıdık tek-akış; B en kompakt ama bölüm başına dokunuş ister. Hangisi mobilde daha okunur/hızlı — karşılaştır."
+  >
+    <div class="mcmp container-site">
+      <figure class="mcmp-item">
+        <figcaption class="t-tech mcmp-cap">
+          <span class="mcmp-badge">A</span> Kompakt Akış — tek yoğun kaydırma
+        </figcaption>
+        <PhoneFrame><MobilKompakt /></PhoneFrame>
+      </figure>
+      <figure class="mcmp-item">
+        <figcaption class="t-tech mcmp-cap">
+          <span class="mcmp-badge">B</span> Sekmeli — tek seferde tek bölüm
+        </figcaption>
+        <PhoneFrame><MobilSekmeli /></PhoneFrame>
+      </figure>
+    </div>
+  </Specimen>
+</Base>
+
+<style>
+  .mcmp {
+    display: flex; flex-wrap: wrap; gap: 2.5rem;
+    justify-content: center; align-items: start;
+    padding-block: clamp(1.5rem, 4vh, 3rem);
+  }
+  .mcmp-item { display: grid; gap: 0.9rem; justify-items: center; }
+  .mcmp-cap {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    color: var(--color-graphite-600); font-size: 0.7rem;
+  }
+  .mcmp-badge {
+    display: inline-grid; place-items: center;
+    inline-size: 1.3rem; block-size: 1.3rem;
+    background: var(--color-mey-red); color: #fff;
+    border-radius: var(--radius-brand); font-size: 0.7rem;
+  }
+</style>

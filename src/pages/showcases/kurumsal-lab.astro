@@ -1,0 +1,62 @@
+---
+/*
+  KURUMSAL LAB — /showcases/kurumsal-lab.
+  Kurumsal sayfasının tasarım + içerik yükseltmesi: üç ayrı yön alt alta, her biri
+  Specimen künye çubuğuyla. Üçü de AYNI içerik modelini (kurumsal/data.ts) kullanır;
+  yalnız yerleşim ve register değişir. Onaylanan varyant CorporatePage.astro'ya
+  taşınır. Navigasyonda YOK, noindex.
+*/
+import Base from '../../layouts/Base.astro';
+import LabIntro from '../../components/showcase/LabIntro.astro';
+import Specimen from '../../components/showcase/Specimen.astro';
+import DossierVariant from '../../components/showcase/kurumsal/DossierVariant.astro';
+import GalleryVariant from '../../components/showcase/kurumsal/GalleryVariant.astro';
+import SurecVariant from '../../components/showcase/kurumsal/SurecVariant.astro';
+import SeckiVariant from '../../components/showcase/kurumsal/SeckiVariant.astro';
+---
+
+<Base
+  locale="tr"
+  page="home"
+  path="/showcases/kurumsal-lab"
+  title="Kurumsal Lab — Tasarım Vitrini"
+  noindex
+>
+  <LabIntro
+    kicker="MEY İnşaat · Dahili · Kurumsal Lab"
+    title="Kurumsal — Tasarım & İçerik Yükseltmesi"
+    desc="Mevcut Kurumsal sayfası tek sütun düzyazıydı; galeri (aksonometri render'leri, 8 marka ikonu, üç gerçek bina, malzeme) kullanılmıyordu. Aşağıda üç yön: her biri aynı sıkılaştırılmış içeriği farklı bir kurguyla sunar — eksik sert bilgiler görünür rozet olarak kalır. Bir yön seç; CorporatePage'e taşınır."
+  />
+
+  <Specimen
+    id="D · SEÇKİ ★"
+    name="Beğenilenlerin birleşimi + iki bölüm yeniden tasarım"
+    why="Onaylanan parçalar: Portföy=aksonometri kaydı (A), Hikaye=yatay zaman çizelgesi (C), Biz Kimiz=2 sütun+görsel (B), Misyon/Vizyon=teal-kenarlı (A), CTA=koyu (C). Beğenilmeyen 'beyaz kutu' ızgaralar KUTUSUZ yeniden tasarlandı: Süreç=koyu omurga (bağlı kot çizgisi, survey tikleri, hover), Değerler=editoryal liste (dev hayalet numaralar, hairline, hover kırmızı alt-çizgi). Aday: prod'a bu."
+  >
+    <SeckiVariant />
+  </Specimen>
+
+  <Specimen
+    id="A · KÜNYE"
+    name="Teknik dossier — çizim↔yapı, mono katman"
+    why="Mühendislik künyesi dili: tek gür an, şeffaf aksonometriyi gerçek yapıyla bir kot çizgisiyle karşılaştırır (çizdiğimizi inşa ederiz). Değerler 2×2 künye ızgarası, portföy aksonometri kaydı. En 'teknik/blueprint' yön."
+  >
+    <DossierVariant />
+  </Specimen>
+
+  <Specimen
+    id="B · VİTRİN"
+    name="Kurumsal galeri — tam-taşma skyline, foto öncelikli"
+    why="Ant Yapı/VINCI güveni: tam-taşma üç-bina skyline'ı survey gibi okunur; 8 marka ikonu kabiliyet galerisi, üç gerçek bina kartı, malzeme & işçilik kanıtı. En 'kurumsal/fotoğrafik' yön."
+  >
+    <GalleryVariant />
+  </Specimen>
+
+  <Specimen
+    id="C · SÜREÇ"
+    name="Yöntem — süreç omurgası, yatay zaman çizelgesi"
+    why="Güveni süreçle verir: 8 ikondan kurulu 5 adımlık koyu süreç omurgası (Etüt→Teslim) tek gür an. Hikaye yatay zaman çizelgesi, çizim↔yapı kanıtıyla. En 'kabiliyet/nasıl' yön."
+  >
+    <SurecVariant />
+  </Specimen>
+</Base>

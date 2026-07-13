@@ -1,0 +1,87 @@
+---
+/*
+  VARYANT B — SEKMELİ: hero sabit; altında segment kontrol (HİKÂYE · MEKÂN · KÜNYE)
+  tek seferde tek bölüm gösterir → hemen hemen sıfır kaydırma, en kompakt. Canlı
+  masaüstü adımlı sahnenin mobil karşılığı. No-JS: üç bölüm de görünür (dikey yığın).
+*/
+import MHero from './MHero.astro';
+import MHikaye from './MHikaye.astro';
+import MMekan from './MMekan.astro';
+import MKunye from './MKunye.astro';
+import { ui } from '../../../../lib/content';
+const note = ui('tr').projects.detail.samplesNote;
+const tabs = ['HİKÂYE', 'MEKÂN', 'KÜNYE'];
+---
+
+<div class="msk" data-mobil-sekmeli data-testid="mobil-sekmeli">
+  <MHero />
+
+  <div class="msk-tabs" role="tablist" aria-label="Bölümler">
+    {tabs.map((tab, i) => (
+      <button
+        class:list={['t-tech msk-tab', i === 0 && 'is-on']}
+        type="button"
+        role="tab"
+        aria-selected={i === 0 ? 'true' : 'false'}
+        data-msk-tab={i}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
+
+  <div class="msk-panels">
+    <div class="msk-panel is-on" data-msk-panel="0" data-testid="msk-panel-0"><MHikaye /></div>
+    <div class="msk-panel" data-msk-panel="1" data-testid="msk-panel-1"><MMekan /></div>
+    <div class="msk-panel" data-msk-panel="2" data-testid="msk-panel-2"><MKunye /></div>
+  </div>
+
+  <p class="t-caption msk-note">{note}</p>
+</div>
+
+<style>
+  .msk { display: grid; gap: 0.95rem; }
+  .msk-tabs {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    background: var(--color-line); border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand); overflow: hidden;
+  }
+  .msk-tab {
+    font-size: 0.62rem; padding: 0.5rem 0.3rem; background: #fff;
+    color: var(--color-graphite-400); cursor: pointer;
+    transition: background-color 160ms ease-out, color 160ms ease-out;
+  }
+  .msk-tab.is-on { background: var(--color-mey-red); color: #fff; }
+
+  /* JS-li mod: yalnız aktif bölüm görünür (en kompakt). */
+  .msk.is-live .msk-panel { display: none; }
+  .msk.is-live .msk-panel.is-on { display: block; }
+  /* No-JS varsayılan: üç bölüm de görünür, aralarında ayraç. */
+  .msk:not(.is-live) .msk-panel + .msk-panel {
+    border-block-start: 1px solid var(--color-line);
+    padding-block-start: 0.95rem; margin-block-start: 0.95rem;
+  }
+  .msk-note {
+    font-size: 0.54rem; line-height: 1.4; color: var(--color-graphite-400);
+    border-block-start: 1px solid var(--color-line); padding-block-start: 0.7rem;
+    margin: 0;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mobil-sekmeli]').forEach((root) => {
+    root.classList.add('is-live');
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-msk-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-msk-panel]'));
+    if (!tabs.length) return;
+    const select = (i: number) => {
+      tabs.forEach((t, j) => {
+        t.classList.toggle('is-on', j === i);
+        t.setAttribute('aria-selected', j === i ? 'true' : 'false');
+      });
+      panels.forEach((p, j) => p.classList.toggle('is-on', j === i));
+    };
+    tabs.forEach((t, i) => t.addEventListener('click', () => select(i)));
+    select(0);
+  });
+</script>

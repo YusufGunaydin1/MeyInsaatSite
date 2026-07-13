@@ -20,6 +20,30 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const demos: Demo[] = [
   {
+    title: 'ÖNERİ — Proje detay: KOMPAKT MOBİL (2 varyant)',
+    desc:
+      'Canlı mobil detay, kareleri tam-genişlik görsellerle alt alta yığıyor → çok ' +
+      'uzun/geniş. İki kompakt yaklaşım cihaz çerçevesinde yan yana: A) Kompakt Akış — ' +
+      'küçük çevrelenmiş görseller + sıkı satır/tipografi, tek yoğun kaydırma; B) Sekmeli — ' +
+      'hero sabit, segment kontrol tek bölüm gösterir (en az kaydırma). Birini seç → prod mobil.',
+    status: 'proposal',
+    meta: 'showcase/detay/mobil/* · lab: proje-detay-mobil-lab',
+    href: base + '/showcases/proje-detay-mobil-lab',
+  },
+  {
+    title: 'ÖNERİ — Kurumsal: tasarım & içerik yükseltmesi (3 yön)',
+    desc:
+      'Mevcut Kurumsal sayfası tek sütun düzyazı; galeri (aksonometri render\'leri, ' +
+      '8 marka ikonu, üç gerçek bina, malzeme) kullanılmıyor. Üç yön alt alta: ' +
+      'A) Künye — teknik dossier, çizim↔yapı; B) Vitrin — tam-taşma skyline, foto ' +
+      'öncelikli; C) Süreç — süreç omurgası. + D) SEÇKİ ★ — beğenilenlerin birleşimi ' +
+      '(en üstte, aday): Süreç ve Değerler bölümleri kutusuz/hover-animasyonlu yeniden ' +
+      'tasarlandı. Hepsi aynı içeriği kullanır; eksik sert bilgiler görünür rozet kalır.',
+    status: 'proposal',
+    meta: 'kurumsal/data.ts · Dossier/Gallery/Surec · lab: kurumsal-lab',
+    href: base + '/showcases/kurumsal-lab',
+  },
+  {
     title: 'CANLI — Kompakt panel: adımlı gezinme (Önceki/Sonraki)',
     desc:
       'Kazanan varyant (2026-07-11) production\'da: sol 3:4 bina fotoğrafı HİÇ değişmez; ' +

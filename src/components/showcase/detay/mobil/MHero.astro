@@ -1,0 +1,80 @@
+---
+/* Kompakt mobil hero: kısa oranlı kapak, üzerine bindirilmiş başlık + şantiye
+   etiketleri, altında tek satır mono künye — dikey yer kazandırır. Ali verisi. */
+import { Image } from 'astro:assets';
+import { ui, project } from '../../../../lib/content';
+import cover from '../../../../assets/projects/ali.webp';
+
+const t = ui('tr');
+const p = project('ali', 'tr');
+const td = t.projects.detail;
+const name = p?.md?.frontmatter?.name ?? 'Ali Apartmanı';
+const tip = String(t.projects.types?.[p?.data?.type] ?? 'Konut').toUpperCase();
+const statu = String(t.projects.status?.[p?.data?.status] ?? 'Tamamlandı').toUpperCase();
+const s = td.samples;
+---
+
+<header class="mh">
+  <figure class="mh-media">
+    <Image src={cover} alt={name} widths={[280, 560]} sizes="360px" class="mh-img" />
+    <span class="mh-pole" aria-hidden="true"></span>
+    <span class="mh-tag t-tech" style="--y: 8%">{tip}</span>
+    <span class="mh-tag t-tech" style="--y: 26%">{statu}</span>
+    <div class="mh-over">
+      <p class="t-tech mh-eyebrow">PROJELER</p>
+      <h2 class="mh-title">{name}</h2>
+    </div>
+  </figure>
+  <p class="t-tech mh-meta">
+    <span class="mh-s">{s.placeCity}</span>
+    <span class="mh-dot" aria-hidden="true">·</span>
+    <span class="mh-s">{s.floors} {td.spaces.floorsWord}</span>
+    <span class="mh-dot" aria-hidden="true">·</span>
+    <span class="mh-s">{s.units} {td.spaces.unitsWord}</span>
+    <span class="mh-dot" aria-hidden="true">·</span>
+    <span class="mh-s">{s.year}</span>
+  </p>
+</header>
+
+<style>
+  .mh-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-brand);
+    background: var(--color-concrete-100);
+  }
+  .mh-img { width: 100%; display: block; aspect-ratio: 5 / 4; object-fit: cover; }
+  .mh-pole {
+    position: absolute; inset-block: 0; inset-inline-start: 0.7rem;
+    width: 2px; background: var(--color-mey-red); opacity: 0.9;
+  }
+  .mh-tag {
+    position: absolute; top: var(--y); inset-inline-start: 0.7rem;
+    background: rgb(14 15 17 / 0.85); color: #fff;
+    padding: 0.15rem 0.5rem 0.15rem 0.7rem;
+    border-radius: var(--radius-brand);
+    font-size: 0.6rem; white-space: nowrap;
+  }
+  .mh-tag::before {
+    content: ""; position: absolute; inset-inline-start: 0; top: 50%;
+    width: 0.4rem; height: 2px; background: var(--color-mey-red);
+  }
+  .mh-over {
+    position: absolute; inset-inline: 0; inset-block-end: 0;
+    padding: 1.6rem 0.85rem 0.7rem;
+    background: linear-gradient(to top, rgb(14 15 17 / 0.82), rgb(14 15 17 / 0));
+  }
+  .mh-eyebrow { color: #ff9a9d; font-size: 0.58rem; margin-block-end: 0.15rem; }
+  .mh-title {
+    font-family: var(--font-display);
+    font-weight: 600; font-size: 1.5rem; line-height: 1.02;
+    letter-spacing: 0.01em; color: #fff;
+  }
+  .mh-meta {
+    display: flex; flex-wrap: wrap; gap: 0.3rem;
+    margin-block-start: 0.55rem; font-size: 0.62rem;
+    color: var(--color-graphite-900);
+  }
+  .mh-s { color: var(--color-graphite-400); }
+  .mh-dot { color: var(--color-mey-red); }
+</style>

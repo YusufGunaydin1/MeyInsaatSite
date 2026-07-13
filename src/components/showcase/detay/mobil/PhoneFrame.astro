@@ -1,0 +1,82 @@
+---
+/*
+  Vitrin cihaz çerçevesi: mobil (≈390px) tasarımı masaüstü vitrinde göstermek için.
+  Sadece showcase sunum kabuğu — prod'a ALINMAZ (onaylanan varyantın kendi CSS'i
+  gerçek sayfaya taşınır). Ekran zemini gerçek sayfayla aynı (concrete-050).
+*/
+interface Props {
+  time?: string;
+}
+const { time = '9:41' } = Astro.props;
+---
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="phone-status" aria-hidden="true">
+      <span class="phone-time">{time}</span>
+      <span class="phone-notch"></span>
+      <span class="phone-icons"><i></i><i></i><i class="bat"></i></span>
+    </div>
+    <div class="phone-body"><slot /></div>
+  </div>
+</div>
+
+<style>
+  .phone {
+    inline-size: 390px;
+    max-inline-size: 100%;
+    margin-inline: auto;
+    background: var(--color-night-950);
+    border-radius: 2.75rem;
+    padding: 0.55rem;
+  }
+  .phone-screen {
+    background: var(--color-concrete-050);
+    border-radius: 2.3rem;
+    overflow: hidden;
+    position: relative;
+  }
+  .phone-status {
+    height: 2.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 1.35rem;
+    position: relative;
+  }
+  .phone-time {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-graphite-900);
+    letter-spacing: 0.02em;
+  }
+  .phone-notch {
+    position: absolute;
+    inset-block-start: 0.35rem;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    inline-size: 32%;
+    block-size: 1.15rem;
+    background: var(--color-night-950);
+    border-radius: 0.9rem;
+  }
+  .phone-icons { display: inline-flex; gap: 0.25rem; align-items: center; }
+  .phone-icons i {
+    inline-size: 0.35rem;
+    block-size: 0.35rem;
+    border-radius: 50%;
+    background: var(--color-graphite-400);
+    display: block;
+  }
+  .phone-icons i.bat {
+    inline-size: 1.1rem;
+    block-size: 0.55rem;
+    border-radius: 1px;
+    background: var(--color-graphite-900);
+  }
+  /* Gerçek mobil genişlik: içerik 390px ekran içinde akar (dar ekran simülasyonu) */
+  .phone-body {
+    padding: 0.5rem 1rem 1.35rem;
+  }
+</style>

@@ -1,0 +1,276 @@
+---
+/*
+  VARYANT D — "SEÇKİ" (beğenilenlerin birleşimi + iki bölüm yeniden tasarım).
+  Onaylanan parçalar: Portföy=aksonometri kaydı (A), Hikaye=yatay zaman çizelgesi (C),
+  Biz Kimiz=2 sütun + planlama görseli (B), Misyon/Vizyon=teal-kenarlı (A), CTA=koyu (C).
+  YENİDEN TASARIM (eski "beyaz kutu" ızgaralar ucuz bulundu):
+   · Süreç: koyu omurga — bağlı kırmızı kot çizgisi, survey tikleri, hover lift + tik çizimi.
+   · Değerler: KUTUSUZ editoryal liste — dev Oswald hayalet numaralar, hairline ayraç,
+     hover'da kırmızı alt-çizgi çizilir (brief §7/§12). Metin-kutu-ızgara YOK.
+*/
+import { Image } from 'astro:assets';
+import StatsStrip from '../../StatsStrip.astro';
+import PlaceholderChip from '../../PlaceholderChip.astro';
+import { corp, img } from './data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<div class="sck" data-testid="variant-secki">
+  <!-- HERO: ifade + kılavuz çizgi -->
+  <section class="container-site sck-hero" data-testid="sck-hero">
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red">{corp.coord}</p>
+      <h1 class="t-display-xl mt-4">{corp.slogan}</h1>
+      <p class="t-body-l mt-6 max-w-2xl text-graphite-600">{corp.lead}</p>
+      <div class="sck-cta-row mt-7">
+        <a class="btn-primary" href={`${base}/projeler`}>{corp.ctaProjects} <span aria-hidden="true">→</span></a>
+        <a class="btn-ghost" href={`${base}/iletisim`}>{corp.ctaContact}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tam-taşma skyline, survey gibi okunur -->
+  <section class="sck-skyline">
+    <Image src={img.skyline} alt="MEY İnşaat konut projeleri — İstanbul (temsilî görsel)" widths={[768, 1280, 1920, 2560]} sizes="100vw" class="sck-skyline-img" loading="lazy" />
+    <div class="sck-skyline-tagrow container-site">
+      <span class="t-tech sck-skyline-tag">MEY İNŞAAT · İSTANBUL · KONUT</span>
+      <span class="sck-skyline-level" aria-hidden="true"></span>
+      <span class="t-tech sck-skyline-read">PORTFÖY · TESLİM EDİLDİ</span>
+    </div>
+  </section>
+
+  <!-- BİZ KİMİZ — 2 sütun + planlama görseli (B) -->
+  <section class="sck-alt">
+    <div class="container-site sck-who">
+      <div class="sck-who-text">
+        <p class="t-tech text-mey-teal-700">00 · KİMLİK</p>
+        <h2 class="t-display-l mt-3">{corp.whoTitle}</h2>
+        {corp.who.map((p) => <p class="t-body-l mt-4 text-graphite-600">{p}</p>)}
+      </div>
+      <figure class="sck-who-fig reveal">
+        <Image src={img.planningDesk} alt="Proje masası — maket, çizim ve malzeme (temsilî)" widths={[560, 900]} sizes="(min-width: 900px) 45vw, 90vw" class="sck-cover" loading="lazy" />
+        <figcaption class="t-tech sck-fig-cap">ÇİZİMDEN SAHAYA</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- SÜREÇ — YENİDEN TASARIM: koyu omurga, bağlı kot çizgisi, hover -->
+  <section class="theatre blueprint-grid sck-process" data-testid="sck-process">
+    <div class="container-site">
+      <p class="t-tech" style="color: var(--color-red-on-dark);">{corp.processTitle.toUpperCase()}</p>
+      <h2 class="t-display-l mt-3">Çizimden anahtar teslimine</h2>
+      <p class="t-body-l mt-3 max-w-2xl" style="color: rgb(244 244 242 / 0.72);">{corp.processIntro}</p>
+      <ol class="sck-spine mt-12">
+        {corp.process.map((s) => (
+          <li class="sck-step reveal">
+            <div class="sck-step-ic">
+              <Image src={s.icon} alt={s.name} widths={[120, 208]} sizes="104px" class="sck-step-img" loading="lazy" />
+            </div>
+            <span class="t-tech sck-step-no">{s.no}</span>
+            <h3 class="t-heading-s sck-step-nm">{s.name}</h3>
+            <p class="t-caption sck-step-tx">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- HİKAYE — yatay zaman çizelgesi (C) -->
+  <section class="container-site section-pad" data-testid="sck-story">
+    <p class="t-tech text-mey-red">ZAMAN ÇİZELGESİ</p>
+    <h2 class="t-display-l mt-3">{corp.storyTitle}</h2>
+    <ol class="sck-timeline mt-10">
+      {corp.story.map((m) => (
+        <li class="sck-tl-node reveal">
+          <span class="sck-tl-dot" aria-hidden="true"></span>
+          <p class="t-tech text-mey-red sck-tl-tag">{m.tag}</p>
+          <h3 class="t-heading-m mt-1">{m.title}</h3>
+          <p class="t-body mt-2 text-graphite-600">
+            {m.text}
+            {m.pending && <span class="ms-1 align-middle inline-block"><PlaceholderChip locale="tr" label={m.pending} /></span>}
+          </p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- PORTFÖY — aksonometri kaydı (A) -->
+  <section class="sck-portfolio" data-testid="sck-portfolio">
+    <div class="container-site">
+      <div class="sck-pf-head">
+        <div>
+          <p class="t-tech text-mey-teal-700">KAYIT · PORTFÖY</p>
+          <h2 class="t-display-l mt-3">{corp.portfolioTitle}</h2>
+        </div>
+        <a class="t-tech sck-pf-all" href={`${base}/projeler`}>TÜM PROJELER <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="t-body-l mt-3 max-w-2xl text-graphite-600">{corp.portfolioIntro}</p>
+      <div class="sck-reg mt-10">
+        {corp.buildings.map((b, i) => (
+          <a class="sck-reg-item reveal" href={`${base}/projeler/${b.slug}`}>
+            <div class="sck-reg-iso">
+              <Image src={b.iso} alt={`${b.name} — aksonometrik render (temsilî)`} widths={[320, 480]} sizes="(min-width: 900px) 30vw, 90vw" class="sck-reg-img" loading="lazy" />
+            </div>
+            <span class="t-tech sck-reg-idx">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="t-heading-s mt-2">{b.name}</h3>
+            <p class="t-tech text-graphite-400 mt-1">{b.meta}</p>
+          </a>
+        ))}
+      </div>
+      <p class="t-caption sck-note mt-6">{corp.repNote}</p>
+    </div>
+  </section>
+
+  <!-- DEĞERLER — YENİDEN TASARIM: kutusuz editoryal liste, dev numara, hover alt-çizgi -->
+  <section class="sck-values" data-testid="sck-values">
+    <div class="container-site">
+      <div class="guide-line-v ps-6 sm:ps-10">
+        <p class="t-tech text-mey-red">İLKELER</p>
+        <h2 class="t-display-l mt-3">{corp.valuesTitle}</h2>
+      </div>
+      <ol class="sck-vlist mt-10">
+        {corp.values.map((v) => (
+          <li class="sck-vrow reveal">
+            <span class="sck-vnum" aria-hidden="true">{v.no}</span>
+            <div class="sck-vbody">
+              <h3 class="t-heading-m sck-vname">{v.name}</h3>
+              <p class="t-body mt-2 text-graphite-600">{v.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- MİSYON / VİZYON — teal-kenarlı (A) -->
+  <section class="container-site section-pad">
+    <div class="sck-mv">
+      <article class="sck-mv-card">
+        <p class="t-tech text-mey-teal-700">MİSYON</p>
+        <p class="t-heading-m mt-3 text-graphite-900">{corp.mission}</p>
+      </article>
+      <article class="sck-mv-card">
+        <p class="t-tech text-mey-teal-700">VİZYON</p>
+        <p class="t-heading-m mt-3 text-graphite-900">{corp.vision}</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- SAYILAR -->
+  <section class="sck-alt">
+    <div class="container-site" style="padding-block: clamp(3rem, 7vh, 5rem);">
+      <p class="t-tech text-mey-red">SAYILARLA MEY</p>
+      <div class="mt-6"><StatsStrip locale="tr" /></div>
+    </div>
+  </section>
+
+  <!-- CTA — koyu bookend (C) -->
+  <section class="theatre blueprint-grid sck-cta">
+    <div class="container-site">
+      <p class="t-tech" style="color: var(--color-red-on-dark);">İLETİŞİM</p>
+      <h2 class="t-display-l mt-3">{corp.ctaTitle}</h2>
+      <p class="t-body-l mt-3 max-w-xl" style="color: rgb(244 244 242 / 0.72);">{corp.ctaSub}</p>
+      <div class="sck-cta-row mt-7">
+        <a class="btn-primary" href={`${base}/projeler`}>{corp.ctaProjects} <span aria-hidden="true">→</span></a>
+        <a class="btn-ghost" href={`${base}/iletisim`}>{corp.ctaContact}</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .sck-cover { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .sck-cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+  .sck-alt { background: var(--color-concrete-100); border-block: 1px solid var(--color-line); }
+  .sck-fig-cap { color: var(--color-graphite-400); margin-top: 0.5rem; }
+  .sck-hero { padding-block: clamp(3rem, 7vh, 5.5rem); }
+
+  /* Skyline bandı */
+  .sck-skyline { position: relative; height: min(46svh, 460px); overflow: hidden; background: var(--color-night-950); border-block: 1px solid var(--color-line); }
+  .sck-skyline-img { width: 100%; height: 100%; object-fit: cover; }
+  .sck-skyline-tagrow { position: absolute; inset-inline: 0; bottom: 1.2rem; display: flex; align-items: center; gap: 0.9rem; }
+  .sck-skyline-tag, .sck-skyline-read { color: #fff; white-space: nowrap; text-shadow: 0 1px 3px rgb(14 15 17 / 0.5); }
+  .sck-skyline-read { color: var(--color-red-on-dark); }
+  .sck-skyline-level { flex: 1; height: 2px; background: var(--color-red-on-dark); }
+
+  /* BİZ KİMİZ */
+  .sck-who { display: grid; gap: 2rem; padding-block: clamp(3.5rem, 8vh, 6rem); align-items: center; }
+  @media (min-width: 900px) { .sck-who { grid-template-columns: 1fr 1fr; gap: 3rem; } }
+  .sck-who-fig { aspect-ratio: 16 / 10; border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; background: #fff; }
+
+  /* ---- SÜREÇ omurgası (yeniden tasarım) ---- */
+  .sck-process { padding-block: clamp(3.5rem, 9vh, 6.5rem); }
+  .sck-spine { list-style: none; padding: 0; display: grid; gap: 1.75rem; grid-template-columns: 1fr; position: relative; }
+  @media (min-width: 900px) { .sck-spine { grid-template-columns: repeat(5, 1fr); gap: 1rem; } }
+  .sck-step { position: relative; padding-top: 0.5rem; }
+  /* bağlayıcı kot çizgisi + node tikleri (desktop) */
+  @media (min-width: 900px) {
+    .sck-spine::before { content: ""; position: absolute; top: 52px; inset-inline: 10%; height: 2px;
+      background: linear-gradient(to right, rgb(242 85 90 / 0.12), var(--color-red-on-dark) 12%, var(--color-red-on-dark) 88%, rgb(242 85 90 / 0.12)); }
+  }
+  .sck-step-ic { width: 104px; height: 104px; background: var(--color-night-800); border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: var(--radius-brand); display: grid; place-items: center; position: relative; z-index: 1; padding: 10px;
+    transition: transform 240ms ease-out, border-color 240ms ease-out; }
+  .sck-step-img { width: 100%; height: 100%; object-fit: contain; transition: transform 240ms ease-out; }
+  /* survey tik: her ikonun altında kısa dikey işaret */
+  .sck-step-ic::after { content: ""; position: absolute; bottom: -0.75rem; inset-inline-start: 50%; transform: translateX(-50%);
+    width: 2px; height: 0.55rem; background: var(--color-red-on-dark); opacity: 0.5; }
+  .sck-step-no { color: var(--color-red-on-dark); display: block; margin-top: 1.15rem; margin-bottom: 0.2rem; }
+  .sck-step-nm { color: #fff; position: relative; display: inline-block; padding-bottom: 0.25rem; }
+  .sck-step-nm::after { content: ""; position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 2px;
+    background: var(--color-red-on-dark); transform: scaleX(0); transform-origin: inline-start; transition: transform 260ms ease-out; }
+  .sck-step-tx { color: rgb(244 244 242 / 0.62); max-width: 28ch; margin-top: 0.4rem; }
+  .sck-step:hover .sck-step-ic { transform: translateY(-4px); border-color: var(--color-red-on-dark); }
+  .sck-step:hover .sck-step-img { transform: scale(1.05); }
+  .sck-step:hover .sck-step-nm::after { transform: scaleX(1); }
+
+  /* Yatay zaman çizelgesi */
+  .sck-timeline { list-style: none; padding: 0; display: grid; gap: 2rem; grid-template-columns: 1fr; }
+  @media (min-width: 800px) { .sck-timeline { grid-template-columns: repeat(3, 1fr); gap: 1.75rem; } }
+  .sck-tl-node { position: relative; padding-top: 1.5rem; border-top: 2px solid var(--color-line); max-width: 42ch; transition: border-color 240ms ease-out; }
+  .sck-tl-node:hover { border-top-color: var(--color-mey-red); }
+  .sck-tl-dot { position: absolute; top: -7px; inset-inline-start: 0; width: 12px; height: 12px; background: var(--color-mey-red); border-radius: 50%; }
+
+  /* Portföy kaydı */
+  .sck-portfolio { background: #fff; border-block: 1px solid var(--color-line); padding-block: clamp(3.5rem, 8vh, 6rem); }
+  .sck-pf-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .sck-pf-all { color: var(--color-mey-teal-700); }
+  .sck-pf-all:hover { color: var(--color-graphite-900); }
+  .sck-reg { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .sck-reg { grid-template-columns: repeat(3, 1fr); } }
+  .sck-reg-item { display: block; border: 1px solid var(--color-line); border-radius: var(--radius-brand); padding: 1rem; transition: border-color 220ms ease-out; }
+  .sck-reg-item:hover { border-color: var(--color-graphite-400); }
+  .sck-reg-iso { aspect-ratio: 1 / 1; display: grid; place-items: center; background:
+      linear-gradient(to right, rgb(73 193 198 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(73 193 198 / 0.05) 1px, transparent 1px), var(--color-concrete-050);
+    background-size: 28px 28px, 28px 28px, auto; border-radius: var(--radius-brand); overflow: hidden; }
+  .sck-reg-img { width: 100%; height: 100%; object-fit: contain; padding: 7%; transition: transform 300ms ease-out; }
+  .sck-reg-item:hover .sck-reg-img { transform: scale(1.03); }
+  .sck-reg-idx { color: var(--color-mey-red); display: inline-block; margin-top: 0.75rem; }
+  .sck-note { color: var(--color-graphite-400); }
+
+  /* ---- DEĞERLER editoryal liste (yeniden tasarım, KUTUSUZ) ---- */
+  .sck-values { padding-block: clamp(3.5rem, 8vh, 6rem); background: var(--color-concrete-050); }
+  .sck-vlist { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .sck-vlist { grid-template-columns: 1fr 1fr; column-gap: 3.5rem; } }
+  .sck-vrow { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: start;
+    padding-block: 1.7rem; border-top: 1px solid var(--color-line); }
+  /* iki sütunda üstteki iki satırın çift hairline'ını sadeleştir */
+  @media (min-width: 820px) { .sck-vrow:nth-child(2) { border-top: 1px solid var(--color-line); } }
+  .sck-vnum { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 3.4vw, 2.9rem);
+    line-height: 1; color: #c7c8c3; letter-spacing: 0.01em; transition: color 240ms ease-out; font-variant-numeric: tabular-nums; }
+  .sck-vname { color: var(--color-graphite-900); position: relative; display: inline-block; padding-bottom: 0.3rem; }
+  .sck-vname::after { content: ""; position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 2px;
+    background: var(--color-mey-red); transform: scaleX(0); transform-origin: inline-start; transition: transform 280ms ease-out; }
+  .sck-vrow:hover .sck-vnum { color: var(--color-mey-red); }
+  .sck-vrow:hover .sck-vname::after { transform: scaleX(1); }
+
+  /* Misyon/Vizyon */
+  .sck-mv { display: grid; gap: 1.5rem; }
+  @media (min-width: 720px) { .sck-mv { grid-template-columns: 1fr 1fr; } }
+  .sck-mv-card { border: 1px solid var(--color-line); border-inline-start: 2px solid var(--color-mey-teal);
+    border-radius: var(--radius-brand); padding: 1.75rem 1.6rem; background: #fff; }
+
+  .sck-cta { padding-block: clamp(3.5rem, 9vh, 6.5rem); }
+</style>

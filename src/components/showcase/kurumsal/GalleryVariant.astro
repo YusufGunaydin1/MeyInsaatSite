@@ -1,0 +1,244 @@
+---
+/*
+  VARYANT B — "VİTRİN" (Kurumsal Galeri).
+  Register: kurumsal, fotoğraf öncelikli (Ant Yapı/VINCI güveni). Tek gür jest:
+  tam-taşma "skyline" görseli (üç bina birlikte) bir survey paftası gibi kırmızı
+  kot çizgisi + mono etiketle okunur. Gerisi sakin: gerçek bina galerisi, marka
+  ikon seti, malzeme & işçilik kanıtı.
+*/
+import { Image } from 'astro:assets';
+import StatsStrip from '../../StatsStrip.astro';
+import PlaceholderChip from '../../PlaceholderChip.astro';
+import { corp, img } from './data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// 8 ikon = MEY'in baştan-sona kabiliyeti (ne gösteriyorsa o etiket — dürüst)
+const caps = [
+  { icon: img.icon7, label: 'Etüt & Zemin' },
+  { icon: img.icon3, label: 'Kaba İnşaat' },
+  { icon: img.icon5, label: 'İnşaat Yönetimi' },
+  { icon: img.icon4, label: 'Cephe Tasarımı' },
+  { icon: img.icon6, label: 'Kalite Kontrol' },
+  { icon: img.icon8, label: 'İç Mekân' },
+  { icon: img.icon1, label: 'Modern Konut' },
+  { icon: img.icon2, label: 'Anahtar Teslim' },
+];
+---
+
+<div class="gal" data-testid="variant-gallery">
+  <!-- HERO: tam-taşma skyline -->
+  <section class="gal-hero" data-testid="gal-hero">
+    <Image src={img.skyline} alt="MEY İnşaat konut projeleri — İstanbul (temsilî görsel)" widths={[768, 1280, 1920, 2560]} sizes="100vw" class="gal-hero-img" fetchpriority="high" />
+    <div class="gal-hero-scrim"></div>
+    <div class="gal-hero-overlay container-site">
+      <p class="t-tech gal-hero-tag">MEY İNŞAAT · İSTANBUL · KONUT</p>
+      <div class="gal-level"><span class="gal-level-line"></span><span class="t-tech gal-level-txt">PORTFÖY · TESLİM EDİLDİ</span></div>
+    </div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="container-site gal-statement">
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red">{corp.eyebrow}</p>
+      <h1 class="t-display-xl mt-4">{corp.slogan}</h1>
+      <p class="t-body-l mt-6 max-w-2xl text-graphite-600">{corp.lead}</p>
+      <div class="gal-cta-row mt-7">
+        <a class="btn-primary" href={`${base}/projeler`}>{corp.ctaProjects} <span aria-hidden="true">→</span></a>
+        <a class="btn-ghost" href={`${base}/iletisim`}>{corp.ctaContact}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BİZ KİMİZ + planlama görseli -->
+  <section class="gal-alt">
+    <div class="container-site gal-who">
+      <div class="gal-who-text">
+        <p class="t-tech text-mey-teal-700">00 · KİMLİK</p>
+        <h2 class="t-display-l mt-3">{corp.whoTitle}</h2>
+        {corp.who.map((p) => <p class="t-body-l mt-4 text-graphite-600">{p}</p>)}
+      </div>
+      <figure class="gal-who-fig">
+        <Image src={img.planningDesk} alt="Proje masası — maket, çizim ve malzeme (temsilî)" widths={[560, 900]} sizes="(min-width: 900px) 45vw, 90vw" class="sc-img" loading="lazy" />
+        <figcaption class="t-tech gal-fig-cap">ÇİZİMDEN SAHAYA</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- KABİLİYET — 8 ikon galerisi -->
+  <section class="container-site section-pad" data-testid="gal-caps">
+    <p class="t-tech text-mey-red">BAŞTAN SONA</p>
+    <h2 class="t-display-l mt-3">Tek elden, uçtan uca</h2>
+    <p class="t-body-l mt-3 max-w-2xl text-graphite-600">Etütten anahtar teslimine, her aşamayı biz yönetiriz.</p>
+    <ul class="gal-caps mt-9">
+      {caps.map((c) => (
+        <li class="gal-cap">
+          <div class="gal-cap-ic"><Image src={c.icon} alt={c.label} widths={[120, 200]} sizes="120px" class="gal-cap-img" loading="lazy" /></div>
+          <p class="t-tech gal-cap-lbl">{c.label}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- PORTFÖY — gerçek bina kartları -->
+  <section class="gal-alt" data-testid="gal-portfolio">
+    <div class="container-site gal-pf-wrap">
+      <div class="gal-pf-head">
+        <div>
+          <p class="t-tech text-mey-teal-700">PORTFÖY</p>
+          <h2 class="t-display-l mt-3">{corp.portfolioTitle}</h2>
+        </div>
+        <a class="t-tech gal-pf-all" href={`${base}/projeler`}>TÜM PROJELER <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="gal-grid mt-9">
+        {corp.buildings.map((b, i) => (
+          <a class="gal-tile" href={`${base}/projeler/${b.slug}`}>
+            <div class="gal-tile-img">
+              <Image src={b.photo} alt={`${b.name} (temsilî görsel)`} widths={[400, 640]} sizes="(min-width: 900px) 30vw, 90vw" class="sc-img" loading="lazy" />
+              <span class="t-tech gal-tile-idx">{String(i + 1).padStart(2, '0')}</span>
+            </div>
+            <h3 class="t-heading-s mt-3">{b.name}</h3>
+            <p class="t-body mt-1 text-graphite-600">{b.blurb}</p>
+            <p class="t-tech text-graphite-400 mt-2">{b.meta}</p>
+          </a>
+        ))}
+      </div>
+      <p class="t-caption gal-note mt-6">{corp.repNote}</p>
+    </div>
+  </section>
+
+  <!-- KALİTE — malzeme & işçilik -->
+  <section class="container-site section-pad">
+    <p class="t-tech text-mey-red">02 · KALİTE</p>
+    <h2 class="t-display-l mt-3">Malzeme & işçilik</h2>
+    <div class="gal-quality mt-8">
+      <figure class="gal-q-fig">
+        <Image src={img.materials} alt="Cephe malzemeleri — tuğla, cam, çelik, beton (temsilî)" widths={[520, 800]} sizes="(min-width: 900px) 48vw, 90vw" class="sc-img" loading="lazy" />
+        <figcaption class="t-tech gal-fig-cap">MALZEME PALETİ</figcaption>
+      </figure>
+      <figure class="gal-q-fig">
+        <Image src={img.lobby} alt="Ortak alan — lobi ve merdiven (temsilî)" widths={[520, 800]} sizes="(min-width: 900px) 48vw, 90vw" class="sc-img" loading="lazy" />
+        <figcaption class="t-tech gal-fig-cap">ORTAK ALAN</figcaption>
+      </figure>
+    </div>
+    <p class="t-body-l mt-6 max-w-2xl text-graphite-600">{corp.values[1].text}</p>
+  </section>
+
+  <!-- DEĞERLERİMİZ -->
+  <section class="gal-alt">
+    <div class="container-site section-pad" style="padding-block: clamp(3.5rem, 8vh, 6rem);">
+      <p class="t-tech text-mey-red">İLKELER</p>
+      <h2 class="t-display-l mt-3">{corp.valuesTitle}</h2>
+      <div class="gal-values mt-8">
+        {corp.values.map((v) => (
+          <article class="gal-value card">
+            <span class="t-tech gal-value-no">{v.no}</span>
+            <h3 class="t-heading-s mt-3">{v.name}</h3>
+            <p class="t-body mt-2 text-graphite-600">{v.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- MİSYON / VİZYON + HİKAYE özet chip -->
+  <section class="container-site section-pad">
+    <div class="gal-mv">
+      <article class="gal-mv-card">
+        <p class="t-tech text-mey-teal-700">MİSYON</p>
+        <p class="t-heading-m mt-3">{corp.mission}</p>
+      </article>
+      <article class="gal-mv-card">
+        <p class="t-tech text-mey-teal-700">VİZYON</p>
+        <p class="t-heading-m mt-3">{corp.vision}</p>
+      </article>
+    </div>
+    <p class="t-caption mt-6 text-graphite-400">
+      Kuruluş ve yönetim: <PlaceholderChip locale="tr" label="Kurucu" />
+    </p>
+  </section>
+
+  <!-- CTA — kırmızı çizgi backdrop -->
+  <section class="gal-cta" data-testid="gal-cta">
+    <Image src={img.redLines} alt="" widths={[1280, 1920]} sizes="100vw" class="gal-cta-bg" loading="lazy" aria-hidden="true" />
+    <div class="gal-cta-scrim"></div>
+    <div class="container-site gal-cta-inner">
+      <p class="t-tech text-mey-red">İLETİŞİM</p>
+      <h2 class="t-display-l mt-3">{corp.ctaTitle}</h2>
+      <p class="t-body-l mt-3 max-w-xl text-graphite-600">{corp.ctaSub}</p>
+      <div class="gal-cta-row mt-7">
+        <a class="btn-primary" href={`${base}/projeler`}>{corp.ctaProjects} <span aria-hidden="true">→</span></a>
+        <a class="btn-ghost" href={`${base}/iletisim`}>{corp.ctaContact}</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .sc-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .gal-alt { background: var(--color-concrete-100); border-block: 1px solid var(--color-line); }
+  .gal-fig-cap { color: var(--color-graphite-400); margin-top: 0.5rem; }
+  .gal-cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+
+  /* HERO */
+  .gal-hero { position: relative; height: min(62svh, 640px); overflow: hidden; background: var(--color-night-950); }
+  .gal-hero-img { width: 100%; height: 100%; object-fit: cover; }
+  .gal-hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(14 15 17 / 0.28) 0%, transparent 26%, transparent 62%, rgb(14 15 17 / 0.34) 100%); }
+  .gal-hero-overlay { position: absolute; inset-inline: 0; inset-block: 0; display: flex; flex-direction: column; justify-content: space-between; padding-block: 1.4rem; }
+  .gal-hero-tag { color: #fff; }
+  .gal-level { display: flex; align-items: center; gap: 0.75rem; }
+  .gal-level-line { height: 2px; background: var(--color-red-on-dark); flex: 1; }
+  .gal-level-txt { color: var(--color-red-on-dark); white-space: nowrap; }
+
+  .gal-statement { padding-block: clamp(3rem, 7vh, 5.5rem); }
+
+  /* BİZ KİMİZ */
+  .gal-who { display: grid; gap: 2rem; padding-block: clamp(3.5rem, 8vh, 6rem); align-items: center; }
+  @media (min-width: 900px) { .gal-who { grid-template-columns: 1fr 1fr; gap: 3rem; } }
+  .gal-who-fig { aspect-ratio: 16 / 10; border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; background: #fff; }
+
+  /* KABİLİYET ikonlar */
+  .gal-caps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; list-style: none; padding: 0; }
+  @media (min-width: 640px) { .gal-caps { grid-template-columns: repeat(4, 1fr); } }
+  .gal-cap { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.75rem; border: 1px solid var(--color-line); border-radius: var(--radius-brand); background: #fff; padding: 1.4rem 0.8rem; }
+  .gal-cap-ic { width: 84px; height: 84px; }
+  .gal-cap-img { width: 100%; height: 100%; object-fit: contain; }
+  .gal-cap-lbl { color: var(--color-graphite-600); }
+
+  /* PORTFÖY */
+  .gal-pf-wrap { padding-block: clamp(3.5rem, 8vh, 6rem); }
+  .gal-pf-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .gal-pf-all { color: var(--color-mey-teal-700); }
+  .gal-pf-all:hover { color: var(--color-graphite-900); }
+  .gal-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .gal-grid { grid-template-columns: repeat(3, 1fr); } }
+  .gal-tile { display: block; }
+  .gal-tile-img { position: relative; aspect-ratio: 3 / 4; border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; }
+  .gal-tile-img .sc-img { transition: transform 300ms ease-out; }
+  .gal-tile:hover .sc-img { transform: scale(1.02); }
+  .gal-tile-idx { position: absolute; top: 0.6rem; inset-inline-start: 0.6rem; color: #fff; background: var(--color-mey-red); padding: 0.15rem 0.5rem; border-radius: var(--radius-brand); }
+  .gal-note { color: var(--color-graphite-400); }
+
+  /* KALİTE */
+  .gal-quality { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .gal-quality { grid-template-columns: 1fr 1fr; } }
+  .gal-q-fig { aspect-ratio: 4 / 3; border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; background: #fff; }
+
+  /* DEĞERLER */
+  .gal-values { display: grid; gap: 1.25rem; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .gal-values { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .gal-values { grid-template-columns: repeat(4, 1fr); } }
+  .gal-value { padding: 1.5rem 1.4rem; }
+  .gal-value-no { color: var(--color-mey-red); border: 1px solid var(--color-mey-red); border-radius: var(--radius-brand); padding: 0.1rem 0.45rem; }
+
+  /* MİSYON/VİZYON */
+  .gal-mv { display: grid; gap: 1.5rem; }
+  @media (min-width: 720px) { .gal-mv { grid-template-columns: 1fr 1fr; } }
+  .gal-mv-card { border: 1px solid var(--color-line); border-inline-start: 2px solid var(--color-mey-teal); border-radius: var(--radius-brand); padding: 1.75rem 1.6rem; background: #fff; }
+
+  /* CTA */
+  .gal-cta { position: relative; overflow: hidden; border-top: 1px solid var(--color-line); }
+  .gal-cta-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .gal-cta-scrim { position: absolute; inset: 0; background: rgb(244 244 242 / 0.74); }
+  .gal-cta-inner { position: relative; padding-block: clamp(3.5rem, 9vh, 6.5rem); }
+</style>

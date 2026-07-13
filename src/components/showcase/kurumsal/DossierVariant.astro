@@ -1,0 +1,219 @@
+---
+/*
+  VARYANT A — "KÜNYE" (Teknik Dossier).
+  Register: mühendislik künyesi / spec sheet. Tek gür jest: ÇİZİM↔YAPI —
+  şeffaf aksonometri render'i (çizim) ile gerçek bina görselini (yapı) bir
+  kot çizgisiyle karşılıklı koyar; "çizdiğimizi inşa ederiz" görünür olur.
+  Gerisi sakin: mono teknik katman, kırmızı kılavuz çizgi, düz hairline'lar.
+*/
+import { Image } from 'astro:assets';
+import StatsStrip from '../../StatsStrip.astro';
+import PlaceholderChip from '../../PlaceholderChip.astro';
+import { corp } from './data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const draw = corp.buildings[0]; // Ali — çizim↔yapı kanıtı
+---
+
+<div class="dsr" data-testid="variant-dossier">
+  <!-- HERO -->
+  <section class="container-site section-pad">
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red">{corp.coord}</p>
+      <h1 class="t-display-xl mt-4">{corp.slogan}</h1>
+      <p class="t-body-l mt-6 max-w-2xl text-graphite-600">{corp.lead}</p>
+    </div>
+  </section>
+
+  <!-- SİGNATURE: ÇİZİM ↔ YAPI -->
+  <section class="dsr-band" data-testid="dsr-drawbuild">
+    <div class="container-site">
+      <p class="t-tech text-mey-teal-700">ÇİZİMDEN YAPIYA · {draw.name.toUpperCase()}</p>
+      <div class="dsr-pair mt-6">
+        <figure class="dsr-cell">
+          <span class="t-tech dsr-tag">01 · ÇİZİM / AKSONOMETRİ</span>
+          <div class="dsr-iso">
+            <Image src={draw.iso} alt={`${draw.name} — aksonometrik render (temsilî)`} widths={[380, 600]} sizes="(min-width: 900px) 40vw, 90vw" class="sc-img dsr-iso-img" loading="lazy" />
+          </div>
+        </figure>
+        <div class="dsr-level" aria-hidden="true">
+          <span class="dsr-level-line"></span>
+          <span class="t-tech dsr-level-txt">= İNŞA →</span>
+        </div>
+        <figure class="dsr-cell">
+          <span class="t-tech dsr-tag">02 · YAPI / TESLİM</span>
+          <div class="dsr-photo">
+            <Image src={draw.photo} alt={`${draw.name} — tamamlanmış yapı (temsilî görsel)`} widths={[380, 640]} sizes="(min-width: 900px) 40vw, 90vw" class="sc-img dsr-photo-img" loading="lazy" />
+          </div>
+        </figure>
+      </div>
+      <p class="t-caption dsr-note mt-5">{corp.repNote}</p>
+    </div>
+  </section>
+
+  <!-- BİZ KİMİZ -->
+  <section class="container-site section-pad">
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red">MEY İNŞAAT · 00</p>
+      <h2 class="t-display-l mt-3">{corp.whoTitle}</h2>
+    </div>
+    <div class="dsr-cols mt-8 ps-6 sm:ps-10">
+      {corp.who.map((p) => <p class="t-body-l text-graphite-600">{p}</p>)}
+    </div>
+  </section>
+
+  <!-- HİKAYEMİZ — künye listesi -->
+  <section class="dsr-story" data-testid="dsr-story">
+    <div class="container-site">
+      <p class="t-tech text-mey-teal-700">ZAMAN ÇİZELGESİ</p>
+      <h2 class="t-display-l mt-3">{corp.storyTitle}</h2>
+      <ol class="dsr-timeline mt-10">
+        {corp.story.map((m) => (
+          <li class="dsr-mile reveal">
+            <span class="t-tech dsr-mile-no">{m.no}</span>
+            <div class="dsr-mile-body">
+              <p class="t-tech text-mey-red">{m.tag}</p>
+              <h3 class="t-heading-m mt-1">{m.title}</h3>
+              <p class="t-body mt-2 text-graphite-600">
+                {m.text}
+                {m.pending && <span class="ms-1 align-middle inline-block"><PlaceholderChip locale="tr" label={m.pending} /></span>}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- DEĞERLERİMİZ — 2×2 künye ızgarası -->
+  <section class="container-site section-pad">
+    <p class="t-tech text-mey-red">İLKELER</p>
+    <h2 class="t-display-l mt-3">{corp.valuesTitle}</h2>
+    <div class="dsr-values mt-8">
+      {corp.values.map((v) => (
+        <article class="dsr-value">
+          <span class="t-tech dsr-value-no">{v.no}</span>
+          <h3 class="t-heading-s mt-3">{v.name}</h3>
+          <p class="t-body mt-2 text-graphite-600">{v.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- PORTFÖY — 3 aksonometri künyesi -->
+  <section class="dsr-portfolio" data-testid="dsr-portfolio">
+    <div class="container-site">
+      <p class="t-tech text-mey-teal-700">KAYIT · PORTFÖY</p>
+      <h2 class="t-display-l mt-3">{corp.portfolioTitle}</h2>
+      <p class="t-body-l mt-3 max-w-2xl text-graphite-600">{corp.portfolioIntro}</p>
+      <div class="dsr-reg mt-10">
+        {corp.buildings.map((b, i) => (
+          <a class="dsr-reg-item reveal" href={`${base}/projeler/${b.slug}`}>
+            <div class="dsr-reg-iso">
+              <Image src={b.iso} alt={`${b.name} — aksonometrik render (temsilî)`} widths={[320, 480]} sizes="(min-width: 900px) 30vw, 90vw" class="sc-img" loading="lazy" />
+            </div>
+            <span class="t-tech dsr-reg-idx">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="t-heading-s mt-2">{b.name}</h3>
+            <p class="t-tech text-graphite-400 mt-1">{b.meta}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SAYILAR -->
+  <section class="dsr-stats">
+    <div class="container-site">
+      <p class="t-tech text-mey-red">SAYILARLA MEY</p>
+      <div class="mt-6"><StatsStrip locale="tr" /></div>
+    </div>
+  </section>
+
+  <!-- MİSYON / VİZYON -->
+  <section class="container-site section-pad">
+    <div class="dsr-mv">
+      <article class="dsr-mv-card">
+        <p class="t-tech text-mey-teal-700">MİSYON</p>
+        <p class="t-heading-m mt-3 text-graphite-900">{corp.mission}</p>
+      </article>
+      <article class="dsr-mv-card">
+        <p class="t-tech text-mey-teal-700">VİZYON</p>
+        <p class="t-heading-m mt-3 text-graphite-900">{corp.vision}</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- CTA (koyu bookend) -->
+  <section class="theatre blueprint-grid dsr-cta">
+    <div class="container-site">
+      <p class="t-tech" style="color: var(--color-red-on-dark);">İLETİŞİM</p>
+      <h2 class="t-display-l mt-3">{corp.ctaTitle}</h2>
+      <p class="t-body-l mt-3 max-w-xl" style="color: rgb(244 244 242 / 0.72);">{corp.ctaSub}</p>
+      <div class="dsr-cta-row mt-7">
+        <a class="btn-primary" href={`${base}/projeler`}>{corp.ctaProjects} <span aria-hidden="true">→</span></a>
+        <a class="btn-ghost" href={`${base}/iletisim`}>{corp.ctaContact}</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .sc-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* ÇİZİM↔YAPI bandı */
+  .dsr-band { background: #fff; border-block: 1px solid var(--color-line); padding-block: clamp(3rem, 7vh, 5.5rem); }
+  .dsr-pair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1.5rem; }
+  .dsr-cell { position: relative; }
+  .dsr-tag { position: absolute; top: 0; inset-inline-start: 0; z-index: 2; color: var(--color-graphite-400); background: rgb(255 255 255 / 0.85); padding: 0.15rem 0.4rem; }
+  .dsr-iso { aspect-ratio: 1 / 1; display: grid; place-items: center; background:
+      linear-gradient(to right, rgb(73 193 198 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(73 193 198 / 0.06) 1px, transparent 1px), var(--color-concrete-050);
+    background-size: 32px 32px, 32px 32px, auto; border: 1px solid var(--color-line); border-radius: var(--radius-brand); }
+  .dsr-iso-img { object-fit: contain; padding: 8%; }
+  .dsr-photo { aspect-ratio: 1 / 1; border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; }
+  .dsr-level { display: grid; justify-items: center; gap: 0.5rem; min-width: 5rem; }
+  .dsr-level-line { width: 100%; height: 2px; background: var(--color-mey-red); }
+  .dsr-level-txt { color: var(--color-mey-red); white-space: nowrap; }
+  .dsr-note { color: var(--color-graphite-400); }
+
+  .dsr-cols { display: grid; gap: 1.5rem; }
+  @media (min-width: 800px) { .dsr-cols { grid-template-columns: 1fr 1fr; gap: 2.5rem; } }
+
+  /* Hikaye künye */
+  .dsr-story { background: var(--color-concrete-100); padding-block: clamp(3.5rem, 8vh, 6rem); }
+  .dsr-timeline { display: grid; gap: 0; }
+  .dsr-mile { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; padding-block: 1.6rem; border-top: 1px solid var(--color-line); }
+  .dsr-mile:last-child { border-bottom: 1px solid var(--color-line); }
+  .dsr-mile-no { color: var(--color-mey-red); font-size: 0.875rem; padding-top: 0.15rem; }
+  .dsr-mile-body { max-width: 60ch; }
+
+  /* Değerler ızgarası */
+  .dsr-values { display: grid; gap: 1px; background: var(--color-line); border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; }
+  @media (min-width: 720px) { .dsr-values { grid-template-columns: 1fr 1fr; } }
+  .dsr-value { background: #fff; padding: 1.6rem 1.5rem; }
+  .dsr-value-no { color: var(--color-mey-red); border: 1px solid var(--color-mey-red); border-radius: var(--radius-brand); padding: 0.1rem 0.45rem; }
+
+  /* Portföy kayıt */
+  .dsr-portfolio { background: #fff; border-top: 1px solid var(--color-line); padding-block: clamp(3.5rem, 8vh, 6rem); }
+  .dsr-reg { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .dsr-reg { grid-template-columns: repeat(3, 1fr); } }
+  .dsr-reg-item { display: block; border: 1px solid var(--color-line); border-radius: var(--radius-brand); padding: 1rem; transition: border-color 200ms ease-out; }
+  .dsr-reg-item:hover { border-color: var(--color-graphite-400); }
+  .dsr-reg-iso { aspect-ratio: 1 / 1; display: grid; place-items: center; background: var(--color-concrete-050); border-radius: var(--radius-brand); overflow: hidden; }
+  .dsr-reg-iso :global(img) { object-fit: contain; padding: 6%; }
+  .dsr-reg-idx { color: var(--color-mey-red); display: inline-block; margin-top: 0.75rem; }
+
+  .dsr-stats { background: var(--color-concrete-100); padding-block: clamp(3rem, 7vh, 5rem); }
+
+  .dsr-mv { display: grid; gap: 1.5rem; }
+  @media (min-width: 720px) { .dsr-mv { grid-template-columns: 1fr 1fr; } }
+  .dsr-mv-card { border: 1px solid var(--color-line); border-inline-start: 2px solid var(--color-mey-teal); border-radius: var(--radius-brand); padding: 1.75rem 1.6rem; background: #fff; }
+
+  .dsr-cta { padding-block: clamp(3.5rem, 9vh, 6.5rem); }
+  .dsr-cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+
+  @media (max-width: 640px) {
+    .dsr-pair { grid-template-columns: 1fr; }
+    .dsr-level { transform: rotate(90deg); min-width: 0; padding-block: 0.5rem; }
+  }
+</style>

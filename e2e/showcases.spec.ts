@@ -9,13 +9,30 @@ import { u } from './util';
 test('showcases hub renders with the adopted-design card', async ({ page }) => {
   await page.goto(u('showcases/'));
   await expect(page.locator('h1')).toContainText('Tasarım Vitrini');
-  // The stepped compact panel won (2026-07-11) and shipped to production.
-  const card = page.locator('.sc-card').first();
-  await expect(card).toContainText('CANLIDA');
-  await expect(card).toContainText('adımlı gezinme');
-  await expect(card.locator('a.sc-open')).toHaveAttribute('href', /projeler\/ali/);
+  // The stepped compact panel won (2026-07-11) and shipped to production. Target
+  // the LIVE card by status (card order changes as proposals are added), not .first().
+  const live = page
+    .locator('.sc-card')
+    .filter({ has: page.locator('.sc-status.live') })
+    .first();
+  await expect(live).toContainText('CANLIDA');
+  await expect(live).toContainText('adımlı gezinme');
+  await expect(live.locator('a.sc-open')).toHaveAttribute('href', /projeler\/ali/);
   // noindex: arama motorlarına kapalı
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+});
+
+test('showcases hub lists the kurumsal upgrade proposal', async ({ page }) => {
+  await page.goto(u('showcases/'));
+  const proposal = page
+    .locator('.sc-card')
+    .filter({ hasText: 'Kurumsal' })
+    .first();
+  await expect(proposal).toContainText('ÖNERİ');
+  await expect(proposal.locator('a.sc-open')).toHaveAttribute(
+    'href',
+    /showcases\/kurumsal-lab/
+  );
 });
 
 test('showcases is absent from sitemap and main nav', async ({ page, request, baseURL }) => {
