@@ -14,8 +14,12 @@ export default defineConfig({
   site: SITE,
   base: '/',
   trailingSlash: 'ignore',
-  // /showcases = dahili tasarım vitrini: sitemap dışı (sayfa ayrıca noindex)
-  integrations: [react(), sitemap({ filter: (page) => !page.includes('/showcases') })],
+  // /showcases = dahili tasarım vitrini: sitemap dışı (sayfa ayrıca noindex).
+  // /satilik-daireler = canlı ama fiyatlar TEMSİLÎ: gerçek satış verisi girilince
+  // bu istisnayı ve features/Satilik*Page'deki noindex'i BİRLİKTE kaldır.
+  integrations: [react(), sitemap({
+    filter: (page) => !page.includes('/showcases') && !page.includes('/satilik-daireler'),
+  })],
   i18n: {
     locales: ['tr', 'en', 'ru', 'ar'],
     defaultLocale: 'tr',

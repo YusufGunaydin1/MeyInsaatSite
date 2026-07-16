@@ -1,30 +1,38 @@
 ---
 /*
-  DAİRE DETAY B — D-12 / Daire 2 (ref: daire-detay-ref-b). Fotoğraf değiştirilmiş
-  bir klon DEĞİL: geniş karusel önde, özellik çipleri, daire özellikleri + oda
-  ölçüleri, proje hakkında + yakın çevre + konum üçlüsü, finansman şeridi ve
-  kendi benzer-daire sırası; rayda belge listesi (broşür/kat planı) vurgusu.
+  DAİRE DETAY — D-12 / Daire 2 (canlı; tasarım: daire-detay-ref-b mock; D-11'in
+  klonu değil): geniş karusel, özellik çipleri, daire özellikleri + oda ölçüleri,
+  genel bakış + proje + konum üçlüsü, finansman şeridi, kendi benzer sırası.
+  NOINDEX: fiyatlar temsilî — gerçek satış verisiyle birlikte kaldırılacak.
 */
 import { Image } from 'astro:assets';
-import Base from '../../../../layouts/Base.astro';
-import Icon from '../../../../components/showcase/satilik/kompakt/Icon.astro';
-import MockChip from '../../../../components/showcase/satilik/kompakt/MockChip.astro';
-import Breadcrumb from '../../../../components/showcase/satilik/kompakt/Breadcrumb.astro';
-import SpecGrid from '../../../../components/showcase/satilik/kompakt/SpecGrid.astro';
-import MapPanel from '../../../../components/showcase/satilik/kompakt/MapPanel.astro';
-import PaymentPlan from '../../../../components/showcase/satilik/kompakt/PaymentPlan.astro';
-import SimilarUnits from '../../../../components/showcase/satilik/kompakt/SimilarUnits.astro';
-import StickyRail from '../../../../components/showcase/satilik/kompakt/StickyRail.astro';
-import SoonDialog from '../../../../components/showcase/satilik/kompakt/SoonDialog.astro';
-import Carousel from '../../../../components/showcase/satilik/kompakt/Carousel.tsx';
-import { carouselItems } from '../../../../components/showcase/satilik/kompakt/assets.ts';
-import { detay, specsD2, odaOlculeriD2, tl, proje } from '../../../../components/showcase/satilik/kompakt/data.ts';
-import { building } from '../../../../components/showcase/satilik/data.ts';
-import { publicAsset, entry } from '../../../../components/showcase/satilik/media.ts';
-import '../../../../components/showcase/satilik/kompakt/kompakt.css';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
+import MockChip from '../components/showcase/satilik/kompakt/MockChip.astro';
+import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
+import SpecGrid from '../components/showcase/satilik/kompakt/SpecGrid.astro';
+import MapPanel from '../components/showcase/satilik/kompakt/MapPanel.astro';
+import PaymentPlan from '../components/showcase/satilik/kompakt/PaymentPlan.astro';
+import SimilarUnits from '../components/showcase/satilik/kompakt/SimilarUnits.astro';
+import StickyRail from '../components/showcase/satilik/kompakt/StickyRail.astro';
+import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
+import Carousel from '../components/showcase/satilik/kompakt/Carousel.tsx';
+import { carouselItems } from '../components/showcase/satilik/kompakt/assets.ts';
+import { detay, specsD2, odaOlculeriD2, tl, proje } from '../components/showcase/satilik/kompakt/data.ts';
+import { building } from '../components/showcase/satilik/data.ts';
+import { publicAsset, entry } from '../components/showcase/satilik/media.ts';
+import { localePath, type Locale } from '../lib/i18n';
+import { ui } from '../lib/content';
+import '../components/showcase/satilik/kompakt/kompakt.css';
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const kompakt = base + '/showcases/satilik-daireler/kompakt';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = ui(locale);
+const basePrefix = localePath(locale, '/').replace(/\/$/, '');
+const root = basePrefix + '/satilik-daireler';
+
 const d = detay['daire-2'];
 const items = await carouselItems([...d.galeri]);
 
@@ -43,18 +51,18 @@ const ozellikler = [
 ---
 
 <Base
-  locale="tr"
-  page="home"
-  path="/projeler"
+  locale={locale}
+  page="satilik"
+  path="/satilik-daireler/daire-2"
   title={d.baslik + ' — MEY İnşaat'}
   description="El Ele Apartmanı D-12: çatı avlulu 3+2 dubleks — galeri, özellikler, oda ölçüleri, finansman."
   noindex
 >
   <div class="container-site kce-crumbwrap">
     <Breadcrumb items={[
-      { label: 'Ana Sayfa', href: base + '/' },
-      { label: 'Satılık Daireler', href: kompakt + '/' },
-      { label: proje.ad, href: kompakt + '/#daireler' },
+      { label: t.nav.home, href: localePath(locale, '/') },
+      { label: t.nav.forSale, href: root },
+      { label: proje.ad, href: root },
       { label: '3+2 Dubleks · D-12' },
     ]} />
   </div>
@@ -80,10 +88,8 @@ const ozellikler = [
   <!-- GÖVDE -->
   <div class="container-site kce-layout">
     <div class="kce-main">
-      <!-- GENİŞ KARUSEL -->
       <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
 
-      <!-- ÖZELLİK ÇİPLERİ -->
       <ul class="kce-chips card" data-testid="kc-ozellik-chips">
         {ozellikler.map((o) => (
           <li>
@@ -94,7 +100,6 @@ const ozellikler = [
         ))}
       </ul>
 
-      <!-- DAİRE ÖZELLİKLERİ + ODA ÖLÇÜLERİ -->
       <section class="kce-two" aria-label="Daire özellikleri ve oda ölçüleri">
         <div class="card kce-card">
           <h2 class="t-heading-s">Daire Özellikleri</h2>
@@ -112,7 +117,6 @@ const ozellikler = [
         </div>
       </section>
 
-      <!-- GENEL BAKIŞ + PROJE HAKKINDA + KONUM -->
       <section class="kce-three" aria-label="Genel bakış, proje ve konum">
         <div class="card kce-card">
           <h2 class="t-heading-s">Daireye Genel Bakış</h2>
@@ -126,21 +130,19 @@ const ozellikler = [
           <h2 class="t-heading-s">Proje Hakkında</h2>
           <Image src={bina.img} alt={bina.alt} widths={[420, 720]} sizes="(min-width: 1024px) 300px, 94vw" class="kce-proje-img" />
           <p class="t-caption kce-proje-text">{building.positioning} — {building.builder} yapımı, {proje.kat} katlı, {proje.toplamDaire} daireli bina.</p>
-          <a class="kce-proje-link" href={base + '/projeler/el-ele-apartmani'}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
+          <a class="kce-proje-link" href={basePrefix + '/projeler/el-ele-apartmani'}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
         </div>
         <MapPanel compact title="Yakın Çevre" />
       </section>
 
-      <!-- FİNANSMAN ŞERİDİ -->
       <PaymentPlan fiyat={d.unit.fiyat!} mode="strip" />
 
-      <!-- BENZER -->
       <section id="benzer">
-        <SimilarUnits current="daire-2" base={base} />
+        <SimilarUnits current="daire-2" base={basePrefix} />
       </section>
     </div>
 
-    <StickyRail konu="D-12 · 3+2 Dubleks" base={base} docs />
+    <StickyRail konu="D-12 · 3+2 Dubleks" base={basePrefix} docs />
   </div>
 
   <SoonDialog />

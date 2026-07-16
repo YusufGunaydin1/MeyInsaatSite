@@ -1,29 +1,37 @@
 ---
 /*
-  DAİRE DETAY A — D-11 / Daire 1 (ref: daire-detay-ref-a).
-  Dizilim: başlık+fiyat şeridi → galeri | künye ızgarası → çapa sekmeleri →
-  matris + genel bakış → konum → ödeme planı + SSS → benzer daireler; sağda
-  yapışkan ray (satış ofisi + hızlı bilgi formu + fiyat alarmı).
+  DAİRE DETAY — D-11 / Daire 1 (canlı; tasarım: daire-detay-ref-a mock).
+  Başlık+fiyat şeridi → galeri | künye → çapa sekmeleri → matris + genel bakış
+  → konum → ödeme planı + SSS → benzer daireler; sağda yapışkan ray.
+  NOINDEX: fiyatlar temsilî — gerçek satış verisiyle birlikte kaldırılacak.
 */
-import Base from '../../../../layouts/Base.astro';
-import Icon from '../../../../components/showcase/satilik/kompakt/Icon.astro';
-import MockChip from '../../../../components/showcase/satilik/kompakt/MockChip.astro';
-import Breadcrumb from '../../../../components/showcase/satilik/kompakt/Breadcrumb.astro';
-import SpecGrid from '../../../../components/showcase/satilik/kompakt/SpecGrid.astro';
-import AvailabilityMatrix from '../../../../components/showcase/satilik/kompakt/AvailabilityMatrix.astro';
-import MapPanel from '../../../../components/showcase/satilik/kompakt/MapPanel.astro';
-import PaymentPlan from '../../../../components/showcase/satilik/kompakt/PaymentPlan.astro';
-import FaqList from '../../../../components/showcase/satilik/kompakt/FaqList.astro';
-import SimilarUnits from '../../../../components/showcase/satilik/kompakt/SimilarUnits.astro';
-import StickyRail from '../../../../components/showcase/satilik/kompakt/StickyRail.astro';
-import SoonDialog from '../../../../components/showcase/satilik/kompakt/SoonDialog.astro';
-import Carousel from '../../../../components/showcase/satilik/kompakt/Carousel.tsx';
-import { carouselItems } from '../../../../components/showcase/satilik/kompakt/assets.ts';
-import { detay, specsD1, tl, proje } from '../../../../components/showcase/satilik/kompakt/data.ts';
-import '../../../../components/showcase/satilik/kompakt/kompakt.css';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
+import MockChip from '../components/showcase/satilik/kompakt/MockChip.astro';
+import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
+import SpecGrid from '../components/showcase/satilik/kompakt/SpecGrid.astro';
+import AvailabilityMatrix from '../components/showcase/satilik/kompakt/AvailabilityMatrix.astro';
+import MapPanel from '../components/showcase/satilik/kompakt/MapPanel.astro';
+import PaymentPlan from '../components/showcase/satilik/kompakt/PaymentPlan.astro';
+import FaqList from '../components/showcase/satilik/kompakt/FaqList.astro';
+import SimilarUnits from '../components/showcase/satilik/kompakt/SimilarUnits.astro';
+import StickyRail from '../components/showcase/satilik/kompakt/StickyRail.astro';
+import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
+import Carousel from '../components/showcase/satilik/kompakt/Carousel.tsx';
+import { carouselItems } from '../components/showcase/satilik/kompakt/assets.ts';
+import { detay, specsD1, tl, proje } from '../components/showcase/satilik/kompakt/data.ts';
+import { localePath, type Locale } from '../lib/i18n';
+import { ui } from '../lib/content';
+import '../components/showcase/satilik/kompakt/kompakt.css';
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const kompakt = base + '/showcases/satilik-daireler/kompakt';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = ui(locale);
+const basePrefix = localePath(locale, '/').replace(/\/$/, '');
+const root = basePrefix + '/satilik-daireler';
+
 const d = detay['daire-1'];
 const items = await carouselItems([...d.galeri]);
 
@@ -47,18 +55,18 @@ const projeDetay = [
 ---
 
 <Base
-  locale="tr"
-  page="home"
-  path="/projeler"
+  locale={locale}
+  page="satilik"
+  path="/satilik-daireler/daire-1"
   title={d.baslik + ' — MEY İnşaat'}
   description="El Ele Apartmanı D-11: deniz manzaralı 3+2 dubleks — galeri, künye, ödeme planı ve randevu."
   noindex
 >
   <div class="container-site kcd-crumbwrap">
     <Breadcrumb items={[
-      { label: 'Ana Sayfa', href: base + '/' },
-      { label: 'Satılık Daireler', href: kompakt + '/' },
-      { label: proje.ad, href: kompakt + '/#daireler' },
+      { label: t.nav.home, href: localePath(locale, '/') },
+      { label: t.nav.forSale, href: root },
+      { label: proje.ad, href: root },
       { label: '3+2 Dubleks · D-11' },
     ]} />
   </div>
@@ -82,14 +90,13 @@ const projeDetay = [
     </div>
     <div class="kcd-head-actions">
       <button type="button" class="kcd-mini" data-soon="Favoriler"><Icon name="bell" size={15} /> Favorilere Ekle</button>
-      <a class="kcd-mini" href={kompakt + '/daire-2'} data-testid="kc-compare"><Icon name="compare" size={15} /> Diğer daireyle karşılaştır</a>
+      <a class="kcd-mini" href={root + '/daire-2'} data-testid="kc-compare"><Icon name="compare" size={15} /> Diğer daireyle karşılaştır</a>
     </div>
   </header>
 
   <!-- GÖVDE: sol içerik + sağ ray -->
   <div class="container-site kcd-layout">
     <div class="kcd-main">
-      <!-- GALERİ + KÜNYE -->
       <section class="kcd-gallery" id="genel" aria-label="Galeri ve künye">
         <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
         <div class="kcd-specside card">
@@ -98,12 +105,10 @@ const projeDetay = [
         </div>
       </section>
 
-      <!-- ÇAPA SEKMELERİ -->
       <nav class="kcd-tabs" aria-label="Sayfa bölümleri">
         {sekmeler.map((s) => <a href={'#' + s.id}>{s.label}</a>)}
       </nav>
 
-      <!-- PROJE DETAYLARI + GENEL BAKIŞ -->
       <section class="kcd-block" aria-label="Proje detayları">
         <div class="kcd-two">
           <div class="card kcd-card">
@@ -121,17 +126,14 @@ const projeDetay = [
         </div>
       </section>
 
-      <!-- KAT MATRİSİ -->
       <section class="kcd-block" id="konum-secimi" aria-label="Blok, kat ve daire konumu">
         <AvailabilityMatrix />
       </section>
 
-      <!-- KONUM -->
       <section class="kcd-block" id="konum" aria-label="Konum ve yakın çevre">
         <MapPanel title="Yakın Çevre" />
       </section>
 
-      <!-- ÖDEME PLANI + SSS -->
       <section class="kcd-block" id="odeme" aria-label="Ödeme planı ve sorular">
         <div class="kcd-two">
           <div class="card kcd-card"><PaymentPlan fiyat={d.unit.fiyat!} /></div>
@@ -139,13 +141,12 @@ const projeDetay = [
         </div>
       </section>
 
-      <!-- BENZER -->
       <section class="kcd-block" id="benzer">
-        <SimilarUnits current="daire-1" base={base} />
+        <SimilarUnits current="daire-1" base={basePrefix} />
       </section>
     </div>
 
-    <StickyRail konu="D-11 · 3+2 Dubleks" base={base} alarm />
+    <StickyRail konu="D-11 · 3+2 Dubleks" base={basePrefix} alarm />
   </div>
 
   <SoonDialog />
