@@ -116,6 +116,8 @@
   grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
   gap: 0.9rem;
 }
+/* Vitrin dizilimi: az kart, geniş sahne — hayalet sütun bırakma */
+.kx-b .kx-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .kx-card {
   background: #fff;
   border: 1px solid var(--color-line);

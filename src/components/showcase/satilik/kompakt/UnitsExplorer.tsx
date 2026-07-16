@@ -88,7 +88,7 @@ export default function UnitsExplorer({ mode, items }: Props) {
   }, [items]);
 
   return (
-    <div className="kx" data-testid={`kx-${mode}`}>
+    <div className={`kx kx-${mode}`} data-testid={`kx-${mode}`}>
       {mode === 'b' && (
         <div className="kx-tabs" role="tablist" aria-label="Proje seçimi" data-testid="kx-tabs">
           {[[TUMU, 'Tüm Projeler'] as [string, string], ...projeler].map(([key, label]) => (

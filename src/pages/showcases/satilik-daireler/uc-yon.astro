@@ -17,6 +17,26 @@ const pages = ui.nav.filter((n) => n.href);
 <Base locale="tr" page="home" path="/showcases/satilik-daireler/uc-yon" title={hub.title + ' — Tasarım Vitrini'} noindex>
   <LabIntro kicker={hub.kicker} title={hub.title} desc={hub.desc} />
 
+  <!-- Sahip kararı (2026-07-16): ferah/butik yönler REDDEDİLDİ — arşiv olarak durur -->
+  <div class="container-site">
+    <p class="t-tech uy-rejected" data-testid="uy-rejected">
+      KÖTÜ ÖRNEK — ARŞİV: Bu üç ferah yön 2026-07-16'da reddedildi (aşırı genişlik/boşluk,
+      yanlış bilgi mimarisi). Güncel yön: <a href={root + '/kompakt/'}>Kompakt</a>.
+    </p>
+  </div>
+
+  <style>
+    .uy-rejected {
+      display: block;
+      border: 1px dashed rgb(181 35 35 / 0.5);
+      border-radius: var(--radius-brand);
+      color: var(--color-mey-red);
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .uy-rejected a { text-decoration: underline; }
+  </style>
+
   <section class="uy-wrap">
     <div class="container-site">
       <div class="uy-grid">
