@@ -22,7 +22,7 @@ test('liste: nav Satılık aktif + sekmeler/filtre/ray + tek temsilî-veri çipi
   await page.goto(u(K));
   // temsilî fiyatlar yayında kaldığı sürece bilinçli noindex
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
-  await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveText(/satılık daireler/i);
+  await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveText(/^satılık$/i);
   await expect(page.getByTestId('kl-tab-tumu')).toContainText('Tümü (8)');
   await expect(page.getByTestId('kl-filters')).toBeVisible();
   await expect(page.getByTestId('kl-compare')).toBeVisible();
