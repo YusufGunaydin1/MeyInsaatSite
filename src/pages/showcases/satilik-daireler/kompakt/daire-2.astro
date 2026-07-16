@@ -1,0 +1,219 @@
+---
+/*
+  DAİRE DETAY B — D-12 / Daire 2 (ref: daire-detay-ref-b). Fotoğraf değiştirilmiş
+  bir klon DEĞİL: geniş karusel önde, özellik çipleri, daire özellikleri + oda
+  ölçüleri, proje hakkında + yakın çevre + konum üçlüsü, finansman şeridi ve
+  kendi benzer-daire sırası; rayda belge listesi (broşür/kat planı) vurgusu.
+*/
+import { Image } from 'astro:assets';
+import Base from '../../../../layouts/Base.astro';
+import Icon from '../../../../components/showcase/satilik/kompakt/Icon.astro';
+import MockChip from '../../../../components/showcase/satilik/kompakt/MockChip.astro';
+import Breadcrumb from '../../../../components/showcase/satilik/kompakt/Breadcrumb.astro';
+import SpecGrid from '../../../../components/showcase/satilik/kompakt/SpecGrid.astro';
+import MapPanel from '../../../../components/showcase/satilik/kompakt/MapPanel.astro';
+import PaymentPlan from '../../../../components/showcase/satilik/kompakt/PaymentPlan.astro';
+import SimilarUnits from '../../../../components/showcase/satilik/kompakt/SimilarUnits.astro';
+import StickyRail from '../../../../components/showcase/satilik/kompakt/StickyRail.astro';
+import SoonDialog from '../../../../components/showcase/satilik/kompakt/SoonDialog.astro';
+import Carousel from '../../../../components/showcase/satilik/kompakt/Carousel.tsx';
+import { carouselItems } from '../../../../components/showcase/satilik/kompakt/assets.ts';
+import { detay, specsD2, odaOlculeriD2, tl, proje } from '../../../../components/showcase/satilik/kompakt/data.ts';
+import { building } from '../../../../components/showcase/satilik/data.ts';
+import { publicAsset, entry } from '../../../../components/showcase/satilik/media.ts';
+import '../../../../components/showcase/satilik/kompakt/kompakt.css';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const kompakt = base + '/showcases/satilik-daireler/kompakt';
+const d = detay['daire-2'];
+const items = await carouselItems([...d.galeri]);
+
+const binaKey = 'daire-1/bina-dis.png';
+const bina = { img: publicAsset(binaKey), alt: entry(binaKey).alt };
+
+/* Özellik çipleri — fotoğrafların desteklediği + oda ölçüleri modülünden gelen değerler */
+const ozellikler = [
+  { icon: 'sea', title: 'Çatı Terası', sub: '19,5 m²' },
+  { icon: 'stairs', title: 'Dubleks', sub: 'İki katlı yaşam' },
+  { icon: 'cart', title: 'İkinci Mutfak', sub: 'Üst kat nişi' },
+  { icon: 'car', title: 'Kapalı Otopark', sub: 'Bina içinde' },
+  { icon: 'expand', title: 'Dam Pencereleri', sub: 'Üç çatı odası' },
+  { icon: 'shield', title: '2 Banyo', sub: 'Siyah profil duş' },
+];
+---
+
+<Base
+  locale="tr"
+  page="home"
+  path="/projeler"
+  title={d.baslik + ' — MEY İnşaat'}
+  description="El Ele Apartmanı D-12: çatı avlulu 3+2 dubleks — galeri, özellikler, oda ölçüleri, finansman."
+  noindex
+>
+  <div class="container-site kce-crumbwrap">
+    <Breadcrumb items={[
+      { label: 'Ana Sayfa', href: base + '/' },
+      { label: 'Satılık Daireler', href: kompakt + '/' },
+      { label: proje.ad, href: kompakt + '/#daireler' },
+      { label: '3+2 Dubleks · D-12' },
+    ]} />
+  </div>
+
+  <!-- BAŞLIK ŞERİDİ -->
+  <header class="container-site kce-head">
+    <div>
+      <h1 class="kce-title">{d.baslik}</h1>
+      <p class="kce-meta">
+        <span class="t-tech"><Icon name="pin" size={13} /> {proje.lokasyon}</span>
+        <span class="t-tech">{proje.ad}</span>
+        <span class="t-tech">{d.unit.kat}</span>
+        <span class="t-tech">No: {d.unit.no}</span>
+      </p>
+    </div>
+    <div class="kce-price-box">
+      <p class="kce-price tabular-nums" data-testid="kc-price">{tl(d.unit.fiyat!)}</p>
+      <p class="t-caption kce-kdv">KDV Dahil</p>
+      <MockChip />
+    </div>
+  </header>
+
+  <!-- GÖVDE -->
+  <div class="container-site kce-layout">
+    <div class="kce-main">
+      <!-- GENİŞ KARUSEL -->
+      <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
+
+      <!-- ÖZELLİK ÇİPLERİ -->
+      <ul class="kce-chips card" data-testid="kc-ozellik-chips">
+        {ozellikler.map((o) => (
+          <li>
+            <span class="kce-chip-ic"><Icon name={o.icon} size={19} /></span>
+            <p class="kce-chip-title">{o.title}</p>
+            <p class="kce-chip-sub">{o.sub}</p>
+          </li>
+        ))}
+      </ul>
+
+      <!-- DAİRE ÖZELLİKLERİ + ODA ÖLÇÜLERİ -->
+      <section class="kce-two" aria-label="Daire özellikleri ve oda ölçüleri">
+        <div class="card kce-card">
+          <h2 class="t-heading-s">Daire Özellikleri</h2>
+          <SpecGrid items={specsD2} columns={1} testid="kc-specs-d2" />
+        </div>
+        <div class="card kce-card" data-testid="kc-oda-olculeri">
+          <h2 class="t-heading-s">Oda Ölçüleri</h2>
+          <p class="t-caption kce-plan-note">Kat planı görseli hazırlanıyor — ölçüler aşağıda.</p>
+          {odaOlculeriD2.map((g) => (
+            <div class="kce-oda-grup">
+              <p class="t-tech kce-oda-grup-ad">{g.grup}</p>
+              <SpecGrid items={g.odalar} columns={1} testid={`kc-oda-${g.grup === 'Alt kat' ? 'alt' : 'ust'}`} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- GENEL BAKIŞ + PROJE HAKKINDA + KONUM -->
+      <section class="kce-three" aria-label="Genel bakış, proje ve konum">
+        <div class="card kce-card">
+          <h2 class="t-heading-s">Daireye Genel Bakış</h2>
+          <ul class="kce-checklist" data-testid="kc-genel-bakis">
+            {d.genelBakis.map((g) => (
+              <li><Icon name="check" size={16} /> {g}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="card kce-card kce-proje">
+          <h2 class="t-heading-s">Proje Hakkında</h2>
+          <Image src={bina.img} alt={bina.alt} widths={[420, 720]} sizes="(min-width: 1024px) 300px, 94vw" class="kce-proje-img" />
+          <p class="t-caption kce-proje-text">{building.positioning} — {building.builder} yapımı, {proje.kat} katlı, {proje.toplamDaire} daireli bina.</p>
+          <a class="kce-proje-link" href={base + '/projeler/el-ele-apartmani'}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
+        </div>
+        <MapPanel compact title="Yakın Çevre" />
+      </section>
+
+      <!-- FİNANSMAN ŞERİDİ -->
+      <PaymentPlan fiyat={d.unit.fiyat!} mode="strip" />
+
+      <!-- BENZER -->
+      <section id="benzer">
+        <SimilarUnits current="daire-2" base={base} />
+      </section>
+    </div>
+
+    <StickyRail konu="D-12 · 3+2 Dubleks" base={base} docs />
+  </div>
+
+  <SoonDialog />
+</Base>
+
+<style>
+  .kce-crumbwrap { padding-block: 0.9rem 0.4rem; }
+  .kce-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .kce-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--color-graphite-900);
+  }
+  .kce-meta { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .kce-meta span { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--color-graphite-400); }
+  .kce-price-box { text-align: end; display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+  .kce-price {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    color: var(--color-graphite-900);
+    line-height: 1.05;
+  }
+  .kce-kdv { color: var(--color-graphite-400); }
+
+  .kce-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 1.5rem;
+    padding-block: 1.25rem 2.25rem;
+    align-items: start;
+  }
+  .kce-main { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }
+
+  .kce-chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    gap: 0.9rem;
+    padding: 0.9rem 1.1rem;
+  }
+  .kce-chip-ic { color: var(--color-mey-red); display: inline-flex; }
+  .kce-chip-title { font-weight: 600; font-size: 0.8125rem; color: var(--color-graphite-900); margin-top: 0.25rem; line-height: 1.25; }
+  .kce-chip-sub { font-size: 0.75rem; color: var(--color-graphite-400); }
+
+  .kce-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+  .kce-card { padding: 1rem 1.1rem 1.1rem; }
+  .kce-plan-note { color: var(--color-graphite-400); margin-top: 0.2rem; }
+  .kce-oda-grup { margin-top: 0.7rem; }
+  .kce-oda-grup-ad { color: var(--color-mey-teal-700); margin-bottom: 0.2rem; }
+
+  .kce-three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+  .kce-checklist { margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.45rem; }
+  .kce-checklist li { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.875rem; }
+  .kce-checklist :global(svg) { color: var(--color-mey-teal-700); flex-shrink: 0; transform: translateY(2px); }
+  .kce-proje-img { width: 100%; height: 110px; object-fit: cover; border-radius: var(--radius-brand); margin-top: 0.6rem; }
+  .kce-proje-text { margin-top: 0.5rem; }
+  .kce-proje-link { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.5rem; font-size: 0.8125rem; font-weight: 500; color: var(--color-mey-red); }
+  .kce-proje-link:hover { color: var(--color-mey-red-700); }
+
+  @media (max-width: 1023px) {
+    .kce-layout { grid-template-columns: minmax(0, 1fr); }
+    .kce-two, .kce-three { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

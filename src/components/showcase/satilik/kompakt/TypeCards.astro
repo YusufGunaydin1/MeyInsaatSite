@@ -1,0 +1,67 @@
+---
+/*
+  Daire tipleri kartları — ref'lerdeki plan küçük resmi yerine soyut plan glifi
+  (elimizde kat planı görseli yok; uydurma plan çizilmez, şema stilize kalır).
+*/
+import { tipler } from './data';
+
+interface Props {
+  unitsHref: string;
+}
+const { unitsHref } = Astro.props;
+---
+
+<div class="kc-types" data-testid="kc-types">
+  <h3 class="t-heading-s">Daire Tiplerini Keşfedin</h3>
+  <div class="kc-types-grid">
+    {tipler.map((t) => (
+      <article class:list={['kc-type card', t.durum === 'tukendi' && 'is-tukendi']}>
+        <svg class="kc-type-plan" viewBox="0 0 64 44" aria-hidden="true">
+          <rect x="2" y="2" width="60" height="40" />
+          <path d="M2 16h26M28 2v26M28 28h34M46 28v14" />
+          {t.durum === 'musait' && <path d="M40 10h14v10H40z" />}
+        </svg>
+        <p class="kc-type-ad">{t.ad}</p>
+        <p class="kc-type-ozet">{t.ozet}</p>
+        <p class="t-tech kc-type-m2">{t.m2}</p>
+        <p class:list={['kc-type-fiyat', t.durum === 'tukendi' && 'is-mute']}>{t.fiyatText}</p>
+        {t.durum === 'musait'
+          ? <a class="kc-type-cta" href={unitsHref}>{t.adet} — incele</a>
+          : <span class="t-tech kc-type-durum">{t.adet}</span>}
+      </article>
+    ))}
+  </div>
+</div>
+
+<style>
+  .kc-types-grid {
+    margin-top: 0.85rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.9rem;
+  }
+  .kc-type { padding: 0.9rem 1rem 1rem; }
+  .kc-type.is-tukendi { background: var(--color-concrete-050); }
+  .kc-type-plan {
+    width: 64px;
+    height: 44px;
+    fill: none;
+    stroke: var(--color-mey-teal-700);
+    stroke-width: 1.5;
+  }
+  .kc-type.is-tukendi .kc-type-plan { stroke: var(--color-graphite-400); }
+  .kc-type-ad { margin-top: 0.5rem; font-weight: 600; color: var(--color-graphite-900); }
+  .kc-type-ozet { font-size: 0.8125rem; color: var(--color-graphite-400); line-height: 1.35; }
+  .kc-type-m2 { margin-top: 0.45rem; color: var(--color-graphite-400); }
+  .kc-type-fiyat { margin-top: 0.15rem; font-weight: 600; font-size: 0.9375rem; color: var(--color-graphite-900); }
+  .kc-type-fiyat.is-mute { color: var(--color-graphite-400); font-weight: 500; }
+  .kc-type-cta {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-mey-red);
+  }
+  .kc-type-cta:hover { color: var(--color-mey-red-700); text-decoration: underline; }
+  .kc-type-durum { display: inline-block; margin-top: 0.55rem; color: var(--color-graphite-400); }
+</style>

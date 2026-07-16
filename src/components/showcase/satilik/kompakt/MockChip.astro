@@ -1,0 +1,33 @@
+---
+/*
+  Sayfa başına TEK temsilî-veri çipi: kompakt ailedeki her sayı mock olduğundan
+  bunu tek, sessiz ama net bir bantla söyler (shared/Chip.astro'nun kesikli
+  çerçeve dili; metni sabit — alan alan tekrar edilmez).
+*/
+import { MOCK_NOTICE } from './data';
+
+interface Props {
+  onDark?: boolean;
+}
+const { onDark = false } = Astro.props;
+---
+
+<span class:list={['t-tech kc-mock', onDark && 'kc-mock-dark']} data-testid="kc-mock-chip">
+  {MOCK_NOTICE}
+</span>
+
+<style>
+  .kc-mock {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px dashed rgb(102 105 109 / 0.55);
+    border-radius: var(--radius-brand);
+    padding: 0.25rem 0.6rem;
+    color: var(--color-graphite-400);
+  }
+  .kc-mock-dark {
+    border-color: rgb(255 255 255 / 0.3);
+    color: rgb(244 244 242 / 0.6);
+  }
+</style>

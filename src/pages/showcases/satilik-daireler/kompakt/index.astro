@@ -1,0 +1,207 @@
+---
+/*
+  SATILIK DAİRELER — KOMPAKT · Landing A "proje-merkezli" (ref: genel-sayfa-ref-a).
+  Gerçek site kabuğu içinde (Base + Header/Footer, aktif sekme Projeler — path
+  '/projeler' bu yüzden geçilir; sayfa noindex, canonical önemsiz). Yoğunluk
+  yasası: ilk ekranda 3+ bilgi modülü, bant dolgusu 2–2.5rem, tam-tuval foto yok.
+*/
+import { Image } from 'astro:assets';
+import Base from '../../../../layouts/Base.astro';
+import Icon from '../../../../components/showcase/satilik/kompakt/Icon.astro';
+import MockChip from '../../../../components/showcase/satilik/kompakt/MockChip.astro';
+import ProjectStrip from '../../../../components/showcase/satilik/kompakt/ProjectStrip.astro';
+import StatBar from '../../../../components/showcase/satilik/kompakt/StatBar.astro';
+import AvailabilityMatrix from '../../../../components/showcase/satilik/kompakt/AvailabilityMatrix.astro';
+import MapPanel from '../../../../components/showcase/satilik/kompakt/MapPanel.astro';
+import FeatureRow from '../../../../components/showcase/satilik/kompakt/FeatureRow.astro';
+import TypeCards from '../../../../components/showcase/satilik/kompakt/TypeCards.astro';
+import CtaBand from '../../../../components/showcase/satilik/kompakt/CtaBand.astro';
+import SoonDialog from '../../../../components/showcase/satilik/kompakt/SoonDialog.astro';
+import UnitsExplorer, { type ExplorerItem } from '../../../../components/showcase/satilik/kompakt/UnitsExplorer.tsx';
+import { cardImage } from '../../../../components/showcase/satilik/kompakt/assets.ts';
+import { units, tl } from '../../../../components/showcase/satilik/kompakt/data.ts';
+import { building } from '../../../../components/showcase/satilik/data.ts';
+import { publicAsset, entry } from '../../../../components/showcase/satilik/media.ts';
+import '../../../../components/showcase/satilik/kompakt/kompakt.css';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const kompakt = base + '/showcases/satilik-daireler/kompakt';
+
+const heroKey = 'daire-1/bina-dis.png';
+const hero = { img: publicAsset(heroKey), alt: entry(heroKey).alt };
+const featuredKey = 'daire-1/cevre-manzara.png';
+const featured = { img: publicAsset(featuredKey), alt: entry(featuredKey).alt };
+
+const items: ExplorerItem[] = await Promise.all(
+  units.map(async (u): Promise<ExplorerItem> => ({
+    id: u.id,
+    kind: 'unit',
+    proje: 'el-ele',
+    projeLabel: 'El Ele Apartmanı',
+    no: u.no,
+    kat: u.kat,
+    katKey: u.katKey,
+    tip: u.tip,
+    oda: u.oda,
+    brut: u.brut,
+    fiyatText: u.fiyat ? tl(u.fiyat) : undefined,
+    durum: u.durum === 'musait' ? 'musait' : 'satildi',
+    badge: u.badge,
+    href: u.detay ? `${kompakt}/${u.detay}` : undefined,
+    cta: 'İncele',
+    img: u.foto ? await cardImage(u.foto) : undefined,
+  }))
+);
+---
+
+<Base
+  locale="tr"
+  page="home"
+  path="/projeler"
+  title="Satılık Daireler — Kompakt A · El Ele Apartmanı — MEY İnşaat"
+  description="El Ele Apartmanı'ndaki satılık 3+2 dubleks daireler: kat & daire durumu, filtreler, fiyat ve randevu."
+  noindex
+>
+  <!-- HERO: kompakt koyu bant — tek yüksek jest yok, bilgiye hızlı iniş -->
+  <section class="kca-hero theatre">
+    <Image src={hero.img} alt="" widths={[880, 1440]} sizes="100vw" class="kca-hero-img" loading="eager" />
+    <div class="kca-hero-scrim" aria-hidden="true"></div>
+    <div class="container-site kca-hero-in">
+      <p class="t-tech kc-eyebrow">SATILIK DAİRELER</p>
+      <h1 class="kca-hero-title">Yaşam alanınızı seçin,<br />geleceğinizi birlikte inşa edelim.</h1>
+      <p class="kca-hero-sub">
+        MEY İnşaat projelerinden size uygun daireyi seçin. Güvenli yatırım, konforlu yaşam.
+      </p>
+      <a class="btn-primary kca-hero-cta" href="#daireler">Daireleri İncele <Icon name="arrow-right" size={16} /></a>
+    </div>
+  </section>
+
+  <!-- PROJE ŞERİDİ: hero'ya bindirilmiş -->
+  <div class="container-site kca-strip">
+    <ProjectStrip base={base} />
+  </div>
+
+  <!-- STAT BAR + temsilî veri çipi -->
+  <div class="container-site kc-section-tight">
+    <StatBar detailHref={base + '/projeler/el-ele-apartmani'} />
+    <p class="kca-mockline"><MockChip /></p>
+  </div>
+
+  <!-- FİLTRE + DAİRE KARTLARI (ada) -->
+  <section class="container-site kca-units" id="daireler" aria-label="El Ele Apartmanı daireleri">
+    <div class="kca-units-head">
+      <h2 class="kc-h2">El Ele Apartmanı — Daireler</h2>
+      <p class="t-caption kca-units-sub">10 dairelik binada 2 dubleks satışta; kalan daireler teslim edildi.</p>
+    </div>
+    <UnitsExplorer client:load mode="a" items={items} />
+  </section>
+
+  <!-- ÖNE ÇIKAN PROJE + MÜSAİTLİK MATRİSİ -->
+  <section class="container-site kc-section" aria-label="Proje ve kat durumu">
+    <div class="kca-split">
+      <article class="kca-featured card">
+        <div class="kca-featured-media">
+          <Image src={featured.img} alt={featured.alt} widths={[640, 1080]} sizes="(min-width: 1024px) 560px, 94vw" />
+          <span class="kx-badge">ÖNE ÇIKAN</span>
+        </div>
+        <div class="kca-featured-body">
+          <h3 class="t-heading-m">{building.name}</h3>
+          <p class="t-tech kca-featured-loc"><Icon name="pin" size={14} /> Marmara Sahili / İstanbul</p>
+          <p class="t-caption kca-featured-intro">{building.intro}</p>
+          <div class="kca-featured-actions">
+            <button type="button" class="btn-ghost kca-sm-btn" data-soon="Proje broşürü" data-testid="kc-brosur">
+              <Icon name="doc" size={16} /> Proje Broşürü
+            </button>
+            <button type="button" class="btn-ghost kca-sm-btn" data-soon="Sanal tur" data-testid="kc-sanal-tur">
+              <Icon name="expand" size={16} /> Sanal Tur
+            </button>
+          </div>
+        </div>
+      </article>
+      <AvailabilityMatrix />
+    </div>
+  </section>
+
+  <!-- YAKIN LOKASYONLAR -->
+  <section class="container-site kc-section-tight" aria-label="Konum ve yakın çevre">
+    <MapPanel />
+  </section>
+
+  <!-- NEDEN + DAİRE TİPLERİ -->
+  <section class="container-site kc-section" aria-label="Neden El Ele ve daire tipleri">
+    <div class="kca-why card">
+      <FeatureRow />
+      <div class="kca-why-sep" aria-hidden="true"></div>
+      <TypeCards unitsHref="#daireler" />
+    </div>
+  </section>
+
+  <!-- CTA BANDI -->
+  <div class="container-site kca-cta">
+    <CtaBand base={base} />
+  </div>
+
+  <SoonDialog />
+</Base>
+
+<style>
+  .kca-hero { position: relative; overflow: hidden; }
+  .kca-hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+  .kca-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(14 15 17 / 0.9) 0%, rgb(14 15 17 / 0.72) 45%, rgb(14 15 17 / 0.35) 100%);
+  }
+  .kca-hero-in { position: relative; padding-block: 2.75rem 4.25rem; }
+  .kca-hero-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.4vw, 2.7rem);
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-top: 0.5rem;
+    max-width: 22ch;
+  }
+  .kca-hero-sub { margin-top: 0.7rem; max-width: 52ch; color: rgb(244 244 242 / 0.8); font-size: 0.9375rem; }
+  .kca-hero-cta { margin-top: 1.1rem; }
+
+  .kca-strip { margin-top: -2rem; position: relative; }
+  .kca-mockline { margin-top: 0.5rem; text-align: end; }
+
+  .kca-units { padding-block: 1rem 0.5rem; }
+  .kca-units-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+  .kca-units-sub { color: var(--color-graphite-400); }
+
+  .kca-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .kca-featured { overflow: hidden; }
+  .kca-featured-media { position: relative; }
+  .kca-featured-media img { width: 100%; height: 230px; object-fit: cover; display: block; }
+  .kca-featured-body { padding: 1rem 1.1rem 1.1rem; }
+  .kca-featured-loc { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--color-graphite-400); margin-top: 0.3rem; }
+  .kca-featured-intro { margin-top: 0.6rem; }
+  .kca-featured-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.85rem; }
+  .kca-sm-btn { padding: 0.5rem 0.9rem; font-size: 0.875rem; }
+
+  .kca-why { padding: 1.25rem 1.4rem 1.4rem; }
+  .kca-why-sep { border-top: 1px solid var(--color-line); margin-block: 1.25rem; }
+
+  .kca-cta { padding-block: 0.5rem 2.25rem; }
+
+  @media (max-width: 1023px) {
+    .kca-split { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

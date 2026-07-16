@@ -1,0 +1,165 @@
+---
+/*
+  Yapışkan sağ ray — satış ofisi kartı (gerçek telefon yayınlanana dek dürüst
+  "yakında" düğmeleri), Hızlı Bilgi Alın mini formu (mock), belge bağlantıları
+  ve güven kalemleri. İki detay dizilimi aynı bileşeni farklı seçeneklerle kullanır.
+*/
+import Icon from './Icon.astro';
+import RailForm from './RailForm.tsx';
+
+interface Props {
+  konu: string;
+  base: string;
+  /** detay B: belge listesi (broşür/kat planı/şartname) göster */
+  docs?: boolean;
+  /** detay A: fiyat alarmı kutusu göster */
+  alarm?: boolean;
+}
+const { konu, base, docs = false, alarm = false } = Astro.props;
+
+const docList = ['Proje Broşürü', 'Kat Planı', 'Teknik Şartname'];
+const trust = [
+  { icon: 'shield', title: 'Tapu güvencesi', sub: 'Kat mülkiyeti ile alım' },
+  { icon: 'key', title: 'Aracısız satış', sub: 'Doğrudan müteahhitten' },
+  { icon: 'chat', title: 'Satış sonrası destek', sub: 'Tek muhatap: Mey İnşaat' },
+];
+---
+
+<aside class="kc-rail" data-testid="kc-rail">
+  <div class="kc-rail-office theatre">
+    <p class="t-tech kc-rail-kicker">MEY İNŞAAT · SATIŞ OFİSİ</p>
+    <button type="button" class="kc-rail-btn" data-soon="Satış hattı" data-testid="kc-rail-phone">
+      <Icon name="phone" size={17} /> Satış hattı — yakında
+    </button>
+    <button type="button" class="kc-rail-btn" data-soon="WhatsApp hattı">
+      <Icon name="chat" size={17} /> WhatsApp — yakında
+    </button>
+    <a class="kc-rail-btn is-solid" href={base + '/iletisim'}>
+      <Icon name="mail" size={17} /> Mesaj Gönder
+    </a>
+  </div>
+
+  <div class="kc-rail-form">
+    <h3 class="t-heading-s">Hızlı Bilgi Alın</h3>
+    <p class="t-caption kc-rail-formsub">{konu} hakkında bilgi isteyin; size dönelim.</p>
+    <RailForm client:load konu={konu} />
+  </div>
+
+  {docs && (
+    <div class="kc-rail-docs card">
+      <h3 class="t-heading-s">Dokümanlar</h3>
+      <ul>
+        {docList.map((d) => (
+          <li>
+            <button type="button" class="kc-rail-doc" data-soon={d}>
+              <Icon name="doc" size={17} /> <span>{d}</span>
+              <span class="t-tech kc-rail-doc-tag">YAKINDA</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {alarm && (
+    <div class="kc-rail-alarm card">
+      <h3 class="t-heading-s">Fiyat Alarmı Kur</h3>
+      <p class="t-caption">Fiyat değişirse haber verelim.</p>
+      <button type="button" class="kc-rail-btn is-line" data-soon="Fiyat alarmı" data-testid="kc-rail-alarm">
+        <Icon name="alarm" size={17} /> Fiyat Alarmı Kur
+      </button>
+    </div>
+  )}
+
+  <ul class="kc-rail-trust card">
+    {trust.map((t) => (
+      <li>
+        <span class="kc-rail-trust-ic"><Icon name={t.icon} size={19} /></span>
+        <div>
+          <p class="kc-rail-trust-title">{t.title}</p>
+          <p class="kc-rail-trust-sub">{t.sub}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+</aside>
+
+<style>
+  .kc-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    position: sticky;
+    top: 1rem;
+  }
+  .kc-rail-office {
+    border-radius: var(--radius-brand);
+    padding: 1rem 1.1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .kc-rail-kicker { color: var(--color-mey-teal); margin-bottom: 0.2rem; }
+  .kc-rail-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid rgb(255 255 255 / 0.35);
+    border-radius: var(--radius-brand);
+    background: none;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 150ms ease-out;
+  }
+  .kc-rail-btn:hover { background: rgb(255 255 255 / 0.08); }
+  .kc-rail-btn.is-solid { background: var(--color-mey-red); border-color: var(--color-mey-red); }
+  .kc-rail-btn.is-solid:hover { background: var(--color-mey-red-700); }
+  .kc-rail-btn.is-line {
+    color: var(--color-graphite-900);
+    border-color: var(--color-graphite-900);
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+  .kc-rail-btn.is-line:hover { background: var(--color-concrete-100); }
+  .kc-rail-form {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    padding: 1rem 1.1rem 1.1rem;
+  }
+  .kc-rail-form :global(.kcf) { border: none; padding: 0; margin-top: 0.6rem; }
+  .kc-rail-formsub { color: var(--color-graphite-400); margin-top: 0.2rem; }
+  .kc-rail-docs, .kc-rail-alarm { padding: 1rem 1.1rem 1.1rem; }
+  .kc-rail-docs ul { margin-top: 0.5rem; }
+  .kc-rail-doc {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--color-graphite-900);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.5rem 0;
+    cursor: pointer;
+    text-align: start;
+  }
+  .kc-rail-doc:hover span:first-of-type { color: var(--color-mey-red); }
+  .kc-rail-docs li:last-child .kc-rail-doc { border-bottom: none; }
+  .kc-rail-doc-tag { margin-inline-start: auto; color: var(--color-graphite-400); }
+  .kc-rail-trust { padding: 0.9rem 1.1rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .kc-rail-trust li { display: flex; gap: 0.6rem; align-items: flex-start; }
+  .kc-rail-trust-ic { color: var(--color-mey-teal-700); display: inline-flex; margin-top: 0.1rem; }
+  .kc-rail-trust-title { font-weight: 600; font-size: 0.875rem; color: var(--color-graphite-900); line-height: 1.25; }
+  .kc-rail-trust-sub { font-size: 0.8125rem; color: var(--color-graphite-400); }
+  @media (max-width: 1023px) {
+    .kc-rail { position: static; }
+  }
+</style>

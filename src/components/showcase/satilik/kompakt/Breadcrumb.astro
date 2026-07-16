@@ -1,0 +1,27 @@
+---
+/* İçerik haritası kırıntısı — her halka gerçek bir sayfaya gider. */
+interface Props {
+  items: { label: string; href?: string }[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="kc-crumb" aria-label="Sayfa yolu" data-testid="kc-breadcrumb">
+  <ol>
+    {items.map((it, i) => (
+      <li>
+        {it.href ? <a href={it.href}>{it.label}</a> : <span aria-current="page">{it.label}</span>}
+        {i < items.length - 1 && <span class="kc-crumb-sep" aria-hidden="true">›</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .kc-crumb ol { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+  .kc-crumb li { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8125rem; }
+  .kc-crumb a { color: var(--color-graphite-400); }
+  .kc-crumb a:hover { color: var(--color-mey-red); }
+  .kc-crumb span[aria-current] { color: var(--color-graphite-900); font-weight: 500; }
+  .kc-crumb-sep { color: var(--color-graphite-400); }
+</style>

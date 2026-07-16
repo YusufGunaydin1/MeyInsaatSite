@@ -1,0 +1,121 @@
+---
+/*
+  Ödeme planı — iki mod: 'table' (detay A: satırlar + toplam; satır toplamı
+  fiyata eşittir, e2e bunu ölçer) ve 'strip' (detay B: finansman şeridi).
+*/
+import Icon from './Icon.astro';
+import { odemePlani, finansman, tl } from './data';
+
+interface Props {
+  fiyat: number;
+  mode?: 'table' | 'strip';
+}
+const { fiyat, mode = 'table' } = Astro.props;
+const plan = odemePlani(fiyat);
+const fin = finansman(fiyat);
+---
+
+{mode === 'table' ? (
+  <div class="kc-pay" data-testid="kc-payment">
+    <h3 class="t-heading-s">Ödeme Planı</h3>
+    <table class="kc-pay-table">
+      <tbody>
+        {plan.rows.map((r) => (
+          <tr data-testid="kc-payment-row">
+            <th scope="row">{r.ad}</th>
+            <td class="t-tech">{r.oran}</td>
+            <td class="kc-pay-tutar tabular-nums" data-tutar={r.tutar}>{tl(r.tutar)}</td>
+          </tr>
+        ))}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row">Toplam</th>
+          <td class="t-tech">%100</td>
+          <td class="kc-pay-tutar tabular-nums" data-testid="kc-payment-total" data-tutar={plan.toplam}>
+            {tl(plan.toplam)}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="kc-pay-foot">
+      <p class="t-caption kc-pay-note">Banka kredisine uygundur.</p>
+      <button type="button" class="kc-pay-cta" data-soon="Kredi teklifi">
+        <Icon name="doc" size={16} /> Kredi Teklifi Al
+      </button>
+    </div>
+  </div>
+) : (
+  <div class="kc-fin theatre" data-testid="kc-finance">
+    <div class="kc-fin-head">
+      <h3 class="t-heading-s kc-fin-title">Finansman Seçenekleri</h3>
+      <p class="t-caption kc-fin-sub">Kredi seçeneklerini karşılaştırın, uygun teklifi alın.</p>
+    </div>
+    <dl class="kc-fin-grid">
+      <div><dt class="t-tech">Peşinat</dt><dd><strong>{fin.pesinatOran}</strong><span class="tabular-nums">{tl(fin.pesinat)}</span></dd></div>
+      <div><dt class="t-tech">Kalan Tutar</dt><dd><strong>{fin.kalanOran}</strong><span class="tabular-nums">{tl(fin.kalan)}</span></dd></div>
+      <div><dt class="t-tech">Vade</dt><dd><strong>{fin.vade}</strong><span>banka kredisi</span></dd></div>
+      <div><dt class="t-tech">Tahmini Aylık Taksit</dt><dd><strong class="tabular-nums">{tl(fin.taksit)}</strong><span>’den başlayan</span></dd></div>
+    </dl>
+    <button type="button" class="btn-primary kc-fin-cta" data-soon="Kredi teklifi">Kredi Teklifini Al</button>
+  </div>
+)}
+
+<style>
+  .kc-pay-table { width: 100%; border-collapse: collapse; margin-top: 0.7rem; }
+  .kc-pay-table th {
+    text-align: start;
+    font-weight: 500;
+    color: var(--color-graphite-600);
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--color-line);
+    font-size: 0.875rem;
+  }
+  .kc-pay-table td {
+    padding: 0.45rem 0 0.45rem 0.75rem;
+    border-bottom: 1px solid var(--color-line);
+    color: var(--color-graphite-400);
+    white-space: nowrap;
+  }
+  .kc-pay-tutar { text-align: end; font-weight: 600; color: var(--color-graphite-900) !important; font-size: 0.9375rem; }
+  .kc-pay-table tfoot th, .kc-pay-table tfoot td { border-bottom: none; border-top: 2px solid var(--color-graphite-900); }
+  .kc-pay-table tfoot th { font-weight: 600; color: var(--color-graphite-900); }
+  .kc-pay-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-top: 0.7rem; flex-wrap: wrap; }
+  .kc-pay-note { color: var(--color-graphite-400); }
+  .kc-pay-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-graphite-900);
+    border: 1px solid var(--color-graphite-900);
+    border-radius: var(--radius-brand);
+    padding: 0.45rem 0.8rem;
+    transition: background-color 200ms ease-out;
+  }
+  .kc-pay-cta:hover { background: var(--color-concrete-100); }
+
+  .kc-fin {
+    border-radius: var(--radius-brand);
+    padding: 1.2rem 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .kc-fin-head { min-width: 180px; }
+  .kc-fin-title { color: #fff; }
+  .kc-fin-sub { color: rgb(244 244 242 / 0.6); margin-top: 0.2rem; max-width: 26ch; }
+  .kc-fin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1.25rem;
+    flex: 1;
+    min-width: 260px;
+  }
+  .kc-fin-grid dt { color: rgb(244 244 242 / 0.55); }
+  .kc-fin-grid dd { margin-top: 0.3rem; display: flex; flex-direction: column; }
+  .kc-fin-grid strong { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; color: #fff; line-height: 1.1; }
+  .kc-fin-grid span { font-size: 0.8125rem; color: rgb(244 244 242 / 0.65); }
+</style>

@@ -1,0 +1,101 @@
+---
+/*
+  Kat & Daire Durumu matrisi — ref-a. Gerçek: yalnız iki dubleks MÜSAİT, kalan
+  daireler SATILDI, zemin '—'. Rezerve lejantta durur (bugün 0 adet). Renk tek
+  başına taşımaz: her hücre durumunu metinle de söyler (WCAG).
+*/
+import { matris } from './data';
+
+const stateClass = { musait: 'is-musait', rezerve: 'is-rezerve', satildi: 'is-satildi', yok: 'is-yok' } as const;
+const stateText = { musait: 'Müsait', rezerve: 'Rezerve', satildi: 'Satıldı', yok: '—' } as const;
+---
+
+<div class="kc-matrix card" data-testid="kc-matrix">
+  <div class="kc-matrix-head">
+    <h3 class="t-heading-s">Kat &amp; Daire Durumu</h3>
+    <ul class="kc-legend" data-testid="kc-matrix-legend">
+      {matris.legend.map((l) => (
+        <li class:list={['t-tech kc-legend-item', stateClass[l.durum]]}>
+          <span class="kc-legend-dot" aria-hidden="true"></span>{l.label}
+        </li>
+      ))}
+    </ul>
+  </div>
+  <table class="kc-matrix-table">
+    <thead>
+      <tr>
+        <th scope="col" class="t-tech">Kat</th>
+        <th scope="col" class="t-tech">Batı Daire</th>
+        <th scope="col" class="t-tech">Doğu Daire</th>
+      </tr>
+    </thead>
+    <tbody>
+      {matris.rows.map((row) => (
+        <tr>
+          <th scope="row" class="t-tech">{row.kat}</th>
+          {row.cells.map((c) => (
+            <td class:list={['kc-cell', stateClass[c.durum]]} data-durum={c.durum}>
+              <span class="kc-cell-label">{c.label}</span>
+              {c.sub && <span class="kc-cell-sub">{c.sub}</span>}
+              <span class="kc-cell-state t-tech">{stateText[c.durum]}</span>
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .kc-matrix { padding: 1rem 1.1rem 1.1rem; }
+  .kc-matrix-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+  .kc-legend { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .kc-legend-item { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-graphite-400); }
+  .kc-legend-dot { width: 10px; height: 10px; border-radius: var(--radius-brand); background: currentColor; }
+  .kc-legend-item.is-musait .kc-legend-dot { background: var(--color-mey-teal-700); }
+  .kc-legend-item.is-rezerve .kc-legend-dot { background: #c98a2d; }
+  .kc-legend-item.is-satildi .kc-legend-dot { background: var(--color-mey-red); }
+
+  .kc-matrix-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .kc-matrix-table thead th {
+    text-align: start;
+    color: var(--color-graphite-400);
+    padding: 0.35rem 0.45rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .kc-matrix-table thead th:first-child { width: 4.6rem; }
+  .kc-matrix-table tbody th {
+    text-align: start;
+    color: var(--color-graphite-600);
+    padding: 0.45rem;
+    border-bottom: 1px solid var(--color-line);
+    white-space: nowrap;
+  }
+  .kc-cell {
+    border-bottom: 1px solid var(--color-line);
+    border-inline-start: 1px solid var(--color-line);
+    padding: 0.4rem 0.55rem;
+    line-height: 1.25;
+  }
+  .kc-cell-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    color: var(--color-graphite-900);
+  }
+  .kc-cell-sub { display: block; font-size: 0.75rem; color: var(--color-graphite-400); }
+  .kc-cell-state { display: block; margin-top: 0.15rem; }
+  .kc-cell.is-musait { background: rgb(73 193 198 / 0.12); }
+  .kc-cell.is-musait .kc-cell-state { color: var(--color-mey-teal-700); }
+  .kc-cell.is-satildi { background: rgb(181 35 35 / 0.06); }
+  .kc-cell.is-satildi .kc-cell-state { color: var(--color-mey-red); }
+  .kc-cell.is-satildi .kc-cell-label { color: var(--color-graphite-400); font-weight: 500; }
+  .kc-cell.is-yok .kc-cell-state { color: var(--color-graphite-400); }
+</style>

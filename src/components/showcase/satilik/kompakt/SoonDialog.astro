@@ -1,0 +1,52 @@
+---
+/*
+  "Yakında" diyaloğu — broşür/sanal tur/kredi teklifi/satış hattı gibi henüz
+  var olmayan uçlar İÇİN dürüst tek kapı: sayfadaki her [data-soon] düğmesi bu
+  yerel <dialog>'u açar (ölü uç yok; sahte indirme/sahte numara yok).
+  Sayfa başına BİR kez eklenir.
+*/
+---
+
+<dialog class="kc-soon" data-testid="kc-soon-dialog">
+  <p class="t-tech kc-soon-kicker">YAKINDA</p>
+  <h3 class="t-heading-s" data-soon-title>Bu içerik hazırlanıyor</h3>
+  <p class="t-caption kc-soon-text">
+    Satış bilgileri yayınlandığında bu bağlantı aktif olacak. Şimdilik randevu
+    formunu kullanabilir ya da İletişim sayfasından bize ulaşabilirsiniz.
+  </p>
+  <form method="dialog">
+    <button class="btn-ghost kc-soon-close" data-testid="kc-soon-close">Kapat</button>
+  </form>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('.kc-soon');
+  const title = dialog?.querySelector<HTMLElement>('[data-soon-title]');
+  if (dialog && title) {
+    for (const btn of document.querySelectorAll<HTMLElement>('[data-soon]')) {
+      btn.addEventListener('click', () => {
+        title.textContent = `${btn.dataset.soon} — hazırlanıyor`;
+        dialog.showModal();
+      });
+    }
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  }
+</script>
+
+<style>
+  .kc-soon {
+    margin: auto;
+    width: min(92vw, 420px);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    padding: 1.4rem 1.5rem;
+    background: #fff;
+    color: var(--color-graphite-600);
+  }
+  .kc-soon::backdrop { background: rgb(14 15 17 / 0.6); }
+  .kc-soon-kicker { color: var(--color-mey-red); margin-bottom: 0.4rem; }
+  .kc-soon-text { margin-top: 0.5rem; }
+  .kc-soon-close { margin-top: 1rem; padding: 0.5rem 1rem; }
+</style>

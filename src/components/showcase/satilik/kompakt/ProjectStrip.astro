@@ -1,0 +1,114 @@
+---
+/*
+  Proje seçici şeridi — ref-a: hero'nun altına bindirilmiş yatay proje kartları.
+  Aktif proje kırmızı; diğer kartlar gerçek proje sayfalarına gider (ölü uç yok).
+  Satış vitrini yalnız El Ele'de olduğundan diğerleri "satış bilgisi yakında" notu taşır.
+*/
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { publicAsset, entry } from '../media';
+import aliImg from '../../../../assets/projects/ali.webp';
+import sapanImg from '../../../../assets/projects/sapanbaglari.webp';
+
+interface Props {
+  base: string;
+}
+const { base } = Astro.props;
+
+const elEleKey = 'daire-1/bina-dis.png';
+const elEle = { img: publicAsset(elEleKey), alt: entry(elEleKey).alt };
+---
+
+<nav class="kc-pstrip" aria-label="Proje seçimi" data-testid="kc-project-strip">
+  <a class="kc-ptile is-active" href={base + '/showcases/satilik-daireler/kompakt/'} aria-current="page">
+    <Image src={elEle.img} alt="" widths={[160]} sizes="72px" class="kc-ptile-img" />
+    <div>
+      <p class="kc-ptile-name">El Ele Apartmanı</p>
+      <p class="t-tech kc-ptile-sub">2 satılık dubleks</p>
+    </div>
+  </a>
+  <a class="kc-ptile" href={base + '/projeler/ali'}>
+    <Image src={aliImg} alt="" widths={[160]} sizes="72px" class="kc-ptile-img" />
+    <div>
+      <p class="kc-ptile-name">Ali Apartmanı</p>
+      <p class="t-tech kc-ptile-sub">Satış bilgisi yakında</p>
+    </div>
+  </a>
+  <a class="kc-ptile" href={base + '/projeler/sapanbaglari'}>
+    <Image src={sapanImg} alt="" widths={[160]} sizes="72px" class="kc-ptile-img" />
+    <div>
+      <p class="kc-ptile-name">Sapanbağları</p>
+      <p class="t-tech kc-ptile-sub">Satış bilgisi yakında</p>
+    </div>
+  </a>
+  <a class="kc-ptile kc-ptile-all" href={base + '/projeler'}>
+    <span class="kc-ptile-allicon"><Icon name="building" size={22} /></span>
+    <div>
+      <p class="kc-ptile-name">Tüm Projeler</p>
+      <p class="t-tech kc-ptile-sub">Projelerimizi inceleyin</p>
+    </div>
+  </a>
+</nav>
+
+<style>
+  .kc-pstrip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    background: var(--color-night-800);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+  }
+  .kc-ptile {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 0.9rem;
+    border-inline-end: 1px solid rgb(255 255 255 / 0.08);
+    color: var(--color-concrete-100);
+    transition: background-color 150ms ease-out;
+    min-width: 0;
+  }
+  .kc-ptile:last-child { border-inline-end: none; }
+  .kc-ptile:hover { background: rgb(255 255 255 / 0.06); }
+  .kc-ptile.is-active { background: var(--color-mey-red); }
+  .kc-ptile.is-active:hover { background: var(--color-mey-red-700); }
+  .kc-ptile-img {
+    width: 56px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: var(--radius-brand);
+    flex-shrink: 0;
+  }
+  .kc-ptile-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .kc-ptile-sub { color: rgb(244 244 242 / 0.65); margin-top: 0.2rem; }
+  .kc-ptile.is-active .kc-ptile-sub { color: rgb(255 255 255 / 0.8); }
+  .kc-ptile-allicon {
+    width: 56px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgb(255 255 255 / 0.3);
+    border-radius: var(--radius-brand);
+    color: var(--color-mey-teal);
+    flex-shrink: 0;
+  }
+  @media (max-width: 900px) {
+    .kc-pstrip {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(200px, 1fr);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+</style>

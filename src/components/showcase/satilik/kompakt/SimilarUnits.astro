@@ -1,0 +1,81 @@
+---
+/*
+  Benzer daireler — gerçek benzer tek daire diğer dublekstir; yanına diğer proje
+  teaser'ları gelir (fiyat/müsaitlik UYDURULMAZ: "satış bilgisi yakında").
+  Sıra sayfaya özgüdür (detay.benzerSira) — klon sayfa hissi vermez.
+*/
+import { Image } from 'astro:assets';
+import { publicAsset, entry } from '../media';
+import { detay, projeTeasers, tl, unitById } from './data';
+import aliImg from '../../../../assets/projects/ali.webp';
+import sapanImg from '../../../../assets/projects/sapanbaglari.webp';
+
+interface Props {
+  current: 'daire-1' | 'daire-2';
+  base: string;
+}
+const { current, base } = Astro.props;
+const d = detay[current];
+const teaserImg = { ali: aliImg, sapanbaglari: sapanImg } as const;
+const kompaktBase = base + '/showcases/satilik-daireler/kompakt/';
+---
+
+<section class="kc-similar" data-testid="kc-similar">
+  <h2 class="t-heading-m">Benzer Daireler</h2>
+  <div class="kc-similar-grid">
+    {d.benzerSira.map((id) => {
+      const u = unitById(id)!;
+      return (
+        <article class="kc-sim card">
+          <Image src={publicAsset(u.foto!)} alt={entry(u.foto!).alt} widths={[420, 720]} sizes="(min-width: 900px) 300px, 94vw" class="kc-sim-img" />
+          <div class="kc-sim-body">
+            <p class="t-tech kc-sim-durum">MÜSAİT · {u.no}</p>
+            <p class="kc-sim-ad">{u.tip} — {u.kat}</p>
+            <p class="kc-sim-meta">Brüt {u.brut} m² · {u.cephe}</p>
+            <p class="kc-sim-fiyat tabular-nums">{tl(u.fiyat!)}</p>
+            <a class="kc-sim-cta" href={kompaktBase + u.detay} data-testid={`kc-sim-${u.detay}`}>Detaylı İncele</a>
+          </div>
+        </article>
+      );
+    })}
+    {projeTeasers.map((t) => (
+      <article class="kc-sim card is-teaser">
+        <Image src={teaserImg[t.slug as keyof typeof teaserImg]} alt={t.ad} widths={[420, 720]} sizes="(min-width: 900px) 300px, 94vw" class="kc-sim-img" />
+        <div class="kc-sim-body">
+          <p class="t-tech kc-sim-durum is-mute">{t.not.toUpperCase()}</p>
+          <p class="kc-sim-ad">{t.ad}</p>
+          <p class="kc-sim-meta">{t.konum}</p>
+          <a class="kc-sim-cta is-ghost" href={base + '/projeler/' + t.slug}>Projeyi Gör</a>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .kc-similar-grid {
+    margin-top: 0.9rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.9rem;
+  }
+  .kc-sim { overflow: hidden; display: flex; flex-direction: column; }
+  .kc-sim-img { width: 100%; height: 150px; object-fit: cover; display: block; }
+  .kc-sim.is-teaser .kc-sim-img { filter: saturate(0.7); }
+  .kc-sim-body { padding: 0.75rem 0.9rem 0.9rem; display: flex; flex-direction: column; flex: 1; }
+  .kc-sim-durum { color: var(--color-mey-teal-700); }
+  .kc-sim-durum.is-mute { color: var(--color-graphite-400); }
+  .kc-sim-ad { margin-top: 0.3rem; font-weight: 600; color: var(--color-graphite-900); font-size: 0.9375rem; line-height: 1.3; }
+  .kc-sim-meta { font-size: 0.8125rem; color: var(--color-graphite-400); }
+  .kc-sim-fiyat { margin-top: 0.35rem; font-weight: 600; color: var(--color-graphite-900); }
+  .kc-sim-cta {
+    margin-top: auto;
+    padding-top: 0.6rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-mey-red);
+  }
+  .kc-sim-cta:hover { color: var(--color-mey-red-700); text-decoration: underline; }
+  .kc-sim-cta.is-ghost { color: var(--color-graphite-600); }
+  .kc-sim-cta.is-ghost:hover { color: var(--color-graphite-900); }
+</style>

@@ -1,0 +1,77 @@
+---
+/* Proje stat barı — ref-a: hero'nun hemen altında beyaz, tek satır bilgi şeridi. */
+import Icon from './Icon.astro';
+import { proje } from './data';
+
+interface Props {
+  detailHref: string;
+}
+const { detailHref } = Astro.props;
+
+const stats = [
+  { icon: 'pin', label: 'Lokasyon', value: proje.lokasyon },
+  { icon: 'building', label: 'Toplam Daire', value: String(proje.toplamDaire) },
+  { icon: 'layers', label: 'Blok / Kat', value: `${proje.blok} blok · ${proje.kat} kat` },
+  { icon: 'calendar', label: 'Teslim', value: proje.teslim },
+  { icon: 'flag', label: 'Proje Durumu', value: proje.durum },
+];
+---
+
+<div class="kc-statbar card" data-testid="kc-statbar">
+  {stats.map((s) => (
+    <div class="kc-stat">
+      <span class="kc-stat-icon"><Icon name={s.icon} size={20} /></span>
+      <div>
+        <p class="t-tech kc-stat-label">{s.label}</p>
+        <p class="kc-stat-value">{s.value}</p>
+      </div>
+    </div>
+  ))}
+  <a class="kc-stat-link" href={detailHref}>
+    Proje Detayları <Icon name="arrow-right" size={16} />
+  </a>
+</div>
+
+<style>
+  .kc-statbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.75rem;
+    padding: 0.85rem 1.25rem;
+  }
+  .kc-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+  .kc-stat-icon { color: var(--color-mey-red); display: inline-flex; }
+  .kc-stat-label { color: var(--color-graphite-400); }
+  .kc-stat-value {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 1.25;
+    color: var(--color-graphite-900);
+    white-space: nowrap;
+  }
+  .kc-stat-link {
+    margin-inline-start: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--color-graphite-900);
+    border: 1px solid var(--color-graphite-900);
+    border-radius: var(--radius-brand);
+    padding: 0.5rem 0.9rem;
+    white-space: nowrap;
+    transition: background-color 200ms ease-out;
+  }
+  .kc-stat-link:hover { background: var(--color-concrete-100); }
+  @media (max-width: 900px) {
+    .kc-statbar { gap: 0.7rem 1.25rem; }
+    .kc-stat-link { margin-inline-start: 0; }
+  }
+</style>

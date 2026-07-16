@@ -1,0 +1,45 @@
+---
+/* Yoğun künye ızgarası — etiket:değer çiftleri, ince çizgili satırlar. */
+import type { SpecItem } from './data';
+
+interface Props {
+  items: SpecItem[];
+  columns?: 1 | 2 | 3;
+  testid?: string;
+}
+const { items, columns = 2, testid = 'kc-specs' } = Astro.props;
+---
+
+<dl class:list={['kc-specs', `kc-specs-${columns}`]} data-testid={testid}>
+  {items.map((s) => (
+    <div class="kc-spec">
+      <dt>{s.label}</dt>
+      <dd>{s.value}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  .kc-specs {
+    display: grid;
+    column-gap: 2rem;
+  }
+  .kc-specs-1 { grid-template-columns: minmax(0, 1fr); }
+  .kc-specs-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kc-specs-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .kc-spec {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 0.42rem;
+    border-bottom: 1px solid var(--color-line);
+    font-size: 0.875rem;
+    min-width: 0;
+  }
+  .kc-spec dt { color: var(--color-graphite-400); white-space: nowrap; }
+  .kc-spec dd { color: var(--color-graphite-900); font-weight: 500; text-align: end; }
+  @media (max-width: 760px) {
+    .kc-specs-2, .kc-specs-3 { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

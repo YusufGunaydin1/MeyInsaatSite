@@ -1,0 +1,41 @@
+---
+/* "Neden El Ele?" ikon şeridi — fotoğrafların desteklediği nitelikler (data.ts). */
+import Icon from './Icon.astro';
+import { nedenler } from './data';
+
+interface Props {
+  title?: string;
+}
+const { title = 'Neden El Ele Apartmanı?' } = Astro.props;
+---
+
+<div class="kc-features" data-testid="kc-features">
+  <h3 class="t-heading-s">{title}</h3>
+  <ul>
+    {nedenler.map((n) => (
+      <li>
+        <span class="kc-feature-ic"><Icon name={n.icon} size={20} /></span>
+        <p class="kc-feature-title">{n.title}</p>
+        <p class="kc-feature-sub">{n.sub}</p>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .kc-features ul {
+    margin-top: 0.85rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1rem;
+  }
+  .kc-feature-ic { color: var(--color-mey-red); display: inline-flex; }
+  .kc-feature-title {
+    margin-top: 0.4rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-graphite-900);
+    line-height: 1.25;
+  }
+  .kc-feature-sub { font-size: 0.8125rem; color: var(--color-graphite-400); line-height: 1.35; }
+</style>
