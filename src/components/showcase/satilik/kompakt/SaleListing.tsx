@@ -256,13 +256,14 @@ export default function SaleListing({ items, projeler }: Props) {
                 {u.sold
                   ? <span className="kl-sold" data-testid={`kl-sold-${u.projeKey}`}>TÜMÜ SATILDI</span>
                   : u.rozet && <span className="kl-badge is-red">{u.rozet}</span>}
+                <span className="kl-badge is-dark kl-kind">PROJE</span>
               </div>
               <div className="kl-card-body">
                 <h3 className="kl-card-title">{u.ad}</h3>
                 <p className="kl-card-proje">{u.konum} · Tamamlandı</p>
                 <p className="kl-proje-not">{u.not}</p>
                 <div className="kl-card-foot">
-                  <a className="kl-detail" href={u.href} data-testid={`kl-proje-${u.projeKey}`}>Projeyi İncele ›</a>
+                  <a className="kl-detail kl-detail-ghost" href={u.href} data-testid={`kl-proje-${u.projeKey}`}>Projeyi İncele ›</a>
                 </div>
               </div>
             </article>

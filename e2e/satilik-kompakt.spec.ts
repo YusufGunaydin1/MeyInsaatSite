@@ -58,6 +58,23 @@ test('liste: 2 gerçek ilan + 3 proje kartı; satılmışlar beyaz-üstü-kırm�
   await expect(page.getByTestId('kl-proje-el-ele')).toHaveAttribute('href', /projeler\/el-ele-apartmani$/);
   await expect(page.getByTestId('kl-proje-ali')).toHaveAttribute('href', /projeler\/ali$/);
   await expect(page.getByTestId('kl-detay-d11')).toHaveAttribute('href', /satilik-daireler\/daire-1$/);
+  // CTA hiyerarşisi: ilan Detayları Gör beyaz-üstü-kırmızı; proje Projeyi İncele hayalet kalır
+  const cta = page.getByTestId('kl-detay-d11');
+  const [ctaBg, ctaFg] = await cta.evaluate((el) => {
+    const s = getComputedStyle(el);
+    return [s.backgroundColor, s.color];
+  });
+  expect(ctaBg, 'ilan CTA zemini').toBe('rgb(181, 35, 35)');
+  expect(ctaFg, 'ilan CTA yazısı').toBe('rgb(255, 255, 255)');
+  const ghostBg = await page.getByTestId('kl-proje-ali').evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(ghostBg, 'proje CTA zemin dolgusuz').toBe('rgba(0, 0, 0, 0)');
+  // ince tür ayrımı: proje gövdesi beton tonlu (ilan beyaz) + fotoğrafta PROJE çipi
+  const binaBg = await page.locator('[data-kind="proje"]').first().evaluate((el) => getComputedStyle(el).backgroundColor);
+  const ilanBg = await page.locator('[data-kind="ilan"]').first().evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(binaBg).toBe('rgb(244, 244, 242)');
+  expect(ilanBg).toBe('rgb(255, 255, 255)');
+  await expect(page.locator('[data-kind="proje"] .kl-kind')).toHaveCount(3);
+  await expect(page.locator('[data-kind="proje"] .kl-kind').first()).toHaveText('PROJE');
 });
 
 test('liste: sekme + filtre + sıralama + favoriler dürüst envanterde', async ({ page }) => {
