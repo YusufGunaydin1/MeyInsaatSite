@@ -11,7 +11,7 @@ import Base from '../../layouts/Base.astro';
 type Demo = {
   title: string;
   desc: string;
-  status: 'live' | 'proposal' | 'arsiv';
+  status: 'live' | 'proposal';
   meta: string;
   href: string;
 };
@@ -19,28 +19,6 @@ type Demo = {
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const demos: Demo[] = [
-  {
-    title: 'CANLI — Satılık Daireler: standart listeleme + 2 daire detayı',
-    desc:
-      'Kabul edilen tasarım prod\'a alındı (2026-07-16): /satilik-daireler ana menüde. ' +
-      'Koyu hero + sekmeler (Tümü/Daire/Dubleks) + canlı filtre/sıralama + kart ızgarası + ' +
-      'karşılaştırma ve hızlı iletişim rayı + kat planları bandı; iki daire detayı. ' +
-      'Sayılar temsilî olduğu için sayfalar gerçek satış verisi girilene dek noindex.',
-    status: 'live',
-    meta: 'features/Satilik*Page · satilik/kompakt bileşenleri · alternatif dizilim: kompakt/vitrin',
-    href: base + '/satilik-daireler',
-  },
-  {
-    title: 'KÖTÜ ÖRNEK — arşiv — Satılık Daireler: Üç Yön (Albüm/Sergi/Akşam)',
-    desc:
-      'Reddedildi (2026-07-16): üç ferah/butik yön de aşırı genişlik ve yanlış bilgi ' +
-      'mimarisi nedeniyle sahip incelemesinden geçemedi. Karşı-örnek olarak arşivde durur; ' +
-      'içerik modeli ve 57 karelik manifest kompakt ailede yeniden kullanıldı. Paralel ' +
-      'ailenin (editoryal/mimari/monolit) karşılaştırması satilik-daireler kökünde.',
-    status: 'arsiv',
-    meta: 'satilik/data.ts · album+sergi+aksam · lab: satilik-daireler/uc-yon',
-    href: base + '/showcases/satilik-daireler/uc-yon',
-  },
   {
     title: 'CANLI — Proje detay mobil: Kompakt Akış',
     desc:
@@ -96,7 +74,7 @@ const demos: Demo[] = [
         {demos.map((d) => (
           <article class="sc-card">
             <span class:list={['t-tech sc-status', d.status]}>
-              {d.status === 'live' ? '● CANLIDA' : d.status === 'arsiv' ? '✕ KÖTÜ ÖRNEK' : '○ ÖNERİ'}
+              {d.status === 'live' ? '● CANLIDA' : '○ ÖNERİ'}
             </span>
             <h2 class="t-heading-s sc-title">{d.title}</h2>
             <p class="t-caption text-concrete-100/60">{d.desc}</p>
@@ -142,7 +120,6 @@ const demos: Demo[] = [
   .sc-status { align-self: flex-start; padding: 0.2rem 0.55rem; border-radius: var(--radius-brand); }
   .sc-status.live { color: #7dd87d; border: 1px solid rgb(125 216 125 / 0.3); }
   .sc-status.proposal { color: var(--color-red-on-dark); border: 1px solid rgb(242 85 90 / 0.3); }
-  .sc-status.arsiv { color: rgb(244 244 242 / 0.45); border: 1px dashed rgb(244 244 242 / 0.3); }
   .sc-open { color: var(--color-mey-teal); margin-top: auto; }
   .sc-open:hover { color: #fff; }
   .sc-empty {
