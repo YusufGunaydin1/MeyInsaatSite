@@ -254,13 +254,15 @@ export interface Teaser {
   slug: string; // /projeler/<slug>
 }
 export const projeTeasers: Teaser[] = [
-  { ad: 'Ali Apartmanı', konum: 'İstanbul', not: 'Satış bilgisi yakında', slug: 'ali' },
-  { ad: 'Sapanbağları', konum: 'İstanbul', not: 'Satış bilgisi yakında', slug: 'sapanbaglari' },
+  { ad: 'Ali Apartmanı', konum: 'İstanbul', not: 'Tümü satıldı', slug: 'ali' },
+  { ad: 'Sapanbağları', konum: 'İstanbul', not: 'Tümü satıldı', slug: 'sapanbaglari' },
 ];
 
-/* ─── LİSTELEME SAYFASI (liste-ref.png) — projeler arası temsilî envanter ───
-   Standart pazaryeri ızgarası; yalnız El Ele'nin iki dubleksi gerçek ilandır
-   (detay sayfasına gider), diğer satırlar temsilî ve proje sayfasına çıkar. */
+/* ─── LİSTELEME SAYFASI (liste-ref.png) — dürüst envanter ───
+   Izgara = 2 gerçek ilan (El Ele dubleksleri, detaya gider) + 3 proje kartı
+   (listingProjeler). Ali ve Sapanbağları'nda satılık daire YOK (gerçek durum) —
+   kırmızı TÜMÜ SATILDI bandı taşır, proje sayfasına çıkar. Uydurma ilan üretme:
+   önceki temsilî Ali/Sapanbağları satırları bu yüzden silindi. */
 export interface ListingUnit {
   id: string;
   mock: true;
@@ -289,30 +291,34 @@ export const listing: ListingUnit[] = [
   { id: 'd12', mock: true, tip: 'dubleks', baslik: '3+2 Dubleks', proje: 'El Ele Apartmanı', projeKey: 'el-ele',
     blokKat: 'A Blok · 5.–6. Kat', oda: '3+2', brut: 176, banyo: 2, balkon: 2, kat: '5.–6. Kat', katKey: '5-6',
     fiyat: 13_750_000, badge: 'SON 2 DAİRE', imgKey: 'daire-2/d2-salon-ust-1.png', detay: 'daire-2' },
-  { id: 'ali-1', mock: true, tip: 'daire', baslik: '3+1 Daire', proje: 'Ali Apartmanı', projeKey: 'ali',
-    blokKat: 'A Blok · 4. Kat', oda: '3+1', brut: 135, banyo: 2, balkon: 2, kat: '4. Kat', katKey: '4',
-    fiyat: 7_850_000, badge: 'YENİ' },
-  { id: 'ali-2', mock: true, tip: 'daire', baslik: '2+1 Daire', proje: 'Ali Apartmanı', projeKey: 'ali',
-    blokKat: 'A Blok · 3. Kat', oda: '2+1', brut: 95, banyo: 1, balkon: 1, kat: '3. Kat', katKey: '3',
-    fiyat: 5_450_000 },
-  { id: 'ali-3', mock: true, tip: 'daire', baslik: '1+1 Daire', proje: 'Ali Apartmanı', projeKey: 'ali',
-    blokKat: 'A Blok · 1. Kat', oda: '1+1', brut: 60, banyo: 1, balkon: 1, kat: '1. Kat', katKey: '1',
-    fiyat: 3_250_000 },
-  { id: 'sap-1', mock: true, tip: 'daire', baslik: '3+1 Daire', proje: 'Sapanbağları', projeKey: 'sapanbaglari',
-    blokKat: 'B Blok · 2. Kat', oda: '3+1', brut: 145, banyo: 2, balkon: 2, kat: '2. Kat', katKey: '2',
-    fiyat: 8_250_000, badge: 'SON DAİRE' },
-  { id: 'sap-2', mock: true, tip: 'daire', baslik: '2+1 Daire', proje: 'Sapanbağları', projeKey: 'sapanbaglari',
-    blokKat: 'B Blok · 2. Kat', oda: '2+1', brut: 90, banyo: 1, balkon: 1, kat: '2. Kat', katKey: '2',
-    fiyat: 5_150_000 },
-  { id: 'sap-3', mock: true, tip: 'dubleks', baslik: '4+1 Dubleks', proje: 'Sapanbağları', projeKey: 'sapanbaglari',
-    blokKat: 'C Blok · 5.–6. Kat', oda: '4+1', brut: 210, banyo: 2, balkon: 1, kat: '5.–6. Kat', katKey: '5-6',
-    fiyat: 14_750_000 },
 ];
 
-/* Kat planı bandı — plan görselleri hazır değil; stilize şema + temsilî m² */
+/* Proje kartları — sayı içermez, durumları gerçektir (mock kapsamı dışı). */
+export interface ListingProje {
+  id: string;
+  ad: string;
+  projeKey: 'el-ele' | 'ali' | 'sapanbaglari';
+  konum: string;
+  /** true → kartta kırmızı TÜMÜ SATILDI bandı */
+  sold: boolean;
+  not: string;
+  /** satışı açık projede foto rozeti */
+  rozet?: string;
+  slug: string; // /projeler/<slug>
+}
+
+export const listingProjeler: ListingProje[] = [
+  { id: 'p-el-ele', ad: 'El Ele Apartmanı', projeKey: 'el-ele', konum: 'İstanbul',
+    sold: false, not: '2 satılık dubleks bu binada', rozet: '2 DAİRE SATILIK', slug: 'el-ele-apartmani' },
+  { id: 'p-ali', ad: 'Ali Apartmanı', projeKey: 'ali', konum: 'İstanbul',
+    sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'ali' },
+  { id: 'p-sapanbaglari', ad: 'Sapanbağları', projeKey: 'sapanbaglari', konum: 'İstanbul',
+    sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'sapanbaglari' },
+];
+
+/* Kat planı bandı — plan görselleri hazır değil; stilize şema + temsilî m².
+   Yalnız satıştaki tip: 3+2 dubleks. */
 export const katPlanlari = [
-  { ad: '3+1 Daire Kat Planı', m2: '135 m²' },
-  { ad: '2+1 Daire Kat Planı', m2: '95 m²' },
   { ad: '3+2 Dubleks Alt Kat', m2: '96 m²' },
   { ad: '3+2 Dubleks Üst Kat', m2: '86 m²' },
 ];

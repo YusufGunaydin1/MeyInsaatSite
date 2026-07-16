@@ -17,12 +17,13 @@ import MockChip from '../components/showcase/satilik/kompakt/MockChip.astro';
 import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
 import CtaBand from '../components/showcase/satilik/kompakt/CtaBand.astro';
 import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
-import SaleListing, { type ListingItem, type ListingImage } from '../components/showcase/satilik/kompakt/SaleListing.tsx';
+import SaleListing, { type ListingCard, type ListingImage } from '../components/showcase/satilik/kompakt/SaleListing.tsx';
 import { cardImage } from '../components/showcase/satilik/kompakt/assets.ts';
-import { listing, katPlanlari, tl } from '../components/showcase/satilik/kompakt/data.ts';
+import { listing, listingProjeler, katPlanlari, tl } from '../components/showcase/satilik/kompakt/data.ts';
 import { publicAsset } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui } from '../lib/content';
+import elEleImg from '../assets/projects/el-ele-apartmani.webp';
 import aliImg from '../assets/projects/ali.webp';
 import sapanImg from '../assets/projects/sapanbaglari.webp';
 import '../components/showcase/satilik/kompakt/kompakt.css';
@@ -39,19 +40,21 @@ const root = basePrefix + '/satilik-daireler';
 
 const hero = publicAsset('daire-1/bina-dis.png');
 
-/* Proje dış cepheleri temsilî satırların kart görseli olur */
+/* Proje dış cepheleri proje kartlarının görseli olur */
 async function assetImage(src: ImageMetadata, alt: string): Promise<ListingImage> {
   const a = await getImage({ src, width: 480, format: 'webp' });
   const b = await getImage({ src, width: 880, format: 'webp' });
   return { src: a.src, srcset: `${a.src} 480w, ${b.src} 880w`, width: src.width, height: src.height, alt };
 }
-const projeGorsel = {
-  ali: await assetImage(aliImg, 'Ali Apartmanı dış cephe'),
-  sapanbaglari: await assetImage(sapanImg, 'Sapanbağları dış cephe'),
-} as const;
+const projeGorsel: Record<string, ImageMetadata> = {
+  'el-ele': elEleImg,
+  ali: aliImg,
+  sapanbaglari: sapanImg,
+};
 
-const items: ListingItem[] = await Promise.all(
-  listing.map(async (u): Promise<ListingItem> => ({
+const ilanlar: ListingCard[] = await Promise.all(
+  listing.map(async (u): Promise<ListingCard> => ({
+    kind: 'ilan',
     id: u.id,
     tip: u.tip,
     baslik: u.baslik,
@@ -67,12 +70,27 @@ const items: ListingItem[] = await Promise.all(
     fiyat: u.fiyat,
     fiyatText: tl(u.fiyat),
     badge: u.badge,
-    href: u.detay
-      ? `${root}/${u.detay}`
-      : `${basePrefix}/projeler/${u.projeKey === 'el-ele' ? 'el-ele-apartmani' : u.projeKey}`,
-    img: u.imgKey ? await cardImage(u.imgKey) : projeGorsel[u.projeKey as 'ali' | 'sapanbaglari'],
+    href: `${root}/${u.detay}`,
+    img: await cardImage(u.imgKey!),
   }))
 );
+
+const projeKartlari: ListingCard[] = await Promise.all(
+  listingProjeler.map(async (p): Promise<ListingCard> => ({
+    kind: 'proje',
+    id: p.id,
+    ad: p.ad,
+    projeKey: p.projeKey,
+    konum: p.konum,
+    sold: p.sold,
+    not: p.not,
+    rozet: p.rozet,
+    href: `${basePrefix}/projeler/${p.slug}`,
+    img: await assetImage(projeGorsel[p.projeKey], `${p.ad} dış cephe`),
+  }))
+);
+
+const items: ListingCard[] = [...ilanlar, ...projeKartlari];
 
 const projeler = [
   { key: 'el-ele', ad: 'El Ele Apartmanı' },
@@ -233,7 +251,8 @@ const stats = [
   .ks-plans-grid {
     margin-top: 0.9rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* 360px tavanı: iki plan kartı yarım ekrana yayılıp bandı şişirmesin */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 360px));
     gap: 0.9rem;
   }
   .ks-plan { padding: 0.9rem 1rem 1rem; }

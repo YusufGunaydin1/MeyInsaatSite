@@ -212,7 +212,7 @@ export default function UnitsExplorer({ mode, items }: Props) {
             <div className="kx-card-body">
               <p className="kx-card-proje">{it.projeLabel}</p>
               <p className="kx-card-title">
-                {it.kind === 'teaser' ? 'Satış bilgisi yakında' : `${it.tip} · ${it.kat} · ${it.no}`}
+                {it.kind === 'teaser' ? 'Tümü satıldı' : `${it.tip} · ${it.kat} · ${it.no}`}
               </p>
               {it.kind === 'unit' && <p className="kx-card-meta">Brüt: {it.brut} m²</p>}
               {it.fiyatText ? (

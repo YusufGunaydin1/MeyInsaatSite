@@ -1,9 +1,12 @@
 /*
-  Satılık listesi adası — liste-ref.png'nin tamamı: sekmeler (Tümü/Daire/Dubleks),
-  canlı filtre seçicileri, sıralama, favoriler (kalp gerçekten çalışır),
-  kart ızgarası + Daha Fazla Yükle, sağ rayda karşılaştırma paneli ve hızlı
-  iletişim formu. Henüz var olmayan uçlar (harita, karşılaştırma görünümü)
-  sayfadaki ortak "yakında" diyaloğunu açar.
+  Satılık listesi adası — liste-ref.png düzeni, dürüst envanterle: sekmeler
+  (Tümü/Daireler/Projeler), canlı filtreler, sıralama, favoriler, kart ızgarası,
+  sağ rayda karşılaştırma + hızlı form. Izgara iki tür kart taşır: gerçek ilanlar
+  (yalnız El Ele dubleksleri — fiyat/kalp/karşılaştırma) ve proje kartları
+  (satılmışlar kırmızı TÜMÜ SATILDI bandı taşır, fiyatsız, proje sayfasına çıkar).
+  Birim filtreleri (kat/oda/m²/fiyat) aktifken proje kartları ızgaradan düşer;
+  fiyat sıralaması fiyatsız proje kartlarını hep sona koyar. Henüz var olmayan
+  uçlar (harita, karşılaştırma görünümü) ortak "yakında" diyaloğunu açar.
 */
 import { useMemo, useState } from 'react';
 import RailForm from './RailForm';
@@ -17,6 +20,7 @@ export interface ListingImage {
 }
 
 export interface ListingItem {
+  kind: 'ilan';
   id: string;
   tip: 'daire' | 'dubleks';
   baslik: string;
@@ -36,8 +40,23 @@ export interface ListingItem {
   img: ListingImage;
 }
 
+export interface ListingProjeItem {
+  kind: 'proje';
+  id: string;
+  ad: string;
+  projeKey: string;
+  konum: string;
+  sold: boolean;
+  not: string;
+  rozet?: string;
+  href: string;
+  img: ListingImage;
+}
+
+export type ListingCard = ListingItem | ListingProjeItem;
+
 interface Props {
-  items: ListingItem[];
+  items: ListingCard[];
   projeler: { key: string; ad: string }[];
 }
 
@@ -83,10 +102,14 @@ interface Filters {
 }
 const EMPTY: Filters = { proje: TUMU, kat: TUMU, oda: TUMU, m2: TUMU, fiyat: TUMU };
 
-function matches(u: ListingItem, f: Filters, tab: string, favOnly: boolean, favs: Set<string>) {
-  if (tab !== TUMU && u.tip !== tab) return false;
-  if (favOnly && !favs.has(u.id)) return false;
+function matches(u: ListingCard, f: Filters, tab: string, favOnly: boolean, favs: Set<string>) {
+  if (tab !== TUMU && u.kind !== tab) return false;
+  if (favOnly && (u.kind !== 'ilan' || !favs.has(u.id))) return false;
   if (f.proje !== TUMU && u.projeKey !== f.proje) return false;
+  if (u.kind === 'proje') {
+    // birim filtreleri yalnız ilanları tarif eder — herhangi biri aktifken proje kartları düşer
+    return f.kat === TUMU && f.oda === TUMU && f.m2 === TUMU && f.fiyat === TUMU;
+  }
   if (f.kat !== TUMU && u.katKey !== f.kat) return false;
   if (f.oda !== TUMU && u.oda !== f.oda) return false;
   if (f.m2 === '0-100' && u.brut >= 100) return false;
@@ -109,15 +132,19 @@ export default function SaleListing({ items, projeler }: Props) {
 
   const visible = useMemo(() => {
     const list = items.filter((u) => matches(u, filters, tab, favOnly, favs));
-    list.sort((a, b) => (sort === 'asc' ? a.fiyat - b.fiyat : b.fiyat - a.fiyat));
+    list.sort((a, b) => {
+      if (a.kind !== b.kind) return a.kind === 'ilan' ? -1 : 1; // fiyatsız proje kartları hep sonda
+      if (a.kind !== 'ilan' || b.kind !== 'ilan') return 0;
+      return sort === 'asc' ? a.fiyat - b.fiyat : b.fiyat - a.fiyat;
+    });
     return list;
   }, [items, filters, tab, favOnly, favs, sort]);
 
   const counts = useMemo(
     () => ({
       tumu: items.length,
-      daire: items.filter((u) => u.tip === 'daire').length,
-      dubleks: items.filter((u) => u.tip === 'dubleks').length,
+      ilan: items.filter((u) => u.kind === 'ilan').length,
+      proje: items.filter((u) => u.kind === 'proje').length,
     }),
     [items]
   );
@@ -133,7 +160,9 @@ export default function SaleListing({ items, projeler }: Props) {
       return next;
     });
 
-  const compareItems = compare.map((id) => items.find((u) => u.id === id)!).filter(Boolean);
+  const compareItems = compare
+    .map((id) => items.find((u) => u.id === id))
+    .filter((u): u is ListingItem => !!u && u.kind === 'ilan');
 
   return (
     <div className="kl" data-testid="kl">
@@ -141,7 +170,7 @@ export default function SaleListing({ items, projeler }: Props) {
         {/* SEKMELER + sağ eylemler */}
         <div className="kl-tabs-row">
           <div className="kl-tabs" role="tablist" aria-label="İlan tipi">
-            {([['tumu', `Tümü (${counts.tumu})`], ['daire', `Daire (${counts.daire})`], ['dubleks', `Dubleks (${counts.dubleks})`]] as const).map(([key, label]) => (
+            {([['tumu', `Tümü (${counts.tumu})`], ['ilan', `Daireler (${counts.ilan})`], ['proje', `Projeler (${counts.proje})`]] as const).map(([key, label]) => (
               <button key={key} type="button" role="tab" aria-selected={tab === key}
                 className={tab === key ? 'kl-tab is-active' : 'kl-tab'}
                 onClick={() => { setTab(key); setShown(PAGE); }}
@@ -174,8 +203,6 @@ export default function SaleListing({ items, projeler }: Props) {
             <span className="kx-field-label">Kat</span>
             <select value={filters.kat} onChange={set('kat')} data-testid="kl-f-kat">
               <option value={TUMU}>Tümü</option>
-              <option value="1">1. Kat</option><option value="2">2. Kat</option>
-              <option value="3">3. Kat</option><option value="4">4. Kat</option>
               <option value="5-6">5.–6. Kat</option>
             </select>
           </label>
@@ -183,15 +210,13 @@ export default function SaleListing({ items, projeler }: Props) {
             <span className="kx-field-label">Oda Sayısı</span>
             <select value={filters.oda} onChange={set('oda')} data-testid="kl-f-oda">
               <option value={TUMU}>Tümü</option>
-              {['1+1', '2+1', '3+1', '3+2', '4+1'].map((o) => <option key={o} value={o}>{o}</option>)}
+              <option value="3+2">3+2</option>
             </select>
           </label>
           <label className="kx-field">
             <span className="kx-field-label">m² Aralığı</span>
             <select value={filters.m2} onChange={set('m2')} data-testid="kl-f-m2">
               <option value={TUMU}>Tümü</option>
-              <option value="0-100">100 m²'ye kadar</option>
-              <option value="100-150">100–150 m²</option>
               <option value="150+">150 m² üzeri</option>
             </select>
           </label>
@@ -199,8 +224,6 @@ export default function SaleListing({ items, projeler }: Props) {
             <span className="kx-field-label">Fiyat Aralığı</span>
             <select value={filters.fiyat} onChange={set('fiyat')} data-testid="kl-f-fiyat">
               <option value={TUMU}>Tümü</option>
-              <option value="0-6">6 milyon TL'ye kadar</option>
-              <option value="6-10">6–10 milyon TL</option>
               <option value="10+">10 milyon TL üzeri</option>
             </select>
           </label>
@@ -224,8 +247,27 @@ export default function SaleListing({ items, projeler }: Props) {
 
         {/* KART IZGARASI */}
         <div className="kl-grid" data-testid="kl-grid">
-          {visible.slice(0, shown).map((u) => (
-            <article key={u.id} className="kl-card" data-testid="kl-card" data-unit={u.id}>
+          {visible.slice(0, shown).map((u) => u.kind === 'proje' ? (
+            <article key={u.id} className={u.sold ? 'kl-card kl-card-bina is-sold' : 'kl-card kl-card-bina'}
+              data-testid="kl-card" data-unit={u.id} data-kind="proje">
+              <div className="kl-card-media">
+                <img src={u.img.src} srcSet={u.img.srcset} sizes="(min-width: 900px) 300px, 94vw"
+                  width={u.img.width} height={u.img.height} alt={u.img.alt} loading="lazy" />
+                {u.sold
+                  ? <span className="kl-sold" data-testid={`kl-sold-${u.projeKey}`}>TÜMÜ SATILDI</span>
+                  : u.rozet && <span className="kl-badge is-red">{u.rozet}</span>}
+              </div>
+              <div className="kl-card-body">
+                <h3 className="kl-card-title">{u.ad}</h3>
+                <p className="kl-card-proje">{u.konum} · Tamamlandı</p>
+                <p className="kl-proje-not">{u.not}</p>
+                <div className="kl-card-foot">
+                  <a className="kl-detail" href={u.href} data-testid={`kl-proje-${u.projeKey}`}>Projeyi İncele ›</a>
+                </div>
+              </div>
+            </article>
+          ) : (
+            <article key={u.id} className="kl-card" data-testid="kl-card" data-unit={u.id} data-kind="ilan">
               <div className="kl-card-media">
                 <img src={u.img.src} srcSet={u.img.srcset} sizes="(min-width: 900px) 300px, 94vw"
                   width={u.img.width} height={u.img.height} alt={u.img.alt} loading="lazy" />

@@ -23,27 +23,64 @@ test('liste: nav Satılık aktif + sekmeler/filtre/ray + tek temsilî-veri çipi
   // temsilî fiyatlar yayında kaldığı sürece bilinçli noindex
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
   await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveText(/^satılık$/i);
-  await expect(page.getByTestId('kl-tab-tumu')).toContainText('Tümü (8)');
+  await expect(page.getByTestId('kl-tab-tumu')).toContainText('Tümü (5)');
   await expect(page.getByTestId('kl-filters')).toBeVisible();
   await expect(page.getByTestId('kl-compare')).toBeVisible();
   await expect(page.getByTestId('kcf-form')).toBeVisible(); // hızlı iletişim
   await expect(page.getByTestId('kc-mock-chip')).toHaveCount(1);
 });
 
-test('liste: sekme + filtre + sıralama + favoriler + daha fazla yükle', async ({ page }) => {
+test('liste: 2 gerçek ilan + 3 proje kartı; satılmışlar beyaz-üstü-kırmızı TÜMÜ SATILDI bandı taşır', async ({ page }) => {
   await page.goto(u(K));
-  await expect(page.getByTestId('kl-card')).toHaveCount(6); // 8 sonuç, ilk 6 gösterilir
-  await expect(page.getByTestId('kl-count')).toContainText('8 sonuç');
-  await page.getByTestId('kl-more').click();
-  await expect(page.getByTestId('kl-card')).toHaveCount(8);
-  // sekme: dubleks → 3
-  await page.getByTestId('kl-tab-dubleks').click();
+  await expect(page.getByTestId('kl-card')).toHaveCount(5);
+  await expect(page.getByTestId('kl-count')).toContainText('5 sonuç');
+  await expect(page.getByTestId('kl-more')).toHaveCount(0); // 5 kart tek sayfaya sığar
+  // yalnız iki gerçek ilan fiyat/kalp taşır — proje kartları uydurma sayı taşımaz
+  await expect(page.locator('[data-kind="ilan"]')).toHaveCount(2);
+  await expect(page.locator('[data-kind="proje"]')).toHaveCount(3);
+  await expect(page.locator('[data-kind="proje"] .kl-price')).toHaveCount(0);
+  await expect(page.locator('[data-kind="proje"] .kl-heart')).toHaveCount(0);
+  await expect(page.locator('[data-kind="proje"]').filter({ hasText: ' TL' })).toHaveCount(0);
+  // satılmış projeler: bant görünür, sözcük doğru, kullanıcı beyazı kırmızı üzerinde GÖRÜR
+  for (const key of ['ali', 'sapanbaglari']) {
+    const band = page.getByTestId(`kl-sold-${key}`);
+    await expect(band).toBeVisible();
+    await expect(band).toHaveText('TÜMÜ SATILDI');
+    const [bg, fg] = await band.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return [s.backgroundColor, s.color];
+    });
+    expect(bg, key + ' bant zemini').toBe('rgb(181, 35, 35)');
+    expect(fg, key + ' bant yazısı').toBe('rgb(255, 255, 255)');
+  }
+  // El Ele satılmadı: bant yok, proje kartı proje sayfasına çıkar
+  await expect(page.getByTestId('kl-sold-el-ele')).toHaveCount(0);
+  await expect(page.getByTestId('kl-proje-el-ele')).toHaveAttribute('href', /projeler\/el-ele-apartmani$/);
+  await expect(page.getByTestId('kl-proje-ali')).toHaveAttribute('href', /projeler\/ali$/);
+  await expect(page.getByTestId('kl-detay-d11')).toHaveAttribute('href', /satilik-daireler\/daire-1$/);
+});
+
+test('liste: sekme + filtre + sıralama + favoriler dürüst envanterde', async ({ page }) => {
+  await page.goto(u(K));
+  // sekmeler tür sayar
+  await page.getByTestId('kl-tab-proje').click();
   await expect(page.getByTestId('kl-card')).toHaveCount(3);
-  // filtre: proje El Ele → 2; sıralama desc → pahalı önce
-  await page.getByTestId('kl-f-proje').selectOption('el-ele');
+  await page.getByTestId('kl-tab-ilan').click();
   await expect(page.getByTestId('kl-card')).toHaveCount(2);
+  await page.getByTestId('kl-tab-tumu').click();
+  // birim filtresi aktifken proje kartları düşer
+  await page.getByTestId('kl-f-oda').selectOption('3+2');
+  await expect(page.getByTestId('kl-card')).toHaveCount(2);
+  await expect(page.locator('[data-kind="proje"]')).toHaveCount(0);
+  await page.getByTestId('kl-clear').click();
+  // proje filtresi iki kart türüne de uygulanır: El Ele → 2 ilan + 1 proje kartı
+  await page.getByTestId('kl-f-proje').selectOption('el-ele');
+  await expect(page.getByTestId('kl-card')).toHaveCount(3);
+  // sıralama: pahalı ilan önce; fiyatsız proje kartı hep sonda
   await page.getByTestId('kl-sort').selectOption('desc');
   await expect(page.getByTestId('kl-card').first()).toContainText('14.900.000 TL');
+  await expect(page.getByTestId('kl-card').last()).toHaveAttribute('data-kind', 'proje');
+  await page.getByTestId('kl-clear').click();
   // favori: kalp → sayaç → yalnız favoriler
   await page.getByTestId('kl-fav-d11').click();
   await expect(page.getByTestId('kl-favorilerim')).toContainText('(1)');
@@ -51,11 +88,7 @@ test('liste: sekme + filtre + sıralama + favoriler + daha fazla yükle', async 
   await expect(page.getByTestId('kl-card')).toHaveCount(1);
   // temizle → tümü geri
   await page.getByTestId('kl-clear').click();
-  await expect(page.getByTestId('kl-count')).toContainText('8 sonuç');
-  // gerçek daire detaya, temsilî satır proje sayfasına gider (tümü görünür olsun)
-  await page.getByTestId('kl-more').click();
-  await expect(page.getByTestId('kl-detay-d11')).toHaveAttribute('href', /satilik-daireler\/daire-1$/);
-  await expect(page.getByTestId('kl-detay-ali-3')).toHaveAttribute('href', /projeler\/ali$/);
+  await expect(page.getByTestId('kl-count')).toContainText('5 sonuç');
 });
 
 test('detay D-11: matris lejantı ve gerçek durum dağılımı', async ({ page }) => {
@@ -77,7 +110,7 @@ test('vitrin dizilimi: proje sekmeleri filtreler; teaser kartlar fiyat uydurmaz'
   await page.getByTestId('kx-tab-ali').click();
   const teaser = page.getByTestId('kx-card');
   await expect(teaser).toHaveCount(1);
-  await expect(teaser).toContainText('Satış bilgisi yakında');
+  await expect(teaser).toContainText('Tümü satıldı');
   await expect(teaser).not.toContainText(' TL');
   await expect(page.getByTestId('kc-tum-daireler')).toHaveAttribute('href', /\/satilik-daireler$/);
 });
