@@ -1,0 +1,76 @@
+---
+/* SERGİ · İletişim — antet + form; kanallar mono kart (gerçek bilgi yakında). */
+import Shell from '../../../../components/showcase/satilik/sergi/Shell.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import ViewingForm from '../../../../components/showcase/satilik/shared/ViewingForm';
+import { form, ui } from '../../../../components/showcase/satilik/data';
+
+const channels = ['Telefon', 'WhatsApp', 'E-posta'];
+---
+
+<Shell
+  title="Randevu — Satış Kataloğu · Sergi"
+  description="El Ele Apartmanı daireleri için görüşme ve gezi randevusu."
+  current="iletisim"
+>
+  <header class="srg-c-head reveal">
+    <p class="t-tech srg-c-kicker">KATALOG · 07</p>
+    <h1 class="t-display-l">{form.title.toUpperCase()}</h1>
+    <p class="t-body-l srg-c-lede">{form.intro}</p>
+  </header>
+
+  <div class="srg-c-grid reveal">
+    <div class="srg-c-form">
+      <ViewingForm client:load />
+    </div>
+    <aside class="srg-c-side">
+      <p class="t-tech srg-c-side-title">DOĞRUDAN KANALLAR</p>
+      {channels.map((c) => (
+        <div class="srg-c-ch">
+          <span class="t-tech srg-c-ch-name">{c.toUpperCase()}</span>
+          <Chip />
+        </div>
+      ))}
+      <p class="t-caption srg-c-note">
+        Kanal bilgileri satış duyurusuyla eklenecek. Randevu formu bu vitrin
+        sürümünde gerçek veri göndermez.
+      </p>
+      <a class="t-tech srg-c-back" href={import.meta.env.BASE_URL.replace(/\/$/, '') + '/showcases/satilik-daireler/sergi/daireler'}>
+        ← ESERLERE DÖN
+      </a>
+    </aside>
+  </div>
+</Shell>
+
+<style>
+  .srg-c-kicker { color: var(--color-mey-teal-700); }
+  .srg-c-head h1 { margin-top: 0.5rem; }
+  .srg-c-lede { margin-top: 0.8rem; max-width: 66ch; }
+
+  .srg-c-grid { margin-top: 1.8rem; display: grid; gap: 2rem; }
+  @media (min-width: 1024px) {
+    .srg-c-grid { grid-template-columns: 7fr 4fr; gap: clamp(2rem, 4vw, 3.4rem); align-items: start; }
+    .srg-c-side { position: sticky; top: 1.4rem; }
+  }
+  .srg-c-form {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: clamp(1.1rem, 2.5vw, 1.8rem);
+  }
+  .srg-c-side {
+    border: 1px solid var(--color-line);
+    border-inline-start: 2px solid var(--color-mey-red);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: 1.1rem 1.2rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .srg-c-side-title { color: var(--color-mey-red); }
+  .srg-c-ch { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .srg-c-ch-name { color: var(--color-graphite-600); }
+  .srg-c-note { color: var(--color-graphite-400); }
+  .srg-c-back { color: var(--color-mey-teal-700); }
+  .srg-c-back:hover { color: var(--color-graphite-900); }
+</style>

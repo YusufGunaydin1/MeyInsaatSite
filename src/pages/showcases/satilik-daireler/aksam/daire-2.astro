@@ -1,0 +1,178 @@
+---
+/*
+  AKŞAM · Daire 2 — GECE KARTLARI ızgarası: Daire 1'in ışık bantlarının aksine
+  bölümler night-800 kartlarda toplanır; açılış aydınlık üst kat panoramasıyla,
+  final çatı terasının koyu perdesiyle biter.
+*/
+import Shell from '../../../../components/showcase/satilik/aksam/Shell.astro';
+import Cover from '../../../../components/showcase/satilik/aksam/Cover.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import { daire2 as apt, daire1, ui } from '../../../../components/showcase/satilik/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const root = base + '/showcases/satilik-daireler/aksam';
+const teras = apt.sections.find((s) => s.id === 'teras')!;
+const cardSections = apt.sections.filter((s) => s.id !== 'teras' && s.id !== 'ust-kat');
+const ustKat = apt.sections.find((s) => s.id === 'ust-kat')!;
+---
+
+<Shell title="Daire 2 — Akşam Vitrini" description={apt.hook} current="daire-2">
+  <article data-testid="sv-detail-daire-2">
+    <section class="aks-light aks-2-open">
+      <div class="aks-container reveal">
+        <p class="t-tech aks-2-kicker">{apt.no} — {apt.tagline.toUpperCase()}</p>
+        <h1 class="t-display-l">DAİRE 2</h1>
+        <div class="aks-2-open-grid">
+          <p class="t-body-l aks-2-lede">{apt.intro}</p>
+          <dl class="aks-2-facts" data-testid="sv-facts">
+            {apt.facts.map((f) => (
+              <div class="aks-2-fact">
+                <dt class="t-tech">{f.label.toUpperCase()}</dt>
+                <dd>{f.pending ? <Chip /> : f.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="aks-light aks-2-ust">
+      <div class="aks-container reveal" id={ustKat.id}>
+        <Cover imgKey={ustKat.keys[0]} ratio="21/10" sizes="(min-width: 1320px) 1280px, 96vw" caption />
+        <div class="aks-2-ust-row">
+          <div>
+            <p class="t-tech aks-2-row-kicker">{ustKat.eyebrow}</p>
+            <h2 class="t-heading-m">{ustKat.title}</h2>
+          </div>
+          <p class="t-body aks-2-ust-text">{ustKat.text}</p>
+        </div>
+        <div class="aks-2-ust-two">
+          {ustKat.keys.slice(1).map((k) => (
+            <Cover imgKey={k} ratio="4/3" sizes="(min-width: 900px) 46vw, 94vw" />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="aks-dark aks-2-cards">
+      <div class="aks-container">
+        <p class="t-tech aks-2-cards-kicker reveal">GECE KARTLARI · EVİN GERİ KALANI</p>
+        <div class="aks-2-grid">
+          {cardSections.map((s) => (
+            <article class="aks-2-card reveal" id={s.id}>
+              <Cover imgKey={s.keys[0]} ratio="4/3" sizes="(min-width: 1024px) 30vw, 94vw" />
+              <div class="aks-2-card-body">
+                <p class="t-tech aks-2-card-kicker">{s.eyebrow}</p>
+                <h2 class="aks-2-card-title">{s.title}</h2>
+                <p class="t-caption aks-2-card-text">{s.text}</p>
+                {s.keys.length > 1 && (
+                  <div class="aks-2-card-extra">
+                    {s.keys.slice(1, 3).map((k) => (
+                      <Cover imgKey={k} ratio="4/3" sizes="(min-width: 1024px) 14vw, 44vw" />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="aks-dark aks-2-teras theatre" id="teras">
+      <Cover imgKey={teras.keys[0]} ratio="3/4" sizes="(min-width: 900px) 44vw, 94vw" class="aks-2-teras-fig" />
+      <div class="aks-2-teras-text reveal">
+        <p class="t-tech aks-2-row-kicker-dark">{teras.eyebrow} — PERDE</p>
+        <h2 class="t-display-l">{teras.title}</h2>
+        <p class="t-body aks-2-teras-body">{teras.text}</p>
+        <div class="aks-2-teras-cta">
+          <a class="btn-primary" href={`${root}/iletisim?daire=daire-2`} data-testid="sv-cta-randevu">{ui.cta.randevu}</a>
+          <a class="btn-ghost" href={`${root}/galeri?bolum=daire-2`}>{ui.cta.fotograflar}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="aks-dark aks-2-switch">
+      <div class="aks-container aks-2-switch-inner reveal">
+        <p class="t-tech">ÖTEKİ PANEL — {daire1.tagline.toUpperCase()}</p>
+        <a class="btn-ghost" href={`${root}/daire-1`} data-testid="sv-switch-daire-1">{ui.cta.daire1}</a>
+      </div>
+    </section>
+  </article>
+</Shell>
+
+<style>
+  .aks-2-open { padding-block: clamp(2rem, 5vh, 3.4rem) 0; }
+  .aks-2-kicker { color: var(--color-mey-teal-700); }
+  .aks-2-open h1 { margin-top: 0.4rem; }
+  .aks-2-open-grid { margin-top: 1rem; display: grid; gap: 1.4rem; }
+  @media (min-width: 1024px) { .aks-2-open-grid { grid-template-columns: 7fr 5fr; gap: 3rem; align-items: start; } }
+  .aks-2-lede { max-width: 64ch; }
+  .aks-2-facts {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: 1rem 1.1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem 1.2rem;
+  }
+  .aks-2-fact dt { color: var(--color-graphite-400); }
+  .aks-2-fact dd { margin-top: 0.25rem; font-weight: 500; color: var(--color-graphite-900); font-size: 0.9375rem; }
+
+  .aks-2-ust { padding-block: clamp(1.8rem, 4vh, 3rem); }
+  .aks-2-row-kicker { color: var(--color-mey-teal-700); }
+  .aks-2-ust-row {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.8rem;
+  }
+  @media (min-width: 900px) { .aks-2-ust-row { grid-template-columns: 4fr 7fr; gap: 2.4rem; align-items: baseline; } }
+  .aks-2-ust-text { max-width: 60ch; }
+  .aks-2-ust-two { margin-top: 1.1rem; display: grid; gap: 1.1rem; }
+  @media (min-width: 800px) { .aks-2-ust-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .aks-2-cards { padding-block: clamp(2.2rem, 5vh, 3.6rem); }
+  .aks-2-cards-kicker { color: var(--color-mey-teal); }
+  .aks-2-grid { margin-top: 1.2rem; display: grid; gap: 1.4rem; }
+  @media (min-width: 800px) { .aks-2-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1200px) { .aks-2-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .aks-2-card {
+    background: var(--color-night-800);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: var(--radius-brand);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .aks-2-card :global(.aks-cover) { border-radius: 0; }
+  .aks-2-card-body { padding: 0.9rem 1rem 1.1rem; }
+  .aks-2-card-kicker { color: var(--color-red-on-dark); }
+  .aks-2-card-title { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; color: #fff; margin-top: 0.3rem; }
+  .aks-2-card-text { color: rgb(244 244 242 / 0.68); margin-top: 0.45rem; }
+  .aks-2-card-extra { margin-top: 0.8rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
+
+  .aks-2-teras {
+    display: grid;
+    gap: 1.6rem;
+    padding: clamp(1.6rem, 4vw, 3rem) clamp(1rem, 3vw, 2.4rem);
+    max-width: 1320px;
+    margin-inline: auto;
+  }
+  @media (min-width: 900px) { .aks-2-teras { grid-template-columns: 5fr 6fr; align-items: center; gap: 3rem; } }
+  .aks-2-row-kicker-dark { color: var(--color-red-on-dark); }
+  .aks-2-teras-text h2 { margin-top: 0.4rem; }
+  .aks-2-teras-body { margin-top: 0.7rem; color: rgb(244 244 242 / 0.75); max-width: 52ch; }
+  .aks-2-teras-cta { margin-top: 1.3rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+  .aks-2-switch { border-top: 1px solid rgb(255 255 255 / 0.08); }
+  .aks-2-switch-inner {
+    padding-block: 1.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+    color: rgb(244 244 242 / 0.65);
+  }
+</style>

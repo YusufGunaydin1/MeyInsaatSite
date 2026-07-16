@@ -1,0 +1,111 @@
+---
+/*
+  SERGİ · Daire 1 — "EE-01" eser sayfası: yapışkan künye + bölüm rayları altında
+  4:3 kilitli plaka ızgarası; teras finali geniş plakalarla açılır.
+  (Daire 2 sergi sayfası bilerek farklı: çizim paftası düzeni, tam genişlik.)
+*/
+import Shell from '../../../../components/showcase/satilik/sergi/Shell.astro';
+import Plate from '../../../../components/showcase/satilik/sergi/Plate.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import { daire1 as apt, ui } from '../../../../components/showcase/satilik/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const root = base + '/showcases/satilik-daireler/sergi';
+let plateNo = 0;
+const nextPlate = () => `EE-D1-${String(++plateNo).padStart(2, '0')}`;
+---
+
+<Shell title="Daire 1 — EE-01 · Sergi" description={apt.hook} current="daire-1">
+  <article data-testid="sv-detail-daire-1">
+    <header class="srg-e-head reveal">
+      <div>
+        <p class="t-tech srg-e-kicker">ESER 01 · {apt.tagline.toUpperCase()}</p>
+        <h1 class="t-display-l">DAİRE 1</h1>
+        <p class="t-body-l srg-e-lede">{apt.intro}</p>
+      </div>
+      <aside class="srg-e-kunye" data-testid="sv-facts">
+        <p class="t-tech srg-e-kunye-title">KÜNYE — EE-01</p>
+        <dl>
+          {apt.facts.map((f) => (
+            <div class="srg-e-kunye-row">
+              <dt class="t-tech">{f.label.toUpperCase()}</dt>
+              <dd>{f.pending ? <Chip /> : f.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <a class="btn-primary srg-e-kunye-cta" href={`${root}/iletisim?daire=daire-1`} data-testid="sv-cta-randevu">
+          {ui.cta.randevu}
+        </a>
+      </aside>
+    </header>
+
+    {apt.sections.map((s) => (
+      <section class="reveal" id={s.id}>
+        <h2 class="srg-rule t-tech">{s.eyebrow} — {s.title.toUpperCase()}</h2>
+        <p class="srg-e-text">{s.text}</p>
+        <div class:list={['srg-e-grid', s.id === 'teras' && 'srg-e-grid-teras']}>
+          {s.keys.map((k) => (
+            <Plate imgKey={k} plate={nextPlate()} crop={s.id !== 'teras'} sizes={s.id === 'teras' ? '(min-width: 1024px) 82vw, 94vw' : '(min-width: 1024px) 40vw, 94vw'} />
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <nav class="srg-e-next reveal" aria-label="Katalogda gezinme">
+      <a class="t-tech srg-e-next-link" href={`${root}/daire-2`} data-testid="sv-switch-daire-2">
+        SONRAKİ ESER: EE-02 · DAİRE 2 →
+      </a>
+      <div class="srg-e-next-cta">
+        <a class="btn-primary" href={`${root}/iletisim?daire=daire-1`}>{ui.cta.randevu}</a>
+        <a class="btn-ghost" href={`${root}/galeri?bolum=daire-1`}>{ui.cta.fotograflar}</a>
+      </div>
+    </nav>
+  </article>
+</Shell>
+
+<style>
+  .srg-e-head { display: grid; gap: 1.6rem; }
+  @media (min-width: 1024px) {
+    .srg-e-head { grid-template-columns: 7fr 4fr; gap: clamp(2rem, 4vw, 3.4rem); align-items: start; }
+    .srg-e-kunye { position: sticky; top: 1.4rem; }
+  }
+  .srg-e-kicker { color: var(--color-mey-teal-700); }
+  .srg-e-head h1 { margin-top: 0.5rem; }
+  .srg-e-lede { margin-top: 0.9rem; max-width: 62ch; }
+
+  .srg-e-kunye {
+    border: 1px solid var(--color-line);
+    border-inline-start: 2px solid var(--color-mey-red);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: 1rem 1.1rem;
+  }
+  .srg-e-kunye-title { color: var(--color-mey-red); }
+  .srg-e-kunye dl { margin-top: 0.7rem; display: grid; gap: 0.55rem; }
+  .srg-e-kunye-row { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  .srg-e-kunye-row dt { color: var(--color-graphite-400); }
+  .srg-e-kunye-row dd { font-weight: 500; color: var(--color-graphite-900); text-align: end; font-size: 0.9375rem; }
+  .srg-e-kunye-cta { margin-top: 1rem; width: 100%; justify-content: center; }
+
+  .srg-e-text { max-width: 68ch; line-height: 1.7; }
+  .srg-e-grid { margin-top: 1.3rem; display: grid; gap: 1.2rem; }
+  @media (min-width: 800px) { .srg-e-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .srg-e-grid-teras { grid-template-columns: 1fr; }
+  @media (min-width: 800px) { .srg-e-grid-teras { grid-template-columns: 1fr; } }
+
+  .srg-e-next {
+    margin-top: clamp(2.6rem, 6vh, 4.2rem);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: 1.2rem 1.3rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .srg-e-next-link { color: var(--color-mey-red); }
+  .srg-e-next-link:hover { color: var(--color-mey-red-700); }
+  .srg-e-next-cta { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+</style>

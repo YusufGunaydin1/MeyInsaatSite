@@ -1,0 +1,124 @@
+---
+/* SERGİ · El Ele Apartmanı — bina dosyası: antet, plakalar, ustalık maddeleri. */
+import Shell from '../../../../components/showcase/satilik/sergi/Shell.astro';
+import Plate from '../../../../components/showcase/satilik/sergi/Plate.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import { building, ui } from '../../../../components/showcase/satilik/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const root = base + '/showcases/satilik-daireler/sergi';
+---
+
+<Shell
+  title="El Ele Apartmanı — Bina Dosyası · Sergi"
+  description={building.intro}
+  current="el-ele-apartmani"
+>
+  <section class="srg-b-open reveal" data-testid="sv-building">
+    <Plate imgKey={building.exterior} plate="EE-BN-01" sizes="(min-width: 1024px) 46vw, 94vw" loading="eager" />
+    <div class="srg-b-meta">
+      <p class="t-tech srg-b-kicker">BİNA DOSYASI</p>
+      <h1 class="t-display-l">EL ELE APARTMANI</h1>
+      <p class="t-body-l srg-b-lede">{building.intro}</p>
+      <dl class="srg-b-kunye" data-testid="sv-facts">
+        {building.facts.map((f) => (
+          <div class="srg-b-kunye-row">
+            <dt class="t-tech">{f.label.toUpperCase()}</dt>
+            <dd>{f.pending ? <Chip /> : f.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <h2 class="srg-rule t-tech">USTALIK — MEY İNŞAAT</h2>
+  <section class="srg-b-craft reveal">
+    {building.craft.map((c, i) => (
+      <article class="srg-b-craft-item">
+        <p class="t-tech srg-b-craft-no">{String(i + 1).padStart(2, '0')}</p>
+        <h3 class="t-heading-s">{c.title}</h3>
+        <p class="t-caption srg-b-craft-text">{c.text}</p>
+      </article>
+    ))}
+  </section>
+
+  <h2 class="srg-rule t-tech">ORTAK ALANLAR</h2>
+  <section class="srg-b-common reveal">
+    <Plate imgKey={building.entrance} plate="EE-BN-02" crop />
+    <Plate imgKey={building.parking} plate="EE-BN-03" crop />
+  </section>
+  <p class="t-caption srg-b-note reveal">
+    Giriş karesi Mey İnşaat'ın kendi kayıt filigranını taşır — teslim öncesi saha çekimi.
+  </p>
+
+  <h2 class="srg-rule t-tech">ÇEVRE</h2>
+  <section class="srg-b-env reveal">
+    {building.environment.map((k, i) => (
+      <Plate
+        imgKey={k}
+        plate={`EE-ÇV-${String(i + 1).padStart(2, '0')}`}
+        crop={i !== 0}
+        sizes={i === 0 ? '(min-width: 1024px) 82vw, 94vw' : '(min-width: 1024px) 40vw, 94vw'}
+        class={i === 0 ? 'srg-b-env-wide' : ''}
+      />
+    ))}
+  </section>
+  <p class="t-caption srg-b-note reveal">Konum ve mesafe bilgileri satış duyurusuyla birlikte eklenecek.</p>
+
+  <h2 class="srg-rule t-tech">RANDEVU</h2>
+  <section class="srg-b-cta reveal">
+    <p class="t-heading-m">Binayı ve iki daireyi yapımcısıyla gezin.</p>
+    <div class="srg-b-cta-row">
+      <a class="btn-primary" href={`${root}/iletisim`} data-testid="sv-cta-randevu">{ui.cta.randevu}</a>
+      <a class="btn-ghost" href={`${root}/daireler`}>{ui.cta.daireleri}</a>
+      <a class="btn-ghost" href={`${root}/galeri?bolum=bina`}>{ui.cta.fotograflar}</a>
+    </div>
+  </section>
+</Shell>
+
+<style>
+  .srg-b-open { display: grid; gap: 1.6rem; }
+  @media (min-width: 1024px) {
+    .srg-b-open { grid-template-columns: 5fr 6fr; gap: clamp(2rem, 4vw, 3.2rem); align-items: start; }
+  }
+  .srg-b-kicker { color: var(--color-mey-teal-700); }
+  .srg-b-meta h1 { margin-top: 0.5rem; }
+  .srg-b-lede { margin-top: 0.9rem; max-width: 60ch; }
+  .srg-b-kunye {
+    margin-top: 1.2rem;
+    border: 1px solid var(--color-line);
+    border-inline-start: 2px solid var(--color-mey-red);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: 1rem 1.1rem;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .srg-b-kunye-row { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  .srg-b-kunye-row dt { color: var(--color-graphite-400); }
+  .srg-b-kunye-row dd { font-weight: 500; color: var(--color-graphite-900); text-align: end; }
+
+  .srg-b-craft { display: grid; gap: 1.6rem; }
+  @media (min-width: 900px) { .srg-b-craft { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; } }
+  .srg-b-craft-no { color: var(--color-mey-red); }
+  .srg-b-craft-item h3 { margin-top: 0.4rem; }
+  .srg-b-craft-text { margin-top: 0.4rem; }
+
+  .srg-b-common { display: grid; gap: 1.2rem; }
+  @media (min-width: 800px) { .srg-b-common { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .srg-b-note { margin-top: 0.8rem; color: var(--color-graphite-400); }
+
+  .srg-b-env { display: grid; gap: 1.2rem; }
+  @media (min-width: 800px) {
+    .srg-b-env { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .srg-b-env :global(.srg-b-env-wide) { grid-column: 1 / -1; }
+  }
+
+  .srg-b-cta {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: clamp(1.3rem, 3vw, 2rem);
+  }
+  .srg-b-cta-row { margin-top: 1rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+</style>

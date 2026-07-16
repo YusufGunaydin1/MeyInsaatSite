@@ -1,0 +1,161 @@
+---
+/* SERGİ · Giriş — katalog kapağı: survey hero + numaralı sergi bölümleri. */
+import Shell from '../../../../components/showcase/satilik/sergi/Shell.astro';
+import Plate from '../../../../components/showcase/satilik/sergi/Plate.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import { Image } from 'astro:assets';
+import { shot } from '../../../../components/showcase/satilik/media';
+import { apartments, building, ui } from '../../../../components/showcase/satilik/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const root = base + '/showcases/satilik-daireler/sergi';
+const hero = shot(building.exterior);
+---
+
+<Shell
+  title="El Ele Apartmanı — Satış Kataloğu · Sergi"
+  description="Müteahhitten sıfır 3+2 dubleks iki daire: mimari katalog sunumu."
+  current=""
+>
+  <section class="srg-hero reveal">
+    <figure class="srg-hero-fig">
+      <Image src={hero.img} alt={hero.alt} widths={[560, 900, 1280]} sizes="(min-width: 1024px) 44vw, 94vw" loading="eager" />
+      <span class="srg-hero-line" aria-hidden="true">
+        <span class="t-tech srg-hero-tag">EL ELE APARTMANI · TESLİME HAZIR</span>
+      </span>
+    </figure>
+    <div class="srg-hero-text">
+      <p class="t-tech srg-hero-kicker">{ui.kicker.toUpperCase()}</p>
+      <h1 class="t-display-l">İKİ DUBLEKS,<br />DOĞRUDAN YAPIMCISINDAN</h1>
+      <p class="t-body-l srg-hero-lede">
+        {building.intro} Bu katalog iki daireyi, binayı ve çevreyi plaka plaka sunar;
+        eksik ticari bilgiler görünür biçimde “bilgi yakında” olarak işaretlidir.
+      </p>
+      <div class="srg-hero-cta">
+        <a class="btn-primary" href={`${root}/daireler`} data-testid="sv-cta-daireler">{ui.cta.daireleri}</a>
+        <a class="btn-ghost" href={`${root}/galeri`}>{ui.cta.fotograflar}</a>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="srg-rule t-tech">SERGİ 01 · DAİRELER</h2>
+  <section class="srg-apts">
+    {apartments.map((apt) => (
+      <article class="srg-apt reveal" data-testid={`sv-apt-${apt.id}`}>
+        <Plate imgKey={apt.lead} plate={`EE-${apt.no}`} crop />
+        <div class="srg-apt-meta">
+          <h3 class="t-heading-m">{apt.name} — {apt.tagline}</h3>
+          <p class="srg-apt-hook">{apt.hook}</p>
+          <p class="t-tech srg-apt-facts">3+2 · DUBLEKS · SIFIR</p>
+          <a class="t-tech srg-apt-open" href={`${root}/${apt.id}`} data-testid={`sv-open-${apt.id}`}>
+            {(apt.id === 'daire-1' ? ui.cta.daire1 : ui.cta.daire2).toUpperCase()} →
+          </a>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <h2 class="srg-rule t-tech">SERGİ 02 · BİNA</h2>
+  <section class="srg-bina reveal">
+    <dl class="srg-kunye" data-testid="sv-facts">
+      {building.facts.map((f) => (
+        <div class="srg-kunye-row">
+          <dt class="t-tech">{f.label.toUpperCase()}</dt>
+          <dd>{f.pending ? <Chip /> : f.value}</dd>
+        </div>
+      ))}
+    </dl>
+    <div class="srg-bina-text">
+      {building.craft.map((c, i) => (
+        <article class="srg-craft">
+          <p class="t-tech srg-craft-no">{String(i + 1).padStart(2, '0')}</p>
+          <div>
+            <h3 class="t-heading-s">{c.title}</h3>
+            <p class="t-caption srg-craft-text">{c.text}</p>
+          </div>
+        </article>
+      ))}
+      <a class="t-tech srg-apt-open" href={`${root}/el-ele-apartmani`}>{ui.cta.bina.toUpperCase()} →</a>
+    </div>
+  </section>
+
+  <h2 class="srg-rule t-tech">SERGİ 03 · ÇEVRE</h2>
+  <section class="reveal">
+    <Plate imgKey="daire-1/cevre-manzara.png" plate="EE-ÇV-01" sizes="(min-width: 1024px) 82vw, 94vw" />
+  </section>
+
+  <h2 class="srg-rule t-tech">SERGİ 04 · RANDEVU</h2>
+  <section class="srg-cta reveal">
+    <p class="t-heading-m">Plakalar fikir verir; ışığı yerinde görürsünüz.</p>
+    <p class="t-body srg-cta-text">İki daire de randevuyla, yapımcı eşliğinde gezilir.</p>
+    <div class="srg-hero-cta">
+      <a class="btn-primary" href={`${root}/iletisim`} data-testid="sv-cta-randevu">{ui.cta.randevu}</a>
+      <a class="btn-ghost" href={`${root}/iletisim`}>{ui.cta.detaylar}</a>
+    </div>
+  </section>
+</Shell>
+
+<style>
+  .srg-hero { display: grid; gap: 1.6rem; }
+  @media (min-width: 1024px) {
+    .srg-hero { grid-template-columns: 5fr 6fr; gap: clamp(1.8rem, 3.5vw, 3rem); align-items: center; }
+  }
+  .srg-hero-fig { position: relative; border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; }
+  .srg-hero-fig :global(img) { display: block; width: 100%; height: auto; }
+  .srg-hero-line {
+    position: absolute;
+    inset-inline: 0;
+    top: 34%;
+    border-top: 1px solid var(--color-mey-red);
+    display: block;
+  }
+  .srg-hero-tag {
+    position: absolute;
+    inset-inline-start: 0.7rem;
+    top: 0.35rem;
+    background: var(--color-mey-red);
+    color: #fff;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-brand);
+  }
+  .srg-hero-kicker { color: var(--color-mey-teal-700); }
+  .srg-hero-text h1 { margin-top: 0.7rem; }
+  .srg-hero-lede { margin-top: 1rem; max-width: 56ch; }
+  .srg-hero-cta { margin-top: 1.4rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+  .srg-apts { display: grid; gap: 1.8rem; }
+  @media (min-width: 900px) { .srg-apts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.2rem; } }
+  .srg-apt-meta { padding-top: 0.9rem; }
+  .srg-apt-hook { margin-top: 0.5rem; line-height: 1.65; max-width: 52ch; }
+  .srg-apt-facts { margin-top: 0.7rem; color: var(--color-graphite-400); }
+  .srg-apt-open { display: inline-block; margin-top: 0.9rem; color: var(--color-mey-red); }
+  .srg-apt-open:hover { color: var(--color-mey-red-700); }
+
+  .srg-bina { display: grid; gap: 2rem; }
+  @media (min-width: 1024px) { .srg-bina { grid-template-columns: 5fr 6fr; gap: 3rem; align-items: start; } }
+  .srg-kunye {
+    border: 1px solid var(--color-line);
+    border-inline-start: 2px solid var(--color-mey-red);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: 1.1rem 1.2rem;
+    display: grid;
+    gap: 0.65rem;
+  }
+  .srg-kunye-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .srg-kunye-row dt { color: var(--color-graphite-400); }
+  .srg-kunye-row dd { font-weight: 500; color: var(--color-graphite-900); text-align: end; }
+  .srg-craft { display: flex; gap: 0.9rem; align-items: baseline; }
+  .srg-craft + .srg-craft { margin-top: 1.1rem; }
+  .srg-craft-no { color: var(--color-mey-red); }
+  .srg-craft-text { margin-top: 0.3rem; max-width: 60ch; }
+  .srg-bina-text .srg-apt-open { margin-top: 1.4rem; }
+
+  .srg-cta {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    padding: clamp(1.4rem, 3.5vw, 2.2rem);
+  }
+  .srg-cta-text { margin-top: 0.5rem; color: var(--color-graphite-600); }
+</style>
