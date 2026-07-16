@@ -20,14 +20,13 @@ interface Props {
 }
 
 export default function GalleryLightbox({ items, tabs, initialTab = 'tumu' }: Props) {
-  // Statik sayfada derin bağlantı: /galeri?bolum=daire-2 sekmeyi istemcide seçer
-  const [tab, setTab] = useState(() => {
-    const wanted =
-      typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search).get('bolum') ?? initialTab
-        : initialTab;
-    return tabs.some((t) => t.id === wanted) ? wanted : 'tumu';
-  });
+  const [tab, setTab] = useState(tabs.some((t) => t.id === initialTab) ? initialTab : 'tumu');
+  // Derin bağlantı (?bolum=) SSR uyumu için mount SONRASI uygulanır
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('bolum');
+    if (q && tabs.some((t) => t.id === q)) setTab(q);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [open, setOpen] = useState<number | null>(null);
   const restoreFocus = useRef<HTMLElement | null>(null);
   const closeBtn = useRef<HTMLButtonElement | null>(null);

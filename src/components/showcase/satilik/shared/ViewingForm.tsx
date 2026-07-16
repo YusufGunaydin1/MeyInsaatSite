@@ -3,7 +3,7 @@
   yükleniyor, başarı ve hata durumları tasarım incelemesi için canlandırılır;
   sonuç, formun üstündeki açıkça işaretli "vitrin kontrolü" ile seçilir.
 */
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { form as copy } from '../data';
 import './form.css';
 
@@ -18,14 +18,13 @@ export default function ViewingForm({ initialApartment = '' }: Props) {
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
   const [channel, setChannel] = useState(copy.fields.channel.options[0]);
-  // Derin bağlantı: /iletisim?daire=daire-2 ilgili daireyi istemcide ön-seçer
-  const [apartment, setApartment] = useState(() => {
-    if (typeof window === 'undefined') return initialApartment;
+  const [apartment, setApartment] = useState(initialApartment);
+  // Derin bağlantı (?daire=) SSR'la uyuşmazlık yaratmasın diye mount SONRASI uygulanır
+  useEffect(() => {
     const q = new URLSearchParams(window.location.search).get('daire');
-    if (q === 'daire-1') return 'Daire 1';
-    if (q === 'daire-2') return 'Daire 2';
-    return initialApartment;
-  });
+    if (q === 'daire-1') setApartment('Daire 1');
+    else if (q === 'daire-2') setApartment('Daire 2');
+  }, []);
   const [date, setDate] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -156,7 +155,7 @@ export default function ViewingForm({ initialApartment = '' }: Props) {
                 name="svf-apartment"
                 checked={apartment === opt}
                 onChange={() => setApartment(opt)}
-                data-testid={`svf-apartment-${opt.replace(/\s/g, '').toLowerCase()}`}
+                data-testid={`svf-apartment-${opt.replace(/\s/g, '').replace(/İ/g, 'I').toLowerCase()}`}
               />
               {opt}
             </label>

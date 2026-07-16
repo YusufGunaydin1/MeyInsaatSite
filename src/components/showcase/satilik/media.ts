@@ -9,8 +9,17 @@
 import type { ImageMetadata } from 'astro';
 import { BLOCKED_KEYS, byKey, type MediaEntry } from './manifest';
 
+/*
+  Negatif desenler ŞART: eager glob dosyayı modül grafına sokar ve Vite orijinali
+  dist'e YAYAR — filigranlı iki kare sayfalarda hiç render edilmese bile publicte
+  servis edilirdi. Graf dışı = yayım dışı; publicAsset() koruması yedek katmandır.
+*/
 const modules = import.meta.glob<{ default: ImageMetadata }>(
-  '/images/for_sale/El_Ele/daire-*/*.{png,jpeg}',
+  [
+    '/images/for_sale/El_Ele/daire-*/*.{png,jpeg}',
+    '!/images/for_sale/El_Ele/daire-2/cevre-deniz.png',
+    '!/images/for_sale/El_Ele/daire-1/d2-teras.png',
+  ],
   { eager: true }
 );
 
