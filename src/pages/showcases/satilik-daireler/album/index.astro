@@ -1,0 +1,151 @@
+---
+/* ALBÜM · Giriş — imaj öncülüğünde editoryal satış anlatısı (bölüm bölüm). */
+import Shell from '../../../../components/showcase/satilik/album/Shell.astro';
+import Figure from '../../../../components/showcase/satilik/album/Figure.astro';
+import { apartments, building, ui } from '../../../../components/showcase/satilik/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const root = base + '/showcases/satilik-daireler/album';
+---
+
+<Shell
+  title="El Ele Apartmanı — Satılık Dubleks Daireler · Albüm"
+  description="Mey İnşaat'tan El Ele Apartmanı'nda müteahhitten sıfır 3+2 dubleks iki daire."
+  current=""
+>
+  <section class="alb-hero">
+    <Figure imgKey="daire-1/d1-teras-2.png" loading="eager" quiet class="reveal" />
+    <div class="alb-hero-text reveal">
+      <p class="alb-eyebrow">{ui.kicker}</p>
+      <h1 class="alb-display alb-hero-title">
+        El Ele Apartmanı’nda,<br />yapandan alınan iki ev
+      </h1>
+      <p class="alb-hero-lede">
+        {building.intro} İki daire de üçer yatak odalı, ikişer salonlu birer dubleks —
+        biri denize, öteki çatıların sessizliğine bakıyor.
+      </p>
+      <div class="alb-cta-row">
+        <a class="btn-primary" href={`${root}/daireler`} data-testid="sv-cta-daireler">{ui.cta.daireleri}</a>
+        <a class="alb-link" href={`${root}/el-ele-apartmani`}>{ui.cta.bina}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="alb-chapter">
+    <header class="alb-ch-head reveal">
+      <p class="alb-eyebrow">Bölüm I · Daireler</p>
+      <h2 class="alb-display alb-ch-title">Aynı binada iki ayrı hayat</h2>
+    </header>
+
+    {apartments.map((apt, i) => (
+      <article class:list={['alb-apt reveal', i % 2 === 1 && 'alb-apt-flip']} data-testid={`sv-apt-${apt.id}`}>
+        <Figure imgKey={apt.lead} sizes="(min-width: 900px) 56vw, 94vw" class="alb-apt-fig" />
+        <div class="alb-apt-text">
+          <p class="alb-eyebrow">{apt.no} · {apt.tagline}</p>
+          <h3 class="alb-display alb-apt-name">{apt.name}</h3>
+          <p>{apt.hook}</p>
+          <p class="alb-serif-cap">3+2 · dubleks · sıfır, müteahhitten</p>
+          <a class="alb-link" href={`${root}/${apt.id}`} data-testid={`sv-open-${apt.id}`}>
+            {apt.id === 'daire-1' ? ui.cta.daire1 : ui.cta.daire2}
+          </a>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="alb-chapter">
+    <header class="alb-ch-head reveal">
+      <p class="alb-eyebrow">Bölüm II · Bina</p>
+      <h2 class="alb-display alb-ch-title">{building.name}</h2>
+    </header>
+    <div class="alb-bina reveal">
+      <Figure imgKey={building.exterior} sizes="(min-width: 900px) 40vw, 94vw" />
+      <div class="alb-bina-text">
+        <p>{building.positioning}. Beyaz sıvalı cephe, ferforje balkonlar, kiremit kırması çatı —
+        binayı yapan el, daireleri de kendisi teslim ediyor.</p>
+        <ul class="alb-craft">
+          {building.craft.map((c) => (
+            <li>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+            </li>
+          ))}
+        </ul>
+        <a class="alb-link" href={`${root}/el-ele-apartmani`}>{ui.cta.bina}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="alb-chapter">
+    <header class="alb-ch-head reveal">
+      <p class="alb-eyebrow">Bölüm III · Çevre</p>
+      <h2 class="alb-display alb-ch-title">Kıyının ritmi</h2>
+    </header>
+    <div class="reveal">
+      <Figure imgKey="daire-1/cevre-manzara.png" sizes="(min-width: 1180px) 1100px, 94vw" />
+      <p class="alb-center-note">
+        Dosyadaki çevre kareleri semtin kıyı şeridini ve sahil parkını gösteriyor;
+        konum ve mesafe bilgileri paylaşılmadan burada yalnız fotoğraflar konuşuyor.
+      </p>
+      <p class="alb-center-note">
+        <a class="alb-link" href={`${root}/galeri`} data-testid="sv-cta-galeri">{ui.cta.fotograflar}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="alb-chapter alb-invite reveal">
+    <p class="alb-eyebrow">Bölüm IV · Davet</p>
+    <h2 class="alb-display alb-ch-title">Gelin, ikisini de yerinde gezelim</h2>
+    <p class="alb-invite-text">
+      Fiyat, alan ve teslim koşulları için doğrudan Mey İnşaat ile konuşursunuz;
+      randevu bırakın, size uyan saatte kapıyı birlikte açalım.
+    </p>
+    <div class="alb-cta-row alb-cta-center">
+      <a class="btn-primary" href={`${root}/iletisim`} data-testid="sv-cta-randevu">{ui.cta.randevu}</a>
+      <a class="alb-link" href={`${root}/iletisim`}>{ui.cta.gorus}</a>
+    </div>
+  </section>
+</Shell>
+
+<style>
+  section { max-width: 1180px; margin-inline: auto; padding-inline: 1rem; }
+
+  .alb-hero { padding-top: clamp(1.6rem, 4vw, 3rem); }
+  .alb-hero-text { max-width: 760px; margin-inline: auto; text-align: center; padding-top: clamp(1.8rem, 4vw, 3rem); }
+  .alb-hero-title { font-size: clamp(2rem, 5vw, 3.4rem); margin-top: 0.8rem; }
+  .alb-hero-lede { margin-top: 1.1rem; font-size: 1.0625rem; line-height: 1.75; }
+  .alb-cta-row { margin-top: 1.6rem; display: flex; align-items: center; justify-content: center; gap: 1.4rem; flex-wrap: wrap; }
+
+  .alb-chapter { padding-top: clamp(3.4rem, 9vh, 6.5rem); }
+  .alb-ch-head { text-align: center; max-width: 720px; margin-inline: auto; }
+  .alb-ch-title { font-size: clamp(1.7rem, 3.6vw, 2.6rem); margin-top: 0.7rem; }
+
+  .alb-apt {
+    margin-top: clamp(2.2rem, 5vw, 3.6rem);
+    display: grid;
+    gap: 1.4rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .alb-apt { grid-template-columns: 7fr 5fr; gap: clamp(1.6rem, 4vw, 3.2rem); }
+    .alb-apt-flip .alb-apt-fig { order: 2; }
+  }
+  .alb-apt-fig :global(img) { aspect-ratio: 4 / 3; object-fit: cover; }
+  .alb-apt-name { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0.55rem 0 0.7rem; }
+  .alb-apt-text p + p { margin-top: 0.7rem; }
+  .alb-apt-text .alb-link { display: inline-block; margin-top: 1.1rem; }
+
+  .alb-bina { margin-top: clamp(2rem, 5vw, 3.2rem); display: grid; gap: 1.6rem; }
+  @media (min-width: 900px) { .alb-bina { grid-template-columns: 5fr 7fr; align-items: start; } }
+  .alb-bina-text > p { font-size: 1.0625rem; line-height: 1.7; }
+  .alb-craft { margin-top: 1.4rem; display: grid; gap: 1.1rem; }
+  .alb-craft h3 { font-family: var(--alb-serif); font-weight: 600; font-size: 1.125rem; }
+  .alb-craft p { margin-top: 0.25rem; font-size: 0.9688rem; line-height: 1.6; }
+  .alb-bina-text .alb-link { display: inline-block; margin-top: 1.3rem; }
+
+  .alb-center-note { max-width: 640px; margin: 1.2rem auto 0; text-align: center; }
+
+  .alb-invite { text-align: center; max-width: 760px; }
+  .alb-invite-text { margin-top: 1rem; font-size: 1.0625rem; line-height: 1.75; }
+  .alb-cta-center { justify-content: center; }
+</style>

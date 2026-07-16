@@ -1,0 +1,129 @@
+---
+/*
+  ALBÜM · Daire 2 — "sakin çatı katlı dubleks". Daire 1 sayfasının kopyası DEĞİL:
+  açılış yan yana (portre + metin), bölümler kenar-notlu asimetrik düzende akar,
+  künye sağda sabit kart olarak durur. Ev, üst katından aşağı doğru anlatılır.
+*/
+import Shell from '../../../../components/showcase/satilik/album/Shell.astro';
+import Figure from '../../../../components/showcase/satilik/album/Figure.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import { daire2 as apt, ui } from '../../../../components/showcase/satilik/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const root = base + '/showcases/satilik-daireler/album';
+---
+
+<Shell
+  title="Daire 2 — Sakin Çatı Katlı Dubleks · Albüm"
+  description={apt.hook}
+  current="daire-2"
+>
+  <article data-testid="sv-detail-daire-2">
+    <section class="alb-d2-open reveal">
+      <Figure imgKey={apt.lead} sizes="(min-width: 900px) 44vw, 94vw" loading="eager" class="alb-d2-open-fig" />
+      <div class="alb-d2-open-text">
+        <p class="alb-eyebrow">{apt.no} · {apt.tagline}</p>
+        <h1 class="alb-display">{apt.name}</h1>
+        <p class="alb-d2-intro">{apt.intro}</p>
+        <aside class="alb-d2-kunye" data-testid="sv-facts">
+          <p class="t-tech alb-d2-kunye-title">KÜNYE</p>
+          <dl>
+            {apt.facts.map((f) => (
+              <div class="alb-d2-kunye-row">
+                <dt>{f.label}</dt>
+                <dd>{f.pending ? <Chip /> : f.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section class="alb-d2-hero reveal">
+      <Figure imgKey={apt.hero} sizes="(min-width: 1180px) 1100px, 94vw" />
+    </section>
+
+    {apt.sections.map((s, i) => (
+      <section class="alb-d2-ch reveal" id={s.id}>
+        <div class="alb-d2-ch-side">
+          <p class="alb-eyebrow">{String(i + 1).padStart(2, '0')} · {s.eyebrow}</p>
+          <h2 class="alb-display alb-d2-ch-title">{s.title}</h2>
+          <p class="alb-d2-ch-text">{s.text}</p>
+        </div>
+        <div class:list={['alb-d2-ch-figs', s.keys.length > 2 && 'alb-d2-ch-figs-grid']}>
+          {s.keys.map((k) => (
+            <Figure imgKey={k} sizes="(min-width: 900px) 34vw, 94vw" />
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section class="alb-d2-next reveal">
+      <p class="alb-serif-cap">Çatının sessizliği en iyi yerinde dinlenir.</p>
+      <div class="alb-d2-next-row">
+        <a class="btn-primary" href={`${root}/iletisim?daire=daire-2`} data-testid="sv-cta-randevu">{ui.cta.randevu}</a>
+        <a class="alb-link" href={`${root}/galeri?bolum=daire-2`}>{ui.cta.fotograflar}</a>
+        <a class="alb-link" href={`${root}/daire-1`} data-testid="sv-switch-daire-1">Öteki ev: {ui.cta.daire1}</a>
+      </div>
+    </section>
+  </article>
+</Shell>
+
+<style>
+  section { max-width: 1180px; margin-inline: auto; padding-inline: 1rem; }
+
+  .alb-d2-open {
+    padding-top: clamp(1.8rem, 4.5vw, 3.2rem);
+    display: grid;
+    gap: 1.6rem;
+  }
+  @media (min-width: 900px) {
+    .alb-d2-open { grid-template-columns: 5fr 6fr; gap: clamp(2rem, 4.5vw, 3.6rem); align-items: start; }
+  }
+  .alb-d2-open-text h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); margin-top: 0.6rem; }
+  .alb-d2-intro { margin-top: 1rem; line-height: 1.78; }
+
+  .alb-d2-kunye {
+    margin-top: 1.5rem;
+    border: 1px solid var(--alb-line);
+    border-inline-start: 2px solid var(--color-mey-red);
+    border-radius: var(--radius-brand);
+    background: var(--alb-surface);
+    padding: 1rem 1.2rem;
+    max-width: 460px;
+  }
+  .alb-d2-kunye-title { color: var(--color-mey-red); }
+  .alb-d2-kunye dl { margin-top: 0.6rem; display: grid; gap: 0.45rem; }
+  .alb-d2-kunye-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .alb-d2-kunye-row dt { font-size: 0.875rem; color: var(--color-graphite-400); }
+  .alb-d2-kunye-row dd { font-weight: 500; color: var(--alb-ink); font-size: 0.9375rem; text-align: end; }
+
+  .alb-d2-hero { padding-top: clamp(2.4rem, 6vw, 4rem); }
+
+  .alb-d2-ch {
+    padding-top: clamp(2.8rem, 7vh, 4.8rem);
+    display: grid;
+    gap: 1.3rem;
+  }
+  @media (min-width: 900px) {
+    .alb-d2-ch { grid-template-columns: 4fr 7fr; gap: clamp(1.8rem, 4vw, 3.2rem); align-items: start; }
+    .alb-d2-ch-side { position: sticky; top: 1.5rem; }
+  }
+  .alb-d2-ch-title { font-size: clamp(1.45rem, 2.8vw, 2rem); margin-top: 0.55rem; }
+  .alb-d2-ch-text { margin-top: 0.8rem; line-height: 1.72; }
+
+  .alb-d2-ch-figs { display: grid; gap: 1.1rem; }
+  @media (min-width: 640px) {
+    .alb-d2-ch-figs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  .alb-d2-next { text-align: center; padding-top: clamp(3rem, 8vh, 5rem); }
+  .alb-d2-next-row {
+    margin-top: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.3rem;
+    flex-wrap: wrap;
+  }
+</style>

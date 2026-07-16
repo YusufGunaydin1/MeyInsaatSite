@@ -1,0 +1,125 @@
+/* Galeri + lightbox — taban stil concrete/graphite tokenlarıyla; sv-aksam koyu tema ezmesi. */
+
+.slx-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.slx-tab {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-brand);
+  background: #fff;
+  color: var(--color-graphite-600);
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 150ms ease-out, color 150ms ease-out;
+}
+.slx-tab:hover { border-color: var(--color-graphite-400); color: var(--color-graphite-900); }
+.slx-tab[aria-selected='true'] {
+  color: var(--color-mey-red);
+  border-color: var(--color-mey-red);
+}
+
+.slx-count { margin-top: 1rem; color: var(--color-graphite-400); }
+
+.slx-grid {
+  margin-top: 0.75rem;
+  columns: 1;
+  column-gap: 1rem;
+}
+@media (min-width: 640px) { .slx-grid { columns: 2; } }
+@media (min-width: 1024px) { .slx-grid { columns: 3; } }
+
+.slx-cell {
+  display: block;
+  width: 100%;
+  margin: 0 0 1rem;
+  break-inside: avoid;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-brand);
+  background: #fff;
+  padding: 0;
+  cursor: zoom-in;
+  text-align: start;
+  overflow: hidden;
+}
+.slx-cell img { display: block; width: 100%; height: auto; }
+.slx-cell:hover img { opacity: 0.92; }
+.slx-cap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem 0.65rem;
+}
+.slx-cap-group { color: var(--color-mey-red); white-space: nowrap; }
+.slx-cap-text {
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: var(--color-graphite-600);
+}
+
+.slx-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgb(14 15 17 / 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.75rem, 3vw, 2rem);
+}
+.slx-dialog {
+  max-width: min(1100px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.slx-dialog > img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100dvh - 8.5rem);
+  width: auto;
+  height: auto;
+  margin-inline: auto;
+  border-radius: var(--radius-brand);
+  background: var(--color-night-800);
+}
+.slx-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.slx-info { display: flex; align-items: baseline; gap: 0.75rem; min-width: 0; }
+.slx-info-count { color: var(--color-red-on-dark); white-space: nowrap; }
+.slx-info-cap { color: rgb(244 244 242 / 0.85); font-size: 0.9375rem; }
+.slx-nav { display: flex; gap: 0.5rem; }
+.slx-btn {
+  border: 1px solid rgb(255 255 255 / 0.35);
+  border-radius: var(--radius-brand);
+  background: transparent;
+  color: #fff;
+  padding: 0.5rem 0.85rem;
+  font: inherit;
+  cursor: pointer;
+}
+.slx-btn:hover { background: rgb(255 255 255 / 0.1); }
+.slx-overlay :focus-visible { outline-color: var(--color-red-on-dark); }
+
+/* ── AKŞAM teması: galeri koyu sahnede yaşar ── */
+.sv-aksam .slx-tab { background: var(--color-night-800); color: rgb(244 244 242 / 0.75); border-color: rgb(255 255 255 / 0.16); }
+.sv-aksam .slx-tab:hover { color: #fff; border-color: rgb(255 255 255 / 0.4); }
+.sv-aksam .slx-tab[aria-selected='true'] { color: var(--color-red-on-dark); border-color: var(--color-red-on-dark); }
+.sv-aksam .slx-count { color: rgb(244 244 242 / 0.5); }
+.sv-aksam .slx-cell { background: var(--color-night-800); border-color: rgb(255 255 255 / 0.12); }
+.sv-aksam .slx-cap-text { color: rgb(244 244 242 / 0.78); }
+.sv-aksam .slx-cap-group { color: var(--color-mey-teal); }
+
+/* ── ALBÜM teması: sıcak zemin, serif altyazı ── */
+.sv-album .slx-tab { background: transparent; }
+.sv-album .slx-cell { background: transparent; border: none; }
+.sv-album .slx-cell img { border: 1px solid var(--color-line); border-radius: var(--radius-brand); }
+.sv-album .slx-cap { padding-inline: 0.15rem; }
+.sv-album .slx-cap-text { font-family: 'IBM Plex Serif', Georgia, serif; font-style: italic; }

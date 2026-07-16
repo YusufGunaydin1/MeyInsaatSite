@@ -1,0 +1,70 @@
+---
+/* ALBÜM · İletişim & randevu — kanallar (gerçek bilgi yakında) + vitrin formu. */
+import Shell from '../../../../components/showcase/satilik/album/Shell.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import ViewingForm from '../../../../components/showcase/satilik/shared/ViewingForm';
+import { form, ui } from '../../../../components/showcase/satilik/data';
+
+const channels = ['Telefon', 'WhatsApp', 'E-posta'];
+---
+
+<Shell
+  title="İletişim & Randevu — El Ele Apartmanı · Albüm"
+  description="Daireler için bilgi isteyin ya da özel gezi randevusu bırakın."
+  current="iletisim"
+>
+  <section class="alb-c-head reveal">
+    <p class="alb-eyebrow">İletişim</p>
+    <h1 class="alb-display">{form.title}</h1>
+    <p class="alb-c-lede">{form.intro}</p>
+  </section>
+
+  <section class="alb-c-body">
+    <div class="alb-c-channels reveal" aria-label="Doğrudan iletişim kanalları">
+      <p class="t-tech alb-c-ch-title">DOĞRUDAN ULAŞIN</p>
+      {channels.map((c) => (
+        <div class="alb-c-ch">
+          <p class="alb-c-ch-name">{c}</p>
+          <Chip />
+        </div>
+      ))}
+      <p class="alb-serif-cap alb-c-ch-note">
+        Kanal bilgileri satış duyurusuyla birlikte eklenecek; şimdilik formu kullanın.
+      </p>
+    </div>
+
+    <div class="alb-c-form reveal">
+      <ViewingForm client:load />
+    </div>
+  </section>
+</Shell>
+
+<style>
+  section { max-width: 1180px; margin-inline: auto; padding-inline: 1rem; }
+  .alb-c-head { text-align: center; max-width: 720px; padding-top: clamp(2.2rem, 6vw, 4rem); }
+  .alb-c-head h1 { font-size: clamp(1.9rem, 4.4vw, 3rem); margin-top: 0.7rem; }
+  .alb-c-lede { margin-top: 1rem; line-height: 1.72; }
+
+  .alb-c-body {
+    padding-top: clamp(2rem, 5vw, 3.2rem);
+    display: grid;
+    gap: 2rem;
+    max-width: 1020px;
+  }
+  @media (min-width: 900px) {
+    .alb-c-body { grid-template-columns: 4fr 7fr; gap: clamp(2rem, 4.5vw, 3.5rem); align-items: start; }
+  }
+
+  .alb-c-channels {
+    border: 1px solid var(--alb-line);
+    border-radius: var(--radius-brand);
+    background: var(--alb-surface);
+    padding: 1.2rem 1.3rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .alb-c-ch-title { color: var(--color-mey-red); }
+  .alb-c-ch { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .alb-c-ch-name { font-weight: 500; color: var(--alb-ink); }
+  .alb-c-ch-note { margin-top: 0.3rem; }
+</style>

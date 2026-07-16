@@ -1,0 +1,106 @@
+---
+/* ALBÜM · Daireler — yalnız iki ev; tablo değil, karakter anlatısı. */
+import Shell from '../../../../components/showcase/satilik/album/Shell.astro';
+import Figure from '../../../../components/showcase/satilik/album/Figure.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import { apartments, ui } from '../../../../components/showcase/satilik/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const root = base + '/showcases/satilik-daireler/album';
+---
+
+<Shell
+  title="Daireler — El Ele Apartmanı · Albüm"
+  description="El Ele Apartmanı'ndaki iki 3+2 dubleks dairenin karakterleri."
+  current="daireler"
+>
+  <section class="alb-page-head reveal">
+    <p class="alb-eyebrow">Daireler</p>
+    <h1 class="alb-display">İki dubleks, iki karakter</h1>
+    <p class="alb-lede">
+      Binada satışta yalnız iki daire var; ikisi de üç yatak odalı, iki salonlu birer dubleks.
+      Daire 1 ışığını denizden, Daire 2 sükûnetini çatılardan alıyor. Sayısal detaylar
+      netleşene dek bu sayfa evleri rakamla değil, karakterle anlatır.
+    </p>
+  </section>
+
+  {apartments.map((apt, i) => (
+    <section class:list={['alb-entry reveal', i % 2 === 1 && 'alb-entry-flip']} data-testid={`sv-apt-${apt.id}`}>
+      <Figure imgKey={apt.lead} sizes="(min-width: 900px) 52vw, 94vw" class="alb-entry-fig" />
+      <div class="alb-entry-body">
+        <p class="alb-eyebrow">{apt.no} · {apt.tagline}</p>
+        <h2 class="alb-display alb-entry-name">{apt.name}</h2>
+        <p class="alb-entry-hook">{apt.hook}</p>
+        <ul class="alb-char">
+          {apt.character.slice(0, 4).map((c) => (
+            <li class="alb-serif-cap">— {c}</li>
+          ))}
+        </ul>
+        <dl class="alb-facts">
+          {apt.facts.slice(0, 4).map((f) => (
+            <div class="alb-fact">
+              <dt class="t-tech">{f.label}</dt>
+              <dd>{f.pending ? <Chip /> : f.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <div class="alb-entry-cta">
+          <a class="btn-primary" href={`${root}/${apt.id}`} data-testid={`sv-open-${apt.id}`}>
+            {apt.id === 'daire-1' ? ui.cta.daire1 : ui.cta.daire2}
+          </a>
+          <a class="alb-link" href={`${root}/galeri?bolum=${apt.id}`}>{ui.cta.fotograflar}</a>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="alb-compare reveal">
+    <h2 class="alb-display alb-compare-title">Hangisi size göre?</h2>
+    <p>
+      Gün batımını terasta denizle karşılamak isteyen, misafirini iki katlı bir ev gezdirecek
+      olan için <a class="alb-link" href={`${root}/daire-1`}>Daire 1</a>; çatı katında sessiz
+      bir çalışma-yaşama düzeni kuran, terasında gökyüzüyle baş başa kalmak isteyen için
+      <a class="alb-link" href={`${root}/daire-2`}>Daire 2</a>. İkisini de aynı gün gezmek
+      mümkün — <a class="alb-link" href={`${root}/iletisim`}>{ui.cta.randevu.toLowerCase()}</a>.
+    </p>
+  </section>
+</Shell>
+
+<style>
+  section { max-width: 1180px; margin-inline: auto; padding-inline: 1rem; }
+
+  .alb-page-head { text-align: center; max-width: 760px; padding-top: clamp(2.2rem, 6vw, 4rem); }
+  .alb-page-head h1 { font-size: clamp(1.9rem, 4.4vw, 3rem); margin-top: 0.7rem; }
+  .alb-lede { margin-top: 1.1rem; font-size: 1.0625rem; line-height: 1.75; }
+
+  .alb-entry {
+    padding-top: clamp(2.8rem, 7vh, 5rem);
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .alb-entry { grid-template-columns: 6fr 5fr; gap: clamp(1.8rem, 4vw, 3.4rem); }
+    .alb-entry-flip .alb-entry-fig { order: 2; }
+  }
+  .alb-entry-name { font-size: clamp(1.7rem, 3.4vw, 2.4rem); margin-block: 0.5rem 0.7rem; }
+  .alb-entry-hook { font-size: 1.0625rem; line-height: 1.7; }
+  .alb-char { margin-top: 0.9rem; display: grid; gap: 0.3rem; }
+
+  .alb-facts {
+    margin-top: 1.2rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem 1.2rem;
+    border-top: 1px solid var(--alb-line);
+    padding-top: 1.1rem;
+  }
+  .alb-fact dt { color: var(--color-graphite-400); }
+  .alb-fact dd { margin-top: 0.25rem; color: var(--alb-ink); font-weight: 500; }
+
+  .alb-entry-cta { margin-top: 1.4rem; display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+
+  .alb-compare { max-width: 720px; text-align: center; padding-top: clamp(3rem, 8vh, 5.5rem); }
+  .alb-compare-title { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+  .alb-compare p { margin-top: 1rem; font-size: 1.0625rem; line-height: 1.8; }
+</style>

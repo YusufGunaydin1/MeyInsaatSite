@@ -1,0 +1,115 @@
+---
+/*
+  ALBÜM · Daire 1 — "denize bakan dubleks". Kompozisyon: tam genişlik hero,
+  ortalanmış bölüm başları, terasta genişleyen final. (Daire 2 sayfası bilerek
+  farklı kurgudadır: yan yana açılış + kenar-not düzeni.)
+*/
+import Shell from '../../../../components/showcase/satilik/album/Shell.astro';
+import Figure from '../../../../components/showcase/satilik/album/Figure.astro';
+import Chip from '../../../../components/showcase/satilik/shared/Chip.astro';
+import { daire1 as apt, ui } from '../../../../components/showcase/satilik/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const root = base + '/showcases/satilik-daireler/album';
+const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+---
+
+<Shell
+  title="Daire 1 — Denize Bakan Dubleks · Albüm"
+  description={apt.hook}
+  current="daire-1"
+>
+  <article data-testid="sv-detail-daire-1">
+    <section class="alb-d1-hero">
+      <Figure imgKey={apt.hero} loading="eager" quiet class="reveal" />
+      <div class="alb-d1-head reveal">
+        <p class="alb-eyebrow">{apt.no} · {apt.tagline}</p>
+        <h1 class="alb-display">{apt.name}</h1>
+        <p class="alb-d1-hook">{apt.intro}</p>
+      </div>
+      <dl class="alb-d1-facts reveal" data-testid="sv-facts">
+        {apt.facts.map((f) => (
+          <div class="alb-d1-fact">
+            <dt class="t-tech">{f.label}</dt>
+            <dd>{f.pending ? <Chip /> : f.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    {apt.sections.map((s, i) => (
+      <section class:list={['alb-d1-ch reveal', s.id === 'teras' && 'alb-d1-teras']} id={s.id}>
+        <header class="alb-d1-ch-head">
+          <p class="alb-eyebrow">Bölüm {roman[i]} · {s.eyebrow}</p>
+          <h2 class="alb-display">{s.title}</h2>
+          <p class="alb-d1-ch-text">{s.text}</p>
+        </header>
+        <div class:list={['alb-d1-figs', s.keys.length > 1 && 'alb-d1-figs-multi']}>
+          {s.keys.map((k, j) => (
+            <Figure
+              imgKey={k}
+              sizes={j === 0 || s.keys.length === 1 ? '(min-width: 1180px) 1100px, 94vw' : '(min-width: 900px) 44vw, 94vw'}
+              class={j === 0 ? 'alb-d1-fig-lead' : ''}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section class="alb-d1-next reveal">
+      <p class="alb-serif-cap">Bu evi gezmeden karar vermeyin.</p>
+      <div class="alb-d1-next-row">
+        <a class="btn-primary" href={`${root}/iletisim?daire=daire-1`} data-testid="sv-cta-randevu">{ui.cta.randevu}</a>
+        <a class="alb-link" href={`${root}/galeri?bolum=daire-1`}>{ui.cta.fotograflar}</a>
+        <a class="alb-link" href={`${root}/daire-2`} data-testid="sv-switch-daire-2">Öteki ev: {ui.cta.daire2}</a>
+      </div>
+    </section>
+  </article>
+</Shell>
+
+<style>
+  section { max-width: 1180px; margin-inline: auto; padding-inline: 1rem; }
+
+  .alb-d1-hero { padding-top: clamp(1.6rem, 4vw, 3rem); }
+  .alb-d1-head { max-width: 780px; margin-inline: auto; text-align: center; padding-top: clamp(1.6rem, 4vw, 2.6rem); }
+  .alb-d1-head h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); margin-top: 0.6rem; }
+  .alb-d1-hook { margin-top: 1.1rem; font-size: 1.0625rem; line-height: 1.78; text-align: start; }
+
+  .alb-d1-facts {
+    margin-top: clamp(1.8rem, 4vw, 2.6rem);
+    padding-block: 1.1rem;
+    border-block: 1px solid var(--alb-line);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.9rem 2.2rem;
+  }
+  .alb-d1-fact { text-align: center; }
+  .alb-d1-fact dt { color: var(--color-graphite-400); }
+  .alb-d1-fact dd { margin-top: 0.3rem; font-weight: 500; color: var(--alb-ink); }
+
+  .alb-d1-ch { padding-top: clamp(3rem, 8vh, 5.5rem); }
+  .alb-d1-ch-head { max-width: 700px; margin-inline: auto; text-align: center; }
+  .alb-d1-ch-head h2 { font-size: clamp(1.6rem, 3.2vw, 2.3rem); margin-top: 0.6rem; }
+  .alb-d1-ch-text { margin-top: 0.9rem; line-height: 1.75; text-align: start; }
+
+  .alb-d1-figs { margin-top: clamp(1.6rem, 4vw, 2.4rem); display: grid; gap: 1.2rem; }
+  @media (min-width: 900px) {
+    .alb-d1-figs-multi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .alb-d1-figs-multi :global(.alb-d1-fig-lead) { grid-column: 1 / -1; }
+  }
+
+  /* Teras bölümü: albümün genişleyen finali */
+  .alb-d1-teras { max-width: 1320px; }
+  .alb-d1-teras .alb-d1-figs { gap: 1rem; }
+
+  .alb-d1-next { text-align: center; padding-top: clamp(3rem, 8vh, 5rem); }
+  .alb-d1-next-row {
+    margin-top: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.3rem;
+    flex-wrap: wrap;
+  }
+</style>
