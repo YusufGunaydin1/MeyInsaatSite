@@ -17,35 +17,48 @@ const decoded = async (page: Page, sel: string) => {
     .toBeGreaterThan(0);
 };
 
-test('landing A: kabuk + yoğun modüller + tek temsilî-veri çipi', async ({ page }) => {
+test('liste: kabuk + sekmeler/filtre/ray + tek temsilî-veri çipi', async ({ page }) => {
   await page.goto(u(K));
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
   // gerçek site kabuğu: aktif nav = Projeler
   await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveText(/projeler/i);
-  // ilk ekran modülleri ayakta
-  await expect(page.getByTestId('kc-project-strip')).toBeVisible();
-  await expect(page.getByTestId('kc-statbar')).toBeVisible();
-  await expect(page.getByTestId('kx-filters')).toBeVisible();
-  await expect(page.getByTestId('kc-matrix')).toBeVisible();
+  await expect(page.getByTestId('kl-tab-tumu')).toContainText('Tümü (8)');
+  await expect(page.getByTestId('kl-filters')).toBeVisible();
+  await expect(page.getByTestId('kl-compare')).toBeVisible();
+  await expect(page.getByTestId('kcf-form')).toBeVisible(); // hızlı iletişim
   await expect(page.getByTestId('kc-mock-chip')).toHaveCount(1);
 });
 
-test('landing A: filtre görünen kartları değiştirir, temizle geri getirir', async ({ page }) => {
+test('liste: sekme + filtre + sıralama + favoriler + daha fazla yükle', async ({ page }) => {
   await page.goto(u(K));
-  await expect(page.getByTestId('kx-card')).toHaveCount(10);
-  await page.getByTestId('kx-f-tip').selectOption('3+2 Dubleks');
-  await page.getByTestId('kx-apply').click();
-  await expect(page.getByTestId('kx-card')).toHaveCount(2);
-  await expect(page.getByTestId('kx-count')).toHaveText(/2 sonuç/i);
-  await page.getByTestId('kx-f-durum').selectOption('satildi');
-  await page.getByTestId('kx-apply').click();
-  await expect(page.getByTestId('kx-empty')).toBeVisible(); // satılmış dubleks yok
-  await page.getByTestId('kx-clear').click();
-  await expect(page.getByTestId('kx-card')).toHaveCount(10);
+  await expect(page.getByTestId('kl-card')).toHaveCount(6); // 8 sonuç, ilk 6 gösterilir
+  await expect(page.getByTestId('kl-count')).toContainText('8 sonuç');
+  await page.getByTestId('kl-more').click();
+  await expect(page.getByTestId('kl-card')).toHaveCount(8);
+  // sekme: dubleks → 3
+  await page.getByTestId('kl-tab-dubleks').click();
+  await expect(page.getByTestId('kl-card')).toHaveCount(3);
+  // filtre: proje El Ele → 2; sıralama desc → pahalı önce
+  await page.getByTestId('kl-f-proje').selectOption('el-ele');
+  await expect(page.getByTestId('kl-card')).toHaveCount(2);
+  await page.getByTestId('kl-sort').selectOption('desc');
+  await expect(page.getByTestId('kl-card').first()).toContainText('14.900.000 TL');
+  // favori: kalp → sayaç → yalnız favoriler
+  await page.getByTestId('kl-fav-d11').click();
+  await expect(page.getByTestId('kl-favorilerim')).toContainText('(1)');
+  await page.getByTestId('kl-favorilerim').click();
+  await expect(page.getByTestId('kl-card')).toHaveCount(1);
+  // temizle → tümü geri
+  await page.getByTestId('kl-clear').click();
+  await expect(page.getByTestId('kl-count')).toContainText('8 sonuç');
+  // gerçek daire detaya, temsilî satır proje sayfasına gider (tümü görünür olsun)
+  await page.getByTestId('kl-more').click();
+  await expect(page.getByTestId('kl-detay-d11')).toHaveAttribute('href', /kompakt\/daire-1$/);
+  await expect(page.getByTestId('kl-detay-ali-3')).toHaveAttribute('href', /projeler\/ali$/);
 });
 
-test('landing A: matris lejantı ve gerçek durum dağılımı', async ({ page }) => {
-  await page.goto(u(K));
+test('detay D-11: matris lejantı ve gerçek durum dağılımı', async ({ page }) => {
+  await page.goto(u(K + 'daire-1'));
   const matrix = page.getByTestId('kc-matrix');
   await expect(matrix.getByTestId('kc-matrix-legend').locator('li')).toHaveCount(3);
   await expect(matrix.locator('td[data-durum="musait"]')).toHaveCount(4); // 2 dubleks × 2 kat satırı

@@ -258,6 +258,65 @@ export const projeTeasers: Teaser[] = [
   { ad: 'Sapanbağları', konum: 'İstanbul', not: 'Satış bilgisi yakında', slug: 'sapanbaglari' },
 ];
 
+/* ─── LİSTELEME SAYFASI (liste-ref.png) — projeler arası temsilî envanter ───
+   Standart pazaryeri ızgarası; yalnız El Ele'nin iki dubleksi gerçek ilandır
+   (detay sayfasına gider), diğer satırlar temsilî ve proje sayfasına çıkar. */
+export interface ListingUnit {
+  id: string;
+  mock: true;
+  tip: 'daire' | 'dubleks';
+  baslik: string;
+  proje: string;
+  projeKey: 'el-ele' | 'ali' | 'sapanbaglari';
+  blokKat: string;
+  oda: string;
+  brut: number;
+  banyo: number;
+  balkon: number;
+  kat: string;
+  katKey: '1' | '2' | '3' | '4' | '5-6';
+  fiyat: number;
+  badge?: string;
+  /** El Ele gerçek daireleri: manifest anahtarı + detay sayfası */
+  imgKey?: string;
+  detay?: 'daire-1' | 'daire-2';
+}
+
+export const listing: ListingUnit[] = [
+  { id: 'd11', mock: true, tip: 'dubleks', baslik: '3+2 Dubleks', proje: 'El Ele Apartmanı', projeKey: 'el-ele',
+    blokKat: 'A Blok · 5.–6. Kat', oda: '3+2', brut: 182, banyo: 2, balkon: 2, kat: '5.–6. Kat', katKey: '5-6',
+    fiyat: 14_900_000, badge: 'YENİ', imgKey: 'daire-1/d1-salon-alt.png', detay: 'daire-1' },
+  { id: 'd12', mock: true, tip: 'dubleks', baslik: '3+2 Dubleks', proje: 'El Ele Apartmanı', projeKey: 'el-ele',
+    blokKat: 'A Blok · 5.–6. Kat', oda: '3+2', brut: 176, banyo: 2, balkon: 2, kat: '5.–6. Kat', katKey: '5-6',
+    fiyat: 13_750_000, badge: 'SON 2 DAİRE', imgKey: 'daire-2/d2-salon-ust-1.png', detay: 'daire-2' },
+  { id: 'ali-1', mock: true, tip: 'daire', baslik: '3+1 Daire', proje: 'Ali Apartmanı', projeKey: 'ali',
+    blokKat: 'A Blok · 4. Kat', oda: '3+1', brut: 135, banyo: 2, balkon: 2, kat: '4. Kat', katKey: '4',
+    fiyat: 7_850_000, badge: 'YENİ' },
+  { id: 'ali-2', mock: true, tip: 'daire', baslik: '2+1 Daire', proje: 'Ali Apartmanı', projeKey: 'ali',
+    blokKat: 'A Blok · 3. Kat', oda: '2+1', brut: 95, banyo: 1, balkon: 1, kat: '3. Kat', katKey: '3',
+    fiyat: 5_450_000 },
+  { id: 'ali-3', mock: true, tip: 'daire', baslik: '1+1 Daire', proje: 'Ali Apartmanı', projeKey: 'ali',
+    blokKat: 'A Blok · 1. Kat', oda: '1+1', brut: 60, banyo: 1, balkon: 1, kat: '1. Kat', katKey: '1',
+    fiyat: 3_250_000 },
+  { id: 'sap-1', mock: true, tip: 'daire', baslik: '3+1 Daire', proje: 'Sapanbağları', projeKey: 'sapanbaglari',
+    blokKat: 'B Blok · 2. Kat', oda: '3+1', brut: 145, banyo: 2, balkon: 2, kat: '2. Kat', katKey: '2',
+    fiyat: 8_250_000, badge: 'SON DAİRE' },
+  { id: 'sap-2', mock: true, tip: 'daire', baslik: '2+1 Daire', proje: 'Sapanbağları', projeKey: 'sapanbaglari',
+    blokKat: 'B Blok · 2. Kat', oda: '2+1', brut: 90, banyo: 1, balkon: 1, kat: '2. Kat', katKey: '2',
+    fiyat: 5_150_000 },
+  { id: 'sap-3', mock: true, tip: 'dubleks', baslik: '4+1 Dubleks', proje: 'Sapanbağları', projeKey: 'sapanbaglari',
+    blokKat: 'C Blok · 5.–6. Kat', oda: '4+1', brut: 210, banyo: 2, balkon: 1, kat: '5.–6. Kat', katKey: '5-6',
+    fiyat: 14_750_000 },
+];
+
+/* Kat planı bandı — plan görselleri hazır değil; stilize şema + temsilî m² */
+export const katPlanlari = [
+  { ad: '3+1 Daire Kat Planı', m2: '135 m²' },
+  { ad: '2+1 Daire Kat Planı', m2: '95 m²' },
+  { ad: '3+2 Dubleks Alt Kat', m2: '96 m²' },
+  { ad: '3+2 Dubleks Üst Kat', m2: '86 m²' },
+];
+
 /* Detay sayfası başlıkları + kart sıraları (klon değil: kendi vurgusu, kendi sırası) */
 export const detay = {
   'daire-1': {
