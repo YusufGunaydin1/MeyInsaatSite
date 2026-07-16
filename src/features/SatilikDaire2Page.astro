@@ -1,8 +1,10 @@
 ---
 /*
-  DAİRE DETAY — D-12 / Daire 2 (canlı; tasarım: daire-detay-ref-b mock; D-11'in
-  klonu değil): geniş karusel, özellik çipleri, daire özellikleri + oda ölçüleri,
-  genel bakış + proje + konum üçlüsü, finansman şeridi, kendi benzer sırası.
+  DAİRE DETAY — D-12 / Daire 2 (canlı). Üst bölge 2026-07-16'da D-11'in
+  varsayılanına eşitlendi: galeri | künye (.kcg, ortak); eski ref-b geniş karusel
+  artık galeri adasındaki ⟷ anahtarıyla SEÇMELİ geniş görünüm. Sayfanın geri
+  kalanı ref-b kimliğini korur: özellik çipleri, oda ölçüleri, genel bakış +
+  proje + konum üçlüsü, finansman şeridi, kendi benzer sırası.
   NOINDEX: fiyatlar temsilî — gerçek satış verisiyle birlikte kaldırılacak.
 */
 import { Image } from 'astro:assets';
@@ -88,7 +90,13 @@ const ozellikler = [
   <!-- GÖVDE -->
   <div class="container-site kce-layout">
     <div class="kce-main">
-      <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
+      <section class="kcg" data-gallery aria-label="Galeri ve künye">
+        <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
+        <div class="kcg-specside card">
+          <h2 class="t-heading-s">Künye</h2>
+          <SpecGrid items={specsD2} columns={1} testid="kc-specs-d2" />
+        </div>
+      </section>
 
       <ul class="kce-chips card" data-testid="kc-ozellik-chips">
         {ozellikler.map((o) => (
@@ -100,20 +108,18 @@ const ozellikler = [
         ))}
       </ul>
 
-      <section class="kce-two" aria-label="Daire özellikleri ve oda ölçüleri">
-        <div class="card kce-card">
-          <h2 class="t-heading-s">Daire Özellikleri</h2>
-          <SpecGrid items={specsD2} columns={1} testid="kc-specs-d2" />
-        </div>
+      <section aria-label="Oda ölçüleri">
         <div class="card kce-card" data-testid="kc-oda-olculeri">
           <h2 class="t-heading-s">Oda Ölçüleri</h2>
           <p class="t-caption kce-plan-note">Kat planı görseli hazırlanıyor — ölçüler aşağıda.</p>
-          {odaOlculeriD2.map((g) => (
-            <div class="kce-oda-grup">
-              <p class="t-tech kce-oda-grup-ad">{g.grup}</p>
-              <SpecGrid items={g.odalar} columns={1} testid={`kc-oda-${g.grup === 'Alt kat' ? 'alt' : 'ust'}`} />
-            </div>
-          ))}
+          <div class="kce-oda-cols">
+            {odaOlculeriD2.map((g) => (
+              <div class="kce-oda-grup">
+                <p class="t-tech kce-oda-grup-ad">{g.grup}</p>
+                <SpecGrid items={g.odalar} columns={1} testid={`kc-oda-${g.grup === 'Alt kat' ? 'alt' : 'ust'}`} />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -199,9 +205,9 @@ const ozellikler = [
   .kce-chip-title { font-weight: 600; font-size: 0.8125rem; color: var(--color-graphite-900); margin-top: 0.25rem; line-height: 1.25; }
   .kce-chip-sub { font-size: 0.75rem; color: var(--color-graphite-400); }
 
-  .kce-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
   .kce-card { padding: 1rem 1.1rem 1.1rem; }
   .kce-plan-note { color: var(--color-graphite-400); margin-top: 0.2rem; }
+  .kce-oda-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; align-items: start; }
   .kce-oda-grup { margin-top: 0.7rem; }
   .kce-oda-grup-ad { color: var(--color-mey-teal-700); margin-bottom: 0.2rem; }
 
@@ -216,6 +222,9 @@ const ozellikler = [
 
   @media (max-width: 1023px) {
     .kce-layout { grid-template-columns: minmax(0, 1fr); }
-    .kce-two, .kce-three { grid-template-columns: minmax(0, 1fr); }
+    .kce-three { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 760px) {
+    .kce-oda-cols { grid-template-columns: minmax(0, 1fr); }
   }
 </style>

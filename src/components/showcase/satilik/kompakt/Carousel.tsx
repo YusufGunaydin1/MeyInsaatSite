@@ -2,8 +2,15 @@
   Detay galerisi adası — büyük sahne + ok/sayaç/tam ekran + küçük resim rayı.
   Tam ekran yerel <dialog> yerine sabit katman: odak/ESC/oklar elle yönetilir
   (tek bağımlılık React). Görsel URL'leri sunucudan hazır gelir (assets.ts).
+
+  Geniş görünüm (⟷): tam ekrana çıkmadan galeriyi künyenin yerine yayar —
+  ada, en yakın [data-gallery] atasına data-wide takar, düzeni CSS (.kcg) çözer.
+  Tercih localStorage'da tutulur ve iki detay sayfasında da uygulanır; atasız
+  kullanımlarda (örn. eski vitrin) düğme hiç çizilmez.
 */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+const WIDE_KEY = 'kc-galeri-genis';
 
 export interface CarouselItemData {
   key: string;
@@ -24,6 +31,9 @@ interface Props {
 export default function Carousel({ items, label }: Props) {
   const [index, setIndex] = useState(0);
   const [full, setFull] = useState(false);
+  const [wide, setWide] = useState(false);
+  const [canWide, setCanWide] = useState(false);
+  const figRef = useRef<HTMLElement>(null);
   const n = items.length;
   const cur = items[index];
 
@@ -31,6 +41,27 @@ export default function Carousel({ items, label }: Props) {
     (d: number) => setIndex((i) => (i + d + n) % n),
     [n]
   );
+
+  useEffect(() => {
+    const host = figRef.current?.closest('[data-gallery]');
+    if (!host) return;
+    setCanWide(true);
+    if (localStorage.getItem(WIDE_KEY) === '1') {
+      host.setAttribute('data-wide', '');
+      setWide(true);
+    }
+  }, []);
+
+  const toggleWide = () => {
+    const host = figRef.current?.closest('[data-gallery]');
+    if (!host) return;
+    setWide((w) => {
+      const next = !w;
+      host.toggleAttribute('data-wide', next);
+      localStorage.setItem(WIDE_KEY, next ? '1' : '0');
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (!full) return;
@@ -49,13 +80,13 @@ export default function Carousel({ items, label }: Props) {
   }, [full, step]);
 
   return (
-    <figure className="kcar" aria-label={label} data-testid="kc-carousel">
+    <figure className="kcar" aria-label={label} data-testid="kc-carousel" ref={figRef}>
       <div className="kcar-stage">
         <img
           key={cur.key}
           src={cur.src}
           srcSet={cur.srcset}
-          sizes="(min-width: 1100px) 720px, 94vw"
+          sizes={wide ? '(min-width: 1100px) 960px, 94vw' : '(min-width: 1100px) 720px, 94vw'}
           width={cur.width}
           height={cur.height}
           alt={cur.alt}
@@ -68,6 +99,13 @@ export default function Carousel({ items, label }: Props) {
         <button type="button" className="kcar-btn kcar-next" onClick={() => step(1)} aria-label="Sonraki fotoğraf" data-testid="kc-car-next">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m9.5 5 7 7-7 7" /></svg>
         </button>
+        {canWide && (
+          <button type="button" className="kcar-btn kcar-wide" onClick={toggleWide}
+            aria-pressed={wide} aria-label={wide ? 'Yan panelli görünüme dön' : 'Geniş görünüm'}
+            title={wide ? 'Yan panelli görünüme dön' : 'Geniş görünüm'} data-testid="kc-car-wide">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 7 5 12l5 5M14 7l5 5-5 5M5 12h14" /></svg>
+          </button>
+        )}
         <button type="button" className="kcar-btn kcar-full" onClick={() => setFull(true)} aria-label="Tam ekran görüntüle" data-testid="kc-car-full">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" /></svg>
         </button>

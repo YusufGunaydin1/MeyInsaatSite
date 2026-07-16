@@ -208,6 +208,24 @@
   font-size: 0.9rem;
 }
 
+/* ─── Detay galeri bölümü (kcg-): varsayılan galeri|künye; data-wide galeriyi yayar ───
+   Her iki detay sayfası da bunu kullanır — düzen tanımı TEK yerde (ada yalnız
+   data-wide niteliğini takar/söker, bkz. Carousel geniş görünüm). */
+.kcg {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+.kcg-specside { padding: 0.9rem 1rem 1rem; }
+.kcg[data-wide] { grid-template-columns: minmax(0, 1fr); }
+/* geniş görünümde alta inen künye iki sütuna açılır — sayfa boyu tek sütun listeye dönmesin */
+.kcg[data-wide] .kcg-specside .kc-specs-1 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 1023px) {
+  .kcg { grid-template-columns: minmax(0, 1fr); }
+  .kcg[data-wide] .kcg-specside .kc-specs-1 { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ─── Carousel (kcar-) ─── */
 .kcar-stage {
   position: relative;
@@ -238,6 +256,13 @@
 .kcar-prev { position: absolute; left: 0.6rem; top: 50%; transform: translateY(-50%); }
 .kcar-next { position: absolute; right: 0.6rem; top: 50%; transform: translateY(-50%); }
 .kcar-full { position: absolute; right: 0.6rem; bottom: 0.6rem; }
+.kcar-wide { position: absolute; right: 3.4rem; bottom: 0.6rem; }
+.kcar-wide[aria-pressed='true'] { background: var(--color-mey-red); }
+@media (max-width: 1023px) {
+  /* dar ekranda düzen zaten tek sütun — genişletme anlamsız, düğme gizli.
+     .kcar-btn'in display'inden SONRA gelmeli, yoksa kaskadda ezilir */
+  .kcar-btn.kcar-wide { display: none; }
+}
 .kcar-count {
   position: absolute;
   left: 0.6rem;

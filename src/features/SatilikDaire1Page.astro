@@ -97,9 +97,9 @@ const projeDetay = [
   <!-- GÖVDE: sol içerik + sağ ray -->
   <div class="container-site kcd-layout">
     <div class="kcd-main">
-      <section class="kcd-gallery" id="genel" aria-label="Galeri ve künye">
+      <section class="kcg" id="genel" data-gallery aria-label="Galeri ve künye">
         <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
-        <div class="kcd-specside card">
+        <div class="kcg-specside card">
           <h2 class="t-heading-s">Künye</h2>
           <SpecGrid items={specsD1} columns={1} testid="kc-specs-d1" />
         </div>
@@ -209,13 +209,6 @@ const projeDetay = [
     align-items: start;
   }
   .kcd-main { display: flex; flex-direction: column; gap: 1.25rem; min-width: 0; }
-  .kcd-gallery {
-    display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
-    gap: 1rem;
-    align-items: start;
-  }
-  .kcd-specside { padding: 0.9rem 1rem 1rem; }
   .kcd-tabs {
     display: flex;
     gap: 0.25rem;
@@ -239,7 +232,6 @@ const projeDetay = [
 
   @media (max-width: 1023px) {
     .kcd-layout { grid-template-columns: minmax(0, 1fr); }
-    .kcd-gallery { grid-template-columns: minmax(0, 1fr); }
     .kcd-head { grid-template-columns: minmax(0, 1fr); }
     .kcd-head-price { text-align: start; align-items: flex-start; }
     .kcd-two { grid-template-columns: minmax(0, 1fr); }

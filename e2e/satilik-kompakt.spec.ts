@@ -115,6 +115,38 @@ test('vitrin dizilimi: proje sekmeleri filtreler; teaser kartlar fiyat uydurmaz'
   await expect(page.getByTestId('kc-tum-daireler')).toHaveAttribute('href', /\/satilik-daireler$/);
 });
 
+test('detay: varsayılan galeri|künye; ⟷ geniş görünümü açar, tercih iki sayfada da tutulur', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-360', 'dar ekranda düzen zaten tek sütun, düğme gizli');
+  await page.goto(u(K + 'daire-1'));
+  const stage = page.getByTestId('kc-car-main');
+  const kunye1 = page.getByTestId('kc-specs-d1');
+  // varsayılan: künye galerinin SAĞINDA (ref-a düzeni)
+  let sb = (await stage.boundingBox())!;
+  let kb = (await kunye1.boundingBox())!;
+  expect(kb.x).toBeGreaterThan(sb.x + sb.width - 1);
+  const darGenislik = sb.width;
+  // genişlet: sahne belirgin büyür, künye ALTA iner ve görünür kalır
+  await page.getByTestId('kc-car-wide').click();
+  await expect(page.getByTestId('kc-car-wide')).toHaveAttribute('aria-pressed', 'true');
+  sb = (await stage.boundingBox())!;
+  kb = (await kunye1.boundingBox())!;
+  expect(sb.width).toBeGreaterThan(darGenislik * 1.3);
+  expect(kb.y).toBeGreaterThan(sb.y + sb.height - 1);
+  await expect(kunye1).toBeVisible();
+  // tercih diğer detay sayfasına taşınır (localStorage)
+  await page.goto(u(K + 'daire-2'));
+  await expect(page.getByTestId('kc-car-wide')).toHaveAttribute('aria-pressed', 'true');
+  const sb2 = (await page.getByTestId('kc-car-main').boundingBox())!;
+  const kb2 = (await page.getByTestId('kc-specs-d2').boundingBox())!;
+  expect(kb2.y).toBeGreaterThan(sb2.y + sb2.height - 1);
+  // daralt: yan künye geri gelir
+  await page.getByTestId('kc-car-wide').click();
+  await expect(page.getByTestId('kc-car-wide')).toHaveAttribute('aria-pressed', 'false');
+  const sb3 = (await page.getByTestId('kc-car-main').boundingBox())!;
+  const kb3 = (await page.getByTestId('kc-specs-d2').boundingBox())!;
+  expect(kb3.x).toBeGreaterThan(sb3.x + sb3.width - 1);
+});
+
 test('detay D-11: karusel ok/sayaç/küçük resim/tam ekran', async ({ page }) => {
   await page.goto(u(K + 'daire-1'));
   await decoded(page, '[data-testid="kc-car-main"]');
@@ -198,6 +230,10 @@ test('mobil: canlı üç sayfa + vitrin — yatay taşma yok, görseller çözü
     expect(overflow, route + ' yatay taşma').toBeLessThanOrEqual(0);
     await decoded(page, 'main img');
   }
+  // dar ekranda geniş-görünüm anahtarı GİZLİ (düzen zaten tek sütun)
+  await page.goto(u(K + 'daire-1'));
+  await expect(page.getByTestId('kc-car-main')).toBeVisible();
+  await expect(page.getByTestId('kc-car-wide')).toBeHidden();
   await page.goto(u(K));
   await page.locator('details[data-mobile-menu] summary').click();
   await expect(page.locator('details[data-mobile-menu] nav')).toBeVisible();
