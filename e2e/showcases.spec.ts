@@ -10,13 +10,13 @@ test('showcases hub renders with the adopted-design card', async ({ page }) => {
   await page.goto(u('showcases/'));
   await expect(page.locator('h1')).toContainText('Tasarım Vitrini');
   // The stepped compact panel won (2026-07-11) and shipped to production. Target
-  // the LIVE card by status (card order changes as proposals are added), not .first().
+  // that card by its own text (multiple live cards now exist; order changes as
+  // cards are added/adopted), not by position.
   const live = page
     .locator('.sc-card')
-    .filter({ has: page.locator('.sc-status.live') })
+    .filter({ hasText: 'adımlı gezinme' })
     .first();
   await expect(live).toContainText('CANLIDA');
-  await expect(live).toContainText('adımlı gezinme');
   await expect(live.locator('a.sc-open')).toHaveAttribute('href', /projeler\/ali/);
   // noindex: arama motorlarına kapalı
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');

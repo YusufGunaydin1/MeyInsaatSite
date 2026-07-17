@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+import type { SaleMediaItem } from '../satilik-daireler/media';
+
+interface Props {
+  media: SaleMediaItem;
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+  label?: string;
+}
+
+const {
+  media,
+  className = '',
+  sizes = '(min-width: 900px) 50vw, 100vw',
+  priority = false,
+  label,
+} = Astro.props;
+
+if (!media.image) throw new Error(`Kompakt sayfada render edilecek medya bulunamadı: ${media.id}`);
+---
+
+<figure class:list={['sd-photo', className]} data-media-id={media.id}>
+  <Image
+    src={media.image}
+    alt={media.alt}
+    widths={[420, 720, 980, 1280, 1600]}
+    sizes={sizes}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    decoding="async"
+  />
+  {label && <figcaption>{label}</figcaption>}
+</figure>
+

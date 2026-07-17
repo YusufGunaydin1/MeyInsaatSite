@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../../assets/brand/mey-logo-dark.png';
+import { buyerNavigation, mainNavigation } from './data';
+---
+
+<footer class="sd-footer">
+  <div class="sd-container sd-footer-grid">
+    <div class="sd-footer-brand">
+      <Image src={logo} alt="Mey İnşaat" width={120} />
+      <p>El Ele Apartmanı’ndaki iki yeni 3+2 dubleks daire, doğrudan Mey İnşaat tarafından sunuluyor.</p>
+    </div>
+    <nav aria-label="Satılık daireler alt navigasyonu">
+      <h2>Satılık Daireler</h2>
+      {buyerNavigation.slice(1).map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <nav aria-label="Mey İnşaat alt navigasyonu">
+      <h2>Mey İnşaat</h2>
+      {mainNavigation.filter((item) => !item.active).map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <div class="sd-footer-note">
+      <h2>Bilgi notu</h2>
+      <p>Fiyat, alan, adres ve teknik ayrıntılar yayınlanmış değildir. Güncel bilgiler görüşmede teyit edilir.</p>
+    </div>
+  </div>
+  <div class="sd-container sd-footer-bottom">
+    <span>© {new Date().getFullYear()} Mey İnşaat</span>
+    <span>Gösterim amaçlı form · Gerçek veri gönderimi yok</span>
+  </div>
+</footer>
+

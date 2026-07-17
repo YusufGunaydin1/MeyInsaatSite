@@ -1,0 +1,160 @@
+---
+import { Image } from 'astro:assets';
+import logoLight from '../../../assets/brand/mey-logo.png';
+import logoDark from '../../../assets/brand/mey-logo-dark.png';
+import {
+  pageNavigation,
+  saleContent,
+  salePath,
+  variations,
+  type NestedPageSlug,
+  type VariationSlug,
+} from './data';
+
+interface Props {
+  variation: VariationSlug;
+  currentPage?: '' | NestedPageSlug;
+  hideStickyCta?: boolean;
+}
+
+const { variation, currentPage = '', hideStickyCta = false } = Astro.props;
+const variant = variations[variation];
+const currentLabel = currentPage === 'daire-1'
+  ? saleContent.apartments['daire-1'].name
+  : currentPage === 'daire-2'
+    ? saleContent.apartments['daire-2'].name
+    : pageNavigation.find((item) => item.slug === currentPage)?.label ?? saleContent.project.name;
+---
+
+<div class:list={['sale-shell', `sale-theme-${variation}`]} data-sale-shell data-variation={variation}>
+  <header class="sale-header" data-testid="sale-header">
+    <div class="sale-header-inner">
+      <a class="sale-brand" href={salePath(variation)} aria-label={`${saleContent.project.name} başlangıç sayfası`}>
+        <span class="sale-brand-logo-wrap">
+          <Image class="sale-brand-logo sale-brand-logo-light" src={logoLight} alt="Mey İnşaat" width={156} />
+          <Image class="sale-brand-logo sale-brand-logo-dark" src={logoDark} alt="Mey İnşaat" width={156} />
+        </span>
+        <span class="sale-brand-copy">
+          <span>{saleContent.project.name}</span>
+          <small>{variant.name}</small>
+        </span>
+      </a>
+
+      <nav class="sale-desktop-nav" aria-label="Satılık daireler ana navigasyonu">
+        {pageNavigation.map((item, index) => (
+          <a
+            href={salePath(variation, item.slug || undefined)}
+            class:list={['sale-nav-link', currentPage === item.slug && 'is-active']}
+            aria-current={currentPage === item.slug ? 'page' : undefined}
+          >
+            <span class="sale-nav-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <a class="sale-header-cta" href={salePath(variation, 'iletisim')}>Randevu talep et</a>
+
+      <button
+        class="sale-menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls={`sale-mobile-menu-${variation}`}
+        data-sale-menu-toggle
+      >
+        <span class="sr-only">Menüyü aç</span>
+        <span class="sale-menu-lines" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+
+    <div id={`sale-mobile-menu-${variation}`} class="sale-mobile-menu" hidden data-sale-mobile-menu>
+      <div class="sale-mobile-menu-head">
+        <p><span>{variant.index}</span> {variant.direction}</p>
+        <span>{currentLabel}</span>
+      </div>
+      <nav aria-label="Mobil satılık daireler navigasyonu">
+        {pageNavigation.map((item, index) => (
+          <a
+            href={salePath(variation, item.slug || undefined)}
+            class:list={['sale-mobile-nav-link', currentPage === item.slug && 'is-active']}
+            aria-current={currentPage === item.slug ? 'page' : undefined}
+          >
+            <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <strong>{item.shortLabel}</strong>
+            <i aria-hidden="true">↗</i>
+          </a>
+        ))}
+      </nav>
+      <div class="sale-mobile-apartments">
+        <a href={salePath(variation, 'daire-1')}>Daire 1’i gör</a>
+        <a href={salePath(variation, 'daire-2')}>Daire 2’yi gör</a>
+      </div>
+      <a class="sale-mobile-review-link" href={salePath()}>← Üç tasarım yönünü karşılaştır</a>
+    </div>
+  </header>
+
+  <main id="sale-main" tabindex="-1">
+    <slot />
+  </main>
+
+  {!hideStickyCta && (
+    <a class="sale-sticky-cta" data-testid="sticky-contact-cta" href={salePath(variation, 'iletisim')}>
+      <span>Özel görüşme</span>
+      <strong>Randevu talep et</strong>
+      <i aria-hidden="true">↗</i>
+    </a>
+  )}
+
+  <footer class="sale-footer">
+    <div class="sale-container sale-footer-grid">
+      <div>
+        <p class="sale-kicker">Mey İnşaat · Doğrudan satış</p>
+        <h2>{saleContent.project.name}</h2>
+        <p>İki yeni 3+2 dubleks daire için küratörlü tasarım vitrini.</p>
+      </div>
+      <nav aria-label="Alt navigasyon">
+        {pageNavigation.slice(1).map((item) => (
+          <a href={salePath(variation, item.slug || undefined)}>{item.label}</a>
+        ))}
+      </nav>
+      <div class="sale-footer-actions">
+        <a href={salePath(variation, 'daireler')}>Daireleri incele <span aria-hidden="true">→</span></a>
+        <a href={salePath()}>Tasarım yönlerini karşılaştır <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="sale-container sale-footer-bottom">
+      <span>Gösterim amaçlıdır · Gerçek lead gönderimi yoktur</span>
+      <span>{variant.index} / {variant.name}</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const shells = document.querySelectorAll<HTMLElement>('[data-sale-shell]');
+  shells.forEach((shell) => {
+    const toggle = shell.querySelector<HTMLButtonElement>('[data-sale-menu-toggle]');
+    const menu = shell.querySelector<HTMLElement>('[data-sale-mobile-menu]');
+    if (!toggle || !menu) return;
+
+    const setOpen = (open: boolean, returnFocus = false) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+      shell.classList.toggle('is-menu-open', open);
+      const label = toggle.querySelector<HTMLElement>('.sr-only');
+      if (label) label.textContent = open ? 'Menüyü kapat' : 'Menüyü aç';
+      if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
+      if (!open && returnFocus) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false, true);
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 960 && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
+    });
+  });
+</script>

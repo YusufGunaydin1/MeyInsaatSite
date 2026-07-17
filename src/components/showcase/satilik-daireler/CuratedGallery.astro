@@ -1,0 +1,195 @@
+---
+import { Image } from 'astro:assets';
+import SaleBreadcrumb from './SaleBreadcrumb.astro';
+import { gallerySelection, saleContent, salePath, type VariationSlug } from './data';
+import { getSaleMediaList, type GalleryGroup } from './media';
+
+interface Props { variation: VariationSlug }
+const { variation } = Astro.props;
+
+const orderedGroups: GalleryGroup[] = ['daire-1', 'daire-2', 'bina', 'ortak', 'cevre'];
+const galleryItems = orderedGroups.flatMap((group) =>
+  getSaleMediaList(gallerySelection[group]).map((media) => ({ media, group }))
+);
+
+const areaLabels: Record<string, string> = {
+  'lower-living': 'Alt kat salon', 'upper-living': 'Üst kat salon', bedroom: 'Oda',
+  'lower-kitchen': 'Alt kat mutfak', 'upper-kitchen': 'Üst kat mutfak', bathroom: 'Banyo',
+  stairs: 'Merdiven', corridor: 'Koridor', balcony: 'Balkon', terrace: 'Teras', view: 'Görünüm',
+  'building-exterior': 'Bina dışı', entrance: 'Giriş', parking: 'Otopark',
+  'neighbourhood-coastline': 'Çevre',
+};
+
+const groupLabels = saleContent.gallery.filters;
+---
+
+<SaleBreadcrumb variation={variation} current="Galeri" />
+
+<header class="sale-page-intro sale-container">
+  <p class="sale-kicker">{saleContent.gallery.eyebrow}</p>
+  <div class="sale-page-intro-grid">
+    <h1>{saleContent.gallery.title}</h1>
+    <p>{saleContent.gallery.intro}</p>
+  </div>
+</header>
+
+<section class="sale-gallery sale-container" data-sale-gallery data-testid="curated-gallery">
+  <div class="sale-gallery-toolbar">
+    <div class="sale-gallery-filters" aria-label="Galeri grubu seçin">
+      <button type="button" data-gallery-filter="all" aria-pressed="true">{groupLabels.all}</button>
+      {orderedGroups.map((group) => (
+        <button type="button" data-gallery-filter={group} aria-pressed="false">{groupLabels[group]}</button>
+      ))}
+    </div>
+    <p class="sale-gallery-status" aria-live="polite" data-gallery-status>{galleryItems.length} seçilmiş fotoğraf</p>
+  </div>
+
+  <div class="sale-gallery-grid">
+    {galleryItems.map(({ media, group }, index) => {
+      if (!media.image) return null;
+      const ownerLabel = group === 'daire-1' ? 'Daire 1' : group === 'daire-2' ? 'Daire 2' : groupLabels[group];
+      const areaLabel = areaLabels[media.area] ?? ownerLabel;
+      return (
+        <article class:list={['sale-gallery-item', `sale-gallery-item-${index + 1}`]} data-gallery-item data-gallery-group={group}>
+          <button
+            type="button"
+            class="sale-gallery-open"
+            aria-label={`Büyüt: ${media.alt}`}
+            data-gallery-open
+            data-full-src={media.image.src}
+            data-alt={media.alt}
+            data-owner={ownerLabel}
+            data-area={areaLabel}
+            data-media-id={media.id}
+          >
+            <span class="sale-gallery-image">
+              <Image
+                src={media.image}
+                alt={media.alt}
+                widths={[420, 680, 960]}
+                sizes="(min-width: 1100px) 31vw, (min-width: 680px) 48vw, 100vw"
+                loading={index < 3 ? 'eager' : 'lazy'}
+              />
+              <i aria-hidden="true">↗</i>
+            </span>
+            <span class="sale-gallery-caption">
+              <small>{ownerLabel}</small>
+              <strong>{areaLabel}</strong>
+            </span>
+          </button>
+        </article>
+      );
+    })}
+  </div>
+
+  <dialog class="sale-lightbox" data-gallery-lightbox aria-labelledby="sale-lightbox-title">
+    <div class="sale-lightbox-inner">
+      <header class="sale-lightbox-head">
+        <div>
+          <p id="sale-lightbox-title" data-lightbox-owner>Fotoğraf</p>
+          <span data-lightbox-area></span>
+        </div>
+        <button type="button" class="sale-lightbox-close" data-lightbox-close aria-label="Büyütülmüş görünümü kapat">
+          <span aria-hidden="true">Kapat ×</span>
+        </button>
+      </header>
+      <figure class="sale-lightbox-figure">
+        <img data-lightbox-image src="" alt="" />
+        <figcaption data-lightbox-caption></figcaption>
+      </figure>
+      <div class="sale-lightbox-controls">
+        <button type="button" data-lightbox-previous aria-label="Önceki fotoğraf"><span aria-hidden="true">←</span> Önceki</button>
+        <span data-lightbox-counter aria-live="polite">1 / 1</span>
+        <button type="button" data-lightbox-next aria-label="Sonraki fotoğraf">Sonraki <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<section class="sale-gallery-next sale-container">
+  <div><p class="sale-kicker">Fotoğraflardan sonra</p><h2>Bir dairenin kat hikâyesine dönün.</h2></div>
+  <div class="sale-action-row">
+    <a class="sale-button sale-button-outline" href={salePath(variation, 'daire-1')}>Daire 1’i gör</a>
+    <a class="sale-button sale-button-outline" href={salePath(variation, 'daire-2')}>Daire 2’yi gör</a>
+    <a class="sale-text-link" href={salePath(variation, 'iletisim')}>Randevu talep et →</a>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-sale-gallery]').forEach((gallery) => {
+    const filters = Array.from(gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-filter]'));
+    const items = Array.from(gallery.querySelectorAll<HTMLElement>('[data-gallery-item]'));
+    const status = gallery.querySelector<HTMLElement>('[data-gallery-status]');
+    const dialog = gallery.querySelector<HTMLDialogElement>('[data-gallery-lightbox]');
+    const image = dialog?.querySelector<HTMLImageElement>('[data-lightbox-image]');
+    const owner = dialog?.querySelector<HTMLElement>('[data-lightbox-owner]');
+    const area = dialog?.querySelector<HTMLElement>('[data-lightbox-area]');
+    const caption = dialog?.querySelector<HTMLElement>('[data-lightbox-caption]');
+    const counter = dialog?.querySelector<HTMLElement>('[data-lightbox-counter]');
+    const close = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+    const previous = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-previous]');
+    const next = dialog?.querySelector<HTMLButtonElement>('[data-lightbox-next]');
+    if (!dialog || !image || !owner || !area || !caption || !counter || !close || !previous || !next) return;
+
+    let activeFilter = 'all';
+    let activeIndex = 0;
+    let lastTrigger: HTMLButtonElement | null = null;
+
+    const visibleTriggers = () => items
+      .filter((item) => !item.hidden)
+      .map((item) => item.querySelector<HTMLButtonElement>('[data-gallery-open]'))
+      .filter((button): button is HTMLButtonElement => Boolean(button));
+
+    const showAt = (index: number) => {
+      const triggers = visibleTriggers();
+      if (!triggers.length) return;
+      activeIndex = (index + triggers.length) % triggers.length;
+      const trigger = triggers[activeIndex];
+      image.src = trigger.dataset.fullSrc ?? '';
+      image.alt = trigger.dataset.alt ?? '';
+      owner.textContent = trigger.dataset.owner ?? '';
+      area.textContent = trigger.dataset.area ?? '';
+      caption.textContent = trigger.dataset.alt ?? '';
+      counter.textContent = `${activeIndex + 1} / ${triggers.length}`;
+    };
+
+    filters.forEach((filter) => {
+      filter.addEventListener('click', () => {
+        activeFilter = filter.dataset.galleryFilter ?? 'all';
+        filters.forEach((button) => button.setAttribute('aria-pressed', String(button === filter)));
+        items.forEach((item) => {
+          item.hidden = activeFilter !== 'all' && item.dataset.galleryGroup !== activeFilter;
+        });
+        const count = visibleTriggers().length;
+        if (status) status.textContent = `${count} seçilmiş fotoğraf`;
+      });
+    });
+
+    items.forEach((item) => {
+      const trigger = item.querySelector<HTMLButtonElement>('[data-gallery-open]');
+      trigger?.addEventListener('click', () => {
+        const triggers = visibleTriggers();
+        lastTrigger = trigger;
+        showAt(triggers.indexOf(trigger));
+        dialog.showModal();
+        document.body.classList.add('sale-lightbox-open');
+        close.focus();
+      });
+    });
+
+    const closeDialog = () => dialog.close();
+    close.addEventListener('click', closeDialog);
+    previous.addEventListener('click', () => showAt(activeIndex - 1));
+    next.addEventListener('click', () => showAt(activeIndex + 1));
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) closeDialog(); });
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') { event.preventDefault(); showAt(activeIndex - 1); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); showAt(activeIndex + 1); }
+    });
+    dialog.addEventListener('close', () => {
+      document.body.classList.remove('sale-lightbox-open');
+      lastTrigger?.focus();
+    });
+  });
+</script>
+

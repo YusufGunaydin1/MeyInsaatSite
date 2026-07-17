@@ -1,0 +1,44 @@
+---
+import { getSaleMedia, getSaleMediaList } from '../satilik-daireler/media';
+import { apartmentPresentations, compactSaleContent } from './data';
+import PropertyImage from './PropertyImage.astro';
+import RoomAtlas from './RoomAtlas.astro';
+
+const apartment = compactSaleContent.apartments['daire-1'];
+const presentation = apartmentPresentations['daire-1'];
+const lower = getSaleMediaList(presentation.lowerMediaIds);
+const upper = getSaleMediaList(presentation.upperMediaIds);
+---
+
+<section class="sd-story-section" aria-labelledby="d1-floor-title">
+  <div class="sd-container">
+    <header class="sd-section-heading">
+      <div><p class="sd-eyebrow">Kat hikâyesi</p><h2 class="sd-section-title" id="d1-floor-title">Günlük yaşamdan terasa doğru.</h2></div>
+      <p>Daire 1 anlatısı alt kattaki yaşam alanından başlayıp üst kattaki ikinci salona ve açık hava karelerine ilerler.</p>
+    </header>
+    <div class="sd-floor-grid">
+      <article class="sd-floor-card">
+        <div class="sd-floor-card-media">{lower.map((media) => <PropertyImage media={media} sizes="(min-width: 760px) 280px, 50vw" />)}</div>
+        <div class="sd-floor-card-copy"><p class="sd-eyebrow">Alt kat</p><h3>{apartment.lowerTitle}</h3><p>{apartment.lowerStory}</p></div>
+      </article>
+      <article class="sd-floor-card">
+        <div class="sd-floor-card-media">{upper.map((media) => <PropertyImage media={media} sizes="(min-width: 760px) 280px, 50vw" />)}</div>
+        <div class="sd-floor-card-copy"><p class="sd-eyebrow">Üst kat</p><h3>{apartment.upperTitle}</h3><p>{apartment.upperStory}</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sd-story-section is-soft" aria-labelledby="d1-outdoor-title">
+  <div class="sd-container sd-d1-outdoor">
+    <PropertyImage media={getSaleMedia('d1:d1-teras-3.png')} sizes="(min-width: 760px) 760px, 100vw" />
+    <div class="sd-d1-outdoor-copy">
+      <p class="sd-eyebrow">Daire 1’in vurgusu</p>
+      <h2 class="sd-section-title" id="d1-outdoor-title">Teras ve açık ufuk kareleri.</h2>
+      <p>{apartment.character}</p>
+    </div>
+  </div>
+</section>
+
+<RoomAtlas apartmentSlug="daire-1" />
+

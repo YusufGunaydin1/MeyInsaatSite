@@ -1,0 +1,151 @@
+---
+import {
+  apartmentPresentations,
+  buildingMedia,
+  compactSaleContent,
+  finalSalePath,
+  homeGalleryMedia,
+} from './data';
+import { getSaleMedia } from '../satilik-daireler/media';
+import PropertyImage from './PropertyImage.astro';
+
+const apartments = [compactSaleContent.apartments['daire-1'], compactSaleContent.apartments['daire-2']];
+const d1Cue = getSaleMedia('d1:d1-teras-3.png');
+const d2Cue = getSaleMedia('d2:d2-merdiven-1.png');
+---
+
+<div data-testid="sd-sale-home">
+  <section class="sd-home-hero" aria-labelledby="sale-home-title">
+    <div class="sd-container sd-home-hero-grid">
+      <div class="sd-home-hero-copy">
+        <p class="sd-eyebrow">El Ele Apartmanı · Doğrudan Mey İnşaat’tan</p>
+        <h1 class="sd-display" id="sale-home-title">Müteahhitten sıfır 3+2 dubleks daireler.</h1>
+        <p class="sd-lead">İki yeni evi aynı yerde görün, fotoğraflarla ayırt edin ve size yakın olan dairenin ayrıntılarına ilerleyin.</p>
+        <div class="sd-action-row">
+          <a class="sd-button sd-button-primary" href="#daireler">Daireleri incele</a>
+          <a class="sd-button sd-button-secondary" href={finalSalePath('iletisim')}>Randevu talep et</a>
+        </div>
+        <dl class="sd-hero-facts" aria-label="Doğrulanmış proje bilgileri">
+          <div><dt>Seçki</dt><dd>2 daire</dd></div>
+          <div><dt>Plan</dt><dd>3+2 dubleks</dd></div>
+          <div><dt>Sunum</dt><dd>Doğrudan yükleniciden</dd></div>
+        </dl>
+      </div>
+      <div class="sd-home-hero-media">
+        <PropertyImage media={buildingMedia.exterior} priority sizes="(min-width: 1080px) 430px, (min-width: 760px) 36vw, 100vw" />
+        <div class="sd-home-hero-note">
+          <strong>El Ele Apartmanı</strong>
+          <span>İki yeni dubleks</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sd-home-selection" id="daireler" aria-labelledby="apartments-title">
+    <div class="sd-container">
+      <header class="sd-section-heading">
+        <div>
+          <p class="sd-eyebrow">İki ev · tek proje</p>
+          <h2 class="sd-section-title" id="apartments-title">Önce iki daireyi birlikte görün.</h2>
+        </div>
+        <p>Her iki daire de yeni yapım, 3+2 ve dubleks. Farkı, gerçek fotoğrafların gösterdiği mekân akışında keşfedin.</p>
+      </header>
+      <div class="sd-apartment-grid" data-testid="sd-apartment-selection">
+        {apartments.map((apartment) => {
+          const presentation = apartmentPresentations[apartment.slug];
+          return (
+            <article class="sd-apartment-card" data-testid={`sd-card-${apartment.slug}`}>
+              <PropertyImage
+                media={getSaleMedia(presentation.cardMediaId)}
+                priority
+                sizes="(min-width: 980px) 250px, (min-width: 760px) 46vw, 100vw"
+              />
+              <div class="sd-apartment-card-copy">
+                <div class="sd-apartment-card-head">
+                  <div><span class="sd-apartment-index">{apartment.index}</span><h3 class="sd-card-title">{apartment.name}</h3></div>
+                  <span class="sd-eyebrow">Satışta</span>
+                </div>
+                <p class="sd-apartment-cue">{presentation.visualCue}</p>
+                <ul class="sd-confirmed-list" aria-label={`${apartment.name} doğrulanmış bilgileri`}>
+                  <li>3+2</li><li>Dubleks</li><li>Yeni yapım</li>
+                </ul>
+                <p class="sd-price-note">Fiyat bilgisi için bize ulaşın</p>
+                <a class="sd-text-link" href={finalSalePath(apartment.slug)}>{apartment.name} detaylarını gör →</a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="sd-section is-soft" aria-labelledby="cues-title">
+    <div class="sd-container sd-cue-grid">
+      <div class="sd-cue-intro">
+        <p class="sd-eyebrow">Görsel karar ipuçları</p>
+        <h2 class="sd-section-title" id="cues-title">İki farklı fotoğraf hikâyesi.</h2>
+      </div>
+      <article class="sd-cue-card">
+        <PropertyImage media={d1Cue} sizes="110px" />
+        <div><h3>Daire 1 · Açık hava odağı</h3><p>Teras, açık ufuk ve iki salon karesi seçkinin ritmini kuruyor.</p><a href={finalSalePath('daire-1')}>Daire 1’i incele →</a></div>
+      </article>
+      <article class="sd-cue-card">
+        <PropertyImage media={d2Cue} sizes="110px" />
+        <div><h3>Daire 2 · Kat geçişi odağı</h3><p>Belirgin merdiven hattı ve üst kat salonu mekân sırasını görünür kılıyor.</p><a href={finalSalePath('daire-2')}>Daire 2’yi incele →</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sd-section" aria-labelledby="building-home-title">
+    <div class="sd-container">
+      <header class="sd-section-heading">
+        <div><p class="sd-eyebrow">Yapının bütünü</p><h2 class="sd-section-title" id="building-home-title">El Ele Apartmanı</h2></div>
+        <p>Dış cephe, giriş ve kapalı otopark kareleri iki dairenin ortak bina bağlamını gösteriyor.</p>
+      </header>
+      <div class="sd-home-building">
+        <div class="sd-home-building-copy">
+          <p class="sd-eyebrow">Bina ve ortak alanlar</p>
+          <h2 class="sd-section-title">Dairenin ötesindeki günlük varış.</h2>
+          <p>Mevcut fotoğrafları görün; teknik sistem ve otopark tahsisi gibi yayınlanmamış ayrıntıları görüşmede teyit edin.</p>
+          <a class="sd-text-link" href={finalSalePath('el-ele-apartmani')}>Bina sayfasını aç →</a>
+        </div>
+        <PropertyImage media={buildingMedia.exterior} sizes="(min-width: 980px) 220px, 50vw" label="Dış cephe" />
+        <PropertyImage media={buildingMedia.entrance} sizes="(min-width: 980px) 190px, 50vw" label="Giriş" />
+        <PropertyImage media={buildingMedia.parking} sizes="(min-width: 980px) 260px, 100vw" label="Kapalı otopark" />
+      </div>
+    </div>
+  </section>
+
+  <section class="sd-section is-soft" aria-labelledby="trust-title">
+    <div class="sd-container sd-trust-strip">
+      <p class="sd-eyebrow">Mey İnşaat ile doğrudan</p>
+      <h2 id="trust-title">Sorularınız projeyi inşa eden ekibe gider.</h2>
+      <p>Fiyat, alan, tapu, teknik sistem ve görüşme ayrıntıları için ilan aracıları arasında dolaşmadan tek bir talep hazırlayın. Yayınlanmamış bilgiler iddiaya dönüştürülmez.</p>
+      <a class="sd-button sd-button-secondary" href={finalSalePath('iletisim')}>Bilgi talep et</a>
+    </div>
+  </section>
+
+  <section class="sd-section" aria-labelledby="gallery-preview-title">
+    <div class="sd-container">
+      <header class="sd-section-heading">
+        <div><p class="sd-eyebrow">Küratörlü seçki</p><h2 class="sd-section-title" id="gallery-preview-title">İki daireden ve binadan altı kısa bakış.</h2></div>
+        <a class="sd-text-link" href={finalSalePath('galeri')}>Tüm galeriyi aç →</a>
+      </header>
+      <div class="sd-home-gallery-grid">
+        {homeGalleryMedia.map((media) => (
+          <a href={finalSalePath('galeri')} aria-label={`Galeride gör: ${media.alt}`}>
+            <PropertyImage media={media} sizes="(min-width: 980px) 185px, (min-width: 500px) 32vw, 48vw" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sd-cta-band" aria-labelledby="home-cta-title">
+    <div class="sd-container sd-cta-band-inner">
+      <div><p class="sd-eyebrow">Bir sonraki adım</p><h2 class="sd-section-title" id="home-cta-title">Daireleri yerinde görmek ister misiniz?</h2><p>İlgilendiğiniz daireyi ve uygunluğunuzu seçerek kontrollü demo talebini hazırlayın.</p></div>
+      <div class="sd-action-row"><a class="sd-button sd-button-primary" href={finalSalePath('iletisim')}>Randevu talep et</a><a class="sd-button sd-button-dark" href={finalSalePath('galeri')}>Fotoğrafları gör</a></div>
+    </div>
+  </section>
+</div>
+

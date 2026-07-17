@@ -1,0 +1,114 @@
+---
+import SaleBreadcrumb from './SaleBreadcrumb.astro';
+import SaleImage from './SaleImage.astro';
+import { getSaleMedia } from './media';
+import { saleContent, salePath, type VariationSlug } from './data';
+
+interface Props { variation: VariationSlug }
+const { variation } = Astro.props;
+const apartments = [saleContent.apartments['daire-1'], saleContent.apartments['daire-2']];
+const leadMedia = {
+  'daire-1': getSaleMedia('d1:d1-salon-alt.png'),
+  'daire-2': getSaleMedia('d2:d2-salon-ust-1.png'),
+};
+const secondMedia = {
+  'daire-1': getSaleMedia('d1:d1-teras-3.png'),
+  'daire-2': getSaleMedia('d2:d2-merdiven-1.png'),
+};
+---
+
+<SaleBreadcrumb variation={variation} current="Daireler" />
+
+<header class="sale-page-intro sale-container">
+  <p class="sale-kicker">Yalnız iki bağımsız bölüm</p>
+  <div class="sale-page-intro-grid">
+    <h1>İki daireyi, iki ayrı yaşam anlatısı olarak karşılaştırın.</h1>
+    <p>{saleContent.project.apartmentsIntro}</p>
+  </div>
+</header>
+
+{variation === 'editoryal' && (
+  <section class="sale-overview-editorial sale-container" data-testid="apartments-overview">
+    {apartments.map((apartment, index) => (
+      <article class:list={['sale-overview-editorial-card', index === 1 && 'is-reversed']}>
+        <div class="sale-overview-editorial-media">
+          <SaleImage media={leadMedia[apartment.slug]} priority={index === 0} sizes="(min-width: 960px) 57vw, 100vw" />
+          <SaleImage media={secondMedia[apartment.slug]} sizes="(min-width: 960px) 22vw, 42vw" />
+        </div>
+        <div class="sale-overview-editorial-copy">
+          <span class="sale-number">{apartment.index}</span>
+          <p class="sale-kicker">{apartment.confirmed}</p>
+          <h2>{apartment.name}</h2>
+          <p>{apartment.shortIntro}</p>
+          <dl class="sale-placeholder-list">
+            {apartment.facts.slice(0, 2).map((fact) => <div><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
+          </dl>
+          <a class="sale-button sale-button-primary" href={salePath(variation, apartment.slug)}>{apartment.name}’i gör</a>
+        </div>
+      </article>
+    ))}
+  </section>
+)}
+
+{variation === 'mimari' && (
+  <section class="sale-overview-architectural sale-container" data-testid="apartments-overview">
+    <div class="sale-overview-architectural-head" aria-hidden="true">
+      <span>KAYIT</span><span>MEKÂN</span><span>DOĞRULANMIŞ</span><span>DETAY</span>
+    </div>
+    {apartments.map((apartment) => (
+      <article class="sale-overview-architectural-row">
+        <span class="sale-overview-record-no">{apartment.index}</span>
+        <div class="sale-overview-record-media">
+          <SaleImage media={leadMedia[apartment.slug]} sizes="(min-width: 960px) 38vw, 100vw" />
+          <SaleImage media={secondMedia[apartment.slug]} sizes="(min-width: 960px) 13vw, 40vw" />
+        </div>
+        <div class="sale-overview-record-copy">
+          <p class="sale-kicker">BAĞIMSIZ BÖLÜM / {apartment.index}</p>
+          <h2>{apartment.name}</h2>
+          <p>{apartment.shortIntro}</p>
+          <strong>{apartment.confirmed}</strong>
+          <dl class="sale-placeholder-list">
+            {apartment.facts.slice(0, 2).map((fact) => <div><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
+          </dl>
+          <a class="sale-text-link" href={salePath(variation, apartment.slug)}>Mekân kaydını aç ↗</a>
+        </div>
+      </article>
+    ))}
+  </section>
+)}
+
+{variation === 'monolit' && (
+  <section class="sale-overview-monolith" data-testid="apartments-overview">
+    {apartments.map((apartment, index) => (
+      <article class:list={['sale-overview-monolith-card', index === 1 && 'is-light']}>
+        <SaleImage media={leadMedia[apartment.slug]} priority={index === 0} sizes="100vw" />
+        <div class="sale-overview-monolith-scrim"></div>
+        <div class="sale-container sale-overview-monolith-copy">
+          <span>{apartment.index}</span>
+          <p class="sale-kicker">{apartment.confirmed}</p>
+          <h2>{apartment.name}</h2>
+          <p>{apartment.shortIntro}</p>
+          <div class="sale-overview-monolith-facts">
+            {apartment.facts.slice(0, 2).map((fact) => <p><small>{fact.label}</small><strong>{fact.value}</strong></p>)}
+          </div>
+          <a class:list={['sale-button', index === 0 ? 'sale-button-light' : 'sale-button-primary']} href={salePath(variation, apartment.slug)}>
+            {apartment.name}’i gör ↗
+          </a>
+        </div>
+      </article>
+    ))}
+  </section>
+)}
+
+<section class="sale-overview-decision sale-container">
+  <div>
+    <p class="sale-kicker">Karar vermeden önce</p>
+    <h2>Fotoğraf seçkisini birlikte görün.</h2>
+    <p>Her iki daireyi, binayı ve çevre karelerini aynı filtreli galeride doğal biçimde karşılaştırabilirsiniz.</p>
+  </div>
+  <div class="sale-action-row">
+    <a class="sale-button sale-button-outline" href={salePath(variation, 'galeri')}>Fotoğrafları incele</a>
+    <a class="sale-text-link" href={salePath(variation, 'iletisim')}>Detayları sor →</a>
+  </div>
+</section>
+

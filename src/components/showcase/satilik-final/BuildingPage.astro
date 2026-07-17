@@ -1,0 +1,80 @@
+---
+import Breadcrumb from './Breadcrumb.astro';
+import PropertyImage from './PropertyImage.astro';
+import { buildingMedia, compactSaleContent, finalSalePath } from './data';
+
+const building = compactSaleContent.building;
+---
+
+<Breadcrumb current="El Ele Apartmanı" />
+
+<header class="sd-page-intro">
+  <div class="sd-container sd-page-intro-grid">
+    <div><p class="sd-eyebrow">El Ele Apartmanı</p><h1 class="sd-display">İki evin ortak bina bağlamı.</h1></div>
+    <p>{building.intro} Yayınlanmamış teknik ayrıntılar ayrıca teyit edilir.</p>
+  </div>
+</header>
+
+<section class="sd-section" data-testid="sd-building-page">
+  <div class="sd-container sd-building-hero">
+    <PropertyImage media={buildingMedia.exterior} priority sizes="(min-width: 760px) 430px, 100vw" />
+    <div class="sd-building-hero-copy">
+      <p class="sd-eyebrow">Dış cephe</p>
+      <h2 class="sd-section-title">{building.architectureTitle}</h2>
+      <p>{building.architectureBody}</p>
+      <dl class="sd-hero-facts" aria-label="Bina bilgi durumu">
+        <div><dt>Proje</dt><dd>El Ele Apartmanı</dd></div>
+        <div><dt>Yüklenici</dt><dd>Mey İnşaat</dd></div>
+        <div><dt>Teknik detaylar</dt><dd>Bilgi yakında</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="sd-section is-soft" aria-labelledby="building-modules-title">
+  <div class="sd-container">
+    <header class="sd-section-heading">
+      <div><p class="sd-eyebrow">Varış ve ortak alanlar</p><h2 class="sd-section-title" id="building-modules-title">Fotoğrafların desteklediği üç bölüm.</h2></div>
+      <p>Giriş, ortak dolaşım ve kapalı otopark gösterilir; bağımsız bölüm tahsisi veya teknik hak iddiası eklenmez.</p>
+    </header>
+    <div class="sd-building-modules">
+      <article class="sd-building-module">
+        <PropertyImage media={buildingMedia.entrance} sizes="(min-width: 760px) 430px, 100vw" />
+        <div class="sd-building-module-copy"><p class="sd-eyebrow">Giriş</p><h3>{building.sharedTitle}</h3><p>{building.sharedBody}</p></div>
+      </article>
+      <article class="sd-building-module">
+        <PropertyImage media={buildingMedia.parking} sizes="(min-width: 760px) 430px, 100vw" />
+        <div class="sd-building-module-copy"><p class="sd-eyebrow">Ortak alan</p><h3>{building.parkingTitle}</h3><p>{building.parkingBody}</p></div>
+      </article>
+      <article class="sd-building-module">
+        <PropertyImage media={buildingMedia.exterior} sizes="(min-width: 760px) 300px, 100vw" />
+        <div class="sd-building-module-copy"><p class="sd-eyebrow">Proje bütünü</p><h3>İki daire, tek yapı.</h3><p>Daire 1 ve Daire 2 aynı bina anlatısı içinde, ayrı fotoğraf sınırları korunarak sunulur.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sd-section" aria-labelledby="environment-title">
+  <div class="sd-container sd-environment-row">
+    <div class="sd-environment-copy"><p class="sd-eyebrow">Çevre</p><h2 class="sd-section-title" id="environment-title">Destekleyici çevre kareleri.</h2><p>Görüntüler yalnız çevre atmosferini tanıtır. Kesin adres, rota ve mesafe bilgisi yayınlanmamıştır.</p></div>
+    <PropertyImage media={buildingMedia.neighbourhood} sizes="(min-width: 760px) 390px, 100vw" />
+    <PropertyImage media={buildingMedia.coast} sizes="(min-width: 760px) 390px, 100vw" />
+  </div>
+</section>
+
+<section class="sd-section is-soft">
+  <div class="sd-container sd-trust-strip">
+    <p class="sd-eyebrow">Doğrudan satış</p>
+    <h2>{building.directTitle}</h2>
+    <p>{building.directBody}</p>
+    <a class="sd-button sd-button-primary" href={finalSalePath('iletisim')}>Bilgi talep et</a>
+  </div>
+</section>
+
+<section class="sd-cta-band">
+  <div class="sd-container sd-cta-band-inner">
+    <div><p class="sd-eyebrow">Dairelere dönün</p><h2 class="sd-section-title">Bina bağlamından ev seçimine geçin.</h2><p>İki daireyi aynı satırda görün veya tüm fotoğraf seçkisini açın.</p></div>
+    <div class="sd-action-row"><a class="sd-button sd-button-primary" href={finalSalePath('daire-1')}>Daire 1</a><a class="sd-button sd-button-dark" href={finalSalePath('daire-2')}>Daire 2</a><a class="sd-button sd-button-dark" href={finalSalePath('galeri')}>Galeri</a></div>
+  </div>
+</section>
+

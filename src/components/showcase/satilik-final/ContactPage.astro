@@ -1,0 +1,36 @@
+---
+import Breadcrumb from './Breadcrumb.astro';
+import ViewingForm from './ViewingForm';
+import { finalSalePath } from './data';
+---
+
+<Breadcrumb current="Bilgi ve randevu talebi" />
+
+<header class="sd-page-intro">
+  <div class="sd-container sd-page-intro-grid">
+    <div><p class="sd-eyebrow">Özel görüşme</p><h1 class="sd-display">Bilgi veya yerinde görme talebi hazırlayın.</h1></div>
+    <p>Bu sayfa bir arayüz demosudur. Form doğrulama, yükleme, kontrollü hata ve başarı durumlarını gösterir; hiçbir API çağrısı ya da gerçek iletişim yapmaz.</p>
+  </div>
+</header>
+
+<section class="sd-section" data-testid="sd-contact-page">
+  <div class="sd-container sd-contact-layout">
+    <aside class="sd-contact-aside">
+      <div class="sd-contact-guide">
+        <p class="sd-eyebrow">Tek talep · net sonraki adım</p>
+        <h2>Görüşme için gerekli bağlam.</h2>
+        <ol>
+          <li><span>01</span><p><strong>Daire</strong>Daire 1, Daire 2 veya iki ev.</p></li>
+          <li><span>02</span><p><strong>İletişim</strong>Telefon ya da e-posta tercihi.</p></li>
+          <li><span>03</span><p><strong>Uygunluk</strong>Tarih veya genel zaman aralığı.</p></li>
+          <li><span>04</span><p><strong>Sorular</strong>Fiyat, alan ve teknik ayrıntılar.</p></li>
+        </ol>
+        <a class="sd-text-link" href={finalSalePath()}>← Dairelere geri dön</a>
+      </div>
+      <div class="sd-contact-note"><p><strong>Gösterim güvenliği:</strong> Bilgiler tarayıcıdan çıkmaz. Onaylı gerçek iletişim kanalı yayınlanana kadar telefon, WhatsApp veya e-posta bağlantısı üretilmez.</p></div>
+    </aside>
+    <div class="sd-contact-form-panel">
+      <ViewingForm client:load />
+    </div>
+  </div>
+</section>

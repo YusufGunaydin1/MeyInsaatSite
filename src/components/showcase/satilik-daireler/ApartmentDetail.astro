@@ -1,0 +1,247 @@
+---
+import SaleBreadcrumb from './SaleBreadcrumb.astro';
+import SaleImage from './SaleImage.astro';
+import { getSaleMedia, getSaleMediaList, type SaleMediaItem } from './media';
+import {
+  saleContent,
+  salePath,
+  type ApartmentSlug,
+  type VariationSlug,
+} from './data';
+
+interface Props {
+  variation: VariationSlug;
+  apartmentSlug: ApartmentSlug;
+}
+
+const { variation, apartmentSlug } = Astro.props;
+const apartment = saleContent.apartments[apartmentSlug];
+const otherSlug: ApartmentSlug = apartmentSlug === 'daire-1' ? 'daire-2' : 'daire-1';
+const other = saleContent.apartments[otherSlug];
+
+const categoryLabel: Record<string, string> = {
+  'lower-living': 'Alt kat salon',
+  'upper-living': 'Üst kat salon',
+  bedroom: 'Oda',
+  'lower-kitchen': 'Alt mutfak',
+  'upper-kitchen': 'Üst mutfak',
+  bathroom: 'Banyo',
+  stairs: 'Merdiven',
+  corridor: 'Koridor',
+  balcony: 'Balkon',
+  terrace: 'Teras',
+  view: 'Görünüm',
+};
+
+const d1Lower = getSaleMediaList([
+  'd1:d1-salon-alt.png', 'd1:d1-mutfak-1.png', 'd1:d1-oda-1.png', 'd1:d1-banyo-1.png', 'd1:d2-koridor.png',
+]);
+const d1Upper = getSaleMediaList([
+  'd1:d1-merdiven.png', 'd1:d1-salon-ust-1.png', 'd1:d2-mutfak-ust.png', 'd1:d1-oda-3a.png',
+  'd1:d2-banyo-1.png', 'd1:d1-teras-1.png', 'd1:d1-manzara-1.png',
+]);
+const d1Gallery = getSaleMediaList([
+  'd1:d2-salon-alt.png', 'd1:d1-oda-2a.png', 'd1:d1-teras-3.png', 'd1:d2-salon-ust.png', 'd1:d2-balkon.png',
+]);
+
+const d2Lower = getSaleMediaList([
+  'd2:d2-salon-alt-1.png', 'd2:d2-mutfak-alt.png', 'd2:d2-oda-1a.png', 'd2:d2-banyo-1a.png', 'd2:d2-balkon.png',
+]);
+const d2Upper = getSaleMediaList([
+  'd2:d2-merdiven-1.png', 'd2:d2-koridor.png', 'd2:d2-salon-ust-1.png', 'd2:d2-mutfak-ust.png',
+  'd2:d2-oda-2a.png', 'd2:d2-oda-3a.png', 'd2:d2-banyo-2.png', 'd2:d2-teras.png',
+]);
+const d2GalleryResolved = getSaleMediaList([
+  'd2:d2-salon-alt-2.png', 'd2:d2-merdiven-2.png', 'd2:d2-salon-ust-2.png',
+  'd2:d2-oda-3a.png', 'd2:d2-teras.png',
+]);
+
+const hero = getSaleMedia(apartment.heroMediaId);
+const lower = apartmentSlug === 'daire-1' ? d1Lower : d2Lower;
+const upper = apartmentSlug === 'daire-1' ? d1Upper : d2Upper;
+const gallery = apartmentSlug === 'daire-1' ? d1Gallery : d2GalleryResolved;
+
+const caption = (media: SaleMediaItem) => categoryLabel[media.area] ?? 'Mekân';
+---
+
+<SaleBreadcrumb variation={variation} current={apartment.name} />
+
+{apartmentSlug === 'daire-1' ? (
+  <article class="sale-apartment-detail sale-apartment-one" data-testid="apartment-detail-daire-1">
+    <header class="sale-apartment-one-hero sale-container">
+      <div class="sale-apartment-one-title">
+        <p class="sale-kicker">{apartment.index} · El Ele Apartmanı</p>
+        <h1>{apartment.name}</h1>
+        <p class="sale-apartment-confirmed">{apartment.confirmed}</p>
+        <p class="sale-lead">{apartment.lead}</p>
+        <div class="sale-action-row">
+          <a class="sale-button sale-button-primary" href="#kat-hikayesi">Katları keşfet</a>
+          <a class="sale-text-link" href={salePath(variation, 'iletisim')}>Randevu talep et →</a>
+        </div>
+      </div>
+      <SaleImage media={hero} priority sizes="(min-width: 960px) 64vw, 100vw" decorativeCaption="DAİRE 1 · TERAS" />
+      <div class="sale-apartment-one-note">
+        <span>01</span>
+        <p>{apartment.character}</p>
+      </div>
+    </header>
+
+    <section id="kat-hikayesi" class="sale-apartment-story sale-container" aria-labelledby="d1-lower-title">
+      <div class="sale-apartment-story-heading">
+        <p class="sale-kicker">01 / Alt kat</p>
+        <h2 id="d1-lower-title">{apartment.lowerTitle}</h2>
+        <p>{apartment.lowerStory}</p>
+      </div>
+      <div class="sale-apartment-one-lower-grid">
+        {d1Lower.map((item, index) => (
+          <SaleImage
+            media={item}
+            className={`sale-story-media sale-story-media-${index + 1}`}
+            sizes={index === 0 ? '(min-width: 960px) 58vw, 100vw' : '(min-width: 960px) 28vw, 50vw'}
+            decorativeCaption={caption(item)}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section class="sale-apartment-stair-note">
+      <div class="sale-container sale-apartment-stair-note-grid">
+        <SaleImage media={d1Upper[0]} sizes="(min-width: 960px) 32vw, 70vw" decorativeCaption="İKİ KATI BAĞLAYAN HAT" />
+        <div>
+          <p class="sale-kicker">Merdiven</p>
+          <h2>Kat değişimi, evin anlatısında görünür kalır.</h2>
+          <p>Ahşap basamaklı merdiven alt ve üst yaşam alanları arasındaki geçişi fotoğraflarda açıkça kuruyor.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sale-apartment-story sale-container" aria-labelledby="d1-upper-title">
+      <div class="sale-apartment-story-heading is-right">
+        <p class="sale-kicker">02 / Üst kat</p>
+        <h2 id="d1-upper-title">{apartment.upperTitle}</h2>
+        <p>{apartment.upperStory}</p>
+      </div>
+      <div class="sale-apartment-one-upper-grid">
+        {d1Upper.slice(1).map((item, index) => (
+          <SaleImage
+            media={item}
+            className={`sale-upper-media sale-upper-media-${index + 1}`}
+            sizes={index === 4 ? '(min-width: 960px) 54vw, 100vw' : '(min-width: 960px) 30vw, 52vw'}
+            decorativeCaption={caption(item)}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section class="sale-apartment-gallery-preview sale-container" aria-labelledby="d1-gallery-title">
+      <div class="sale-section-heading sale-section-heading-split">
+        <div><p class="sale-kicker">Küratörlü seçki</p><h2 id="d1-gallery-title">Yaşam alanları, odalar ve dış mekân</h2></div>
+        <p>Benzer açılar art arda getirilmeden, Daire 1’in farklı mekânları tek bir kısa seçkide buluşuyor.</p>
+      </div>
+      <div class="sale-detail-gallery-grid">
+        {gallery.map((item, index) => (
+          <SaleImage media={item} className={`sale-detail-gallery-${index + 1}`} sizes="(min-width: 960px) 30vw, 50vw" decorativeCaption={caption(item)} />
+        ))}
+      </div>
+      <a class="sale-text-link" href={salePath(variation, 'galeri')}>Tüm küratörlü galeriyi aç →</a>
+    </section>
+  </article>
+) : (
+  <article class="sale-apartment-detail sale-apartment-two" data-testid="apartment-detail-daire-2">
+    <header class="sale-apartment-two-hero">
+      <SaleImage media={hero} priority sizes="100vw" />
+      <div class="sale-apartment-two-scrim"></div>
+      <div class="sale-container sale-apartment-two-title">
+        <p class="sale-kicker">{apartment.index} · El Ele Apartmanı</p>
+        <h1>{apartment.name}</h1>
+        <p class="sale-apartment-confirmed">{apartment.confirmed}</p>
+        <p>{apartment.lead}</p>
+        <a class="sale-button sale-button-light" href="#mekan-dizisi">Mekân dizisini izle</a>
+      </div>
+    </header>
+
+    <section id="mekan-dizisi" class="sale-apartment-two-arrival sale-container" aria-labelledby="d2-arrival-title">
+      <div>
+        <p class="sale-kicker">Girişten üst kata</p>
+        <h2 id="d2-arrival-title">Doğrusal merdiven, iki katı tek bakışta bağlıyor.</h2>
+        <p>{apartment.character}</p>
+      </div>
+      <div class="sale-apartment-two-arrival-media">
+        <SaleImage media={d2Upper[0]} sizes="(min-width: 960px) 38vw, 70vw" decorativeCaption="MERDİVEN · GENEL" />
+        <SaleImage media={d2Upper[1]} sizes="(min-width: 960px) 22vw, 48vw" decorativeCaption="ÜST KAT · KORİDOR" />
+      </div>
+    </section>
+
+    <section class="sale-apartment-two-floor sale-apartment-two-lower" aria-labelledby="d2-lower-title">
+      <div class="sale-container">
+        <div class="sale-apartment-two-floor-head">
+          <span>01</span>
+          <div><p class="sale-kicker">Alt kat</p><h2 id="d2-lower-title">{apartment.lowerTitle}</h2><p>{apartment.lowerStory}</p></div>
+        </div>
+        <div class="sale-apartment-two-lower-grid">
+          {d2Lower.map((item, index) => (
+            <SaleImage media={item} className={`sale-d2-lower-${index + 1}`} sizes={index === 0 ? '(min-width: 960px) 56vw, 100vw' : '(min-width: 960px) 27vw, 50vw'} decorativeCaption={caption(item)} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="sale-apartment-two-floor sale-apartment-two-upper" aria-labelledby="d2-upper-title">
+      <div class="sale-container">
+        <div class="sale-apartment-two-floor-head">
+          <span>02</span>
+          <div><p class="sale-kicker">Üst kat</p><h2 id="d2-upper-title">{apartment.upperTitle}</h2><p>{apartment.upperStory}</p></div>
+        </div>
+        <div class="sale-apartment-two-sequence">
+          {d2Upper.slice(2).map((item, index) => (
+            <div class="sale-apartment-two-sequence-item">
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <SaleImage media={item} sizes="(min-width: 960px) 36vw, 80vw" />
+              <p>{caption(item)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="sale-apartment-gallery-preview sale-container" aria-labelledby="d2-gallery-title">
+      <div class="sale-section-heading sale-section-heading-split">
+        <div><p class="sale-kicker">Ek açılar</p><h2 id="d2-gallery-title">Salon, merdiven, odalar ve teras</h2></div>
+        <p>Ana kat hikâyesini tekrar etmeden, mekânların karşı açılarını ve birbirine bağlanışını tamamlayan kısa seçki.</p>
+      </div>
+      <div class="sale-detail-gallery-grid sale-detail-gallery-d2">
+        {gallery.map((item, index) => (
+          <SaleImage media={item} className={`sale-detail-gallery-${index + 1}`} sizes="(min-width: 960px) 30vw, 50vw" decorativeCaption={caption(item)} />
+        ))}
+      </div>
+      <a class="sale-text-link" href={salePath(variation, 'galeri')}>Tüm küratörlü galeriyi aç →</a>
+    </section>
+  </article>
+)}
+
+<section class="sale-apartment-facts">
+  <div class="sale-container sale-apartment-facts-grid">
+    <div>
+      <p class="sale-kicker">Teyit bekleyen bilgiler</p>
+      <h2>Bilinenleri açık, bekleyenleri görünür tutuyoruz.</h2>
+      <p>3+2, dubleks ve yeni yapım bilgileri doğrulanmıştır. Aşağıdaki ticari ve teknik ayrıntılar paylaşılınca tek veri kaynağından güncellenecektir.</p>
+    </div>
+    <dl class="sale-placeholder-list sale-placeholder-list-large">
+      {apartment.facts.map((fact) => <div><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
+    </dl>
+  </div>
+</section>
+
+<section class="sale-apartment-switch sale-container" data-testid="apartment-switch">
+  <div>
+    <p class="sale-kicker">Diğer evi de görün</p>
+    <h2>{other.name}</h2>
+    <p>{other.shortIntro}</p>
+  </div>
+  <a class="sale-button sale-button-primary" href={salePath(variation, otherSlug)}>Diğer daireyi incele ↗</a>
+</section>
+
+<section class="sale-apartment-contact sale-container">
+  <div><p class="sale-kicker">Özel görüşme</p><h2>Fotoğraflardan sonra sorularınızı birlikte netleştirelim.</h2></div>
+  <div><p>Fiyat, alan, teknik detay veya yerinde görme talebinizi kontrollü demo formunda hazırlayın.</p><a class="sale-button sale-button-outline" href={salePath(variation, 'iletisim')}>Randevu talep et</a></div>
+</section>

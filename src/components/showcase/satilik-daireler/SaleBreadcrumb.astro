@@ -1,0 +1,19 @@
+---
+import { salePath, variations, type VariationSlug } from './data';
+
+interface Props {
+  variation: VariationSlug;
+  current: string;
+}
+
+const { variation, current } = Astro.props;
+---
+
+<nav class="sale-breadcrumb sale-container" aria-label="Sayfa yolu">
+  <a href={salePath()}>Tasarım seçkisi</a>
+  <span aria-hidden="true">/</span>
+  <a href={salePath(variation)}>{variations[variation].name}</a>
+  <span aria-hidden="true">/</span>
+  <span aria-current="page">{current}</span>
+</nav>
+

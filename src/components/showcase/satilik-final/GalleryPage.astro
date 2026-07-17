@@ -1,0 +1,39 @@
+---
+import Breadcrumb from './Breadcrumb.astro';
+import PhotoGallery from './PhotoGallery';
+import {
+  compactSaleContent,
+  finalSalePath,
+  fullGalleryItems,
+  galleryFilters,
+} from './data';
+---
+
+<Breadcrumb current="Galeri" />
+
+<header class="sd-page-intro">
+  <div class="sd-container sd-page-intro-grid">
+    <div><p class="sd-eyebrow">Küratörlü fotoğraf seçkisi</p><h1 class="sd-display">İki daireyi ve binayı gruplar hâlinde görün.</h1></div>
+    <p>{compactSaleContent.gallery.intro} Filigranlı üçüncü taraf görseli seçkiye dahil edilmemiştir.</p>
+  </div>
+</header>
+
+<section class="sd-section" data-testid="sd-gallery-page">
+  <div class="sd-container">
+    <PhotoGallery
+      items={fullGalleryItems}
+      filters={galleryFilters}
+      variant="full"
+      galleryLabel="Satılık daireler fotoğraf galerisi"
+      client:load
+    />
+  </div>
+</section>
+
+<section class="sd-cta-band">
+  <div class="sd-container sd-cta-band-inner">
+    <div><p class="sd-eyebrow">Fotoğraflardan sonra</p><h2 class="sd-section-title">Bir daireyi ayrıntılı inceleyin.</h2><p>Kat hikâyesine dönün, diğer daireye geçin veya kontrollü görüşme talebini hazırlayın.</p></div>
+    <div class="sd-action-row"><a class="sd-button sd-button-primary" href={finalSalePath('daire-1')}>Daire 1</a><a class="sd-button sd-button-dark" href={finalSalePath('daire-2')}>Daire 2</a><a class="sd-button sd-button-dark" href={finalSalePath('iletisim')}>Randevu</a></div>
+  </div>
+</section>
+

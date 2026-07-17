@@ -1,0 +1,39 @@
+---
+import '../../../styles/global.css';
+import '../../../styles/sale-showcase.css';
+import '../../../styles/sale-showcase-variations.css';
+
+import dm400 from '../../../assets/fonts/showcase/dm-sans-latin-ext-400-normal.woff2?url';
+import dm500 from '../../../assets/fonts/showcase/dm-sans-latin-ext-500-normal.woff2?url';
+import dm600 from '../../../assets/fonts/showcase/dm-sans-latin-ext-600-normal.woff2?url';
+
+interface Props {
+  title: string;
+  description: string;
+  themeColor?: string;
+}
+
+const { title, description, themeColor = '#f4f1eb' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content={themeColor} />
+    <link rel="preload" href={dm400} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={dm500} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={dm600} as="font" type="font/woff2" crossorigin />
+    <script is:inline>document.documentElement.classList.add('sale-js');</script>
+  </head>
+  <body class="sale-body">
+    <a class="sale-skip-link" href="#sale-main">İçeriğe geç</a>
+    <slot />
+  </body>
+</html>
+

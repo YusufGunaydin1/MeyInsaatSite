@@ -1,0 +1,134 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../../assets/brand/mey-logo-dark.png';
+import {
+  comparisonChecklist,
+  saleContent,
+  salePath,
+  variationSlugs,
+  variations,
+} from './data';
+import { getSaleMedia } from './media';
+---
+
+<div class="sale-comparison" data-testid="sale-comparison-hub">
+  <header class="sale-review-header">
+    <div class="sale-container sale-review-header-inner">
+      <a class="sale-review-brand" href="/showcases">
+        <Image src={logo} alt="Mey İnşaat" width={132} />
+        <span>Tasarım vitrini</span>
+      </a>
+      <a class="sale-review-back" href="/showcases">← Tüm vitrinler</a>
+    </div>
+  </header>
+
+  <main id="sale-main" tabindex="-1">
+    <section class="sale-review-hero sale-container">
+      <p class="sale-kicker">Satılık Daireler · Tasarım karşılaştırması</p>
+      <div class="sale-review-hero-grid">
+        <h1>İki ev için üç tamamlanmış dijital deneyim.</h1>
+        <div>
+          <p>
+            Her yön aynı gerçek fotoğraf seçkisini, aynı güvenli mock içeriği ve aynı yedi sayfalık
+            yolculuğu farklı bir mekânsal ritimle yorumlar.
+          </p>
+          <p class="sale-review-note">
+            Amaç bir ilan portalı üretmek değil; ciddi alıcının iki evi anlayıp özel görüşme istemesini
+            sağlayan butik satış dilini seçmek.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sale-review-directions sale-container" aria-labelledby="directions-title">
+      <div class="sale-section-heading">
+        <p class="sale-kicker">Karşılaştırılabilir tam sistemler</p>
+        <h2 id="directions-title">Bir yön seçin, tüm sayfalarda gezin.</h2>
+      </div>
+
+      <div class="sale-direction-list">
+        {variationSlugs.map((slug) => {
+          const variant = variations[slug];
+          const media = getSaleMedia(variant.previewMediaId);
+          if (!media.image) return null;
+          return (
+            <article class={`sale-direction-card direction-${slug}`} data-testid={`direction-${slug}`}>
+              <div class="sale-direction-media">
+                <Image
+                  src={media.image}
+                  alt={`${variant.name} yönü önizlemesi — ${media.alt}`}
+                  widths={[640, 960, 1400]}
+                  sizes="(min-width: 1000px) 48vw, 100vw"
+                />
+                <span>{variant.index}</span>
+              </div>
+              <div class="sale-direction-copy">
+                <p class="sale-kicker">{variant.direction}</p>
+                <h3>{variant.name}</h3>
+                <p class="sale-direction-impression">{variant.impression}</p>
+                <dl>
+                  <div><dt>Tipografi ve ritim</dt><dd>{variant.typography}</dd></div>
+                  <div><dt>Görsel strateji</dt><dd>{variant.imageStrategy}</dd></div>
+                  <div><dt>Navigasyon</dt><dd>{variant.navigation}</dd></div>
+                  <div><dt>İlan portalından farkı</dt><dd>{variant.antiMarketplace}</dd></div>
+                </dl>
+                <div class="sale-direction-actions">
+                  <a class="sale-button sale-button-primary" href={salePath(slug)}>
+                    Tam yönü aç <span aria-hidden="true">↗</span>
+                  </a>
+                  <a class="sale-text-link" href={salePath(slug, 'daireler')}>Dairelerden başla →</a>
+                </div>
+                <nav aria-label={`${variant.name} hızlı sayfaları`}>
+                  <a href={salePath(slug, 'daire-1')}>Daire 1</a>
+                  <a href={salePath(slug, 'daire-2')}>Daire 2</a>
+                  <a href={salePath(slug, 'galeri')}>Galeri</a>
+                  <a href={salePath(slug, 'iletisim')}>Görüşme</a>
+                </nav>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="sale-review-scope">
+      <div class="sale-container sale-review-scope-grid">
+        <div>
+          <p class="sale-kicker">Her yönde aynı kapsam</p>
+          <h2>Renk denemesi değil, uçtan uca sayfa sistemi.</h2>
+          <p>
+            Yönler; ana sayfa, daire anlatısı, bina, galeri ve görüşme adımlarının tamamında aynı
+            tasarım kararını sürdürür. Böylece inceleme, yalnız kahraman alanına göre yapılmaz.
+          </p>
+        </div>
+        <ol>
+          {comparisonChecklist.map((item, index) => (
+            <li><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="sale-review-facts sale-container">
+      <p class="sale-kicker">Değişmeyen gerçekler</p>
+      <h2>{saleContent.project.name}</h2>
+      <div>
+        <p><strong>2</strong><span>satışta daire</span></p>
+        <p><strong>3+2</strong><span>iki dairede de</span></p>
+        <p><strong>Dubleks</strong><span>yeni yapım</span></p>
+        <p><strong>Mey İnşaat</strong><span>yüklenici ve doğrudan satıcı</span></p>
+      </div>
+      <p class="sale-review-facts-note">
+        Fiyat, alan, açık adres, kat, yön, teknik sistem, tapu ve ticari koşullar bu aşamada bilinçli
+        olarak “Bilgi yakında” durumundadır.
+      </p>
+    </section>
+  </main>
+
+  <footer class="sale-review-footer">
+    <div class="sale-container">
+      <span>MEY İnşaat · Satılık Daireler tasarım vitrini</span>
+      <a href="/showcases">Tasarım vitrini ana sayfası →</a>
+    </div>
+  </footer>
+</div>

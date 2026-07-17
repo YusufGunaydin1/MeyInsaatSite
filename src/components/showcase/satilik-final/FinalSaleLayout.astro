@@ -1,0 +1,44 @@
+---
+import '../../../styles/satilik-final-core.css';
+import '../../../styles/satilik-final-pages.css';
+
+import dm400 from '../../../assets/fonts/showcase/dm-sans-latin-ext-400-normal.woff2?url';
+import dm500 from '../../../assets/fonts/showcase/dm-sans-latin-ext-500-normal.woff2?url';
+import dm600 from '../../../assets/fonts/showcase/dm-sans-latin-ext-600-normal.woff2?url';
+import SaleFooter from './SaleFooter.astro';
+import SaleHeader from './SaleHeader.astro';
+import type { FinalSalePage } from './data';
+
+interface Props {
+  title: string;
+  description: string;
+  currentPage?: FinalSalePage;
+}
+
+const { title, description, currentPage = '' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="tr" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#111315" />
+    <link rel="preload" href={dm400} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={dm500} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={dm600} as="font" type="font/woff2" crossorigin />
+  </head>
+  <body class="sd-body">
+    <a class="sd-skip-link" href="#sd-main">İçeriğe geç</a>
+    <SaleHeader currentPage={currentPage} />
+    <main id="sd-main" tabindex="-1">
+      <slot />
+    </main>
+    <SaleFooter />
+  </body>
+</html>
+

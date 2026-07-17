@@ -1,0 +1,84 @@
+---
+import type { ApartmentSlug } from '../satilik-daireler/data';
+import Breadcrumb from './Breadcrumb.astro';
+import DaireOneNarrative from './DaireOneNarrative.astro';
+import DaireTwoNarrative from './DaireTwoNarrative.astro';
+import PhotoGallery from './PhotoGallery';
+import PropertyImage from './PropertyImage.astro';
+import {
+  buildingMedia,
+  compactSaleContent,
+  detailPhotos,
+  finalSalePath,
+} from './data';
+
+interface Props { apartmentSlug: ApartmentSlug }
+const { apartmentSlug } = Astro.props;
+const apartment = compactSaleContent.apartments[apartmentSlug];
+const otherSlug: ApartmentSlug = apartmentSlug === 'daire-1' ? 'daire-2' : 'daire-1';
+const other = compactSaleContent.apartments[otherSlug];
+const contactHref = `${finalSalePath('iletisim')}?daire=${apartmentSlug}`;
+---
+
+<Breadcrumb current={apartment.name} />
+
+<header class="sd-detail-head">
+  <div class="sd-container sd-detail-title-row">
+    <div><p class="sd-eyebrow">El Ele Apartmanı · {apartment.index}</p><h1>{apartment.name}</h1></div>
+    <div class="sd-detail-fact-strip" aria-label="Doğrulanmış daire bilgileri"><span>3+2</span><span>Dubleks</span><span>Yeni yapım</span></div>
+  </div>
+</header>
+
+<section class="sd-container sd-detail-layout" data-testid={`sd-detail-${apartmentSlug}`}>
+  <div class="sd-detail-main">
+    <PhotoGallery
+      items={detailPhotos(apartmentSlug)}
+      variant="detail"
+      galleryLabel={`${apartment.name} öne çıkan fotoğrafları`}
+      client:load
+    />
+    <div class="sd-detail-gallery-link"><a class="sd-text-link" href={`${finalSalePath('galeri')}?bolum=${apartmentSlug}`}>Tüm fotoğraflar →</a></div>
+    <div class="sd-detail-intro">
+      <h2>{apartment.characterTitle}</h2>
+      <p>{apartment.lead}</p>
+    </div>
+  </div>
+  <aside class="sd-detail-aside" aria-label={`${apartment.name} bilgi ve randevu paneli`}>
+    <div class="sd-detail-request">
+      <p class="sd-eyebrow">Doğrudan Mey İnşaat’tan</p>
+      <h2>{apartment.name} hakkında bilgi alın.</h2>
+      <div class="sd-detail-price"><small>Fiyat</small><strong>Fiyat bilgisi için bize ulaşın</strong></div>
+      <p>Form gösterim amaçlıdır; gerçek iletişim veya veri gönderimi yapmaz.</p>
+      <a class="sd-button sd-button-primary" href={contactHref}>Bilgi / randevu talep et</a>
+    </div>
+    <div class="sd-pending-facts" data-testid="sd-pending-facts">
+      <h2>Bilgi özeti</h2>
+      <dl>{apartment.facts.map((fact) => <div><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>
+    </div>
+  </aside>
+</section>
+
+{apartmentSlug === 'daire-1' ? <DaireOneNarrative /> : <DaireTwoNarrative />}
+
+<section class="sd-section">
+  <div class="sd-container sd-apartment-switch" data-testid="sd-apartment-switch">
+    <div><p class="sd-eyebrow">Diğer evi de görün</p><h2>{other.name}</h2></div>
+    <p>{other.shortIntro}</p>
+    <a class="sd-button sd-button-primary" href={finalSalePath(otherSlug)}>{other.name}’ye geç →</a>
+  </div>
+</section>
+
+<section class="sd-section is-soft">
+  <div class="sd-container sd-building-context">
+    <PropertyImage media={buildingMedia.exterior} sizes="150px" />
+    <div><p class="sd-eyebrow">Ortak bina bağlamı</p><h2>El Ele Apartmanı</h2><p>Dış cepheyi, girişi ve ortak alan fotoğraflarını tek sayfada inceleyin.</p></div>
+    <a class="sd-button sd-button-secondary" href={finalSalePath('el-ele-apartmani')}>Binayı incele</a>
+  </div>
+</section>
+
+<section class="sd-cta-band">
+  <div class="sd-container sd-cta-band-inner">
+    <div><p class="sd-eyebrow">Özel görüşme</p><h2 class="sd-section-title">Sorularınızı tek talepte toplayın.</h2><p>Fiyat, alan, teknik ayrıntılar veya yerinde görme isteğinizi kontrollü demo formunda hazırlayın.</p></div>
+    <a class="sd-button sd-button-primary" href={contactHref}>Randevu talep et</a>
+  </div>
+</section>

@@ -1,12 +1,16 @@
 ---
 /*
-  VARYANT D — "SEÇKİ" (beğenilenlerin birleşimi + iki bölüm yeniden tasarım).
-  Onaylanan parçalar: Portföy=aksonometri kaydı (A), Hikaye=yatay zaman çizelgesi (C),
-  Biz Kimiz=2 sütun + planlama görseli (B), Misyon/Vizyon=teal-kenarlı (A), CTA=koyu (C).
-  YENİDEN TASARIM (eski "beyaz kutu" ızgaralar ucuz bulundu):
-   · Süreç: koyu omurga — bağlı kırmızı kot çizgisi, survey tikleri, hover lift + tik çizimi.
-   · Değerler: KUTUSUZ editoryal liste — dev Oswald hayalet numaralar, hairline ayraç,
-     hover'da kırmızı alt-çizgi çizilir (brief §7/§12). Metin-kutu-ızgara YOK.
+  VARYANT D — "PAFTA" (bütünsel yeniden tasarım).
+  Fikir: tüm sayfa TEK bir mimari pafta/çizim seti. "Çizdiğimizi inşa ederiz"i
+  bir sistem hâline getirir → bütünlük stitched-parça hissini kırar.
+   · Tek yüzey: concrete-050 baştan sona; ayrım boşluk + kırmızı string-line rayıyla,
+     arka plan takasıyla DEĞİL. Tek koyu an: süreç bandı.
+   · Tek tekrar eden sistem: her bölüm aynı ray + mono eyebrow + Oswald başlık; her
+     görsel aynı hairline "pafta" çerçevesi + mono köşe etiketi.
+   · İmza: hero = gerçek binanın AKSONOMETRİ render'i çizim olarak sunulur — blueprint
+     zemin, gerçek KAT 1–6 kot skalası, kırmızı kot çizgisi (KAT 6 · +18.40 m).
+   · Tek hareket anı: portföy paftaları hover'da ÇİZİM(render) → YAPI(foto) geçişi.
+  Tokenlar brief'ten (red/teal, Oswald/Plex/mono, 2px, flat). Beğenilen içerik korunur.
 */
 import { Image } from 'astro:assets';
 import StatsStrip from '../../StatsStrip.astro';
@@ -14,128 +18,148 @@ import PlaceholderChip from '../../PlaceholderChip.astro';
 import { corp, img } from './data';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const hero = corp.buildings[2]; // Sapanbağları — kırmızı çatı render'i markayla uyumlu
+const floors = [6, 5, 4, 3, 2, 1];
 ---
 
-<div class="sck" data-testid="variant-secki">
-  <!-- HERO: ifade + kılavuz çizgi -->
-  <section class="container-site sck-hero" data-testid="sck-hero">
-    <div class="guide-line-v ps-6 sm:ps-10">
-      <p class="t-tech text-mey-red">{corp.coord}</p>
-      <h1 class="t-display-xl mt-4">{corp.slogan}</h1>
-      <p class="t-body-l mt-6 max-w-2xl text-graphite-600">{corp.lead}</p>
-      <div class="sck-cta-row mt-7">
-        <a class="btn-primary" href={`${base}/projeler`}>{corp.ctaProjects} <span aria-hidden="true">→</span></a>
-        <a class="btn-ghost" href={`${base}/iletisim`}>{corp.ctaContact}</a>
+<div class="corp" data-testid="variant-secki">
+  <!-- ======================= HERO (imza) ======================= -->
+  <section class="corp-sheet corp-hero" data-testid="sck-hero">
+    <div class="container-site corp-hero-grid">
+      <div class="corp-rail corp-hero-copy">
+        <p class="corp-eyebrow">KURUMSAL — MEY İNŞAAT</p>
+        <h1 class="t-display-xl corp-hero-title">{corp.slogan}</h1>
+        <p class="t-body-l corp-lead">{corp.lead}</p>
+        <div class="corp-btns">
+          <a class="btn-primary" href={`${base}/projeler`}>{corp.ctaProjects} <span aria-hidden="true">→</span></a>
+          <a class="btn-ghost" href={`${base}/iletisim`}>{corp.ctaContact}</a>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Tam-taşma skyline, survey gibi okunur -->
-  <section class="sck-skyline">
-    <Image src={img.skyline} alt="MEY İnşaat konut projeleri — İstanbul (temsilî görsel)" widths={[768, 1280, 1920, 2560]} sizes="100vw" class="sck-skyline-img" loading="lazy" />
-    <div class="sck-skyline-tagrow container-site">
-      <span class="t-tech sck-skyline-tag">MEY İNŞAAT · İSTANBUL · KONUT</span>
-      <span class="sck-skyline-level" aria-hidden="true"></span>
-      <span class="t-tech sck-skyline-read">PORTFÖY · TESLİM EDİLDİ</span>
-    </div>
-  </section>
-
-  <!-- BİZ KİMİZ — 2 sütun + planlama görseli (B) -->
-  <section class="sck-alt">
-    <div class="container-site sck-who">
-      <div class="sck-who-text">
-        <p class="t-tech text-mey-teal-700">00 · KİMLİK</p>
-        <h2 class="t-display-l mt-3">{corp.whoTitle}</h2>
-        {corp.who.map((p) => <p class="t-body-l mt-4 text-graphite-600">{p}</p>)}
-      </div>
-      <figure class="sck-who-fig reveal">
-        <Image src={img.planningDesk} alt="Proje masası — maket, çizim ve malzeme (temsilî)" widths={[560, 900]} sizes="(min-width: 900px) 45vw, 90vw" class="sck-cover" loading="lazy" />
-        <figcaption class="t-tech sck-fig-cap">ÇİZİMDEN SAHAYA</figcaption>
+      <figure class="corp-plate corp-plate--draw corp-hero-plate reveal">
+        <div class="corp-scale" aria-hidden="true">
+          {floors.map((n) => (
+            <div class="corp-scale-row"><span class="t-tech corp-scale-n">{n}</span><span class="corp-scale-tick"></span></div>
+          ))}
+        </div>
+        <div class="corp-level" aria-hidden="true">
+          <span class="corp-level-line"></span>
+          <span class="t-tech corp-level-read">KAT 6 · +18.40 m</span>
+        </div>
+        <Image src={hero.iso} alt={`${hero.name} — aksonometrik render (temsilî)`} widths={[420, 680]} sizes="(min-width: 960px) 44vw, 90vw" class="corp-hero-render" fetchpriority="high" />
+        <figcaption class="t-tech corp-cap corp-hero-cap">AKSONOMETRİ · {hero.name.toUpperCase()} · TEMSİLİ</figcaption>
       </figure>
     </div>
   </section>
 
-  <!-- SÜREÇ — YENİDEN TASARIM: koyu omurga, bağlı kot çizgisi, hover -->
-  <section class="theatre blueprint-grid sck-process" data-testid="sck-process">
+  <!-- ======================= BİZ KİMİZ ======================= -->
+  <section class="corp-sheet" data-testid="sck-who">
     <div class="container-site">
-      <p class="t-tech" style="color: var(--color-red-on-dark);">{corp.processTitle.toUpperCase()}</p>
-      <h2 class="t-display-l mt-3">Çizimden anahtar teslimine</h2>
-      <p class="t-body-l mt-3 max-w-2xl" style="color: rgb(244 244 242 / 0.72);">{corp.processIntro}</p>
-      <ol class="sck-spine mt-12">
+      <div class="corp-rail corp-head">
+        <p class="corp-eyebrow">KİMLİK</p>
+        <h2 class="t-display-l corp-title">{corp.whoTitle}</h2>
+      </div>
+      <div class="corp-who">
+        <div class="corp-who-copy">
+          {corp.who.map((p) => <p class="t-body-l corp-prose">{p}</p>)}
+        </div>
+        <figure class="corp-plate corp-who-plate reveal">
+          <Image src={img.planningDesk} alt="Proje masası — maket, çizim ve malzeme (temsilî)" widths={[560, 900]} sizes="(min-width: 960px) 46vw, 90vw" class="corp-cover" loading="lazy" />
+          <figcaption class="t-tech corp-cap">ÇİZİMDEN SAHAYA · TEMSİLİ</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= SÜREÇ (tek koyu an) ======================= -->
+  <section class="corp-sheet corp-sheet--dark corp-process" data-testid="sck-process">
+    <div class="container-site">
+      <div class="corp-rail corp-rail--dark corp-head">
+        <p class="corp-eyebrow corp-eyebrow--dark">{corp.processTitle.toUpperCase()}</p>
+        <h2 class="t-display-l corp-title corp-title--dark">Çizimden anahtar teslimine</h2>
+        <p class="t-body-l corp-lead corp-lead--dark">{corp.processIntro}</p>
+      </div>
+      <ol class="corp-spine">
         {corp.process.map((s) => (
-          <li class="sck-step reveal">
-            <div class="sck-step-ic">
-              <Image src={s.icon} alt={s.name} widths={[120, 208]} sizes="104px" class="sck-step-img" loading="lazy" />
-            </div>
-            <span class="t-tech sck-step-no">{s.no}</span>
-            <h3 class="t-heading-s sck-step-nm">{s.name}</h3>
-            <p class="t-caption sck-step-tx">{s.text}</p>
+          <li class="corp-step reveal">
+            <div class="corp-step-ic"><Image src={s.icon} alt={s.name} widths={[120, 208]} sizes="104px" class="corp-step-img" loading="lazy" /></div>
+            <span class="t-tech corp-step-no">{s.no}</span>
+            <h3 class="t-heading-s corp-step-nm">{s.name}</h3>
+            <p class="t-caption corp-step-tx">{s.text}</p>
           </li>
         ))}
       </ol>
     </div>
   </section>
 
-  <!-- HİKAYE — yatay zaman çizelgesi (C) -->
-  <section class="container-site section-pad" data-testid="sck-story">
-    <p class="t-tech text-mey-red">ZAMAN ÇİZELGESİ</p>
-    <h2 class="t-display-l mt-3">{corp.storyTitle}</h2>
-    <ol class="sck-timeline mt-10">
-      {corp.story.map((m) => (
-        <li class="sck-tl-node reveal">
-          <span class="sck-tl-dot" aria-hidden="true"></span>
-          <p class="t-tech text-mey-red sck-tl-tag">{m.tag}</p>
-          <h3 class="t-heading-m mt-1">{m.title}</h3>
-          <p class="t-body mt-2 text-graphite-600">
-            {m.text}
-            {m.pending && <span class="ms-1 align-middle inline-block"><PlaceholderChip locale="tr" label={m.pending} /></span>}
-          </p>
-        </li>
-      ))}
-    </ol>
+  <!-- ======================= HİKAYE ======================= -->
+  <section class="corp-sheet" data-testid="sck-story">
+    <div class="container-site">
+      <div class="corp-rail corp-head">
+        <p class="corp-eyebrow">ZAMAN ÇİZELGESİ</p>
+        <h2 class="t-display-l corp-title">{corp.storyTitle}</h2>
+      </div>
+      <ol class="corp-timeline">
+        {corp.story.map((m) => (
+          <li class="corp-tl reveal">
+            <span class="corp-tl-dot" aria-hidden="true"></span>
+            <p class="t-tech corp-tl-tag">{m.tag}</p>
+            <h3 class="t-heading-m corp-tl-title">{m.title}</h3>
+            <p class="t-body corp-prose corp-tl-text">
+              {m.text}
+              {m.pending && <span class="ms-1 align-middle inline-block"><PlaceholderChip locale="tr" label={m.pending} /></span>}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </div>
   </section>
 
-  <!-- PORTFÖY — aksonometri kaydı (A) -->
-  <section class="sck-portfolio" data-testid="sck-portfolio">
+  <!-- ======================= PORTFÖY (çizim→yapı hover) ======================= -->
+  <section class="corp-sheet" data-testid="sck-portfolio">
     <div class="container-site">
-      <div class="sck-pf-head">
-        <div>
-          <p class="t-tech text-mey-teal-700">KAYIT · PORTFÖY</p>
-          <h2 class="t-display-l mt-3">{corp.portfolioTitle}</h2>
+      <div class="corp-head-row">
+        <div class="corp-rail corp-head">
+          <p class="corp-eyebrow">PORTFÖY</p>
+          <h2 class="t-display-l corp-title">{corp.portfolioTitle}</h2>
         </div>
-        <a class="t-tech sck-pf-all" href={`${base}/projeler`}>TÜM PROJELER <span aria-hidden="true">→</span></a>
+        <a class="t-tech corp-all" href={`${base}/projeler`}>TÜM PROJELER <span aria-hidden="true">→</span></a>
       </div>
-      <p class="t-body-l mt-3 max-w-2xl text-graphite-600">{corp.portfolioIntro}</p>
-      <div class="sck-reg mt-10">
+      <p class="t-body corp-hint">Üstüne gel: <span class="corp-hint-draw">çizim</span> → <span class="corp-hint-built">yapı</span></p>
+      <div class="corp-pf">
         {corp.buildings.map((b, i) => (
-          <a class="sck-reg-item reveal" href={`${base}/projeler/${b.slug}`}>
-            <div class="sck-reg-iso">
-              <Image src={b.iso} alt={`${b.name} — aksonometrik render (temsilî)`} widths={[320, 480]} sizes="(min-width: 900px) 30vw, 90vw" class="sck-reg-img" loading="lazy" />
+          <a class="corp-pf-card reveal" href={`${base}/projeler/${b.slug}`}>
+            <div class="corp-plate corp-plate--draw corp-pf-media">
+              <Image src={b.iso} alt={`${b.name} — aksonometrik çizim (temsilî)`} widths={[360, 560]} sizes="(min-width: 720px) 30vw, 90vw" class="corp-pf-iso" loading="lazy" />
+              <Image src={b.photo} alt={`${b.name} — tamamlanmış yapı (temsilî görsel)`} widths={[360, 560]} sizes="(min-width: 720px) 30vw, 90vw" class="corp-pf-photo" loading="lazy" />
+              <span class="t-tech corp-cap corp-pf-tag"><span class="corp-pf-tag-draw">ÇİZİM</span><span class="corp-pf-tag-built">YAPI</span></span>
             </div>
-            <span class="t-tech sck-reg-idx">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="t-heading-s mt-2">{b.name}</h3>
-            <p class="t-tech text-graphite-400 mt-1">{b.meta}</p>
+            <div class="corp-pf-meta">
+              <span class="t-tech corp-pf-idx">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="t-heading-s corp-pf-name">{b.name}</h3>
+              <p class="t-tech corp-muted">{b.meta}</p>
+            </div>
           </a>
         ))}
       </div>
-      <p class="t-caption sck-note mt-6">{corp.repNote}</p>
+      <p class="t-caption corp-note">{corp.repNote}</p>
     </div>
   </section>
 
-  <!-- DEĞERLER — YENİDEN TASARIM: kutusuz editoryal liste, dev numara, hover alt-çizgi -->
-  <section class="sck-values" data-testid="sck-values">
+  <!-- ======================= DEĞERLER (kutusuz liste) ======================= -->
+  <section class="corp-sheet" data-testid="sck-values">
     <div class="container-site">
-      <div class="guide-line-v ps-6 sm:ps-10">
-        <p class="t-tech text-mey-red">İLKELER</p>
-        <h2 class="t-display-l mt-3">{corp.valuesTitle}</h2>
+      <div class="corp-rail corp-head">
+        <p class="corp-eyebrow">İLKELER</p>
+        <h2 class="t-display-l corp-title">{corp.valuesTitle}</h2>
       </div>
-      <ol class="sck-vlist mt-10">
+      <ol class="corp-values">
         {corp.values.map((v) => (
-          <li class="sck-vrow reveal">
-            <span class="sck-vnum" aria-hidden="true">{v.no}</span>
-            <div class="sck-vbody">
-              <h3 class="t-heading-m sck-vname">{v.name}</h3>
-              <p class="t-body mt-2 text-graphite-600">{v.text}</p>
+          <li class="corp-vrow reveal">
+            <span class="corp-vnum" aria-hidden="true">{v.no}</span>
+            <div>
+              <h3 class="t-heading-m corp-vname">{v.name}</h3>
+              <p class="t-body corp-prose corp-vtext">{v.text}</p>
             </div>
           </li>
         ))}
@@ -143,35 +167,33 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
   </section>
 
-  <!-- MİSYON / VİZYON — teal-kenarlı (A) -->
-  <section class="container-site section-pad">
-    <div class="sck-mv">
-      <article class="sck-mv-card">
-        <p class="t-tech text-mey-teal-700">MİSYON</p>
-        <p class="t-heading-m mt-3 text-graphite-900">{corp.mission}</p>
-      </article>
-      <article class="sck-mv-card">
-        <p class="t-tech text-mey-teal-700">VİZYON</p>
-        <p class="t-heading-m mt-3 text-graphite-900">{corp.vision}</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- SAYILAR -->
-  <section class="sck-alt">
-    <div class="container-site" style="padding-block: clamp(3rem, 7vh, 5rem);">
-      <p class="t-tech text-mey-red">SAYILARLA MEY</p>
-      <div class="mt-6"><StatsStrip locale="tr" /></div>
-    </div>
-  </section>
-
-  <!-- CTA — koyu bookend (C) -->
-  <section class="theatre blueprint-grid sck-cta">
+  <!-- ======================= MİSYON / VİZYON + SAYILAR ======================= -->
+  <section class="corp-sheet" data-testid="sck-mv">
     <div class="container-site">
-      <p class="t-tech" style="color: var(--color-red-on-dark);">İLETİŞİM</p>
-      <h2 class="t-display-l mt-3">{corp.ctaTitle}</h2>
-      <p class="t-body-l mt-3 max-w-xl" style="color: rgb(244 244 242 / 0.72);">{corp.ctaSub}</p>
-      <div class="sck-cta-row mt-7">
+      <div class="corp-mv">
+        <div class="corp-rail corp-mv-item">
+          <p class="corp-eyebrow corp-eyebrow--teal">MİSYON</p>
+          <p class="t-heading-m corp-mv-text">{corp.mission}</p>
+        </div>
+        <div class="corp-rail corp-mv-item">
+          <p class="corp-eyebrow corp-eyebrow--teal">VİZYON</p>
+          <p class="t-heading-m corp-mv-text">{corp.vision}</p>
+        </div>
+      </div>
+      <div class="corp-stats">
+        <p class="corp-eyebrow">SAYILARLA MEY</p>
+        <div class="corp-stats-strip"><StatsStrip locale="tr" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= CTA (ışığa yakın, koyu footer'a akar) ======================= -->
+  <section class="corp-sheet corp-cta">
+    <div class="container-site corp-rail">
+      <p class="corp-eyebrow">İLETİŞİM</p>
+      <h2 class="t-display-l corp-title">{corp.ctaTitle}</h2>
+      <p class="t-body-l corp-lead">{corp.ctaSub}</p>
+      <div class="corp-btns">
         <a class="btn-primary" href={`${base}/projeler`}>{corp.ctaProjects} <span aria-hidden="true">→</span></a>
         <a class="btn-ghost" href={`${base}/iletisim`}>{corp.ctaContact}</a>
       </div>
@@ -180,97 +202,141 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 </div>
 
 <style>
-  .sck-cover { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .sck-cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; }
-  .sck-alt { background: var(--color-concrete-100); border-block: 1px solid var(--color-line); }
-  .sck-fig-cap { color: var(--color-graphite-400); margin-top: 0.5rem; }
-  .sck-hero { padding-block: clamp(3rem, 7vh, 5.5rem); }
+  /* ---------- Tek yüzey + tutarlı ritim ---------- */
+  .corp { background: var(--color-concrete-050); }
+  .corp-sheet { padding-block: clamp(3.5rem, 8vh, 6.5rem); }
+  .corp-sheet + .corp-sheet { border-top: 1px solid var(--color-line); }
+  .corp-sheet--dark { background: var(--color-night-950); border-top-color: transparent;
+    background-image:
+      linear-gradient(to right, rgb(73 193 198 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(73 193 198 / 0.05) 1px, transparent 1px);
+    background-size: 48px 48px; }
 
-  /* Skyline bandı */
-  .sck-skyline { position: relative; height: min(46svh, 460px); overflow: hidden; background: var(--color-night-950); border-block: 1px solid var(--color-line); }
-  .sck-skyline-img { width: 100%; height: 100%; object-fit: cover; }
-  .sck-skyline-tagrow { position: absolute; inset-inline: 0; bottom: 1.2rem; display: flex; align-items: center; gap: 0.9rem; }
-  .sck-skyline-tag, .sck-skyline-read { color: #fff; white-space: nowrap; text-shadow: 0 1px 3px rgb(14 15 17 / 0.5); }
-  .sck-skyline-read { color: var(--color-red-on-dark); }
-  .sck-skyline-level { flex: 1; height: 2px; background: var(--color-red-on-dark); }
+  /* Tekrar eden sistem: ray + eyebrow + başlık */
+  .corp-rail { border-inline-start: 2px solid var(--color-mey-red); padding-inline-start: clamp(1.1rem, 2.6vw, 2.1rem); }
+  .corp-rail--dark { border-inline-start-color: var(--color-red-on-dark); }
+  .corp-eyebrow { font-family: var(--font-mono); font-weight: 500; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-mey-red); }
+  .corp-eyebrow--dark { color: var(--color-red-on-dark); }
+  .corp-eyebrow--teal { color: var(--color-mey-teal-700); }
+  .corp-title { margin-top: 0.75rem; }
+  .corp-title--dark { color: #fff; }
+  .corp-lead { margin-top: 0.9rem; max-width: 46ch; color: var(--color-graphite-600); }
+  .corp-lead--dark { color: rgb(244 244 242 / 0.72); }
+  .corp-head { margin-bottom: 2.5rem; }
+  .corp-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .corp-head-row .corp-head { margin-bottom: 0; }
+  .corp-prose { color: var(--color-graphite-600); line-height: 1.7; }
+  .corp-prose + .corp-prose { margin-top: 1rem; }
+  .corp-muted { color: var(--color-graphite-400); }
+  .corp-btns { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.9rem; }
 
-  /* BİZ KİMİZ */
-  .sck-who { display: grid; gap: 2rem; padding-block: clamp(3.5rem, 8vh, 6rem); align-items: center; }
-  @media (min-width: 900px) { .sck-who { grid-template-columns: 1fr 1fr; gap: 3rem; } }
-  .sck-who-fig { aspect-ratio: 16 / 10; border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; background: #fff; }
+  /* Tutarlı görsel çerçevesi (pafta) */
+  .corp-plate { position: relative; border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; background: #fff; }
+  .corp-plate--draw { background-color: var(--color-concrete-050);
+    background-image:
+      linear-gradient(to right, rgb(73 193 198 / 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(73 193 198 / 0.07) 1px, transparent 1px);
+    background-size: 26px 26px; }
+  .corp-cover { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .corp-cap { position: absolute; bottom: 0; inset-inline-start: 0; color: var(--color-graphite-400); background: rgb(255 255 255 / 0.82); padding: 0.2rem 0.5rem; }
 
-  /* ---- SÜREÇ omurgası (yeniden tasarım) ---- */
-  .sck-process { padding-block: clamp(3.5rem, 9vh, 6.5rem); }
-  .sck-spine { list-style: none; padding: 0; display: grid; gap: 1.75rem; grid-template-columns: 1fr; position: relative; }
-  @media (min-width: 900px) { .sck-spine { grid-template-columns: repeat(5, 1fr); gap: 1rem; } }
-  .sck-step { position: relative; padding-top: 0.5rem; }
-  /* bağlayıcı kot çizgisi + node tikleri (desktop) */
+  /* ---------- HERO ---------- */
+  .corp-hero { padding-top: clamp(2.5rem, 6vh, 4.5rem); }
+  .corp-hero-grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 960px) { .corp-hero-grid { grid-template-columns: 1fr 1fr; gap: 3.5rem; } }
+  .corp-hero-title { margin-top: 1rem; }
+  .corp-hero-plate { aspect-ratio: 5 / 4; }
+  .corp-hero-render { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 7% 7% 7% 16%; }
+  /* Kot skalası (KAT 6→1) — mimari çizim detayı */
+  .corp-scale { position: absolute; inset-block: 8%; inset-inline-start: 5%; display: flex; flex-direction: column; justify-content: space-between; z-index: 2; }
+  .corp-scale-row { display: flex; align-items: center; gap: 0.4rem; }
+  .corp-scale-n { color: var(--color-graphite-400); }
+  .corp-scale-tick { width: 0.5rem; height: 1px; background: var(--color-graphite-400); opacity: 0.6; }
+  /* Kırmızı kot çizgisi + okuma */
+  .corp-level { position: absolute; top: 12%; inset-inline: 5% 4%; display: flex; align-items: center; gap: 0.5rem; z-index: 2; }
+  .corp-level-line { flex: 1; height: 2px; background: var(--color-mey-red); }
+  .corp-level-read { color: var(--color-mey-red); white-space: nowrap; }
+  .corp-hero-cap { inset-inline-start: auto; inset-inline-end: 0; }
+
+  /* ---------- BİZ KİMİZ ---------- */
+  .corp-who { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 960px) { .corp-who { grid-template-columns: 1.05fr 1fr; gap: 3.5rem; } }
+  .corp-who-plate { aspect-ratio: 16 / 10; }
+
+  /* ---------- SÜREÇ ---------- */
+  .corp-spine { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.75rem; grid-template-columns: 1fr; position: relative; }
+  @media (min-width: 900px) { .corp-spine { grid-template-columns: repeat(5, 1fr); gap: 1rem; } }
+  .corp-step { position: relative; padding-top: 0.5rem; }
   @media (min-width: 900px) {
-    .sck-spine::before { content: ""; position: absolute; top: 52px; inset-inline: 10%; height: 2px;
+    .corp-spine::before { content: ""; position: absolute; top: 52px; inset-inline: 10%; height: 2px;
       background: linear-gradient(to right, rgb(242 85 90 / 0.12), var(--color-red-on-dark) 12%, var(--color-red-on-dark) 88%, rgb(242 85 90 / 0.12)); }
   }
-  .sck-step-ic { width: 104px; height: 104px; background: var(--color-night-800); border: 1px solid rgb(255 255 255 / 0.1);
+  .corp-step-ic { width: 104px; height: 104px; background: var(--color-night-800); border: 1px solid rgb(255 255 255 / 0.1);
     border-radius: var(--radius-brand); display: grid; place-items: center; position: relative; z-index: 1; padding: 10px;
     transition: transform 240ms ease-out, border-color 240ms ease-out; }
-  .sck-step-img { width: 100%; height: 100%; object-fit: contain; transition: transform 240ms ease-out; }
-  /* survey tik: her ikonun altında kısa dikey işaret */
-  .sck-step-ic::after { content: ""; position: absolute; bottom: -0.75rem; inset-inline-start: 50%; transform: translateX(-50%);
+  .corp-step-img { width: 100%; height: 100%; object-fit: contain; transition: transform 240ms ease-out; }
+  .corp-step-ic::after { content: ""; position: absolute; bottom: -0.75rem; inset-inline-start: 50%; transform: translateX(-50%);
     width: 2px; height: 0.55rem; background: var(--color-red-on-dark); opacity: 0.5; }
-  .sck-step-no { color: var(--color-red-on-dark); display: block; margin-top: 1.15rem; margin-bottom: 0.2rem; }
-  .sck-step-nm { color: #fff; position: relative; display: inline-block; padding-bottom: 0.25rem; }
-  .sck-step-nm::after { content: ""; position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 2px;
-    background: var(--color-red-on-dark); transform: scaleX(0); transform-origin: inline-start; transition: transform 260ms ease-out; }
-  .sck-step-tx { color: rgb(244 244 242 / 0.62); max-width: 28ch; margin-top: 0.4rem; }
-  .sck-step:hover .sck-step-ic { transform: translateY(-4px); border-color: var(--color-red-on-dark); }
-  .sck-step:hover .sck-step-img { transform: scale(1.05); }
-  .sck-step:hover .sck-step-nm::after { transform: scaleX(1); }
+  .corp-step-no { color: var(--color-red-on-dark); display: block; margin-top: 1.15rem; margin-bottom: 0.2rem; }
+  .corp-step-nm { color: #fff; position: relative; display: inline-block; padding-bottom: 0.25rem; }
+  .corp-step-nm::after { content: ""; position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 2px;
+    background: var(--color-red-on-dark); transform: scaleX(0); transform-origin: left; transition: transform 260ms ease-out; }
+  .corp-step-tx { color: rgb(244 244 242 / 0.62); max-width: 28ch; margin-top: 0.4rem; }
+  .corp-step:hover .corp-step-ic { transform: translateY(-4px); border-color: var(--color-red-on-dark); }
+  .corp-step:hover .corp-step-img { transform: scale(1.05); }
+  .corp-step:hover .corp-step-nm::after { transform: scaleX(1); }
 
-  /* Yatay zaman çizelgesi */
-  .sck-timeline { list-style: none; padding: 0; display: grid; gap: 2rem; grid-template-columns: 1fr; }
-  @media (min-width: 800px) { .sck-timeline { grid-template-columns: repeat(3, 1fr); gap: 1.75rem; } }
-  .sck-tl-node { position: relative; padding-top: 1.5rem; border-top: 2px solid var(--color-line); max-width: 42ch; transition: border-color 240ms ease-out; }
-  .sck-tl-node:hover { border-top-color: var(--color-mey-red); }
-  .sck-tl-dot { position: absolute; top: -7px; inset-inline-start: 0; width: 12px; height: 12px; background: var(--color-mey-red); border-radius: 50%; }
+  /* ---------- HİKAYE ---------- */
+  .corp-timeline { list-style: none; padding: 0; margin: 0; display: grid; gap: 2rem; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .corp-timeline { grid-template-columns: repeat(3, 1fr); gap: 1.75rem; } }
+  .corp-tl { position: relative; padding-top: 1.5rem; border-top: 2px solid var(--color-line); max-width: 42ch; transition: border-color 240ms ease-out; }
+  .corp-tl:hover { border-top-color: var(--color-mey-red); }
+  .corp-tl-dot { position: absolute; top: -7px; inset-inline-start: 0; width: 12px; height: 12px; background: var(--color-mey-red); border-radius: 50%; }
+  .corp-tl-tag { color: var(--color-mey-red); }
+  .corp-tl-title { margin-top: 0.25rem; }
+  .corp-tl-text { margin-top: 0.5rem; }
 
-  /* Portföy kaydı */
-  .sck-portfolio { background: #fff; border-block: 1px solid var(--color-line); padding-block: clamp(3.5rem, 8vh, 6rem); }
-  .sck-pf-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-  .sck-pf-all { color: var(--color-mey-teal-700); }
-  .sck-pf-all:hover { color: var(--color-graphite-900); }
-  .sck-reg { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
-  @media (min-width: 720px) { .sck-reg { grid-template-columns: repeat(3, 1fr); } }
-  .sck-reg-item { display: block; border: 1px solid var(--color-line); border-radius: var(--radius-brand); padding: 1rem; transition: border-color 220ms ease-out; }
-  .sck-reg-item:hover { border-color: var(--color-graphite-400); }
-  .sck-reg-iso { aspect-ratio: 1 / 1; display: grid; place-items: center; background:
-      linear-gradient(to right, rgb(73 193 198 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(73 193 198 / 0.05) 1px, transparent 1px), var(--color-concrete-050);
-    background-size: 28px 28px, 28px 28px, auto; border-radius: var(--radius-brand); overflow: hidden; }
-  .sck-reg-img { width: 100%; height: 100%; object-fit: contain; padding: 7%; transition: transform 300ms ease-out; }
-  .sck-reg-item:hover .sck-reg-img { transform: scale(1.03); }
-  .sck-reg-idx { color: var(--color-mey-red); display: inline-block; margin-top: 0.75rem; }
-  .sck-note { color: var(--color-graphite-400); }
+  /* ---------- PORTFÖY ---------- */
+  .corp-hint { color: var(--color-graphite-400); margin-top: 1.25rem; margin-bottom: 1.75rem; }
+  .corp-hint-draw { color: var(--color-mey-teal-700); }
+  .corp-hint-built { color: var(--color-mey-red); }
+  .corp-all { color: var(--color-mey-teal-700); }
+  .corp-all:hover { color: var(--color-graphite-900); }
+  .corp-pf { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .corp-pf { grid-template-columns: repeat(3, 1fr); } }
+  .corp-pf-media { aspect-ratio: 3 / 4; }
+  .corp-pf-iso { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 8%; }
+  .corp-pf-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 340ms ease-out; }
+  .corp-pf-card:hover .corp-pf-photo, .corp-pf-card:focus-visible .corp-pf-photo { opacity: 1; }
+  .corp-pf-tag { z-index: 2; }
+  .corp-pf-tag-built { display: none; }
+  .corp-pf-card:hover .corp-pf-tag-draw, .corp-pf-card:focus-visible .corp-pf-tag-draw { display: none; }
+  .corp-pf-card:hover .corp-pf-tag-built, .corp-pf-card:focus-visible .corp-pf-tag-built { display: inline; }
+  .corp-pf-meta { margin-top: 0.9rem; }
+  .corp-pf-idx { color: var(--color-mey-red); }
+  .corp-pf-name { margin-top: 0.35rem; }
+  .corp-pf-meta .corp-muted { margin-top: 0.25rem; }
+  .corp-note { color: var(--color-graphite-400); margin-top: 1.5rem; }
 
-  /* ---- DEĞERLER editoryal liste (yeniden tasarım, KUTUSUZ) ---- */
-  .sck-values { padding-block: clamp(3.5rem, 8vh, 6rem); background: var(--color-concrete-050); }
-  .sck-vlist { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr; }
-  @media (min-width: 820px) { .sck-vlist { grid-template-columns: 1fr 1fr; column-gap: 3.5rem; } }
-  .sck-vrow { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: start;
-    padding-block: 1.7rem; border-top: 1px solid var(--color-line); }
-  /* iki sütunda üstteki iki satırın çift hairline'ını sadeleştir */
-  @media (min-width: 820px) { .sck-vrow:nth-child(2) { border-top: 1px solid var(--color-line); } }
-  .sck-vnum { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 3.4vw, 2.9rem);
-    line-height: 1; color: #c7c8c3; letter-spacing: 0.01em; transition: color 240ms ease-out; font-variant-numeric: tabular-nums; }
-  .sck-vname { color: var(--color-graphite-900); position: relative; display: inline-block; padding-bottom: 0.3rem; }
-  .sck-vname::after { content: ""; position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 2px;
-    background: var(--color-mey-red); transform: scaleX(0); transform-origin: inline-start; transition: transform 280ms ease-out; }
-  .sck-vrow:hover .sck-vnum { color: var(--color-mey-red); }
-  .sck-vrow:hover .sck-vname::after { transform: scaleX(1); }
+  /* ---------- DEĞERLER (kutusuz editoryal liste) ---------- */
+  .corp-values { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .corp-values { grid-template-columns: 1fr 1fr; column-gap: 3.5rem; } }
+  .corp-vrow { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: start; padding-block: 1.7rem; border-top: 1px solid var(--color-line); }
+  .corp-vnum { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 3.4vw, 2.9rem); line-height: 1; color: #c7c8c3; transition: color 240ms ease-out; font-variant-numeric: tabular-nums; }
+  .corp-vname { color: var(--color-graphite-900); position: relative; display: inline-block; padding-bottom: 0.3rem; }
+  .corp-vname::after { content: ""; position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 2px; background: var(--color-mey-red); transform: scaleX(0); transform-origin: left; transition: transform 280ms ease-out; }
+  .corp-vtext { margin-top: 0.5rem; }
+  .corp-vrow:hover .corp-vnum { color: var(--color-mey-red); }
+  .corp-vrow:hover .corp-vname::after { transform: scaleX(1); }
 
-  /* Misyon/Vizyon */
-  .sck-mv { display: grid; gap: 1.5rem; }
-  @media (min-width: 720px) { .sck-mv { grid-template-columns: 1fr 1fr; } }
-  .sck-mv-card { border: 1px solid var(--color-line); border-inline-start: 2px solid var(--color-mey-teal);
-    border-radius: var(--radius-brand); padding: 1.75rem 1.6rem; background: #fff; }
+  /* ---------- MİSYON / VİZYON + SAYILAR ---------- */
+  .corp-mv { display: grid; gap: 2rem; }
+  @media (min-width: 720px) { .corp-mv { grid-template-columns: 1fr 1fr; gap: 3rem; } }
+  .corp-mv-item { border-inline-start-color: var(--color-mey-teal); }
+  .corp-mv-text { margin-top: 0.75rem; color: var(--color-graphite-900); }
+  .corp-stats { margin-top: 3.5rem; }
+  .corp-stats-strip { margin-top: 1.25rem; }
 
-  .sck-cta { padding-block: clamp(3.5rem, 9vh, 6.5rem); }
+  /* ---------- CTA ---------- */
+  .corp-cta { border-top: 1px solid var(--color-line); }
 </style>

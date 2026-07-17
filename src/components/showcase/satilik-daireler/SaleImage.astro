@@ -1,0 +1,41 @@
+---
+import { Image } from 'astro:assets';
+import type { SaleMediaItem } from './media';
+
+interface Props {
+  media: SaleMediaItem;
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+  caption?: string;
+  decorativeCaption?: string;
+}
+
+const {
+  media,
+  className = '',
+  sizes = '(min-width: 900px) 50vw, 100vw',
+  priority = false,
+  caption,
+  decorativeCaption,
+} = Astro.props;
+
+if (!media.image) throw new Error(`Render için seçilen medya türevi yok: ${media.id}`);
+---
+
+<figure class:list={['sale-media', className]} data-media-id={media.id}>
+  <div class="sale-media-frame">
+    <Image
+      src={media.image}
+      alt={media.alt}
+      widths={[480, 760, 1100, 1500, 1800]}
+      sizes={sizes}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      decoding="async"
+    />
+    {decorativeCaption && <span class="sale-media-tag" aria-hidden="true">{decorativeCaption}</span>}
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+

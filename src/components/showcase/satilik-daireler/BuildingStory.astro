@@ -1,0 +1,117 @@
+---
+import SaleBreadcrumb from './SaleBreadcrumb.astro';
+import SaleImage from './SaleImage.astro';
+import { getSaleMedia } from './media';
+import { saleContent, salePath, type VariationSlug } from './data';
+
+interface Props { variation: VariationSlug }
+const { variation } = Astro.props;
+const building = saleContent.building;
+const media = {
+  exterior: getSaleMedia('d1:bina-dis.png'),
+  entrance: getSaleMedia('d1:bina-giris.jpeg'),
+  parking: getSaleMedia('d1:otopark.png'),
+  environment: getSaleMedia('d1:cevre-manzara.png'),
+  coast: getSaleMedia('d2:cevre-sahil-1.png'),
+};
+---
+
+<SaleBreadcrumb variation={variation} current="El Ele Apartmanı" />
+
+{variation === 'editoryal' && (
+  <article class="sale-building sale-building-editorial" data-testid="building-story">
+    <header class="sale-building-editorial-hero sale-container">
+      <div>
+        <p class="sale-kicker">{building.eyebrow}</p>
+        <h1>{building.title}</h1>
+        <p class="sale-lead">{building.intro}</p>
+      </div>
+      <SaleImage media={media.exterior} priority sizes="(min-width: 960px) 48vw, 82vw" decorativeCaption="EL ELE APARTMANI" />
+    </header>
+
+    <section class="sale-building-editorial-character sale-container">
+      <span aria-hidden="true">01</span>
+      <div><p class="sale-kicker">Mimari karakter</p><h2>{building.architectureTitle}</h2><p>{building.architectureBody}</p></div>
+    </section>
+
+    <section class="sale-building-editorial-shared">
+      <div class="sale-container sale-building-editorial-shared-grid">
+        <SaleImage media={media.entrance} sizes="(min-width: 960px) 38vw, 76vw" decorativeCaption="GİRİŞ · ORTAK ALAN" />
+        <div><p class="sale-kicker">Günlük varış</p><h2>{building.sharedTitle}</h2><p>{building.sharedBody}</p></div>
+        <div><p class="sale-kicker">Ortak alan notu</p><h3>{building.parkingTitle}</h3><p>{building.parkingBody}</p></div>
+        <SaleImage media={media.parking} sizes="(min-width: 960px) 46vw, 100vw" decorativeCaption="KAPALI OTOPARK · TAHSİS BİLGİSİ YAKINDA" />
+      </div>
+    </section>
+
+    <section class="sale-building-editorial-environment sale-container">
+      <div><p class="sale-kicker">Çevre</p><h2>{saleContent.project.environmentTitle}</h2><p>{saleContent.project.environmentLead}</p></div>
+      <SaleImage media={media.environment} sizes="(min-width: 960px) 60vw, 100vw" />
+      <SaleImage media={media.coast} sizes="(min-width: 960px) 28vw, 52vw" />
+    </section>
+  </article>
+)}
+
+{variation === 'mimari' && (
+  <article class="sale-building sale-building-architectural" data-testid="building-story">
+    <header class="sale-building-architectural-hero">
+      <SaleImage media={media.exterior} priority sizes="100vw" decorativeCaption="YAPI KAYDI / 01" />
+      <div class="sale-container">
+        <p class="sale-kicker">{building.eyebrow}</p>
+        <h1>{building.title}</h1>
+        <p>{building.intro}</p>
+      </div>
+    </header>
+
+    <section class="sale-building-register sale-container">
+      <article><span>01</span><div><p class="sale-kicker">DIŞ CEPHE</p><h2>{building.architectureTitle}</h2><p>{building.architectureBody}</p></div><dl class="sale-building-pending"><div><dt>Teknik cephe sistemi</dt><dd>Bilgi yakında</dd></div><div><dt>Malzeme markaları</dt><dd>Bilgi yakında</dd></div></dl></article>
+      <article><span>02</span><div><p class="sale-kicker">GİRİŞ</p><h2>{building.sharedTitle}</h2><p>{building.sharedBody}</p></div><SaleImage media={media.entrance} sizes="(min-width: 960px) 30vw, 70vw" /></article>
+      <article><span>03</span><div><p class="sale-kicker">ORTAK ALAN</p><h2>{building.parkingTitle}</h2><p>{building.parkingBody}</p></div><SaleImage media={media.parking} sizes="(min-width: 960px) 30vw, 70vw" /></article>
+    </section>
+
+    <section class="sale-building-context">
+      <div class="sale-container sale-building-context-grid">
+        <div><p class="sale-kicker">04 / ÇEVRE BAĞLAMI</p><h2>{saleContent.project.environmentTitle}</h2><p>{saleContent.project.environmentLead}</p></div>
+        <SaleImage media={media.environment} sizes="(min-width: 960px) 50vw, 100vw" decorativeCaption="KESİN KONUM VE MESAFE BİLGİSİ YAKINDA" />
+      </div>
+    </section>
+  </article>
+)}
+
+{variation === 'monolit' && (
+  <article class="sale-building sale-building-monolith" data-testid="building-story">
+    <header class="sale-building-monolith-hero">
+      <SaleImage media={media.exterior} priority sizes="100vw" />
+      <div class="sale-building-monolith-scrim"></div>
+      <div class="sale-container"><p class="sale-kicker">{building.eyebrow}</p><h1>{building.title}</h1><p>{building.intro}</p></div>
+    </header>
+
+    <section class="sale-building-monolith-character sale-container">
+      <div><p class="sale-kicker">Mimari karakter</p><h2>{building.architectureTitle}</h2><p>{building.architectureBody}</p></div>
+      <div class="sale-building-monolith-pair">
+        <SaleImage media={media.entrance} sizes="(min-width: 960px) 30vw, 56vw" decorativeCaption="GİRİŞ" />
+        <SaleImage media={media.parking} sizes="(min-width: 960px) 42vw, 84vw" decorativeCaption="ORTAK ALAN" />
+      </div>
+    </section>
+
+    <section class="sale-building-monolith-shared">
+      <div class="sale-container sale-building-monolith-shared-grid">
+        <div><p class="sale-kicker">Ortak alanlar</p><h2>{building.sharedTitle}</h2><p>{building.sharedBody}</p></div>
+        <div><p class="sale-kicker">Otopark</p><h3>{building.parkingTitle}</h3><p>{building.parkingBody}</p></div>
+      </div>
+    </section>
+
+    <section class="sale-building-monolith-environment">
+      <SaleImage media={media.environment} sizes="100vw" />
+      <div class="sale-building-monolith-scrim"></div>
+      <div class="sale-container"><p class="sale-kicker">Çevre</p><h2>{saleContent.project.environmentTitle}</h2><p>{saleContent.project.environmentLead}</p><a href={salePath(variation, 'galeri')}>Çevre fotoğraflarını gör →</a></div>
+    </section>
+  </article>
+)}
+
+<section class="sale-building-direct sale-container">
+  <div><p class="sale-kicker">Doğrudan satış</p><h2>{building.directTitle}</h2><p>{building.directBody}</p></div>
+  <div class="sale-building-direct-actions">
+    <a class="sale-button sale-button-primary" href={salePath(variation, 'daireler')}>Daireleri incele</a>
+    <a class="sale-text-link" href={salePath(variation, 'iletisim')}>Mey İnşaat ile görüş →</a>
+  </div>
+</section>

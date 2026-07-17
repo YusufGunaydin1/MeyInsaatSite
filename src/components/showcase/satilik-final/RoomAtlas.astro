@@ -1,0 +1,39 @@
+---
+import { getSaleMediaList } from '../satilik-daireler/media';
+import { apartmentPresentations, type DetailSectionKey } from './data';
+import type { ApartmentSlug } from '../satilik-daireler/data';
+import PropertyImage from './PropertyImage.astro';
+
+interface Props { apartmentSlug: ApartmentSlug }
+const { apartmentSlug } = Astro.props;
+const presentation = apartmentPresentations[apartmentSlug];
+const orderLabel: Record<DetailSectionKey, string> = {
+  living: 'Yaşam', kitchen: 'Mutfak', bedrooms: 'Odalar', bathrooms: 'Banyolar', stairs: 'Merdiven', outdoor: 'Dış mekân',
+};
+---
+
+<section class="sd-story-section is-soft" aria-labelledby={`${apartmentSlug}-rooms-title`}>
+  <div class="sd-container">
+    <header class="sd-section-heading">
+      <div><p class="sd-eyebrow">Mekân seçkisi</p><h2 class="sd-section-title" id={`${apartmentSlug}-rooms-title`}>Fotoğraflarla oda oda ilerleyin.</h2></div>
+      <p>Her modül bir karar sorusunu yanıtlar; ölçü, yön ve malzeme markası gibi doğrulanmamış ayrıntıları eklemez.</p>
+    </header>
+    <div class="sd-room-grid" data-testid={`${apartmentSlug}-room-atlas`}>
+      {presentation.sections.map((section) => {
+        const media = getSaleMediaList(section.mediaIds);
+        return (
+          <article class="sd-room-card" data-room-section={section.key}>
+            <div class:list={['sd-room-media', media.length === 1 && 'is-single', media.length === 3 && 'is-three']}>
+              {media.map((item) => <PropertyImage media={item} sizes="(min-width: 980px) 190px, (min-width: 500px) 46vw, 100vw" />)}
+            </div>
+            <div class="sd-room-copy">
+              <p class="sd-eyebrow">{orderLabel[section.key]}</p>
+              <h3>{section.title}</h3>
+              <p>{section.body}</p>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>

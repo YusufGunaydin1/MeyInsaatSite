@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../../assets/brand/mey-logo-dark.png';
+import {
+  buyerNavigation,
+  finalSalePath,
+  mainNavigation,
+  type FinalSalePage,
+} from './data';
+
+interface Props { currentPage?: FinalSalePage }
+const { currentPage = '' } = Astro.props;
+---
+
+<header class="sd-header" data-sd-header data-testid="sd-header">
+  <div class="sd-container sd-header-inner">
+    <a class="sd-logo" href="/" aria-label="Mey İnşaat ana sayfası">
+      <Image src={logo} alt="Mey İnşaat" width={132} loading="eager" />
+    </a>
+
+    <nav class="sd-main-nav" aria-label="Mey İnşaat ana navigasyonu">
+      {mainNavigation.map((item) => (
+        <a
+          href={item.href}
+          class:list={['sd-main-nav-link', item.active && 'is-active']}
+          aria-current={item.active ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <a class="sd-header-cta" href={finalSalePath('iletisim')}>Randevu talep et</a>
+
+    <button
+      class="sd-menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="sd-mobile-menu"
+      aria-label="Menüyü aç"
+      data-sd-menu-toggle
+      data-testid="sd-nav-toggle"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="sd-mobile-menu" id="sd-mobile-menu" hidden data-sd-mobile-menu data-testid="sd-nav-mobile">
+    <nav aria-label="Mobil Mey İnşaat navigasyonu">
+      {mainNavigation.map((item) => (
+        <a
+          href={item.href}
+          class:list={['sd-mobile-main-link', item.active && 'is-active']}
+          aria-current={item.active ? 'page' : undefined}
+        >
+          {item.label}<span aria-hidden="true">→</span>
+        </a>
+      ))}
+    </nav>
+    <div class="sd-mobile-buyer-links" aria-label="Satılık daireler sayfaları">
+      {buyerNavigation.map((item) => {
+        const page = item.href === finalSalePath() ? '' : item.href.split('/').at(-1);
+        return (
+          <a class:list={[page === currentPage && 'is-current']} href={item.href}>
+            {item.label}
+          </a>
+        );
+      })}
+    </div>
+    <a class="sd-mobile-cta" href={finalSalePath('iletisim')}>Bilgi veya randevu talep et</a>
+  </div>
+</header>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-sd-header]').forEach((header) => {
+    const toggle = header.querySelector<HTMLButtonElement>('[data-sd-menu-toggle]');
+    const menu = header.querySelector<HTMLElement>('[data-sd-mobile-menu]');
+    if (!toggle || !menu) return;
+
+    const setOpen = (open: boolean, restoreFocus = false) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+      menu.hidden = !open;
+      header.classList.toggle('is-menu-open', open);
+      if (open) menu.querySelector<HTMLAnchorElement>('a')?.focus();
+      if (!open && restoreFocus) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false, true);
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (toggle.getAttribute('aria-expanded') === 'true' && !header.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1080 && toggle.getAttribute('aria-expanded') === 'true') setOpen(false);
+    });
+  });
+</script>
+

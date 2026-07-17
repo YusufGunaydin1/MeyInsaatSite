@@ -1,0 +1,17 @@
+---
+import { finalSalePath } from './data';
+
+interface Props {
+  current: string;
+  parent?: { label: string; href: string };
+}
+
+const { current, parent } = Astro.props;
+---
+
+<nav class="sd-container sd-breadcrumb" aria-label="Sayfa yolu">
+  <a href={finalSalePath()}>Satılık Daireler</a>
+  {parent && <><span aria-hidden="true">/</span><a href={parent.href}>{parent.label}</a></>}
+  <span aria-hidden="true">/</span>
+  <span aria-current="page">{current}</span>
+</nav>

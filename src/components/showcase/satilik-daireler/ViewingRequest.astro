@@ -1,0 +1,262 @@
+---
+import SaleBreadcrumb from './SaleBreadcrumb.astro';
+import { saleContent, salePath, type VariationSlug } from './data';
+
+interface Props { variation: VariationSlug }
+const { variation } = Astro.props;
+const contact = saleContent.contact;
+---
+
+<SaleBreadcrumb variation={variation} current="Görüşme" />
+
+<header class="sale-page-intro sale-container">
+  <p class="sale-kicker">{contact.eyebrow}</p>
+  <div class="sale-page-intro-grid">
+    <h1>{contact.title}</h1>
+    <p>{contact.intro}</p>
+  </div>
+</header>
+
+<section class="sale-contact-layout sale-container" data-viewing-experience data-testid="viewing-request">
+  <aside class="sale-contact-aside">
+    <p class="sale-kicker">Görüşmede netleştirilecekler</p>
+    <h2>Tek talep, açık bir sonraki adım.</h2>
+    <ol>
+      <li><span>01</span><p><strong>Daire seçimi</strong>İlgilendiğiniz evi veya iki daireyi birden belirtin.</p></li>
+      <li><span>02</span><p><strong>İletişim tercihi</strong>Size uygun görüşme kanalını seçin.</p></li>
+      <li><span>03</span><p><strong>Zaman</strong>Bir tarih seçin ya da genel uygunluğunuzu bırakın.</p></li>
+      <li><span>04</span><p><strong>Detaylar</strong>Fiyat, alan ve teknik sorularınızı mesajda paylaşın.</p></li>
+    </ol>
+    <div class="sale-contact-privacy">
+      <span aria-hidden="true">◇</span>
+      <p><strong>Showcase güvenlik notu</strong>{contact.privacy}</p>
+    </div>
+    <a class="sale-text-link" href={salePath(variation, 'daireler')}>← Dairelere geri dön</a>
+  </aside>
+
+  <div class="sale-form-panel">
+    <div class="sale-form-error-summary" role="alert" tabindex="-1" hidden data-form-error-summary>
+      <strong>Formu göndermeden önce bazı alanları düzeltin.</strong>
+      <ul data-form-error-list></ul>
+    </div>
+
+    <form class="sale-viewing-form" novalidate data-viewing-form>
+      <div class="sale-field sale-field-full">
+        <label for={`apartment-${variation}`}>İlgilendiğiniz daire <span aria-hidden="true">*</span></label>
+        <select id={`apartment-${variation}`} name="apartment" required aria-describedby={`apartment-error-${variation}`}>
+          <option value="">Seçin</option>
+          <option value="daire-1">Daire 1</option>
+          <option value="daire-2">Daire 2</option>
+          <option value="both">İki daireyi de görmek istiyorum</option>
+          <option value="undecided">Henüz karar vermedim</option>
+        </select>
+        <span class="sale-field-error" id={`apartment-error-${variation}`} data-error-for="apartment"></span>
+      </div>
+
+      <div class="sale-field">
+        <label for={`name-${variation}`}>Adınız <span aria-hidden="true">*</span></label>
+        <input id={`name-${variation}`} name="name" type="text" autocomplete="name" required aria-describedby={`name-error-${variation}`} />
+        <span class="sale-field-error" id={`name-error-${variation}`} data-error-for="name"></span>
+      </div>
+
+      <div class="sale-field">
+        <label for={`contact-${variation}`}>Telefon veya e-posta <span aria-hidden="true">*</span></label>
+        <input id={`contact-${variation}`} name="contact" type="text" autocomplete="email" inputmode="email" required aria-describedby={`contact-help-${variation} contact-error-${variation}`} />
+        <small id={`contact-help-${variation}`}>Tercih ettiğiniz kanala uygun bilgiyi yazın.</small>
+        <span class="sale-field-error" id={`contact-error-${variation}`} data-error-for="contact"></span>
+      </div>
+
+      <fieldset class="sale-field sale-field-full sale-choice-field">
+        <legend>Tercih edilen iletişim yöntemi <span aria-hidden="true">*</span></legend>
+        <div class="sale-choice-row">
+          <label><input type="radio" name="method" value="phone" required /> <span>Telefon</span></label>
+          <label><input type="radio" name="method" value="email" /> <span>E-posta</span></label>
+          <label><input type="radio" name="method" value="whatsapp" /> <span>WhatsApp</span></label>
+        </div>
+        <span class="sale-field-error" data-error-for="method"></span>
+      </fieldset>
+
+      <div class="sale-field">
+        <label for={`availability-${variation}`}>Görüşme uygunluğu <span aria-hidden="true">*</span></label>
+        <select id={`availability-${variation}`} name="availability" required data-availability-select aria-describedby={`availability-error-${variation}`}>
+          <option value="">Seçin</option>
+          <option value="date">Belirli bir tarih seçmek istiyorum</option>
+          <option value="weekday">Hafta içi uygunum</option>
+          <option value="weekend">Hafta sonu uygunum</option>
+          <option value="flexible">Esneğim, birlikte planlayalım</option>
+        </select>
+        <span class="sale-field-error" id={`availability-error-${variation}`} data-error-for="availability"></span>
+      </div>
+
+      <div class="sale-field">
+        <label for={`date-${variation}`}>Tercih edilen tarih <span data-date-optional>(isteğe bağlı)</span></label>
+        <input id={`date-${variation}`} name="date" type="date" data-viewing-date aria-describedby={`date-error-${variation}`} />
+        <span class="sale-field-error" id={`date-error-${variation}`} data-error-for="date"></span>
+      </div>
+
+      <div class="sale-field sale-field-full">
+        <label for={`message-${variation}`}>Mesajınız <span>(isteğe bağlı)</span></label>
+        <textarea id={`message-${variation}`} name="message" rows="5" placeholder="Fiyat, alan, teknik detaylar veya görmek istediğiniz bölümler…"></textarea>
+      </div>
+
+      <fieldset class="sale-field sale-field-full sale-demo-state">
+        <legend>Vitrin gönderim senaryosu</legend>
+        <p>Bu kontrol yalnız başarı ve hata tasarımlarını incelemek içindir.</p>
+        <div class="sale-choice-row">
+          <label><input type="radio" name="scenario" value="success" checked /> <span>Başarıyı göster</span></label>
+          <label><input type="radio" name="scenario" value="error" /> <span>Hatayı göster</span></label>
+        </div>
+      </fieldset>
+
+      <label class="sale-consent">
+        <input type="checkbox" name="acknowledgement" required />
+        <span>Bu formun gösterim amaçlı olduğunu ve gerçek veri göndermediğini anlıyorum. <b aria-hidden="true">*</b></span>
+      </label>
+      <span class="sale-field-error sale-field-full" data-error-for="acknowledgement"></span>
+
+      <div class="sale-form-actions sale-field-full">
+        <button class="sale-button sale-button-primary sale-submit" type="submit" data-submit-button>
+          <span data-submit-label>Demo talebi hazırla</span>
+          <i class="sale-loading-dot" aria-hidden="true"></i>
+        </button>
+        <p>Gönder düğmesi hiçbir API çağrısı yapmaz.</p>
+      </div>
+    </form>
+
+    <section class="sale-form-result sale-form-success" role="status" tabindex="-1" hidden data-form-success>
+      <span aria-hidden="true">✓</span>
+      <p class="sale-kicker">Başarı durumu</p>
+      <h2>{contact.successTitle}</h2>
+      <p>{contact.successBody}</p>
+      <div class="sale-action-row">
+        <button class="sale-button sale-button-outline" type="button" data-form-reset>Yeni demo talebi</button>
+        <a class="sale-text-link" href={salePath(variation, 'daireler')}>Dairelere dön →</a>
+      </div>
+    </section>
+
+    <section class="sale-form-result sale-form-server-error" role="alert" tabindex="-1" hidden data-form-server-error>
+      <span aria-hidden="true">!</span>
+      <p class="sale-kicker">Kontrollü hata durumu</p>
+      <h2>{contact.errorTitle}</h2>
+      <p>{contact.errorBody}</p>
+      <button class="sale-button sale-button-outline" type="button" data-error-dismiss>Forma geri dön</button>
+    </section>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-viewing-experience]').forEach((experience) => {
+    const form = experience.querySelector<HTMLFormElement>('[data-viewing-form]');
+    const summary = experience.querySelector<HTMLElement>('[data-form-error-summary]');
+    const errorList = experience.querySelector<HTMLUListElement>('[data-form-error-list]');
+    const submit = experience.querySelector<HTMLButtonElement>('[data-submit-button]');
+    const submitLabel = experience.querySelector<HTMLElement>('[data-submit-label]');
+    const success = experience.querySelector<HTMLElement>('[data-form-success]');
+    const serverError = experience.querySelector<HTMLElement>('[data-form-server-error]');
+    const reset = experience.querySelector<HTMLButtonElement>('[data-form-reset]');
+    const dismiss = experience.querySelector<HTMLButtonElement>('[data-error-dismiss]');
+    const availability = experience.querySelector<HTMLSelectElement>('[data-availability-select]');
+    const date = experience.querySelector<HTMLInputElement>('[data-viewing-date]');
+    const dateOptional = experience.querySelector<HTMLElement>('[data-date-optional]');
+    if (!form || !summary || !errorList || !submit || !submitLabel || !success || !serverError || !reset || !dismiss || !availability || !date) return;
+
+    date.min = new Date().toISOString().slice(0, 10);
+
+    const setDateRequirement = () => {
+      const required = availability.value === 'date';
+      date.required = required;
+      if (dateOptional) dateOptional.textContent = required ? '*' : '(isteğe bağlı)';
+    };
+    availability.addEventListener('change', setDateRequirement);
+
+    const setFieldError = (name: string, message: string) => {
+      const field = form.elements.namedItem(name) as HTMLInputElement | RadioNodeList | null;
+      const target = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      if (target) target.textContent = message;
+      if (field instanceof HTMLElement) field.setAttribute('aria-invalid', message ? 'true' : 'false');
+    };
+
+    const clearErrors = () => {
+      summary.hidden = true;
+      errorList.replaceChildren();
+      form.querySelectorAll<HTMLElement>('[data-error-for]').forEach((node) => { node.textContent = ''; });
+      form.querySelectorAll<HTMLElement>('[aria-invalid="true"]').forEach((node) => node.setAttribute('aria-invalid', 'false'));
+    };
+
+    const validate = () => {
+      clearErrors();
+      const values = new FormData(form);
+      const errors: Array<{ name: string; message: string }> = [];
+      const add = (name: string, message: string) => errors.push({ name, message });
+      const apartment = String(values.get('apartment') ?? '');
+      const name = String(values.get('name') ?? '').trim();
+      const contact = String(values.get('contact') ?? '').trim();
+      const method = String(values.get('method') ?? '');
+      const availabilityValue = String(values.get('availability') ?? '');
+      const dateValue = String(values.get('date') ?? '');
+
+      if (!apartment) add('apartment', 'İlgilendiğiniz daireyi seçin.');
+      if (name.length < 2) add('name', 'Adınızı en az 2 karakterle yazın.');
+      if (!method) add('method', 'Tercih ettiğiniz iletişim yöntemini seçin.');
+      if (!contact) add('contact', 'Telefon veya e-posta bilginizi yazın.');
+      if (method === 'email' && contact && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)) add('contact', 'Geçerli bir e-posta adresi yazın.');
+      if ((method === 'phone' || method === 'whatsapp') && contact.replace(/\D/g, '').length < 10) add('contact', 'En az 10 haneli bir telefon numarası yazın.');
+      if (!availabilityValue) add('availability', 'Genel uygunluğunuzu veya tarih seçeneğini belirtin.');
+      if (availabilityValue === 'date' && !dateValue) add('date', 'Tercih ettiğiniz tarihi seçin.');
+      if (!values.get('acknowledgement')) add('acknowledgement', 'Gösterim notunu onaylayın.');
+
+      errors.forEach(({ name, message }) => setFieldError(name, message));
+      if (errors.length) {
+        errors.forEach(({ message }) => {
+          const li = document.createElement('li');
+          li.textContent = message;
+          errorList.append(li);
+        });
+        summary.hidden = false;
+        summary.focus();
+      }
+      return errors.length === 0;
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      serverError.hidden = true;
+      if (!validate()) return;
+      submit.disabled = true;
+      submit.setAttribute('aria-busy', 'true');
+      submitLabel.textContent = 'Demo hazırlanıyor…';
+      form.classList.add('is-loading');
+
+      window.setTimeout(() => {
+        const scenario = new FormData(form).get('scenario');
+        submit.disabled = false;
+        submit.removeAttribute('aria-busy');
+        submitLabel.textContent = 'Demo talebi hazırla';
+        form.classList.remove('is-loading');
+        if (scenario === 'error') {
+          serverError.hidden = false;
+          serverError.focus();
+          return;
+        }
+        form.hidden = true;
+        success.hidden = false;
+        success.focus();
+      }, 700);
+    });
+
+    reset.addEventListener('click', () => {
+      form.reset();
+      setDateRequirement();
+      clearErrors();
+      success.hidden = true;
+      serverError.hidden = true;
+      form.hidden = false;
+      form.querySelector<HTMLElement>('select, input')?.focus();
+    });
+    dismiss.addEventListener('click', () => {
+      serverError.hidden = true;
+      submit.focus();
+    });
+  });
+</script>
+

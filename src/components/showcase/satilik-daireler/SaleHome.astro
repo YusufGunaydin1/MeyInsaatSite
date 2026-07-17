@@ -1,0 +1,293 @@
+---
+import SaleImage from './SaleImage.astro';
+import { getSaleMedia } from './media';
+import { saleContent, salePath, variations, type VariationSlug } from './data';
+
+interface Props { variation: VariationSlug }
+const { variation } = Astro.props;
+const variant = variations[variation];
+const d1 = saleContent.apartments['daire-1'];
+const d2 = saleContent.apartments['daire-2'];
+
+const media = {
+  d1Hero: getSaleMedia(d1.heroMediaId),
+  d1Living: getSaleMedia(d1.overviewMediaId),
+  d1Upper: getSaleMedia('d1:d1-salon-ust-1.png'),
+  d2Hero: getSaleMedia(d2.heroMediaId),
+  d2Upper: getSaleMedia(d2.overviewMediaId),
+  d2Stairs: getSaleMedia('d2:d2-merdiven-1.png'),
+  building: getSaleMedia('d1:bina-dis.png'),
+  entrance: getSaleMedia('d1:bina-giris.jpeg'),
+  parking: getSaleMedia('d1:otopark.png'),
+  neighbourhood: getSaleMedia('d1:cevre-manzara.png'),
+  coast: getSaleMedia('d2:cevre-sahil-1.png'),
+};
+---
+
+{variation === 'editoryal' && (
+  <div class="sale-home sale-home-editorial" data-testid="sale-home-editoryal">
+    <section class="sale-editorial-hero sale-container">
+      <div class="sale-editorial-hero-copy">
+        <p class="sale-kicker">{saleContent.project.collectionLabel}</p>
+        <h1>{saleContent.project.heroTitle}</h1>
+        <p class="sale-lead">{saleContent.project.heroLead}</p>
+        <div class="sale-action-row">
+          <a class="sale-button sale-button-primary" href={salePath(variation, 'daireler')}>Daireleri incele</a>
+          <a class="sale-text-link" href={salePath(variation, 'galeri')}>Fotoğrafları gör →</a>
+        </div>
+        <dl class="sale-hero-facts" aria-label="Doğrulanmış proje bilgileri">
+          <div><dt>Seçki</dt><dd>2 daire</dd></div>
+          <div><dt>Plan</dt><dd>3+2 dubleks</dd></div>
+          <div><dt>Satış</dt><dd>Doğrudan Mey İnşaat</dd></div>
+        </dl>
+      </div>
+      <div class="sale-editorial-hero-images">
+        <SaleImage media={media.d1Hero} priority sizes="(min-width: 960px) 52vw, 100vw" decorativeCaption="Daire 1 · Teras" />
+        <SaleImage media={media.d2Upper} priority sizes="(min-width: 960px) 24vw, 48vw" decorativeCaption="Daire 2 · Üst kat" />
+      </div>
+    </section>
+
+    <section class="sale-editorial-note sale-container">
+      <span aria-hidden="true">01</span>
+      <div>
+        <p class="sale-kicker">Doğrudan müteahhitten</p>
+        <h2>{saleContent.project.directTitle}</h2>
+      </div>
+      <p>{saleContent.project.directBody}</p>
+    </section>
+
+    <section class="sale-editorial-apartments" aria-labelledby="editorial-homes-title">
+      <div class="sale-container sale-section-heading sale-section-heading-split">
+        <div>
+          <p class="sale-kicker">İki ayrı ev hikâyesi</p>
+          <h2 id="editorial-homes-title">Dairelerin kendi ritmini izleyin.</h2>
+        </div>
+        <p>{saleContent.project.apartmentsIntro}</p>
+      </div>
+      <article class="sale-editorial-home-row sale-container">
+        <SaleImage media={media.d1Living} sizes="(min-width: 960px) 58vw, 100vw" decorativeCaption="01 · Daire 1" />
+        <div>
+          <span class="sale-number">01</span>
+          <p class="sale-kicker">{d1.confirmed}</p>
+          <h3>{d1.name}</h3>
+          <p>{d1.shortIntro}</p>
+          <a class="sale-text-link" href={salePath(variation, 'daire-1')}>Daire 1’i gör →</a>
+        </div>
+      </article>
+      <article class="sale-editorial-home-row is-reversed sale-container">
+        <SaleImage media={media.d2Hero} sizes="(min-width: 960px) 58vw, 100vw" decorativeCaption="02 · Daire 2" />
+        <div>
+          <span class="sale-number">02</span>
+          <p class="sale-kicker">{d2.confirmed}</p>
+          <h3>{d2.name}</h3>
+          <p>{d2.shortIntro}</p>
+          <a class="sale-text-link" href={salePath(variation, 'daire-2')}>Daire 2’yi gör →</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="sale-editorial-building sale-container">
+      <div class="sale-editorial-building-copy">
+        <p class="sale-kicker">Yapının bütünü</p>
+        <h2>{saleContent.project.buildingTitle}</h2>
+        <p>{saleContent.project.buildingLead}</p>
+        <a class="sale-button sale-button-outline" href={salePath(variation, 'el-ele-apartmani')}>Apartmanı keşfet</a>
+      </div>
+      <SaleImage media={media.building} sizes="(min-width: 960px) 35vw, 80vw" decorativeCaption="El Ele Apartmanı" />
+      <SaleImage media={media.entrance} sizes="(min-width: 960px) 24vw, 60vw" decorativeCaption="Giriş · Ortak alan" />
+    </section>
+
+    <section class="sale-editorial-trust">
+      <div class="sale-container sale-editorial-trust-grid">
+        <div>
+          <p class="sale-kicker">Mey İnşaat ile doğrudan</p>
+          <h2>{saleContent.project.trustTitle}</h2>
+          <p>{saleContent.project.trustBody}</p>
+          <a class="sale-text-link" href={salePath(variation, 'iletisim')}>Detayları sor →</a>
+        </div>
+        <div class="sale-editorial-environment">
+          <SaleImage media={media.neighbourhood} sizes="(min-width: 960px) 44vw, 100vw" />
+          <div>
+            <p class="sale-kicker">{saleContent.project.environmentTitle}</p>
+            <p>{saleContent.project.environmentLead}</p>
+            <a href={salePath(variation, 'galeri')}>Çevre seçkisini gör →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sale-end-cta sale-container">
+      <p class="sale-kicker">Bir sonraki adım</p>
+      <h2>{saleContent.project.ctaTitle}</h2>
+      <p>{saleContent.project.ctaBody}</p>
+      <div class="sale-action-row">
+        <a class="sale-button sale-button-primary" href={salePath(variation, 'iletisim')}>Randevu talep et</a>
+        <a class="sale-text-link" href={salePath(variation, 'daireler')}>Önce iki daireyi karşılaştır →</a>
+      </div>
+    </section>
+  </div>
+)}
+
+{variation === 'mimari' && (
+  <div class="sale-home sale-home-architectural" data-testid="sale-home-mimari">
+    <section class="sale-architectural-hero">
+      <SaleImage media={media.d1Hero} priority sizes="100vw" decorativeCaption="EL ELE · İKİ DUBLEKS" />
+      <div class="sale-container sale-architectural-hero-copy">
+        <p class="sale-kicker">KONUT SEÇKİSİ / 2026</p>
+        <h1>{saleContent.project.heroTitle}</h1>
+        <p>{saleContent.project.heroLead}</p>
+        <a class="sale-button sale-button-primary" href={salePath(variation, 'daireler')}>Daireleri incele <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="sale-architectural-index sale-container" aria-label="Proje özeti">
+      <div><span>01</span><small>PROJE</small><strong>{saleContent.project.name}</strong></div>
+      <div><span>02</span><small>KOLEKSİYON</small><strong>2 daire</strong></div>
+      <div><span>03</span><small>PLAN</small><strong>3+2 dubleks</strong></div>
+      <div><span>04</span><small>SATIŞ</small><strong>Mey İnşaat</strong></div>
+    </section>
+
+    <section class="sale-architectural-statement sale-container">
+      <p class="sale-kicker">00 / YAKLAŞIM</p>
+      <h2>{saleContent.project.directTitle}</h2>
+      <p>{saleContent.project.directBody}</p>
+    </section>
+
+    <section class="sale-architectural-records" aria-labelledby="architectural-homes-title">
+      <div class="sale-container sale-section-heading sale-section-heading-split">
+        <div><p class="sale-kicker">01–02 / BAĞIMSIZ BÖLÜMLER</p><h2 id="architectural-homes-title">İki ev. İki kat anlatısı.</h2></div>
+        <p>{saleContent.project.apartmentsIntro}</p>
+      </div>
+      <div class="sale-container sale-architectural-record-grid">
+        {[d1, d2].map((apartment) => {
+          const lead = apartment.slug === 'daire-1' ? media.d1Living : media.d2Hero;
+          const secondary = apartment.slug === 'daire-1' ? media.d1Upper : media.d2Stairs;
+          return (
+            <article class="sale-architectural-record">
+              <header><span>{apartment.index}</span><div><p>{apartment.confirmed}</p><h3>{apartment.name}</h3></div></header>
+              <SaleImage media={lead} sizes="(min-width: 960px) 42vw, 100vw" />
+              <div class="sale-architectural-record-detail">
+                <SaleImage media={secondary} sizes="(min-width: 960px) 15vw, 38vw" />
+                <div><p>{apartment.shortIntro}</p><a href={salePath(variation, apartment.slug)}>Mekân kaydını aç ↗</a></div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="sale-architectural-building">
+      <div class="sale-container sale-architectural-building-grid">
+        <div class="sale-architectural-building-title">
+          <p class="sale-kicker">03 / YAPI</p>
+          <h2>{saleContent.project.buildingTitle}</h2>
+          <p>{saleContent.project.buildingLead}</p>
+          <a class="sale-text-link" href={salePath(variation, 'el-ele-apartmani')}>Yapı dosyasını aç →</a>
+        </div>
+        <SaleImage media={media.building} sizes="(min-width: 960px) 31vw, 80vw" />
+        <div class="sale-architectural-shared">
+          <SaleImage media={media.parking} sizes="(min-width: 960px) 31vw, 100vw" />
+          <p><span>ORTAK ALAN</span> Otopark görseli tahsis bilgisi içermez; detaylar görüşmede teyit edilir.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sale-architectural-proof sale-container">
+      <div>
+        <p class="sale-kicker">04 / DOĞRUDAN İLETİŞİM</p>
+        <h2>{saleContent.project.trustTitle}</h2>
+        <p>{saleContent.project.trustBody}</p>
+        <a class="sale-button sale-button-outline" href={salePath(variation, 'iletisim')}>Mey İnşaat ile görüş</a>
+      </div>
+      <SaleImage media={media.coast} sizes="(min-width: 960px) 46vw, 100vw" decorativeCaption="ÇEVRE / MESAFE BİLGİSİ YAKINDA" />
+    </section>
+
+    <section class="sale-end-cta sale-end-cta-indexed sale-container">
+      <span aria-hidden="true">05</span>
+      <div><p class="sale-kicker">GÖRÜŞME</p><h2>{saleContent.project.ctaTitle}</h2><p>{saleContent.project.ctaBody}</p></div>
+      <a class="sale-button sale-button-primary" href={salePath(variation, 'iletisim')}>Randevu talep et ↗</a>
+    </section>
+  </div>
+)}
+
+{variation === 'monolit' && (
+  <div class="sale-home sale-home-monolith" data-testid="sale-home-monolit">
+    <section class="sale-monolith-hero">
+      <SaleImage media={media.d2Hero} priority sizes="100vw" />
+      <div class="sale-monolith-scrim"></div>
+      <div class="sale-container sale-monolith-hero-copy">
+        <p class="sale-kicker">{saleContent.project.collectionLabel}</p>
+        <h1>{saleContent.project.heroTitle}</h1>
+        <p>{saleContent.project.heroLead}</p>
+        <div class="sale-action-row">
+          <a class="sale-button sale-button-light" href={salePath(variation, 'daireler')}>Daireleri incele</a>
+          <a class="sale-text-link" href={salePath(variation, 'iletisim')}>Özel görüşme iste →</a>
+        </div>
+      </div>
+      <div class="sale-container sale-monolith-selector" aria-label="Dairelere hızlı geçiş">
+        <a href={salePath(variation, 'daire-1')}><span>01</span><strong>Daire 1</strong><small>Teras odaklı anlatı</small><i>↗</i></a>
+        <a href={salePath(variation, 'daire-2')}><span>02</span><strong>Daire 2</strong><small>Çizgisel kat akışı</small><i>↗</i></a>
+      </div>
+    </section>
+
+    <section class="sale-monolith-direct">
+      <div class="sale-container">
+        <p class="sale-kicker">Mey İnşaat · Doğrudan satış</p>
+        <h2>{saleContent.project.directTitle}</h2>
+        <p>{saleContent.project.directBody}</p>
+      </div>
+    </section>
+
+    <section class="sale-monolith-homes" aria-labelledby="monolith-homes-title">
+      <div class="sale-container sale-section-heading sale-section-heading-split">
+        <div><p class="sale-kicker">İki ev · İki atmosfer</p><h2 id="monolith-homes-title">Fotoğraf, seçimi önden kurar.</h2></div>
+        <p>{saleContent.project.apartmentsIntro}</p>
+      </div>
+      <article class="sale-monolith-home">
+        <SaleImage media={media.d1Hero} sizes="100vw" />
+        <div class="sale-container sale-monolith-home-copy">
+          <span>01</span><p class="sale-kicker">{d1.confirmed}</p><h3>{d1.name}</h3><p>{d1.shortIntro}</p>
+          <a class="sale-button sale-button-light" href={salePath(variation, 'daire-1')}>Daire 1’i gör</a>
+        </div>
+      </article>
+      <article class="sale-monolith-home is-light">
+        <SaleImage media={media.d2Upper} sizes="100vw" />
+        <div class="sale-container sale-monolith-home-copy">
+          <span>02</span><p class="sale-kicker">{d2.confirmed}</p><h3>{d2.name}</h3><p>{d2.shortIntro}</p>
+          <a class="sale-button sale-button-primary" href={salePath(variation, 'daire-2')}>Daire 2’yi gör</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="sale-monolith-project">
+      <div class="sale-container sale-monolith-project-grid">
+        <SaleImage media={media.building} sizes="(min-width: 960px) 38vw, 78vw" decorativeCaption="EL ELE APARTMANI" />
+        <div>
+          <p class="sale-kicker">Yapı ve ortak alanlar</p>
+          <h2>{saleContent.project.buildingTitle}</h2>
+          <p>{saleContent.project.buildingLead}</p>
+          <a class="sale-text-link" href={salePath(variation, 'el-ele-apartmani')}>Binayı incele →</a>
+          <div class="sale-monolith-mini-media">
+            <SaleImage media={media.entrance} sizes="(min-width: 960px) 18vw, 44vw" />
+            <SaleImage media={media.parking} sizes="(min-width: 960px) 24vw, 52vw" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sale-monolith-trust">
+      <div class="sale-container sale-monolith-trust-grid">
+        <div><p class="sale-kicker">Doğrudan ve sakin</p><h2>{saleContent.project.trustTitle}</h2><p>{saleContent.project.trustBody}</p></div>
+        <div><p class="sale-kicker">Çevre</p><h3>{saleContent.project.environmentTitle}</h3><p>{saleContent.project.environmentLead}</p><a href={salePath(variation, 'galeri')}>Galeride gör →</a></div>
+      </div>
+    </section>
+
+    <section class="sale-end-cta sale-end-cta-dark sale-container">
+      <p class="sale-kicker">Özel görüşme</p>
+      <h2>{saleContent.project.ctaTitle}</h2>
+      <p>{saleContent.project.ctaBody}</p>
+      <a class="sale-button sale-button-light" href={salePath(variation, 'iletisim')}>Randevu talep et ↗</a>
+    </section>
+  </div>
+)}
+
