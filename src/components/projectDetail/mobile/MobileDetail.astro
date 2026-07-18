@@ -11,6 +11,8 @@
 import '@fontsource/ibm-plex-serif/400.css';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import type { Locale } from '../../../lib/i18n';
+import MapLinks from '../../MapLinks.astro';
 
 interface Props {
   name: string;
@@ -29,8 +31,11 @@ interface Props {
   };
   detail: Record<string, any>;
   ctaHref: string;
+  locale: Locale;
+  /** gerçek adres — varsa künyede harita bağlantıları */
+  mapQuery?: string | null;
 }
-const { name, typeLabel, statusLabel, eyebrow, cover, imgs, detail: td, ctaHref } = Astro.props;
+const { name, typeLabel, statusLabel, eyebrow, cover, imgs, detail: td, ctaHref, locale, mapQuery } = Astro.props;
 
 const s = td.samples;
 const L = td.dossier.labels;
@@ -133,6 +138,11 @@ const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: 
         ))}
       </dl>
     </div>
+    {mapQuery && (
+      <div class="pdm-map">
+        <MapLinks address={mapQuery} locale={locale} label={td.dossier.mapOpen ?? 'HARİTADA AÇ'} />
+      </div>
+    )}
 
     <ol class="pdm-tl">
       {td.dossier.timeline.map((z: { date: string; name: string }) => (
@@ -252,6 +262,7 @@ const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: 
   .pdm-ozet-k::after { content: " :"; }
   .pdm-ozet-v { font-size: 0.6rem; color: var(--color-graphite-900); }
   .pdm-sample { color: var(--color-graphite-400); }
+  .pdm-map { margin-block-start: 0.7rem; }
 
   .pdm-tl {
     list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem;

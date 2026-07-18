@@ -1,0 +1,54 @@
+---
+/*
+  Gerçek harita bağlantıları. Koordinat UYDURMAZ: sorgu, MEY'in doğruladığı açık
+  adres metnidir; pin'i sağlayıcının geocoder'ı çözer. Harici karo/iframe yok
+  (çerez/consent yükü sıfır); bağlantılar mobilde yerel harita uygulamasını açar.
+  UA koklama bilinçli olarak yok — RU yereli Yandex'i öne alır, kalan yereller
+  Google önde, üç sağlayıcı da daima görünür.
+*/
+import type { Locale } from '../lib/i18n';
+
+interface Props {
+  /** düz metin adres, ör. "Batı Mah. Maşuk Sok. No:10, Pendik/İstanbul" */
+  address: string;
+  locale: Locale;
+  /** yerelleştirilmiş "Haritada aç" etiketi */
+  label: string;
+}
+const { address, locale, label } = Astro.props;
+
+const q = encodeURIComponent(address.replace('/', ' '));
+const providers = [
+  { ad: 'Google', href: `https://www.google.com/maps/search/?api=1&query=${q}` },
+  { ad: 'Yandex', href: `https://yandex.com.tr/maps/?text=${q}` },
+  { ad: 'Apple', href: `https://maps.apple.com/?q=${q}` },
+];
+if (locale === 'ru') providers.unshift(providers.splice(1, 1)[0]);
+---
+
+<p class="t-tech maplinks" data-testid="map-links">
+  <span class="maplinks-label">{label}:</span>
+  {providers.map((p) => (
+    <a href={p.href} target="_blank" rel="noopener" data-testid={`map-${p.ad.toLowerCase()}`}>{p.ad}</a>
+  ))}
+</p>
+
+<style>
+  .maplinks {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.7rem;
+  }
+  .maplinks-label { color: var(--color-graphite-400); }
+  .maplinks a { color: var(--color-graphite-900); }
+  .maplinks a:hover { color: var(--color-mey-red); }
+  .maplinks a + a { position: relative; }
+  .maplinks a + a::before {
+    content: "·";
+    position: absolute;
+    inset-inline-start: -0.55rem;
+    color: var(--color-graphite-400);
+    pointer-events: none;
+  }
+</style>

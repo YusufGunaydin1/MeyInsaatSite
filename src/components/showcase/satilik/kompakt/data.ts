@@ -21,6 +21,8 @@ export const proje = {
   ad: building.name,
   slug: 'el-ele-apartmani',
   lokasyon: 'Pendik / İstanbul',
+  /** MEY'in doğruladığı açık adres — harita bağlantıları bundan türetilir */
+  adres: 'Batı Mah. Çiğdem Sok. No:6, Pendik/İstanbul',
   toplamDaire: 10,
   blok: 1,
   kat: 6,

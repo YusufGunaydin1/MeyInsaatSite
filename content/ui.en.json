@@ -214,6 +214,7 @@
           "GLASS",
           "METAL"
         ],
+        "mapOpen": "OPEN IN MAPS",
         "cta": "DETAILED PROJECT INFO"
       },
       "samples": {

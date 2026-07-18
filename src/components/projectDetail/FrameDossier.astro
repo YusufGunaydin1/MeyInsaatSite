@@ -6,6 +6,8 @@
 */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import type { Locale } from '../../lib/i18n';
+import MapLinks from '../MapLinks.astro';
 
 interface Props {
   typeLabel: string;
@@ -16,8 +18,11 @@ interface Props {
   ctaHref: string;
   izometrik: ImageMetadata;
   dokular: ImageMetadata[];
+  locale: Locale;
+  /** gerçek adres — varsa harita sağlayıcı bağlantıları gösterilir */
+  mapQuery?: string | null;
 }
-const { typeLabel, statusLabel, t, samples, brand, ctaHref, izometrik, dokular } = Astro.props;
+const { typeLabel, statusLabel, t, samples, brand, ctaHref, izometrik, dokular, locale, mapQuery } = Astro.props;
 
 const ozet = [
   { k: t.labels.type, v: typeLabel, sample: false },
@@ -43,6 +48,11 @@ const malzeme = (t.materials as string[]).map((ad, i) => ({ ad, img: dokular[i] 
           </div>
         ))}
       </dl>
+      {mapQuery && (
+        <div class="pk-map">
+          <MapLinks address={mapQuery} locale={locale} label={t.mapOpen ?? 'HARİTADA AÇ'} />
+        </div>
+      )}
     </div>
 
     <div class="pk-col">
@@ -115,6 +125,7 @@ const malzeme = (t.materials as string[]).map((ad, i) => ({ ad, img: dokular[i] 
   .pk-ozet-k::after { content: " :"; }
   .pk-ozet-v { color: var(--color-graphite-900); }
   .pk-sample { color: var(--color-graphite-400); }
+  .pk-map { margin-block-start: 0.9rem; padding-block-start: 0.75rem; border-block-start: 1px solid var(--color-line); }
 
   /* Malzeme paleti: kapanış şeridinde tek sıra 48px çipler */
   .pk-mat { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }

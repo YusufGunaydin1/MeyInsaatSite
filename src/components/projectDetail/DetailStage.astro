@@ -39,8 +39,10 @@ interface Props {
   /* Çözümlenmiş DetailStage metni: paylaşımlı varsayılan + proje override
      (ProjectDetailPage'de birleştirilir). Şablon yalnız sunum yapar. */
   detail: Record<string, any>;
+  /** düz metin gerçek adres (data.location) — varsa künyede harita bağlantıları açar */
+  mapQuery?: string | null;
 }
-const { locale, name, typeLabel, statusLabel, cover, coverXray, imgs, detail } = Astro.props;
+const { locale, name, typeLabel, statusLabel, cover, coverXray, imgs, detail, mapQuery } = Astro.props;
 
 const t = ui(locale);
 const td = detail;
@@ -117,6 +119,8 @@ const frames = [
                 ctaHref={localePath(locale, '/iletisim')}
                 izometrik={imgs.izometrik}
                 dokular={imgs.dokular}
+                locale={locale}
+                mapQuery={mapQuery}
               />
             </article>
           </div>
@@ -136,6 +140,8 @@ const frames = [
     imgs={imgs}
     detail={td}
     ctaHref={localePath(locale, '/iletisim')}
+    locale={locale}
+    mapQuery={mapQuery}
   />
 </div>
 
