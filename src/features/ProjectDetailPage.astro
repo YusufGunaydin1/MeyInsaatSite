@@ -34,7 +34,7 @@ const gallery = (data.gallery ?? []).map(img).filter(Boolean) as ImageMetadata[]
 const stages: string[] = data.stages ?? [];
 
 // DetailStage metni: paylaşımlı varsayılan + (varsa) bu projenin kendi metni.
-// Override yoksa (Ali/Sapanbağları) sonuç varsayılana birebir eşittir.
+// Override yoksa (Maşuk) sonuç varsayılana birebir eşittir.
 const detail = mergeDeep(t.projects.detail, projectDetailOverride(slug, locale));
 
 const specs = [
@@ -45,7 +45,7 @@ const specs = [
   { label: t.projects.specs.units, value: data.units },
 ];
 
-// Yatay detay sahnesi: galeri seti TAM olan projelerde (bugün yalnız Ali).
+// Yatay detay sahnesi: galeri seti TAM olan projelerde (bugün üç bina da).
 // Eksik setli projeler dürüst basit hero'da kalır — asla temsilî dolgu yok.
 const stageImgs = {
   salon: img(`${slug}-salon`)!,

@@ -58,9 +58,10 @@
     ]
   },
   "samples": {
-    "place": "БАХЧЕЛИЭВЛЕР",
+    "place": "ПЕНДИК",
     "city": "СТАМБУЛ",
-    "placeCity": "СТАМБУЛ · БАХЧЕЛИЭВЛЕР",
+    "placeCity": "СТАМБУЛ · ПЕНДИК",
+    "address": "BATI MAH. ÇİĞDEM SOK. NO:6, PENDİK/İSTANBUL",
     "floors": "6",
     "units": "20",
     "year": "2023"

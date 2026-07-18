@@ -1,7 +1,7 @@
 {
-  "_comment": "Sapanbağları — DetailStage metni. Paylaşımlı ui.projects.detail (Ali türevli) VARSAYILANININ üzerine deep-merge edilen proje-bazlı override. Yalnız binaya özgü alanlar burada; frame/etiket/buton/dipnot gibi ORTAK arayüz metni ui.tr.json'dan miras alınır. Gri (örnek) değerler MEY doğrulayana kadar temsilîdir.",
+  "_comment": "Çamoğlu Apartmanı — DetailStage metni. Paylaşımlı ui.projects.detail (Ali türevli) VARSAYILANININ üzerine deep-merge edilen proje-bazlı override. Yalnız binaya özgü alanlar burada; frame/etiket/buton/dipnot gibi ORTAK arayüz metni ui.tr.json'dan miras alınır. Gri (örnek) değerler MEY doğrulayana kadar temsilîdir.",
   "story": {
-    "para": "Sapanbağları, beyaz ve antrasit iki tonlu cephesiyle modern konut mimarisini yalın, net bir dile taşır. Geniş pencerelerinden bol gün ışığı alan daireleri, sade malzeme paleti ve keskin hatlarıyla sokağa çağdaş, dingin bir duruş sunar.",
+    "para": "Çamoğlu Apartmanı, beyaz ve antrasit iki tonlu cephesiyle modern konut mimarisini yalın, net bir dile taşır. Geniş pencerelerinden bol gün ışığı alan daireleri, sade malzeme paleti ve keskin hatlarıyla sokağa çağdaş, dingin bir duruş sunar.",
     "quote": "“Yalın hat,\naydınlık yaşam.”",
     "features": ["Beyaz-antrasit cephe", "Geniş pencereler", "Net modern hatlar"],
     "salonAlt": "Salon — geniş pencerelerden gün ışığı alan ferah yaşam alanı (temsilî görsel)",
@@ -28,7 +28,7 @@
     "mapAlt": "Vaziyet — bina ve bahçe yerleşimi (temsilî)"
   },
   "dossier": {
-    "isoAlt": "Sapanbağları — aksonometrik görünüm (temsilî)",
+    "isoAlt": "Çamoğlu Apartmanı — aksonometrik görünüm (temsilî)",
     "materials": ["BEYAZ BETON", "ANTRASİT PANEL", "CAM", "METAL"],
     "timeline": [
       {
@@ -49,9 +49,10 @@
     ]
   },
   "samples": {
-    "place": "ESENYURT",
+    "place": "PENDİK",
     "city": "İSTANBUL",
-    "placeCity": "İSTANBUL · ESENYURT",
+    "placeCity": "İSTANBUL · PENDİK",
+    "address": "YENİ MAH. BAHARLI SOK. NO:9, PENDİK/İSTANBUL",
     "floors": "5",
     "units": "18",
     "year": "2022"

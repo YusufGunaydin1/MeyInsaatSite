@@ -1,7 +1,7 @@
 {
-  "_comment": "Sapanbağları — DetailStage metni (bu dil). Paylaşımlı ui.projects.detail varsayılanının üzerine deep-merge edilen proje-bazlı override; yalnız binaya özgü alanlar. TR kaynaktan çevrildi. Gri (örnek) değerler MEY doğrulayana kadar temsilîdir.",
+  "_comment": "Çamoğlu Apartmanı — DetailStage metni (bu dil). Paylaşımlı ui.projects.detail varsayılanının üzerine deep-merge edilen proje-bazlı override; yalnız binaya özgü alanlar. TR kaynaktan çevrildi. Gri (örnek) değerler MEY doğrulayana kadar temsilîdir.",
   "story": {
-    "para": "يقدّم Sapanbağları قراءةً صافية ودقيقة للعمارة السكنية العصرية عبر واجهته ثنائية اللون باللونين الأبيض والأنثراسيت. تنعم شققه بضوء نهار وفير من نوافذها الواسعة، بينما تمنح لوحةُ المواد الهادئة والخطوطُ الحادّة الشارعَ حضوراً عصرياً وهادئاً.",
+    "para": "يقدّم Çamoğlu Apartmanı قراءةً صافية ودقيقة للعمارة السكنية العصرية عبر واجهته ثنائية اللون باللونين الأبيض والأنثراسيت. تنعم شققه بضوء نهار وفير من نوافذها الواسعة، بينما تمنح لوحةُ المواد الهادئة والخطوطُ الحادّة الشارعَ حضوراً عصرياً وهادئاً.",
     "quote": "«خطوط صافية،\nحياة مضيئة.»",
     "features": [
       "واجهة بيضاء وأنثراسيتية",
@@ -32,7 +32,7 @@
     "mapAlt": "المخطط العام — توزيع المبنى والحديقة (توضيحي)"
   },
   "dossier": {
-    "isoAlt": "Sapanbağları — منظور أكسونومتري (توضيحي)",
+    "isoAlt": "Çamoğlu Apartmanı — منظور أكسونومتري (توضيحي)",
     "materials": [
       "خرسانة بيضاء",
       "لوح أنثراسيتي",
@@ -58,9 +58,10 @@
     ]
   },
   "samples": {
-    "place": "إسنيورت",
+    "place": "بنديك",
     "city": "إسطنبول",
-    "placeCity": "إسطنبول · إسنيورت",
+    "placeCity": "إسطنبول · بنديك",
+    "address": "YENİ MAH. BAHARLI SOK. NO:9, PENDİK/İSTANBUL",
     "floors": "5",
     "units": "18",
     "year": "2022"

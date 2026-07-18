@@ -133,7 +133,7 @@
       ]
     },
     "detail": {
-      "pendingTag": "KONUM · YIL · DAİRE — DOĞRULANIYOR",
+      "pendingTag": "YIL · DAİRE — DOĞRULANIYOR",
       "brand": "MEY İNŞAAT",
       "prev": "Önceki bölüm",
       "next": "Sonraki bölüm",
@@ -143,7 +143,7 @@
         "dossier": "KÜNYE"
       },
       "story": {
-        "para": "Ali Apartmanı, modern aile yaşamının ihtiyaçları düşünülerek tasarlandı. Ferah iç mekânlar, bol gün ışığı alan yaşam alanları ve cam balkon detayları ile konforu estetikle buluşturuyor.",
+        "para": "Maşuk Apartmanı, modern aile yaşamının ihtiyaçları düşünülerek tasarlandı. Ferah iç mekânlar, bol gün ışığı alan yaşam alanları ve cam balkon detayları ile konforu estetikle buluşturuyor.",
         "quote": "“Şehrin içinde,\nhuzurlu bir yaşam.”",
         "features": [
           "Gün ışığı",
@@ -205,7 +205,7 @@
             "desc": "İnce işler ve kontroller tamamlanarak teslim edildi."
           }
         ],
-        "isoAlt": "Ali Apartmanı — aksonometrik çizim (temsilî)",
+        "isoAlt": "Maşuk Apartmanı — aksonometrik çizim (temsilî)",
         "isoCaption": "AKSONOMETRİ — TEMSİLİ",
         "materialsTitle": "CEPHE & MALZEME",
         "materials": [
@@ -217,14 +217,15 @@
         "cta": "DETAYLI PROJE BİLGİSİ"
       },
       "samples": {
-        "place": "BAĞCILAR",
+        "place": "PENDİK",
         "city": "İSTANBUL",
-        "placeCity": "İSTANBUL · BAĞCILAR",
+        "placeCity": "İSTANBUL · PENDİK",
+        "address": "BATI MAH. MAŞUK SOK. NO:10, PENDİK/İSTANBUL",
         "floors": "6",
         "units": "24",
         "year": "2024"
       },
-      "samplesNote": "Gri renkte gösterilen konum, yıl, kat, daire ve zaman çizelgesi değerleri örnek yerleşimdir; MEY İnşaat doğruladığında güncellenecek. İç mekân, vaziyet ve aksonometri görselleri temsilîdir.",
+      "samplesNote": "Gri renkte gösterilen yıl, kat, daire ve zaman çizelgesi değerleri örnek yerleşimdir; MEY İnşaat doğruladığında güncellenecek. İç mekân, vaziyet ve aksonometri görselleri temsilîdir.",
       "prevShort": "Önceki",
       "nextShort": "Sonraki"
     }

@@ -1,8 +1,8 @@
 {
-  "_comment": "Gerçek MEY projesi. Sert gerçekler (konum/yıl/daire) MEY'den gelene kadar null → site görünür [Bilgi bekleniyor] rozetiyle gösterir. Görseller AI-render (gerçek foto değil); gerçek fotoğraf geldiğinde değişecek.",
+  "_comment": "Gerçek MEY projesi — Çamoğlu Apartmanı (slug 'sapanbaglari' URL uyumu için korunuyor). Adres MEY'den doğrulandı (2026-07). Kalan sert gerçekler (yıl/daire) gelene kadar null → site görünür [Bilgi bekleniyor] rozetiyle gösterir. Görseller AI-render (gerçek foto değil); gerçek fotoğraf geldiğinde değişecek.",
   "slug": "sapanbaglari",
-  "location": null,
-  "district": null,
+  "location": "Yeni Mah. Baharlı Sok. No:9, Pendik/İstanbul",
+  "district": "Pendik",
   "type": "konut",
   "status": "completed",
   "year": null,

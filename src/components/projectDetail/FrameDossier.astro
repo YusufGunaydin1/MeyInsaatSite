@@ -1,6 +1,6 @@
 ---
 /*
-  KARE 03 — KÜNYE: mono proje özeti solda (tip/statü/müteahhit gerçek; yer/yıl/
+  KARE 03 — KÜNYE: mono proje özeti solda (tip/statü/yer/müteahhit gerçek; yıl/
   müşteri örnek → gri), kırmızı raylı zaman çizelgesi ortada (örnek tarihler gri),
   aksonometrik pafta sağda; kapanışta malzeme çipleri + kırmızı çerçeveli CTA.
 */
@@ -22,7 +22,7 @@ const { typeLabel, statusLabel, t, samples, brand, ctaHref, izometrik, dokular }
 const ozet = [
   { k: t.labels.type, v: typeLabel, sample: false },
   { k: t.labels.status, v: statusLabel, sample: false },
-  { k: t.labels.place, v: samples.placeCity, sample: true },
+  { k: t.labels.place, v: samples.address ?? samples.placeCity, sample: false },
   { k: t.labels.year, v: samples.year, sample: true },
   { k: t.labels.client, v: t.clientSample, sample: true },
   { k: t.labels.contractor, v: brand, sample: false },

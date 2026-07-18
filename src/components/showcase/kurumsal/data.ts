@@ -170,7 +170,7 @@ export const corp = {
   buildings: [
     {
       slug: 'ali',
-      name: 'Ali Apartmanı',
+      name: 'Maşuk Apartmanı',
       blurb: 'Cam balkonlu, turuncu-beyaz cepheli modern konut.',
       meta: 'İSTANBUL · KONUT · TAMAMLANDI',
       photo: aliPhoto,
@@ -186,7 +186,7 @@ export const corp = {
     },
     {
       slug: 'sapanbaglari',
-      name: 'Sapanbağları',
+      name: 'Çamoğlu Apartmanı',
       blurb: 'Beyaz-antrasit cepheli, kırmızı çatılı modern konut.',
       meta: 'İSTANBUL · KONUT · TAMAMLANDI',
       photo: sapanPhoto,

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { u } from './util';
 
 /*
-  The three real MEY buildings (Ali, El Ele Apartmanı, Sapanbağları). Prove the
+  The three real MEY buildings (Maşuk Apartmanı, El Ele Apartmanı, Çamoğlu Apartmanı). Prove the
   visitor sees real names + decoded building renders, the per-building
   construction story (real stage frames) where it exists, and honest placeholders
   for facts not yet provided — never invented location/year/unit data.
@@ -23,7 +23,7 @@ test('projects list shows the three real buildings with decoded covers', async (
   const tiles = page.locator('main .card');
   await expect(tiles).toHaveCount(3);
   await expect(page.locator('main')).toContainText('El Ele Apartmanı');
-  await expect(page.locator('main')).toContainText('Sapanbağları');
+  await expect(page.locator('main')).toContainText('Çamoğlu Apartmanı');
   await expect(page.locator('main')).not.toContainText('PLACEHOLDER');
   await decodes(page, 'main .card img');
 });
@@ -31,7 +31,7 @@ test('projects list shows the three real buildings with decoded covers', async (
 test('El Ele page: horizontal stage hero, construction story, honest samples', async ({ page }) => {
   await page.goto(u('/projeler/el-ele-apartmani'));
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('El Ele Apartmanı');
-  // Full gallery set → the horizontal detail stage replaces the simple hero (like Ali).
+  // Full gallery set → the horizontal detail stage replaces the simple hero (like Maşuk).
   await expect(page.getByTestId('pd-stage')).toHaveCount(1);
   await decodes(page, '[data-testid="pd-photo"] img, [data-testid="pdm-cover"]');
 
@@ -46,10 +46,10 @@ test('El Ele page: horizontal stage hero, construction story, honest samples', a
   await expect(page.getByTestId('pd-note')).toHaveCount(1);
 });
 
-test('Sapanbağları page: horizontal stage hero, construction story, honest samples', async ({ page }) => {
+test('Çamoğlu Apartmanı page: horizontal stage hero, construction story, honest samples', async ({ page }) => {
   await page.goto(u('/projeler/sapanbaglari'));
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Sapanbağları');
-  // Full gallery set → the horizontal detail stage replaces the simple hero (like Ali/El Ele).
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Çamoğlu Apartmanı');
+  // Full gallery set → the horizontal detail stage replaces the simple hero (like Maşuk/El Ele).
   await expect(page.getByTestId('pd-stage')).toHaveCount(1);
   await decodes(page, '[data-testid="pd-photo"] img, [data-testid="pdm-cover"]');
 
@@ -64,12 +64,12 @@ test('Sapanbağları page: horizontal stage hero, construction story, honest sam
   await expect(page.getByTestId('pd-note')).toHaveCount(1);
 });
 
-test('Ali page: horizontal stage hero, decoded cover, no fabricated story', async ({ page }) => {
+test('Maşuk page: horizontal stage hero, decoded cover, no fabricated story', async ({ page }) => {
   await page.goto(u('/projeler/ali'));
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ali Apartmanı');
-  // Ali's full gallery set → the horizontal detail stage replaces the simple hero.
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Maşuk Apartmanı');
+  // Maşuk's full gallery set → the horizontal detail stage replaces the simple hero.
   await expect(page.getByTestId('pd-stage')).toHaveCount(1);
   await decodes(page, '[data-testid="pd-photo"] img, [data-testid="pdm-cover"]');
-  // Ali has no stage sequence → the story section must be absent (not faked).
+  // Maşuk has no stage sequence → the story section must be absent (not faked).
   await expect(page.locator('.ps-strip')).toHaveCount(0);
 });

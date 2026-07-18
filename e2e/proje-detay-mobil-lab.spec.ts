@@ -3,7 +3,7 @@ import { u } from './util';
 
 /*
   Proje detay MOBİL lab: seçilen KOMPAKT AKIŞ (Variant A) — canlı prod bileşeni
-  (`MobileDetail`) cihaz çerçevesinde önizlenir (Ali verisi). Kanıt: kompakt blok
+  (`MobileDetail`) cihaz çerçevesinde önizlenir (Maşuk verisi). Kanıt: kompakt blok
   render olur, sahne görselleri decode olur, CTA var, sayfa yatay taşmaz.
 */
 

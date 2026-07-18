@@ -51,7 +51,7 @@ const specs = [
 const ozet = [
   { k: L.type, v: typeLabel, sample: false },
   { k: L.status, v: statusLabel, sample: false },
-  { k: L.place, v: s.placeCity, sample: true },
+  { k: L.place, v: s.address ?? s.placeCity, sample: false },
   { k: L.year, v: s.year, sample: true },
 ];
 const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: imgs.dokular[i] }));
@@ -71,7 +71,7 @@ const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: 
       </div>
     </figure>
     <p class="t-tech pdm-meta">
-      <span class="pdm-s">{s.placeCity}</span>
+      <span>{s.placeCity}</span>
       <span class="pdm-dot" aria-hidden="true">·</span>
       <span class="pdm-s">{s.floors} {td.spaces.floorsWord}</span>
       <span class="pdm-dot" aria-hidden="true">·</span>

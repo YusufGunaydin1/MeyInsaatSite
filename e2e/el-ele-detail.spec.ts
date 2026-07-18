@@ -2,17 +2,17 @@ import { test, expect } from '@playwright/test';
 import { u } from './util';
 
 /*
-  /projeler/el-ele-apartmani — Ali ile AYNI adımlı detay sahnesini kullanır ama
+  /projeler/el-ele-apartmani — Maşuk ile AYNI adımlı detay sahnesini kullanır ama
   KENDİ metnini taşır (klasik cephe · ferforje · beyaz sıva). Bu spec, ikinci bir
-  projenin sahneyi doğru açtığını ve paylaşımlı Ali metninin SIZMADIĞINI kanıtlar:
+  projenin sahneyi doğru açtığını ve paylaşımlı Maşuk metninin SIZMADIĞINI kanıtlar:
   zengin sahne var, adımlar yürür, görseller decode olur, metin el-ele'ye özgü.
-  Ali'nin kendi davranışı project-detail-stage.spec.ts'te; burada tekrar edilmez.
+  Maşuk'un kendi davranışı project-detail-stage.spec.ts'te; burada tekrar edilmez.
 */
 
 const PAGE = 'projeler/el-ele-apartmani';
 
 test.describe('el-ele detay — kendi metniyle adımlı sahne', () => {
-  test('masaüstü: zengin sahne açılır, adımlar yürür, el-ele metni (Ali sızıntısı yok)', async ({ page }) => {
+  test('masaüstü: zengin sahne açılır, adımlar yürür, el-ele metni (Maşuk sızıntısı yok)', async ({ page }) => {
     test.skip(test.info().project.name !== 'desktop', 'adımlı mod yalnız masaüstünde');
     await page.goto(u(PAGE));
 
@@ -20,11 +20,11 @@ test.describe('el-ele detay — kendi metniyle adımlı sahne', () => {
     await root.scrollIntoViewIfNeeded();
     await expect(root).toHaveClass(/pds-live/); // basit hero değil → zengin sahne
 
-    // El-ele'ye ÖZGÜ metin (paylaşımlı Ali metni değil)
+    // El-ele'ye ÖZGÜ metin (paylaşımlı Maşuk metni değil)
     await expect(page.getByTestId('pd-quote')).toContainText('Klasik zarafet');
     await expect(root).toContainText('Ferforje detay');
 
-    // Ali'nin metni el-ele'ye SIZMAMALI
+    // Maşuk'un metni el-ele'ye SIZMAMALI
     await expect(root).not.toContainText('Cam balkon');
     await expect(root).not.toContainText(/Bağcılar/i);
 

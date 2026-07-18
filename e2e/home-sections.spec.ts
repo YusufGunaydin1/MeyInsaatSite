@@ -20,7 +20,7 @@ test('projects preview shows the three real buildings linked to their pages', as
   await page.goto(u('/'));
   const tiles = page.locator('main a.card[href*="/projeler/"]');
   await expect(tiles).toHaveCount(3);
-  for (const name of ['Ali Apartmanı', 'El Ele Apartmanı', 'Sapanbağları']) {
+  for (const name of ['Maşuk Apartmanı', 'El Ele Apartmanı', 'Çamoğlu Apartmanı']) {
     await expect(page.getByRole('heading', { name })).toBeVisible();
   }
   await decodes(page, 'main a.card img');

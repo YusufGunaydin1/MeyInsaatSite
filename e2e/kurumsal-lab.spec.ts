@@ -15,7 +15,7 @@ const VARIANTS = [
   'variant-surec',
 ];
 const SIGNATURES = ['sck-process', 'sck-values', 'dsr-drawbuild', 'gal-hero', 'src-spine'];
-const BUILDINGS = ['Ali Apartmanı', 'El Ele Apartmanı', 'Sapanbağları'];
+const BUILDINGS = ['Maşuk Apartmanı', 'El Ele Apartmanı', 'Çamoğlu Apartmanı'];
 
 test.describe('Kurumsal lab — 3 tasarım yönü', () => {
   test('render + noindex + üç yön ve imza bölümleri var', async ({ page }) => {

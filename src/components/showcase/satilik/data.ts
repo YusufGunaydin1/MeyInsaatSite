@@ -285,7 +285,7 @@ export const building = {
     { label: 'Proje', value: 'El Ele Apartmanı' },
     { label: 'Yapımcı ve satıcı', value: 'Mey İnşaat' },
     { label: 'Satılık daire', value: '2 adet — her ikisi 3+2 dubleks' },
-    { label: 'Adres', pending: true },
+    { label: 'Adres', value: 'Batı Mah. Çiğdem Sok. No:6, Pendik/İstanbul' },
     { label: 'Kat sayısı', pending: true },
     { label: 'Isıtma', pending: true },
     { label: 'Otopark tahsisi', pending: true },

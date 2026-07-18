@@ -16,7 +16,7 @@ import { project, ui } from '../../lib/content';
 
 const t = ui('tr');
 const ali = project('ali', 'tr');
-const name = ali?.md?.frontmatter?.name ?? 'Ali Apartmanı';
+const name = ali?.md?.frontmatter?.name ?? 'Maşuk Apartmanı';
 const d = ali?.data ?? {};
 const typeLabel = String(t.projects.types?.[d.type] ?? d.type ?? 'Konut').toUpperCase();
 const statusLabel = String(t.projects.status?.[d.status] ?? d.status ?? 'Tamamlandı').toUpperCase();

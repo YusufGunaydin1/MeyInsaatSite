@@ -58,9 +58,10 @@
     ]
   },
   "samples": {
-    "place": "BAHÇELIEVLER",
+    "place": "PENDIK",
     "city": "ISTANBUL",
-    "placeCity": "ISTANBUL · BAHÇELIEVLER",
+    "placeCity": "ISTANBUL · PENDIK",
+    "address": "BATI MAH. ÇİĞDEM SOK. NO:6, PENDİK/İSTANBUL",
     "floors": "6",
     "units": "20",
     "year": "2023"

@@ -133,7 +133,7 @@
       ]
     },
     "detail": {
-      "pendingTag": "LOCATION · YEAR · UNITS — PENDING VERIFICATION",
+      "pendingTag": "YEAR · UNITS — PENDING VERIFICATION",
       "brand": "MEY İNŞAAT",
       "prev": "Previous section",
       "next": "Next section",
@@ -143,7 +143,7 @@
         "dossier": "FACT SHEET"
       },
       "story": {
-        "para": "Ali Apartmanı was designed around the needs of modern family life. Spacious interiors, daylight-filled living areas and glass-balcony details bring comfort and aesthetics together.",
+        "para": "Maşuk Apartmanı was designed around the needs of modern family life. Spacious interiors, daylight-filled living areas and glass-balcony details bring comfort and aesthetics together.",
         "quote": "“A calm life,\nin the heart of the city.”",
         "features": [
           "Daylight",
@@ -205,7 +205,7 @@
             "desc": "Finishing works and inspections were completed and the building was handed over."
           }
         ],
-        "isoAlt": "Ali Apartmanı — axonometric drawing (representative)",
+        "isoAlt": "Maşuk Apartmanı — axonometric drawing (representative)",
         "isoCaption": "AXONOMETRIC — REPRESENTATIVE",
         "materialsTitle": "FAÇADE & MATERIALS",
         "materials": [
@@ -217,14 +217,15 @@
         "cta": "DETAILED PROJECT INFO"
       },
       "samples": {
-        "place": "BAĞCILAR",
+        "place": "PENDIK",
         "city": "ISTANBUL",
-        "placeCity": "ISTANBUL · BAĞCILAR",
+        "placeCity": "ISTANBUL · PENDIK",
+        "address": "BATI MAH. MAŞUK SOK. NO:10, PENDİK/İSTANBUL",
         "floors": "6",
         "units": "24",
         "year": "2024"
       },
-      "samplesNote": "Values shown in grey — location, year, floors, units and the timeline — are sample placements; they will be updated once MEY İnşaat confirms them. Interior, site-plan and axonometric visuals are representative.",
+      "samplesNote": "Values shown in grey — year, floors, units and the timeline — are sample placements; they will be updated once MEY İnşaat confirms them. Interior, site-plan and axonometric visuals are representative.",
       "prevShort": "Previous",
       "nextShort": "Next"
     }

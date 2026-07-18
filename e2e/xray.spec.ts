@@ -13,7 +13,7 @@ import { u } from './util';
 test('detail stage photo: cutaway hidden idle, revealed under cursor, no toggle', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width < 900, 'desktop hover flow');
   await page.goto(u('/projeler/ali'));
-  // Ali renders the horizontal stage; the lens lives on its fixed left photo.
+  // Maşuk renders the horizontal stage; the lens lives on its fixed left photo.
   const xr = page.locator('[data-testid="pd-photo"] .xrv');
   const top = xr.locator('.xrv-top');
   await xr.scrollIntoViewIfNeeded();
@@ -55,7 +55,7 @@ test('detail stage (El Ele) keeps the lens: hidden idle, hover reveals', async (
   test.skip(!viewport || viewport.width < 900, 'desktop hover flow');
   await page.goto(u('/projeler/el-ele-apartmani'));
   // El Ele now renders the horizontal stage (full gallery set) — the lens lives on
-  // its fixed left stage photo, like Ali, not the simple-hero figure.
+  // its fixed left stage photo, like Maşuk, not the simple-hero figure.
   const xr = page.locator('[data-testid="pd-photo"] .xrv');
   const top = xr.locator('.xrv-top');
   await xr.scrollIntoViewIfNeeded();

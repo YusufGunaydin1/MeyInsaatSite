@@ -20,7 +20,7 @@ export const tl = (n: number) => n.toLocaleString('tr-TR') + ' TL';
 export const proje = {
   ad: building.name,
   slug: 'el-ele-apartmani',
-  lokasyon: 'Marmara Sahili / İstanbul',
+  lokasyon: 'Pendik / İstanbul',
   toplamDaire: 10,
   blok: 1,
   kat: 6,
@@ -254,15 +254,15 @@ export interface Teaser {
   slug: string; // /projeler/<slug>
 }
 export const projeTeasers: Teaser[] = [
-  { ad: 'Ali Apartmanı', konum: 'İstanbul', not: 'Tümü satıldı', slug: 'ali' },
-  { ad: 'Sapanbağları', konum: 'İstanbul', not: 'Tümü satıldı', slug: 'sapanbaglari' },
+  { ad: 'Maşuk Apartmanı', konum: 'Pendik, İstanbul', not: 'Tümü satıldı', slug: 'ali' },
+  { ad: 'Çamoğlu Apartmanı', konum: 'Pendik, İstanbul', not: 'Tümü satıldı', slug: 'sapanbaglari' },
 ];
 
 /* ─── LİSTELEME SAYFASI (liste-ref.png) — dürüst envanter ───
    Izgara = 2 gerçek ilan (El Ele dubleksleri, detaya gider) + 3 proje kartı
-   (listingProjeler). Ali ve Sapanbağları'nda satılık daire YOK (gerçek durum) —
+   (listingProjeler). Ali ve Çamoğlu Apartmanı'nda satılık daire YOK (gerçek durum) —
    kırmızı TÜMÜ SATILDI bandı taşır, proje sayfasına çıkar. Uydurma ilan üretme:
-   önceki temsilî Ali/Sapanbağları satırları bu yüzden silindi. */
+   önceki temsilî Ali/Çamoğlu Apartmanı satırları bu yüzden silindi. */
 export interface ListingUnit {
   id: string;
   mock: true;
@@ -308,11 +308,11 @@ export interface ListingProje {
 }
 
 export const listingProjeler: ListingProje[] = [
-  { id: 'p-el-ele', ad: 'El Ele Apartmanı', projeKey: 'el-ele', konum: 'İstanbul',
+  { id: 'p-el-ele', ad: 'El Ele Apartmanı', projeKey: 'el-ele', konum: 'Pendik, İstanbul',
     sold: false, not: '2 satılık dubleks bu binada', rozet: '2 DAİRE SATILIK', slug: 'el-ele-apartmani' },
-  { id: 'p-ali', ad: 'Ali Apartmanı', projeKey: 'ali', konum: 'İstanbul',
+  { id: 'p-ali', ad: 'Maşuk Apartmanı', projeKey: 'ali', konum: 'Pendik, İstanbul',
     sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'ali' },
-  { id: 'p-sapanbaglari', ad: 'Sapanbağları', projeKey: 'sapanbaglari', konum: 'İstanbul',
+  { id: 'p-sapanbaglari', ad: 'Çamoğlu Apartmanı', projeKey: 'sapanbaglari', konum: 'Pendik, İstanbul',
     sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'sapanbaglari' },
 ];
 

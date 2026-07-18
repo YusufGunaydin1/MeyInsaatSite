@@ -291,7 +291,7 @@ export default function SaleListing({ items, projeler }: Props) {
                   <li><Ic d={I.brut} /><span>{u.brut} m²</span><em>Brüt</em></li>
                   <li><Ic d={I.banyo} /><span>{u.banyo}</span><em>Banyo</em></li>
                   <li><Ic d={I.balkon} /><span>{u.balkon}</span><em>Balkon</em></li>
-                  <li><Ic d={I.kat} /><span>{u.kat.replace(' Kat', '')}</span><em>Konum</em></li>
+                  <li><Ic d={I.kat} /><span>{u.kat.replace(' Kat', '')}</span><em>Kat</em></li>
                 </ul>
                 <div className="kl-card-foot">
                   <p className="kl-price tabular-nums">{u.fiyatText}</p>
