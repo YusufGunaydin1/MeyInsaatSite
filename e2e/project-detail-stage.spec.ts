@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { u } from './util';
 
 /*
-  /projeler/ali detay sahnesi — ADIMLI: foto solda sabit; sağ pencere üç kareyi
+  /projeler/masuk-apartmani detay sahnesi — ADIMLI: foto solda sabit; sağ pencere üç kareyi
   1:1 gösterir, kareler YALNIZ Önceki/Sonraki düğmeleriyle değişir. Kullanıcının
   GÖRDÜĞÜ doğrulanır: scroll kareyi DEĞİŞTİRMEZ, düğmeler 01→02→03 yürütür ve
   uçlarda pasifleşir, foto yerinden oynamaz, görseller decode olur, örnek
@@ -10,7 +10,7 @@ import { u } from './util';
   Reduced-motion AYNI adımlı deneyimi alır. Dar ekran/no-JS dikey yığın.
 */
 
-const PAGE = 'projeler/ali';
+const PAGE = 'projeler/masuk-apartmani';
 /** Koyulaştırılmış graphite-400 (#66696D) — örnek/gri değerlerin rengi */
 const SAMPLE_GREY = 'rgb(102, 105, 109)';
 
@@ -106,7 +106,7 @@ test.describe('proje detay — adımlı sahne', () => {
 
   test('AR RTL: kayma işareti döner — kareler sağdan sola ilerler', async ({ page }) => {
     test.skip(test.info().project.name !== 'desktop', 'adımlı mod yalnız masaüstünde');
-    await page.goto(u('ar/projeler/ali'));
+    await page.goto(u('ar/projeler/masuk-apartmani'));
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
 
     const root = page.getByTestId('pd-stage');

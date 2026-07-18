@@ -47,7 +47,7 @@ test('El Ele page: horizontal stage hero, construction story, honest samples', a
 });
 
 test('Çamoğlu Apartmanı page: horizontal stage hero, construction story, honest samples', async ({ page }) => {
-  await page.goto(u('/projeler/sapanbaglari'));
+  await page.goto(u('/projeler/camoglu-apartmani'));
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Çamoğlu Apartmanı');
   // Full gallery set → the horizontal detail stage replaces the simple hero (like Maşuk/El Ele).
   await expect(page.getByTestId('pd-stage')).toHaveCount(1);
@@ -65,7 +65,7 @@ test('Çamoğlu Apartmanı page: horizontal stage hero, construction story, hone
 });
 
 test('Maşuk page: horizontal stage hero, decoded cover, no fabricated story', async ({ page }) => {
-  await page.goto(u('/projeler/ali'));
+  await page.goto(u('/projeler/masuk-apartmani'));
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Maşuk Apartmanı');
   // Maşuk's full gallery set → the horizontal detail stage replaces the simple hero.
   await expect(page.getByTestId('pd-stage')).toHaveCount(1);

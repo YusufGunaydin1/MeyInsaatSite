@@ -17,7 +17,7 @@ test('showcases hub renders with the adopted-design card', async ({ page }) => {
     .filter({ hasText: 'adımlı gezinme' })
     .first();
   await expect(live).toContainText('CANLIDA');
-  await expect(live.locator('a.sc-open')).toHaveAttribute('href', /projeler\/ali/);
+  await expect(live.locator('a.sc-open')).toHaveAttribute('href', /projeler\/masuk-apartmani/);
   // noindex: arama motorlarına kapalı
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
 });

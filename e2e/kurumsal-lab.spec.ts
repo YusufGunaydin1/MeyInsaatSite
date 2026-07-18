@@ -71,7 +71,7 @@ test.describe('Kurumsal lab — 3 tasarım yönü', () => {
 
   test('linkler gerçek proje detay sayfalarına gidiyor', async ({ page }) => {
     await page.goto(u('showcases/kurumsal-lab'));
-    for (const slug of ['ali', 'el-ele-apartmani', 'sapanbaglari']) {
+    for (const slug of ['masuk-apartmani', 'el-ele-apartmani', 'camoglu-apartmani']) {
       expect(
         await page.locator(`a[href*="projeler/${slug}"]`).count()
       ).toBeGreaterThan(0);

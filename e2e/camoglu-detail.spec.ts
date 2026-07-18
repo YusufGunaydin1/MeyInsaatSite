@@ -2,15 +2,15 @@ import { test, expect } from '@playwright/test';
 import { u } from './util';
 
 /*
-  /projeler/sapanbaglari — Maşuk/El Ele ile AYNI adımlı detay sahnesini kullanır ama
+  /projeler/camoglu-apartmani — Maşuk/El Ele ile AYNI adımlı detay sahnesini kullanır ama
   KENDİ metnini taşır (beyaz-antrasit modern cephe · beyaz beton · antrasit panel).
   Bu spec, üçüncü bir projenin sahneyi doğru açtığını ve ne Maşuk ne de El Ele
   metninin SIZMADIĞINI kanıtlar: zengin sahne var, adımlar yürür, görseller decode
-  olur, metin sapanbaglari'ya özgü. Maşuk'un/El Ele'nin kendi davranışı kendi
+  olur, metin çamoğlu'na özgü. Maşuk'un/El Ele'nin kendi davranışı kendi
   spec'lerinde; burada tekrar edilmez.
 */
 
-const PAGE = 'projeler/sapanbaglari';
+const PAGE = 'projeler/camoglu-apartmani';
 
 test.describe('çamoğlu detay — kendi metniyle adımlı sahne', () => {
   test('masaüstü: zengin sahne açılır, adımlar yürür, çamoğlu metni (Maşuk/El Ele sızıntısı yok)', async ({ page }) => {

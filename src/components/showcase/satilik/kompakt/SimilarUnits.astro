@@ -7,8 +7,8 @@
 import { Image } from 'astro:assets';
 import { publicAsset, entry } from '../media';
 import { detay, projeTeasers, tl, unitById } from './data';
-import aliImg from '../../../../assets/projects/ali.webp';
-import sapanImg from '../../../../assets/projects/sapanbaglari.webp';
+import masukImg from '../../../../assets/projects/masuk-apartmani.webp';
+import camogluImg from '../../../../assets/projects/camoglu-apartmani.webp';
 
 interface Props {
   current: 'daire-1' | 'daire-2';
@@ -16,7 +16,7 @@ interface Props {
 }
 const { current, base } = Astro.props;
 const d = detay[current];
-const teaserImg = { ali: aliImg, sapanbaglari: sapanImg } as const;
+const teaserImg = { 'masuk-apartmani': masukImg, 'camoglu-apartmani': camogluImg } as const;
 const kompaktBase = base + '/satilik-daireler/';
 ---
 

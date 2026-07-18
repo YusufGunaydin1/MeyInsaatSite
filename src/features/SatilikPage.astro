@@ -24,8 +24,8 @@ import { publicAsset } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui } from '../lib/content';
 import elEleImg from '../assets/projects/el-ele-apartmani.webp';
-import aliImg from '../assets/projects/ali.webp';
-import sapanImg from '../assets/projects/sapanbaglari.webp';
+import masukImg from '../assets/projects/masuk-apartmani.webp';
+import camogluImg from '../assets/projects/camoglu-apartmani.webp';
 import '../components/showcase/satilik/kompakt/kompakt.css';
 
 interface Props {
@@ -48,8 +48,8 @@ async function assetImage(src: ImageMetadata, alt: string): Promise<ListingImage
 }
 const projeGorsel: Record<string, ImageMetadata> = {
   'el-ele': elEleImg,
-  ali: aliImg,
-  sapanbaglari: sapanImg,
+  masuk: masukImg,
+  camoglu: camogluImg,
 };
 
 const ilanlar: ListingCard[] = await Promise.all(
@@ -94,8 +94,8 @@ const items: ListingCard[] = [...ilanlar, ...projeKartlari];
 
 const projeler = [
   { key: 'el-ele', ad: 'El Ele Apartmanı' },
-  { key: 'ali', ad: 'Maşuk Apartmanı' },
-  { key: 'sapanbaglari', ad: 'Çamoğlu Apartmanı' },
+  { key: 'masuk', ad: 'Maşuk Apartmanı' },
+  { key: 'camoglu', ad: 'Çamoğlu Apartmanı' },
 ];
 
 const stats = [

@@ -1,0 +1,20 @@
+{
+  "_comment": "Gerçek MEY projesi — Çamoğlu Apartmanı (eski slug 'sapanbaglari' → /projeler/camoglu-apartmani'ye yönlendirilir). Adres MEY'den doğrulandı (2026-07). Kalan sert gerçekler (yıl/daire) gelene kadar null → site görünür [Bilgi bekleniyor] rozetiyle gösterir. Görseller AI-render (gerçek foto değil); gerçek fotoğraf geldiğinde değişecek.",
+  "slug": "camoglu-apartmani",
+  "location": "Yeni Mah. Baharlı Sok. No:9, Pendik/İstanbul",
+  "district": "Pendik",
+  "type": "konut",
+  "status": "completed",
+  "year": null,
+  "units": null,
+  "areaM2": null,
+  "cover": "camoglu-apartmani",
+  "gallery": [],
+  "stages": [
+    "camoglu-apartmani-stage-1",
+    "camoglu-apartmani-stage-2",
+    "camoglu-apartmani-stage-3",
+    "camoglu-apartmani-stage-4",
+    "camoglu-apartmani-stage-5"
+  ]
+}

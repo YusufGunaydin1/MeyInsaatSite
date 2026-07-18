@@ -12,7 +12,7 @@ import { u } from './util';
 
 test('detail stage photo: cutaway hidden idle, revealed under cursor, no toggle', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width < 900, 'desktop hover flow');
-  await page.goto(u('/projeler/ali'));
+  await page.goto(u('/projeler/masuk-apartmani'));
   // Maşuk renders the horizontal stage; the lens lives on its fixed left photo.
   const xr = page.locator('[data-testid="pd-photo"] .xrv');
   const top = xr.locator('.xrv-top');
@@ -77,7 +77,7 @@ test('project tiles carry the lens on /projeler and home', async ({ page, viewpo
 });
 
 test('no interior toggle exists on any locale', async ({ page }) => {
-  for (const path of ['/projeler/ali', '/en/projeler/ali']) {
+  for (const path of ['/projeler/masuk-apartmani', '/en/projeler/masuk-apartmani']) {
     await page.goto(u(path));
     await expect(page.locator('.xrv-toggle'), `toggle on ${path}`).toHaveCount(0);
   }
@@ -85,7 +85,7 @@ test('no interior toggle exists on any locale', async ({ page }) => {
 
 test('touch: kompakt mobil kapakta lens yok, sayfa scroll serbest', async ({ page, viewport }) => {
   test.skip(!viewport || viewport.width > 500, 'touch behavior (mobile project)');
-  await page.goto(u('/projeler/ali'));
+  await page.goto(u('/projeler/masuk-apartmani'));
   // Mobilde masaüstü sahne (X-ray lens dahil) gizli; kompakt akış kapağı düz görsel.
   const cover = page.getByTestId('pdm-cover');
   await cover.scrollIntoViewIfNeeded();

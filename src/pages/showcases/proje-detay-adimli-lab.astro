@@ -15,9 +15,9 @@ import YatayDetayAdimli from '../../components/showcase/detay/yatay/YatayDetayAd
 import { project, ui } from '../../lib/content';
 
 const t = ui('tr');
-const ali = project('ali', 'tr');
-const name = ali?.md?.frontmatter?.name ?? 'Maşuk Apartmanı';
-const d = ali?.data ?? {};
+const masuk = project('masuk-apartmani', 'tr');
+const name = masuk?.md?.frontmatter?.name ?? 'Maşuk Apartmanı';
+const d = masuk?.data ?? {};
 const typeLabel = String(t.projects.types?.[d.type] ?? d.type ?? 'Konut').toUpperCase();
 const statusLabel = String(t.projects.status?.[d.status] ?? d.status ?? 'Tamamlandı').toUpperCase();
 ---

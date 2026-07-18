@@ -17,13 +17,13 @@
 import type { ImageMetadata } from 'astro';
 
 // Şeffaf aksonometri render'ler (çizim katmanı)
-import aliIso from '../../../assets/projects/ali-izometrik.webp';
+import masukIso from '../../../assets/projects/masuk-apartmani-izometrik.webp';
 import eleleIso from '../../../assets/projects/el-ele-apartmani-izometrik.webp';
-import sapanIso from '../../../assets/projects/sapanbaglari-izometrik.webp';
+import camogluIso from '../../../assets/projects/camoglu-apartmani-izometrik.webp';
 // Gerçekleşen bina görselleri (yapı katmanı, 3:4)
-import aliPhoto from '../../../assets/showcase/ali.webp';
+import masukPhoto from '../../../assets/showcase/masuk-apartmani.webp';
 import elelePhoto from '../../../assets/showcase/el-ele-apartmani.webp';
-import sapanPhoto from '../../../assets/showcase/sanbaglari.webp';
+import camogluPhoto from '../../../assets/showcase/camoglu-apartmani.webp';
 // Kurumsal atmosfer / kanıt görselleri
 import skyline from '../../../assets/photos/hero-three-blocks-sky.webp';
 import cornerGolden from '../../../assets/photos/hero-residential-corner-building.webp';
@@ -42,8 +42,8 @@ import icon7 from '../../../assets/showcase/icon-7.webp';
 import icon8 from '../../../assets/showcase/icon-8.webp';
 
 export const img = {
-  aliIso, eleleIso, sapanIso,
-  aliPhoto, elelePhoto, sapanPhoto,
+  masukIso, eleleIso, camogluIso,
+  masukPhoto, elelePhoto, camogluPhoto,
   skyline, cornerGolden, planningDesk, materials, lobby, redLines,
   icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8,
 };
@@ -169,12 +169,12 @@ export const corp = {
   portfolioIntro: 'Bugüne kadar tamamladığımız konut projelerinden.',
   buildings: [
     {
-      slug: 'ali',
+      slug: 'masuk-apartmani',
       name: 'Maşuk Apartmanı',
       blurb: 'Cam balkonlu, turuncu-beyaz cepheli modern konut.',
       meta: 'İSTANBUL · KONUT · TAMAMLANDI',
-      photo: aliPhoto,
-      iso: aliIso,
+      photo: masukPhoto,
+      iso: masukIso,
     },
     {
       slug: 'el-ele-apartmani',
@@ -185,12 +185,12 @@ export const corp = {
       iso: eleleIso,
     },
     {
-      slug: 'sapanbaglari',
+      slug: 'camoglu-apartmani',
       name: 'Çamoğlu Apartmanı',
       blurb: 'Beyaz-antrasit cepheli, kırmızı çatılı modern konut.',
       meta: 'İSTANBUL · KONUT · TAMAMLANDI',
-      photo: sapanPhoto,
-      iso: sapanIso,
+      photo: camogluPhoto,
+      iso: camogluIso,
     },
   ] as Building[],
 

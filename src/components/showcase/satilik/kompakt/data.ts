@@ -254,8 +254,8 @@ export interface Teaser {
   slug: string; // /projeler/<slug>
 }
 export const projeTeasers: Teaser[] = [
-  { ad: 'Maşuk Apartmanı', konum: 'Pendik, İstanbul', not: 'Tümü satıldı', slug: 'ali' },
-  { ad: 'Çamoğlu Apartmanı', konum: 'Pendik, İstanbul', not: 'Tümü satıldı', slug: 'sapanbaglari' },
+  { ad: 'Maşuk Apartmanı', konum: 'Pendik, İstanbul', not: 'Tümü satıldı', slug: 'masuk-apartmani' },
+  { ad: 'Çamoğlu Apartmanı', konum: 'Pendik, İstanbul', not: 'Tümü satıldı', slug: 'camoglu-apartmani' },
 ];
 
 /* ─── LİSTELEME SAYFASI (liste-ref.png) — dürüst envanter ───
@@ -269,7 +269,7 @@ export interface ListingUnit {
   tip: 'daire' | 'dubleks';
   baslik: string;
   proje: string;
-  projeKey: 'el-ele' | 'ali' | 'sapanbaglari';
+  projeKey: 'el-ele' | 'masuk' | 'camoglu';
   blokKat: string;
   oda: string;
   brut: number;
@@ -297,7 +297,7 @@ export const listing: ListingUnit[] = [
 export interface ListingProje {
   id: string;
   ad: string;
-  projeKey: 'el-ele' | 'ali' | 'sapanbaglari';
+  projeKey: 'el-ele' | 'masuk' | 'camoglu';
   konum: string;
   /** true → kartta kırmızı TÜMÜ SATILDI bandı */
   sold: boolean;
@@ -310,10 +310,10 @@ export interface ListingProje {
 export const listingProjeler: ListingProje[] = [
   { id: 'p-el-ele', ad: 'El Ele Apartmanı', projeKey: 'el-ele', konum: 'Pendik, İstanbul',
     sold: false, not: '2 satılık dubleks bu binada', rozet: '2 DAİRE SATILIK', slug: 'el-ele-apartmani' },
-  { id: 'p-ali', ad: 'Maşuk Apartmanı', projeKey: 'ali', konum: 'Pendik, İstanbul',
-    sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'ali' },
-  { id: 'p-sapanbaglari', ad: 'Çamoğlu Apartmanı', projeKey: 'sapanbaglari', konum: 'Pendik, İstanbul',
-    sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'sapanbaglari' },
+  { id: 'p-masuk', ad: 'Maşuk Apartmanı', projeKey: 'masuk', konum: 'Pendik, İstanbul',
+    sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'masuk-apartmani' },
+  { id: 'p-camoglu', ad: 'Çamoğlu Apartmanı', projeKey: 'camoglu', konum: 'Pendik, İstanbul',
+    sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'camoglu-apartmani' },
 ];
 
 /* Kat planı bandı — plan görselleri hazır değil; stilize şema + temsilî m².

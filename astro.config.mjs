@@ -14,6 +14,18 @@ export default defineConfig({
   site: SITE,
   base: '/',
   trailingSlash: 'ignore',
+  // Eski proje slug'ları (yayında linklenmiş olabilir) → gerçek bina adlarına.
+  // Statik çıktıda Astro bunlar için meta-refresh HTML sayfası üretir.
+  redirects: {
+    '/projeler/ali': '/projeler/masuk-apartmani',
+    '/projeler/sapanbaglari': '/projeler/camoglu-apartmani',
+    '/en/projeler/ali': '/en/projeler/masuk-apartmani',
+    '/en/projeler/sapanbaglari': '/en/projeler/camoglu-apartmani',
+    '/ru/projeler/ali': '/ru/projeler/masuk-apartmani',
+    '/ru/projeler/sapanbaglari': '/ru/projeler/camoglu-apartmani',
+    '/ar/projeler/ali': '/ar/projeler/masuk-apartmani',
+    '/ar/projeler/sapanbaglari': '/ar/projeler/camoglu-apartmani',
+  },
   // /showcases = dahili tasarım vitrini: sitemap dışı (sayfa ayrıca noindex).
   // /satilik-daireler = canlı ama fiyatlar TEMSİLÎ: gerçek satış verisi girilince
   // bu istisnayı ve features/Satilik*Page'deki noindex'i BİRLİKTE kaldır.
