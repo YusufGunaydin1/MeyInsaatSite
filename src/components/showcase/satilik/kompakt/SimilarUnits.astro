@@ -6,7 +6,7 @@
 */
 import { Image } from 'astro:assets';
 import { publicAsset, entry } from '../media';
-import { detay, projeTeasers, tl, unitById } from './data';
+import { detay, projeTeasers, RECENTLY_SOLD_LABEL, tl, unitById } from './data';
 import masukImg from '../../../../assets/projects/masuk-apartmani.webp';
 import camogluImg from '../../../../assets/projects/camoglu-apartmani.webp';
 
@@ -25,14 +25,17 @@ const kompaktBase = base + '/satilik-daireler/';
   <div class="kc-similar-grid">
     {d.benzerSira.map((id) => {
       const u = unitById(id)!;
+      const sold = u.durum === 'satildi';
       return (
-        <article class="kc-sim card">
-          <Image src={publicAsset(u.foto!)} alt={entry(u.foto!).alt} widths={[420, 720]} sizes="(min-width: 900px) 300px, 94vw" class="kc-sim-img" />
+        <article class:list={['kc-sim card', { 'is-sold': sold }]} data-testid={`kc-sim-unit-${u.id}`}>
+          <Image src={publicAsset(u.foto!)} alt={entry(u.foto!).alt} widths={[360, 640]} sizes="(min-width: 900px) 300px, calc(100vw - 3rem)" quality={74} loading="lazy" decoding="async" class="kc-sim-img" />
           <div class="kc-sim-body">
-            <p class="t-tech kc-sim-durum">MÜSAİT · {u.no}</p>
+            <p class:list={['t-tech kc-sim-durum', { 'is-sold': sold }]} data-testid={sold ? `kc-sim-status-${u.id}` : undefined}>
+              {sold ? RECENTLY_SOLD_LABEL : `MÜSAİT · ${u.no}`}
+            </p>
             <p class="kc-sim-ad">{u.tip} — {u.kat}</p>
             <p class="kc-sim-meta">Brüt {u.brut} m² · {u.cephe}</p>
-            <p class="kc-sim-fiyat tabular-nums">{tl(u.fiyat!)}</p>
+            {u.fiyat !== null && <p class="kc-sim-fiyat tabular-nums" data-testid={`kc-sim-price-${u.id}`}>{tl(u.fiyat)}</p>}
             <a class="kc-sim-cta" href={kompaktBase + u.detay} data-testid={`kc-sim-${u.detay}`}>Detaylı İncele</a>
           </div>
         </article>
@@ -40,7 +43,7 @@ const kompaktBase = base + '/satilik-daireler/';
     })}
     {projeTeasers.map((t) => (
       <article class="kc-sim card is-teaser">
-        <Image src={teaserImg[t.slug as keyof typeof teaserImg]} alt={t.ad} widths={[420, 720]} sizes="(min-width: 900px) 300px, 94vw" class="kc-sim-img" />
+        <Image src={teaserImg[t.slug as keyof typeof teaserImg]} alt={t.ad} widths={[360, 640]} sizes="(min-width: 900px) 300px, calc(100vw - 3rem)" quality={74} loading="lazy" decoding="async" class="kc-sim-img" />
         <div class="kc-sim-body">
           <p class="t-tech kc-sim-durum is-mute">{t.not.toUpperCase()}</p>
           <p class="kc-sim-ad">{t.ad}</p>
@@ -61,9 +64,11 @@ const kompaktBase = base + '/satilik-daireler/';
   }
   .kc-sim { overflow: hidden; display: flex; flex-direction: column; }
   .kc-sim-img { width: 100%; height: 150px; object-fit: cover; display: block; }
+  .kc-sim.is-sold .kc-sim-img { filter: grayscale(0.35); }
   .kc-sim.is-teaser .kc-sim-img { filter: saturate(0.7); }
   .kc-sim-body { padding: 0.75rem 0.9rem 0.9rem; display: flex; flex-direction: column; flex: 1; }
   .kc-sim-durum { color: var(--color-mey-teal-700); }
+  .kc-sim-durum.is-sold { color: var(--color-mey-red); }
   .kc-sim-durum.is-mute { color: var(--color-graphite-400); }
   .kc-sim-ad { margin-top: 0.3rem; font-weight: 600; color: var(--color-graphite-900); font-size: 0.9375rem; line-height: 1.3; }
   .kc-sim-meta { font-size: 0.8125rem; color: var(--color-graphite-400); }

@@ -5,7 +5,7 @@ slogan: "Çizdiğimizi inşa ederiz."
 sloganNote: "EN: We build what we draw."
 boilerplate: >-
   MEY İnşaat, 23 yıllık kurumsal geçmişe sahip MEY Grubu'nun inşaat markasıdır.
-  Grubun yıllar içinde inşa ettiği güven ve disiplini, 6 yıldır konut projelerine
+  Grubun yıllar içinde inşa ettiği güven ve disiplini, 2021'den bu yana konut projelerine
   taşıyor; İstanbul'da modern, sağlam ve zamanında teslim edilen apartmanlar üretiyoruz.
 ---
 
@@ -20,7 +20,7 @@ boilerplate: >-
 
 MEY İnşaat, **MEY Grubu**'nun inşaat alanındaki markasıdır. Grup, 23 yıl önce **MEY Kozmetik**
 ile kurumsal yolculuğuna başladı ve yıllar içinde kalite, güven ve sürdürülebilir büyüme üzerine
-kurulu bir iş kültürü oluşturdu. Son 6 yıldır bu birikimi inşaat sektörüne taşıyarak, İstanbul'da
+kurulu bir iş kültürü oluşturdu. 2021'den bu yana bu birikimi inşaat sektörüne taşıyarak, İstanbul'da
 konut projeleri geliştiriyoruz.
 
 İşimiz basit bir ilkeye dayanır: çizdiğimiz her projeyi, söz verdiğimiz kalitede ve zamanında inşa
@@ -29,11 +29,11 @@ içinde huzurla yaşanacak, değerini uzun yıllar koruyan binalar üretiyoruz.
 
 ## Hikayemiz
 
-Her şey 23 yıl önce, **MEY Kozmetik**'in kuruluşuyla başladı. [KURUCU ADI — PLACEHOLDER]
+Her şey 23 yıl önce, **MEY Kozmetik**'in kuruluşuyla başladı. **Yavuz Günaydın**
 öncülüğünde; doğru ürünü, tutarlı kalitede ve zamanında sunma ilkesiyle büyüyen grup, aynı
 disiplini zamanla farklı sektörlerde de uygulamanın yollarını aradı.
 
-6 yıl önce **MEY İnşaat**'ı kurduk. Amacımız açıktı: kozmetikte yıllar içinde kazandığımız güveni,
+2021 yılında **MEY İnşaat**'ı kurduk. Amacımız açıktı: kozmetikte yıllar içinde kazandığımız güveni,
 insanların hayatlarındaki en büyük yatırıma — konuta — taşımak. İlk projemizden bugüne
 [PROJE SAYISI — PLACEHOLDER] konut projesini hayata geçirdik ve her birinde aynı ilkeyi koruduk:
 çizdiğimizi inşa ederiz.

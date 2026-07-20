@@ -1,10 +1,11 @@
 ---
 /*
-  Direct channels — phone / WhatsApp / email links only, no form backend (settled).
-  Missing facts render as visible placeholders, never invented.
+  General company channels — landline and email only. The mobile call/WhatsApp
+  number is intentionally scoped to the for-sale experience.
 */
 import type { Locale } from '../lib/i18n';
 import { ui, company } from '../lib/content';
+import { contactNumber, telHref } from '../lib/contact';
 import PlaceholderChip from './PlaceholderChip.astro';
 
 interface Props {
@@ -14,19 +15,14 @@ interface Props {
 const { locale } = Astro.props;
 const t = ui(locale);
 const c = company.contact;
+const phone = contactNumber(c.phone);
 
 const channels = [
   {
     key: 'phone',
     label: t.contact.phone,
-    value: c.phone,
-    href: c.phone ? `tel:${String(c.phone).replace(/\s/g, '')}` : null,
-  },
-  {
-    key: 'whatsapp',
-    label: t.contact.whatsapp,
-    value: c.whatsapp,
-    href: c.whatsapp ? `https://wa.me/${String(c.whatsapp).replace(/\D/g, '')}` : null,
+    value: phone?.display,
+    href: telHref(c.phone),
   },
   {
     key: 'email',
@@ -37,7 +33,7 @@ const channels = [
 ];
 ---
 
-<div class="grid gap-px sm:grid-cols-3 bg-line border border-line rounded-brand overflow-hidden reveal">
+<div class="grid gap-px sm:grid-cols-2 bg-line border border-line rounded-brand overflow-hidden reveal">
   {channels.map((ch) =>
     ch.href ? (
       <a href={ch.href} class="bg-white p-5 hover:bg-concrete-100 transition-colors block">

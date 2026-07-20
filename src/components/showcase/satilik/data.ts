@@ -3,13 +3,14 @@
   ÜÇ tasarım yönü de (albüm / sergi / akşam) AYNI modeli kullanır; yalnız
   yerleşim ve register değişir (tek içerik kaynağı, dual-state yok).
 
-  GERÇEK BİLGİ DİSİPLİNİ: fiyat, m², kat, cephe, adres, tapu, ısıtma, otopark
+  GERÇEK BİLGİ DİSİPLİNİ: m², kat, cephe, adres, tapu, ısıtma, otopark
   tahsisi, teslim tarihi... ASLA uydurulmaz → `pending: true` ile işaretlenir ve
   arayüzde "Bilgi yakında" rozeti olarak çıkar. Gerçek bilgiler geldiğinde YALNIZ
   bu dosya güncellenir; sunum bileşenlerine dokunulmaz.
 
   Onaylı bilinenler: El Ele Apartmanı · Mey İnşaat (müteahhitten direkt satış) ·
-  2 daire · her ikisi 3+2 DUBLEKS · sıfır/yeni yapım. Fotoğrafların görsel olarak
+  iki 3+2 dubleks; Daire 1 yakın zamanda satıldı, Daire 2 satışta ve fiyatı
+  13.750.000 TL. Fotoğrafların görsel olarak
   desteklediği nitelikler (ferforje, iki mutfak, çatı terası, deniz görünümü vb.)
   betimleyici dille kullanılır; ölçü/mesafe iddiasına dönüştürülmez.
 */
@@ -73,11 +74,10 @@ export const daire1: Apartment = {
   facts: [
     { label: 'Oda düzeni', value: '3+2' },
     { label: 'Tip', value: 'Dubleks (iki kat)' },
-    { label: 'Durum', value: 'Sıfır — müteahhitten' },
+    { label: 'Durum', value: 'Yakın zamanda satıldı' },
     { label: 'Brüt / net alan', pending: true },
     { label: 'Bulunduğu kat', pending: true },
     { label: 'Cephe', pending: true },
-    { label: 'Fiyat', pending: true },
   ],
   sections: [
     {
@@ -180,11 +180,11 @@ export const daire2: Apartment = {
   facts: [
     { label: 'Oda düzeni', value: '3+2' },
     { label: 'Tip', value: 'Dubleks (iki kat)' },
-    { label: 'Durum', value: 'Sıfır — müteahhitten' },
+    { label: 'Durum', value: 'Satışta — sıfır' },
     { label: 'Brüt / net alan', pending: true },
     { label: 'Bulunduğu kat', pending: true },
     { label: 'Cephe', pending: true },
-    { label: 'Fiyat', pending: true },
+    { label: 'Fiyat', value: '13.750.000 TL' },
   ],
   sections: [
     {

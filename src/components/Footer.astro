@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { LOCALES, LOCALE_NAMES, localePath, type Locale } from '../lib/i18n';
 import { ui, company, companyContent } from '../lib/content';
+import { contactNumber, telHref } from '../lib/contact';
 import PlaceholderChip from './PlaceholderChip.astro';
 import logo from '../assets/brand/mey-logo-dark.png';
 
@@ -14,6 +15,8 @@ const { locale, path } = Astro.props;
 const t = ui(locale);
 const prose = companyContent(locale);
 const year = new Date().getFullYear();
+const phone = contactNumber(company.contact.phone);
+const phoneLink = telHref(company.contact.phone);
 
 const items = [
   { href: '/', label: t.nav.home },
@@ -55,8 +58,8 @@ const items = [
         <h2 class="t-tech text-concrete-100/50 mb-3">{t.footer.contact}</h2>
         <ul class="space-y-2 t-caption text-concrete-100/85">
           <li>
-            {company.contact.phone
-              ? <a href={`tel:${company.contact.phone}`} class="hover:text-white">{company.contact.phone}</a>
+            {phone && phoneLink
+              ? <a href={phoneLink} class="hover:text-white">{phone.display}</a>
               : <PlaceholderChip locale={locale} label={t.contact.phone} onDark />}
           </li>
           <li>
@@ -94,7 +97,7 @@ const items = [
     </div>
 
     <div class="border-t border-white/10 mt-12 pt-6 flex flex-wrap items-center justify-between gap-2">
-      <p class="t-tech text-concrete-100/50">© {year} {company.name} · {t.footer.rights}</p>
+      <p class="t-tech text-concrete-100/50">© {year} {company.legalName ?? company.name} · {t.footer.rights}</p>
       <p class="t-tech text-concrete-100/50">{prose?.frontmatter?.slogan}</p>
     </div>
   </div>

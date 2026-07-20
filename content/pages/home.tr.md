@@ -56,7 +56,7 @@ sections:
     eyebrow: "05 — NEDEN MEY"
     title: "Sözünü tutan bir grup"
     groupLabel: "YIL MEY GRUBU GÜVENCESİ"
-    constructionLabel: "YIL MEY İNŞAAT DENEYİMİ"
+    constructionLabel: "MEY İNŞAAT KURULUŞ YILI"
     points:
       - value: "TEK ELDEN"
         label: "ARSADAN ANAHTAR TESLİME"
@@ -65,5 +65,5 @@ sections:
   contact:
     eyebrow: "06 — İLETİŞİM"
     title: "Projenizi konuşalım"
-    intro: "Telefon, WhatsApp veya e-posta ile doğrudan ulaşın."
+    intro: "Telefon veya e-posta ile doğrudan ulaşın."
 ---

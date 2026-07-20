@@ -321,6 +321,20 @@
 .kcar-overlay-next { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
 .kcar-close { position: absolute; top: 1rem; right: 1rem; }
 
+@media (max-width: 640px) {
+  .kcg { gap: 0.75rem; }
+  .kcg-specside { padding: 0.75rem 0.8rem 0.85rem; }
+  .kcar-stage > img { aspect-ratio: 16 / 10; }
+  .kcar-btn { width: 2.75rem; height: 2.75rem; }
+  .kcar-prev { left: 0.35rem; }
+  .kcar-next { right: 0.35rem; }
+  .kcar-full { right: 0.35rem; bottom: 0.35rem; }
+  .kcar-count { left: 0.35rem; top: 0.35rem; }
+  .kcar-cap { margin-top: 0.35rem; }
+  .kcar-thumbs { margin-top: 0.35rem; gap: 0.3rem; }
+  .kcar-thumb img { width: 56px; height: 42px; }
+}
+
 /* ─── SaleListing (kl-) — liste-ref yerleşimi ─── */
 .kl {
   display: grid;
@@ -355,6 +369,7 @@
 .kl-tab:hover { border-color: var(--color-graphite-400); color: var(--color-graphite-900); }
 .kl-tab.is-active { background: var(--color-mey-red); border-color: var(--color-mey-red); color: #fff; }
 .kl-tab-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.kl-mobile-label { display: none; }
 .kl-ghost {
   display: inline-flex;
   align-items: center;
@@ -372,6 +387,7 @@
 }
 .kl-ghost:hover { border-color: var(--color-graphite-400); color: var(--color-graphite-900); }
 .kl-ghost.is-active { border-color: var(--color-mey-red); color: var(--color-mey-red); }
+.kl-ghost.kl-filter-toggle { display: none; }
 
 .kl-filters {
   margin-top: 0.6rem;
@@ -438,6 +454,7 @@
 /* img mutlak konumlu: akış içeriği kalmaz, kutu yüksekliği SADECE aspect-ratio'dan gelir
    (flex sütununda içerik min-yüksekliği 16/10'u sessizce eziyordu — kartlar düzensizdi) */
 .kl-card-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.kl-card.is-sold .kl-card-media img { filter: grayscale(35%); }
 .kl-badge {
   position: absolute;
   top: 0.55rem;
@@ -491,6 +508,7 @@
 .kl-card-stats em { font-style: normal; font-size: 0.6875rem; color: var(--color-graphite-400); }
 .kl-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-top: 0.7rem; }
 .kl-price { font-weight: 700; font-size: 1.05rem; color: var(--color-mey-red); }
+.kl-unit-status { font-size: 0.8125rem; font-weight: 600; color: var(--color-mey-red); }
 /* İlan CTA'sı kırmızı dolu (satış eylemi); proje kartları hayalet varyantla ayrışır */
 .kl-detail {
   font-size: 0.75rem;
@@ -532,6 +550,7 @@
   text-align: center;
   padding-block: 0.5rem;
 }
+.kl-unit-sold { font-size: 0.9rem; letter-spacing: 0.08em; }
 .kl-card-bina.is-sold .kl-card-media img { filter: grayscale(35%); }
 .kl-proje-not { font-size: 0.8125rem; color: var(--color-graphite-600); margin-top: 0.55rem; }
 .kl-card-bina .kl-card-foot { margin-top: auto; padding-top: 0.7rem; }
@@ -568,6 +587,7 @@
 .kl-compare-title { font-weight: 600; font-size: 0.875rem; color: #fff; line-height: 1.25; }
 .kl-compare-sub { font-size: 0.75rem; color: rgb(244 244 242 / 0.6); }
 .kl-compare-price { margin-top: 0.2rem; font-weight: 600; font-size: 0.875rem; color: var(--color-red-on-dark); }
+.kl-compare-status { margin-top: 0.2rem; font-weight: 600; font-size: 0.75rem; color: var(--color-red-on-dark); }
 .kl-compare-cta {
   width: 100%;
   margin-top: 0.7rem;
@@ -591,7 +611,7 @@
 .kl-quick-sub { color: var(--color-graphite-400); margin-block: 0.2rem 0.6rem; }
 .kl-quick .kcf { border: none; padding: 0; }
 .kl-quick-lines { margin-top: 0.8rem; display: flex; flex-direction: column; gap: 0.4rem; }
-.kl-quick-lines button {
+.kl-quick-lines a {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -603,11 +623,72 @@
   padding: 0;
   cursor: pointer;
 }
-.kl-quick-lines button:hover { color: var(--color-mey-red); }
+.kl-quick-lines a:hover { color: var(--color-mey-red); }
 
 @media (max-width: 1023px) {
   .kl { grid-template-columns: minmax(0, 1fr); }
   .kl-rail { position: static; }
+}
+
+@media (max-width: 640px) {
+  .kl-tabs-row { gap: 0.4rem; padding: 0.45rem; }
+  .kl-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.3rem;
+    width: 100%;
+  }
+  .kl-tab {
+    min-height: 40px;
+    padding: 0.4rem 0.2rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+  .kl-tab-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.3rem;
+    width: 100%;
+  }
+  .kl-tab-actions .kl-ghost {
+    justify-content: center;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0.4rem 0.25rem;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+  .kl-desktop-label { display: none; }
+  .kl-mobile-label { display: inline-flex; }
+  .kl-ghost.kl-filter-toggle { display: inline-flex; }
+  .kl-filters { display: none; }
+  .kl-filters.is-open {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.45rem;
+    padding: 0.65rem;
+  }
+  .kl-filters .kx-field { min-width: 0; width: 100%; }
+  .kl-clear { grid-column: 1 / -1; min-height: 40px; }
+  .kl-results-row { flex-wrap: nowrap; gap: 0.45rem; margin-top: 0.5rem; }
+  .kl-count { flex-shrink: 0; font-size: 0.8125rem; }
+  .kl-sort { min-width: 0; margin-inline-start: auto; }
+  .kl-sort-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .kl-sort select { min-width: 0; max-width: 190px; width: 100%; font-size: 0.75rem; }
+  .kl-grid { margin-top: 0.55rem; gap: 0.7rem; grid-template-columns: minmax(0, 1fr); }
+  .kl-card-media { aspect-ratio: 16 / 9; }
+  .kl-card-body { padding: 0.65rem 0.7rem 0.75rem; }
+  .kl-card-stats { margin-top: 0.5rem; padding-block: 0.45rem; }
+  .kl-card-stats svg { width: 14px; height: 14px; }
+  .kl-card-foot { margin-top: 0.55rem; }
+  .kl-price { font-size: 1rem; }
+  .kl-unit-sold { font-size: 0.8rem; }
+  .kl-detail { display: inline-flex; align-items: center; min-height: 40px; padding: 0.4rem 0.6rem; }
+  .kl-heart { width: 40px; height: 40px; padding: 0; align-items: center; justify-content: center; }
+  .kl-rail { gap: 0.7rem; }
+  .kl-compare, .kl-quick { padding: 0.75rem 0.8rem 0.85rem; }
 }
 
 /* ─── RailForm (kcf-) ─── */

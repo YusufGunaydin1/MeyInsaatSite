@@ -14,7 +14,7 @@ import SoonDialog from '../../../../components/showcase/satilik/kompakt/SoonDial
 import UnitsExplorer, { type ExplorerItem } from '../../../../components/showcase/satilik/kompakt/UnitsExplorer.tsx';
 import RailForm from '../../../../components/showcase/satilik/kompakt/RailForm.tsx';
 import { cardImage } from '../../../../components/showcase/satilik/kompakt/assets.ts';
-import { units, tl, projeTeasers } from '../../../../components/showcase/satilik/kompakt/data.ts';
+import { RECENTLY_SOLD_LABEL, units, tl, projeTeasers } from '../../../../components/showcase/satilik/kompakt/data.ts';
 import { publicAsset, entry } from '../../../../components/showcase/satilik/media.ts';
 import masukImg from '../../../../assets/projects/masuk-apartmani.webp';
 import camogluImg from '../../../../assets/projects/camoglu-apartmani.webp';
@@ -30,11 +30,11 @@ const hero = { img: publicAsset(heroKey), alt: entry(heroKey).alt };
 const yasamKeys = ['daire-1/d1-salon-alt.png', 'daire-2/d2-mutfak-alt.png'];
 const yasam = yasamKeys.map((k) => ({ img: publicAsset(k), alt: entry(k).alt }));
 
-/* Vitrin: yalnız GERÇEK satılık iki dubleks fiyat taşır; diğer projeler teaser. */
-const musait = units.filter((u) => u.durum === 'musait');
+/* Vitrin: iki gerçek dubleksin güncel durumunu gösterir; yalnız D-12 fiyat taşır. */
+const featuredUnits = units.filter((u) => u.apartmentId);
 const items: ExplorerItem[] = [
   ...(await Promise.all(
-    musait.map(async (u): Promise<ExplorerItem> => ({
+    featuredUnits.map(async (u): Promise<ExplorerItem> => ({
       id: u.id,
       kind: 'unit',
       proje: 'el-ele',
@@ -46,8 +46,9 @@ const items: ExplorerItem[] = [
       oda: u.oda,
       brut: u.brut,
       fiyatText: u.fiyat ? tl(u.fiyat) : undefined,
-      durum: 'musait',
-      badge: u.badge,
+      durum: u.durum,
+      statusLabel: u.durum === 'satildi' ? RECENTLY_SOLD_LABEL : undefined,
+      badge: u.durum === 'satildi' ? undefined : u.badge,
       href: `${kompakt}/${u.detay}`,
       cta: 'Detaylı İncele',
       img: u.foto ? await cardImage(u.foto) : undefined,
@@ -112,7 +113,7 @@ const onerilen = [
   <!-- SEKMELER + FİLTRE + KART VİTRİNİ -->
   <section class="container-site kcb-vitrin" id="vitrin" aria-label="Satılık daire vitrini">
     <div class="kcb-vitrin-head">
-      <h2 class="kc-h2">En güncel satılık daireler</h2>
+      <h2 class="kc-h2">Güncel daire durumu</h2>
       <MockChip />
     </div>
     <UnitsExplorer client:load mode="b" items={items} />

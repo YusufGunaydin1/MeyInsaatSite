@@ -5,7 +5,7 @@ slogan: "We build what we draw."
 sloganNote: "TR: Çizdiğimizi inşa ederiz."
 boilerplate: >-
   MEY İnşaat is the construction brand of MEY Group, which has a 23-year
-  corporate history. For 6 years we have carried the trust and discipline the
+  corporate history. Since 2021, we have carried the trust and discipline the
   group built over those years into residential projects: modern, solid
   apartment buildings in Istanbul, delivered on time.
 ---
@@ -21,7 +21,7 @@ boilerplate: >-
 
 MEY İnşaat is the construction brand of **MEY Group**. The group began its corporate journey
 23 years ago with **MEY Kozmetik** and, over the years, built a work culture founded on quality,
-trust, and sustainable growth. For the past 6 years we have carried that experience into the
+trust, and sustainable growth. Since 2021, we have carried that experience into the
 construction sector, developing residential projects in Istanbul.
 
 Our work rests on a simple principle: to build every project we draw, at the quality we promise
@@ -32,11 +32,11 @@ their value for many years.
 ## Our Story
 
 Everything began 23 years ago with the founding of **MEY Kozmetik**. Led by
-[FOUNDER NAME — PLACEHOLDER], the group grew on the principle of delivering the right product,
+**Yavuz Günaydın**, the group grew on the principle of delivering the right product,
 at consistent quality, on time — and over time it looked for ways to apply the same discipline
 in other sectors.
 
-6 years ago we founded **MEY İnşaat**. Our aim was clear: to carry the trust we had earned over
+We founded **MEY İnşaat** in 2021. Our aim was clear: to carry the trust we had earned over
 years in cosmetics into the largest investment in people's lives — their home. From our first
 project to today, we have completed [NUMBER OF PROJECTS — PLACEHOLDER] residential projects,
 and in every one of them we have kept the same principle: we build what we draw.

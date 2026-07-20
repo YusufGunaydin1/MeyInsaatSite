@@ -2,12 +2,13 @@
 /*
   CONTACT CTA — the page's closing gesture: MEY's red architectural lines on the
   dark theatre, a large title + channel row + primary/ghost actions. Contact
-  facts come from company.json (null → visible placeholder, never invented);
-  copy from content/pages/home.<loc>.md (sections.contact) + ui labels.
+  facts come from company.json; only missing facts render a visible placeholder.
+  Copy comes from content/pages/home.<loc>.md (sections.contact) + ui labels.
 */
 import { Image } from 'astro:assets';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui, company, pageContent } from '../lib/content';
+import { contactNumber, telHref } from '../lib/contact';
 import PlaceholderChip from './PlaceholderChip.astro';
 import redLines from '../assets/photos/red-architectural-lines.webp';
 
@@ -19,17 +20,13 @@ const { locale } = Astro.props;
 const t = ui(locale);
 const s = pageContent('home', locale)?.frontmatter?.sections?.contact ?? {};
 const c = company.contact;
+const phone = contactNumber(c.phone);
 
 const channels = [
   {
     label: t.contact.phone,
-    value: c.phone,
-    href: c.phone ? `tel:${String(c.phone).replace(/\s/g, '')}` : null,
-  },
-  {
-    label: t.contact.whatsapp,
-    value: c.whatsapp,
-    href: c.whatsapp ? `https://wa.me/${String(c.whatsapp).replace(/\D/g, '')}` : null,
+    value: phone?.display,
+    href: telHref(c.phone),
   },
   {
     label: t.contact.email,

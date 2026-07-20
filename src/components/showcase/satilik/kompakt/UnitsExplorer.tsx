@@ -28,6 +28,7 @@ export interface ExplorerItem {
   brut?: number;
   fiyatText?: string;
   durum?: 'musait' | 'satildi';
+  statusLabel?: string;
   badge?: string;
   href?: string;
   cta?: string;
@@ -205,7 +206,7 @@ export default function UnitsExplorer({ mode, items }: Props) {
               {it.badge && <span className="kx-badge">{it.badge}</span>}
               {it.durum && (
                 <span className={`kx-durum is-${it.durum}`}>
-                  {it.durum === 'musait' ? 'MÜSAİT' : 'SATILDI'}
+                  {it.statusLabel ?? (it.durum === 'musait' ? 'MÜSAİT' : 'SATILDI')}
                 </span>
               )}
             </div>
@@ -218,7 +219,7 @@ export default function UnitsExplorer({ mode, items }: Props) {
               {it.fiyatText ? (
                 <p className="kx-card-fiyat">{it.fiyatText}</p>
               ) : (
-                <p className="kx-card-fiyat is-mute">{it.kind === 'teaser' ? '—' : 'Satıldı'}</p>
+                <p className="kx-card-fiyat is-mute">{it.kind === 'teaser' ? '—' : (it.statusLabel ?? 'Satıldı')}</p>
               )}
               {it.href ? (
                 <a className="kx-card-cta" href={it.href} data-testid={`kx-cta-${it.id}`}>

@@ -1,11 +1,13 @@
 ---
 /*
-  Yapışkan sağ ray — satış ofisi kartı (gerçek telefon yayınlanana dek dürüst
-  "yakında" düğmeleri), Hızlı Bilgi Alın mini formu (mock), belge bağlantıları
-  ve güven kalemleri. İki detay dizilimi aynı bileşeni farklı seçeneklerle kullanır.
+  Yapışkan sağ ray — for-sale alanına özel telefon/WhatsApp, Hızlı Bilgi Alın
+  mini formu, belge bağlantıları ve güven kalemleri. İki detay dizilimi aynı
+  bileşeni farklı seçeneklerle kullanır.
 */
 import Icon from './Icon.astro';
 import RailForm from './RailForm.tsx';
+import { company } from '../../../../lib/content';
+import { contactNumber, telHref, whatsappHref } from '../../../../lib/contact';
 
 interface Props {
   konu: string;
@@ -16,6 +18,10 @@ interface Props {
   alarm?: boolean;
 }
 const { konu, base, docs = false, alarm = false } = Astro.props;
+const salesPhone = contactNumber(company.salesContact.phone);
+const salesWhatsapp = contactNumber(company.salesContact.whatsapp);
+const salesPhoneHref = telHref(company.salesContact.phone);
+const salesWhatsappHref = whatsappHref(company.salesContact.whatsapp);
 
 const docList = ['Proje Broşürü', 'Kat Planı', 'Teknik Şartname'];
 const trust = [
@@ -28,12 +34,16 @@ const trust = [
 <aside class="kc-rail" data-testid="kc-rail">
   <div class="kc-rail-office theatre">
     <p class="t-tech kc-rail-kicker">MEY İNŞAAT · SATIŞ OFİSİ</p>
-    <button type="button" class="kc-rail-btn" data-soon="Satış hattı" data-testid="kc-rail-phone">
-      <Icon name="phone" size={17} /> Satış hattı — yakında
-    </button>
-    <button type="button" class="kc-rail-btn" data-soon="WhatsApp hattı">
-      <Icon name="chat" size={17} /> WhatsApp — yakında
-    </button>
+    {salesPhone && salesPhoneHref && (
+      <a class="kc-rail-btn" href={salesPhoneHref} data-testid="kc-rail-phone">
+        <Icon name="phone" size={17} /> {salesPhone.display}
+      </a>
+    )}
+    {salesWhatsapp && salesWhatsappHref && (
+      <a class="kc-rail-btn" href={salesWhatsappHref} data-testid="kc-rail-whatsapp">
+        <Icon name="chat" size={17} /> WhatsApp · {salesWhatsapp.display}
+      </a>
+    )}
     <a class="kc-rail-btn is-solid" href={base + '/iletisim'}>
       <Icon name="mail" size={17} /> Mesaj Gönder
     </a>
@@ -51,7 +61,7 @@ const trust = [
       <ul>
         {docList.map((d) => (
           <li>
-            <button type="button" class="kc-rail-doc" data-soon={d}>
+            <button type="button" class="kc-rail-doc" data-soon={d} data-testid="kc-rail-doc">
               <Icon name="doc" size={17} /> <span>{d}</span>
               <span class="t-tech kc-rail-doc-tag">YAKINDA</span>
             </button>

@@ -56,7 +56,7 @@ sections:
     eyebrow: "05 — WHY MEY"
     title: "A group that keeps its word"
     groupLabel: "YEARS OF MEY GROUP TRUST"
-    constructionLabel: "YEARS OF MEY İNŞAAT EXPERIENCE"
+    constructionLabel: "MEY İNŞAAT FOUNDED"
     points:
       - value: "TURNKEY"
         label: "FROM LAND TO KEYS"
@@ -65,5 +65,5 @@ sections:
   contact:
     eyebrow: "06 — CONTACT"
     title: "Let's talk about your project"
-    intro: "Reach us directly by phone, WhatsApp, or email."
+    intro: "Reach us directly by phone or email."
 ---

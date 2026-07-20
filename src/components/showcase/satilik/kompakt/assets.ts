@@ -21,10 +21,14 @@ export interface CarouselItem extends FlatImage {
   thumb: string;
 }
 
-async function widthSet(img: Parameters<typeof getImage>[0]['src'], widths: number[]) {
+async function widthSet(
+  img: Parameters<typeof getImage>[0]['src'],
+  widths: number[],
+  quality: number
+) {
   const out: { src: string; w: number }[] = [];
   for (const width of widths) {
-    const g = await getImage({ src: img, width, format: 'webp' });
+    const g = await getImage({ src: img, width, format: 'webp', quality });
     out.push({ src: g.src, w: width });
   }
   return out;
@@ -33,7 +37,7 @@ async function widthSet(img: Parameters<typeof getImage>[0]['src'], widths: numb
 /** Kart görseli: ~400px kolonda keskin, 2x dahil. */
 export async function cardImage(key: string): Promise<FlatImage> {
   const { img, alt } = shot(key);
-  const set = await widthSet(img, [480, 880]);
+  const set = await widthSet(img, [400, 720], 74);
   return {
     src: set[0].src,
     srcset: set.map((v) => `${v.src} ${v.w}w`).join(', '),
@@ -46,11 +50,11 @@ export async function cardImage(key: string): Promise<FlatImage> {
 /** Karusel karesi: büyük sahne + küçük şerit küçük resmi + tam ekran. */
 export async function carouselItem(key: string): Promise<CarouselItem> {
   const { img, alt, caption } = shot(key);
-  const main = await widthSet(img, [880, 1440]);
-  const thumb = await getImage({ src: img, width: 200, format: 'webp' });
+  const main = await widthSet(img, [480, 880, 1440], 76);
+  const thumb = await getImage({ src: img, width: 144, format: 'webp', quality: 68 });
   return {
     key,
-    src: main[main.length - 1].src,
+    src: main[1].src,
     srcset: main.map((v) => `${v.src} ${v.w}w`).join(', '),
     width: img.width,
     height: img.height,

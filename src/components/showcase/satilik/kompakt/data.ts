@@ -1,18 +1,18 @@
 /*
   SATILIK DAİRELER — KOMPAKT yön: merkezi TEMSİLÎ (mock) sayı modeli.
-  Referans mocklar sayısal yoğunluk ister (fiyat, m², kat, mesafe, ödeme planı);
-  gerçek satış bilgisi henüz yayınlanmadığından BURADAKİ HER SAYI temsilîdir ve
-  `mock: true` ile işaretlidir. Sayfa başına TEK "Temsilî veriler" çipi bunu
-  görünür kılar (MockChip). Gerçek bilgiler geldiğinde YALNIZ bu dosya güncellenir.
+  Satış durumu ve D-12 fiyatı doğrulanmıştır; m², kat, mesafe ve ödeme planı gibi
+  kalan sayısal alanlar `mock: true` ile işaretlidir. Sayfa başına TEK temsilî
+  veri çipi bu ayrımı görünür kılar (MockChip).
 
   Gerçek (uydurma OLMAYAN) çekirdek ../data.ts'ten gelir: El Ele Apartmanı,
-  Mey İnşaat, 2 satılık daire, ikisi de 3+2 dubleks, sıfır. Matris bu gerçeği
-  korur: yalnız iki dubleks MÜSAİT, diğer tüm daireler SATILDI/–.
+  Mey İnşaat ve iki 3+2 dubleks gerçektir: D-11 yakın zamanda satıldı; D-12
+  13.750.000 TL fiyatla satıştadır. Matris aynı durumu tek kaynaktan taşır.
 */
 import { daire1, daire2, building } from '../data';
 
 export const MOCK = true;
-export const MOCK_NOTICE = 'Temsilî veriler — satış bilgisi yayınlanınca güncellenecek';
+export const MOCK_NOTICE = 'm² ve ödeme verileri temsilîdir — teyit edilecektir';
+export const RECENTLY_SOLD_LABEL = 'YAKIN ZAMANDA SATILDI';
 
 export const tl = (n: number) => n.toLocaleString('tr-TR') + ' TL';
 
@@ -31,8 +31,8 @@ export const proje = {
 };
 
 /* ─── Daire envanteri ───
-   Gerçek: D-11 = Daire 1, D-12 = Daire 2 (müsait). Kalan 8 daire temsilî
-   doluluk — satılmış gösterilir, fiyat taşımaz, karta İncele bağlanmaz. */
+   Gerçek: D-11 = yakın zamanda satıldı; D-12 = 13.750.000 TL ve müsait.
+   Kalan 8 daire temsilî doluluk — satılmış gösterilir, fiyat taşımaz. */
 export type Durum = 'musait' | 'rezerve' | 'satildi';
 
 export interface KUnit {
@@ -61,13 +61,13 @@ export interface KUnit {
 export const units: KUnit[] = [
   {
     id: 'd11', mock: true, apartmentId: 'daire-1', no: 'D-11', kat: '5.–6. Kat', katKey: '5-6',
-    tip: '3+2 Dubleks', oda: '3+2', brut: 182, net: 148, fiyat: 14_900_000, durum: 'musait',
-    cephe: 'Deniz — teras katı', badge: 'DENİZ MANZARALI', foto: 'daire-1/d1-salon-alt.png', detay: 'daire-1',
+    tip: '3+2 Dubleks', oda: '3+2', brut: 182, net: 148, fiyat: null, durum: 'satildi',
+    cephe: 'Deniz — teras katı', badge: RECENTLY_SOLD_LABEL, foto: 'daire-1/d1-salon-alt.png', detay: 'daire-1',
   },
   {
     id: 'd12', mock: true, apartmentId: 'daire-2', no: 'D-12', kat: '5.–6. Kat', katKey: '5-6',
     tip: '3+2 Dubleks', oda: '3+2', brut: 176, net: 143, fiyat: 13_750_000, durum: 'musait',
-    cephe: 'Çatı avlusu — şehir', badge: 'SON 2 DAİRE', foto: 'daire-2/d2-salon-ust-1.png', detay: 'daire-2',
+    cephe: 'Çatı avlusu — şehir', badge: 'SON DAİRE', foto: 'daire-2/d2-salon-ust-1.png', detay: 'daire-2',
   },
   ...([
     ['d41', 'D-8', '4. Kat', '4', 'Güney'], ['d42', 'D-7', '4. Kat', '4', 'Kuzey'],
@@ -81,6 +81,8 @@ export const units: KUnit[] = [
 ];
 
 export const unitById = (id: string) => units.find((u) => u.id === id);
+export const satistakiDaireler = units.filter((u) => u.apartmentId && u.durum === 'musait');
+export const satistakiDaireSayisi = satistakiDaireler.length;
 
 /* ─── Müsaitlik matrisi (kat × daire) ─── */
 export interface MatrixCell {
@@ -96,11 +98,11 @@ export interface MatrixRow {
 export const matris: { rows: MatrixRow[]; legend: { durum: Durum; label: string }[] } = {
   rows: [
     { kat: 'ÇATI', cells: [
-      { label: 'D-11 üst kat', sub: 'teras', durum: 'musait' },
+      { label: 'D-11 üst kat', sub: 'teras', durum: 'satildi' },
       { label: 'D-12 üst kat', sub: 'teras', durum: 'musait' },
     ] },
     { kat: '5. KAT', cells: [
-      { label: 'D-11', sub: '3+2 dubleks', durum: 'musait' },
+      { label: 'D-11', sub: '3+2 dubleks', durum: 'satildi' },
       { label: 'D-12', sub: '3+2 dubleks', durum: 'musait' },
     ] },
     { kat: '4. KAT', cells: [
@@ -161,8 +163,8 @@ export interface Tip {
   adet: string;
 }
 export const tipler: Tip[] = [
-  { ad: '3+2 Dubleks', ozet: 'İki kat, iki salon, teras', m2: '176–182 m² brüt',
-    fiyatText: tl(13_750_000) + '’den', durum: 'musait', adet: '2 daire müsait' },
+  { ad: '3+2 Dubleks', ozet: 'İki kat, iki salon, teras', m2: '176 m² brüt',
+    fiyatText: tl(13_750_000), durum: 'musait', adet: `${satistakiDaireSayisi} daire müsait` },
   { ad: '3+1', ozet: 'Tek kat aile dairesi', m2: '128 m² brüt',
     fiyatText: 'Tümü teslim edildi', durum: 'tukendi', adet: '8 daire — satıldı' },
 ];
@@ -182,7 +184,7 @@ function commonSpecs(u: KUnit): SpecItem[] {
     { label: 'Isıtma', value: 'Kombi (doğalgaz)' },
     { label: 'Otopark', value: 'Kapalı otopark' },
     { label: 'Eşyalı', value: 'Hayır' },
-    { label: 'Kullanım Durumu', value: 'Boş — teslime hazır' },
+    { label: 'Kullanım Durumu', value: u.durum === 'satildi' ? 'Yakın zamanda satıldı' : 'Boş — teslime hazır' },
     { label: 'Tapu Durumu', value: 'Kat mülkiyeti' },
     { label: 'Krediye Uygun', value: 'Evet' },
     { label: 'Takas', value: 'Hayır' },
@@ -239,13 +241,13 @@ export const odaOlculeriD2: { grup: string; odalar: SpecItem[] }[] = [
 /* ─── SSS ─── */
 export const sss: { soru: string; cevap: string }[] = [
   { soru: 'Daireler hemen teslim mi?',
-    cevap: 'Evet — bina tamamlandı, iki dubleks de sıfır ve boş; tapu işlemleriyle birlikte teslim edilir.' },
+    cevap: 'Satıştaki D-12 sıfır ve boştur; tapu işlemleriyle birlikte teslim edilir. D-11 yakın zamanda satılmıştır.' },
   { soru: 'Konut kredisi kullanılabilir mi?',
     cevap: 'Kat mülkiyetli sıfır konutlar kredi kullanımına uygundur; oran ve vade bankanıza göre değişir.' },
   { soru: 'Aracı komisyonu var mı?',
     cevap: 'Hayır. Daireler binayı yapan Mey İnşaat’tan doğrudan satın alınır; süreç tek muhatapla ilerler.' },
   { soru: 'Daireyi yerinde görebilir miyim?',
-    cevap: 'Evet — formdan randevu bırakın, size uyan saatte gezdirelim. İki daire de gezilebilir durumda.' },
+    cevap: 'Evet — formdan randevu bırakın, satıştaki D-12’yi size uyan saatte gezdirelim.' },
 ];
 
 /* ─── Benzer daireler / proje teaser kartları ─── */
@@ -261,7 +263,7 @@ export const projeTeasers: Teaser[] = [
 ];
 
 /* ─── LİSTELEME SAYFASI (liste-ref.png) — dürüst envanter ───
-   Izgara = 2 gerçek ilan (El Ele dubleksleri, detaya gider) + 3 proje kartı
+   Izgara = 2 gerçek daire kaydı (D-11 satıldı, D-12 satışta) + 3 proje kartı
    (listingProjeler). Ali ve Çamoğlu Apartmanı'nda satılık daire YOK (gerçek durum) —
    kırmızı TÜMÜ SATILDI bandı taşır, proje sayfasına çıkar. Uydurma ilan üretme:
    önceki temsilî Ali/Çamoğlu Apartmanı satırları bu yüzden silindi. */
@@ -279,7 +281,8 @@ export interface ListingUnit {
   balkon: number;
   kat: string;
   katKey: '1' | '2' | '3' | '4' | '5-6';
-  fiyat: number;
+  fiyat: number | null;
+  durum: Durum;
   badge?: string;
   /** El Ele gerçek daireleri: manifest anahtarı + detay sayfası */
   imgKey?: string;
@@ -288,11 +291,11 @@ export interface ListingUnit {
 
 export const listing: ListingUnit[] = [
   { id: 'd11', mock: true, tip: 'dubleks', baslik: '3+2 Dubleks', proje: 'El Ele Apartmanı', projeKey: 'el-ele',
-    blokKat: 'A Blok · 5.–6. Kat', oda: '3+2', brut: 182, banyo: 2, balkon: 2, kat: '5.–6. Kat', katKey: '5-6',
-    fiyat: 14_900_000, badge: 'YENİ', imgKey: 'daire-1/d1-salon-alt.png', detay: 'daire-1' },
+    blokKat: 'A Blok · 5.–6. Kat', oda: units[0].oda, brut: units[0].brut, banyo: 2, balkon: 2, kat: units[0].kat, katKey: units[0].katKey,
+    fiyat: units[0].fiyat, durum: units[0].durum, badge: units[0].badge, imgKey: units[0].foto, detay: units[0].detay },
   { id: 'd12', mock: true, tip: 'dubleks', baslik: '3+2 Dubleks', proje: 'El Ele Apartmanı', projeKey: 'el-ele',
-    blokKat: 'A Blok · 5.–6. Kat', oda: '3+2', brut: 176, banyo: 2, balkon: 2, kat: '5.–6. Kat', katKey: '5-6',
-    fiyat: 13_750_000, badge: 'SON 2 DAİRE', imgKey: 'daire-2/d2-salon-ust-1.png', detay: 'daire-2' },
+    blokKat: 'A Blok · 5.–6. Kat', oda: units[1].oda, brut: units[1].brut, banyo: 2, balkon: 2, kat: units[1].kat, katKey: units[1].katKey,
+    fiyat: units[1].fiyat, durum: units[1].durum, badge: units[1].badge, imgKey: units[1].foto, detay: units[1].detay },
 ];
 
 /* Proje kartları — sayı içermez, durumları gerçektir (mock kapsamı dışı). */
@@ -311,7 +314,7 @@ export interface ListingProje {
 
 export const listingProjeler: ListingProje[] = [
   { id: 'p-el-ele', ad: 'El Ele Apartmanı', projeKey: 'el-ele', konum: 'Pendik, İstanbul',
-    sold: false, not: '2 satılık dubleks bu binada', rozet: '2 DAİRE SATILIK', slug: 'el-ele-apartmani' },
+    sold: false, not: `${satistakiDaireSayisi} satılık dubleks bu binada`, rozet: `${satistakiDaireSayisi} DAİRE SATILIK`, slug: 'el-ele-apartmani' },
   { id: 'p-masuk', ad: 'Maşuk Apartmanı', projeKey: 'masuk', konum: 'Pendik, İstanbul',
     sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'masuk-apartmani' },
   { id: 'p-camoglu', ad: 'Çamoğlu Apartmanı', projeKey: 'camoglu', konum: 'Pendik, İstanbul',

@@ -15,6 +15,7 @@
   Bina görselleri AI-render'dir (gerçek foto değil) → "temsilî" notu korunur.
 */
 import type { ImageMetadata } from 'astro';
+import { company } from '../../../lib/content';
 
 // Şeffaf aksonometri render'ler (çizim katmanı)
 import masukIso from '../../../assets/projects/masuk-apartmani-izometrik.webp';
@@ -78,18 +79,18 @@ export interface Building {
 
 export const corp = {
   eyebrow: 'KURUMSAL',
-  coord: 'MEY GRUBU · 23 YIL · İNŞAAT: 6 YIL',
+  coord: 'MEY GRUBU · 23 YIL · MEY İNŞAAT: 2021',
   slogan: 'Çizdiğimizi inşa ederiz.',
   lead:
     'MEY İnşaat, 23 yıllık MEY Grubu’nun konut markasıdır. Grubun kozmetikte ' +
-    'kazandığı güveni ve disiplini 6 yıldır İstanbul’da apartmanlara taşıyoruz — ' +
+    'kazandığı güveni ve disiplini 2021’den bu yana İstanbul’da apartmanlara taşıyoruz — ' +
     'çizdiğimiz projeyi, söz verdiğimiz kalitede ve zamanında.',
 
   whoTitle: 'Biz Kimiz',
   who: [
     'MEY İnşaat, MEY Grubu’nun inşaat markasıdır. Grup 23 yıl önce MEY Kozmetik ile ' +
       'kuruldu; kalite, güven ve sürdürülebilir büyüme üzerine bir iş kültürü oluşturdu. ' +
-      'Bu birikimi son 6 yıldır inşaata taşıyoruz.',
+      'Bu birikimi 2021’den bu yana inşaata taşıyoruz.',
     'İşimiz tek bir ilkeye dayanır: çizdiğimiz her projeyi, söz verdiğimiz kalitede ve ' +
       'zamanında inşa etmek. Modern yapı teknikleri, seçilmiş malzemeler ve baştan sona ' +
       'şeffaf bir süreçle; huzurla yaşanan, değerini uzun yıllar koruyan binalar üretiriz.',
@@ -103,12 +104,11 @@ export const corp = {
       title: 'MEY Kozmetik',
       text:
         'Grubun kurumsal yolculuğu, doğru ürünü tutarlı kalitede ve zamanında sunma ' +
-        'ilkesiyle başladı. Öncü isim:',
-      pending: 'Kurucu',
+        `ilkesiyle başladı. Kurucumuz ${company.founder}.`,
     },
     {
       no: '02',
-      tag: '6 YIL ÖNCE',
+      tag: '2021',
       title: 'MEY İnşaat',
       text:
         'Kozmetikte yıllar içinde kazanılan güveni, insanların hayatındaki en büyük ' +

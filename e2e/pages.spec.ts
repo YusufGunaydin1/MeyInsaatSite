@@ -32,6 +32,12 @@ for (const locale of LOCALES) {
       // bare `footer` locator now matches two elements — target the page footer.
       await expect(page.getByRole('contentinfo')).toBeVisible();
 
+      if (route !== '/satilik-daireler') {
+        await expect(page.locator('body')).not.toContainText('+90 532 625 68 12');
+        await expect(page.locator('a[href="tel:+905326256812"]')).toHaveCount(0);
+        await expect(page.locator('a[href="https://wa.me/905326256812"]')).toHaveCount(0);
+      }
+
       // Prove images the user sees actually load (naturalWidth > 0), not just URLs in DOM.
       // The scrub poster is excluded: it flips to hidden when the canvas takes over
       // (it has its own dedicated test) and a live :visible locator would go stale.
@@ -59,9 +65,25 @@ test('language switcher navigates to same route in other locale', async ({ page 
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });
 
-test('placeholders are visibly flagged, never fake facts', async ({ page }) => {
+test('confirmed company identity appears on every corporate locale', async ({ page }) => {
+  for (const prefix of ['', '/en', '/ru', '/ar']) {
+    await page.goto(u(`${prefix}/kurumsal`));
+    await expect(page.locator('main')).toContainText('Yavuz Günaydın');
+    await expect(page.locator('main')).toContainText('2021');
+    await expect(page.getByRole('contentinfo')).toContainText('MEY İnşaat');
+  }
+});
+
+test('general contact publishes the office details without leaking sales contacts', async ({ page }) => {
   await page.goto(u('/iletisim'));
-  // No invented phone/email: placeholder chips render instead.
-  const chips = page.locator('main span', { hasText: /Bilgi bekleniyor/ });
-  expect(await chips.count()).toBeGreaterThan(0);
+  const main = page.locator('main');
+  await expect(main.locator('a[href="tel:+902163940551"]')).toContainText('+90 (0216) 394 05 51');
+  await expect(main.locator('a[href="mailto:info@meykozmetik.com"]')).toContainText('info@meykozmetik.com');
+  await expect(main).toContainText('Orhanlı, Vakum Sk. No:26, 34956 Tuzla/İstanbul');
+  await expect(main.locator('a[href^="https://wa.me/"]')).toHaveCount(0);
+  await expect(main).not.toContainText('+90 532 625 68 12');
+
+  // Only the still-unconfirmed office hours remain visibly pending here.
+  const chips = page.locator('main span.t-tech', { hasText: /Bilgi bekleniyor/ });
+  await expect(chips).toHaveCount(1);
 });

@@ -4,7 +4,7 @@ import { u } from './util';
 /*
   Home content sections: real-projects preview, on-site journey, materials,
   why-MEY, contact CTA. Prove what the visitor sees — real copy, images that
-  actually decode, and the real 23/6 numbers (no fabricated stats, no leftover
+  actually decode, and the confirmed 23-year/2021 facts (no fabricated stats or
   placeholders where facts exist). The before/after band was removed 2026-07.
 */
 
@@ -99,25 +99,32 @@ test('materials board: annotated palette + interior photo on the dark panel', as
   expect(bg).toBe('rgb(14, 15, 17)');
 });
 
-test('why-MEY shows the real 23/6 numbers, no placeholder chips', async ({ page }) => {
+test('why-MEY shows the confirmed 23-year group history and 2021 construction founding year', async ({ page }) => {
   await page.goto(u('/'));
   const cells = page.locator('.wm-cell');
   await expect(cells).toHaveCount(4);
   await expect(cells.nth(0).locator('.wm-num')).toHaveText('23');
-  await expect(cells.nth(1).locator('.wm-num')).toHaveText('6');
+  await expect(cells.nth(1).locator('.wm-num')).toHaveText('2021');
+  await expect(cells.nth(1)).toContainText('MEY İNŞAAT KURULUŞ YILI');
   await expect(cells.nth(2)).toContainText('TEK ELDEN');
   await expect(cells.nth(3)).toContainText('ŞEFFAF');
   // The old stats grid rendered [Bilgi bekleniyor] chips here — must be gone.
   await expect(page.locator('.wm-grid')).not.toContainText('Bilgi bekleniyor');
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth
+  );
+  expect(overflow).toBeLessThanOrEqual(1);
 });
 
-test('contact CTA closes the page: decoded backdrop, wired actions', async ({ page }) => {
+test('contact CTA closes the page with scoped general contact links', async ({ page }) => {
   await page.goto(u('/'));
   const cta = page.locator('.cc');
   await expect(cta).toBeVisible();
   await decodes(page, '.cc-bg');
   await expect(cta.locator('a.btn-primary')).toHaveAttribute('href', /\/iletisim\/?$/);
   await expect(cta.locator('a.btn-ghost')).toHaveAttribute('href', /\/projeler\/?$/);
-  // Contact facts are null in company.json → honest placeholders, never invented.
-  await expect(cta.locator('.cc-channels')).toContainText('Bilgi bekleniyor');
+  await expect(cta.locator('a[href="tel:+902163940551"]')).toHaveText('+90 (0216) 394 05 51');
+  await expect(cta.locator('a[href="mailto:info@meykozmetik.com"]')).toHaveText('info@meykozmetik.com');
+  await expect(cta.locator('a[href^="https://wa.me/"]')).toHaveCount(0);
+  await expect(cta).not.toContainText('+90 532 625 68 12');
 });

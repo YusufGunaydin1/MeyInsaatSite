@@ -1,19 +1,32 @@
 {
   "_comment": "TEK KAYNAK — sert gerçekler. null = MEY'den beklenen bilgi (asla uydurma). Site null değerleri görünür [Bilgi bekleniyor] rozetiyle gösterir.",
   "name": "MEY İnşaat",
-  "legalName": null,
+  "legalName": "MEY İnşaat",
+  "founder": "Yavuz Günaydın",
   "group": "MEY Grubu",
   "parentBrand": "MEY Kozmetik",
   "groupYears": 23,
-  "constructionYears": 6,
   "groupFoundedYear": null,
-  "constructionFoundedYear": null,
+  "constructionFoundedYear": 2021,
   "contact": {
-    "phone": null,
+    "phone": {
+      "display": "+90 (0216) 394 05 51",
+      "e164": "+902163940551"
+    },
     "whatsapp": null,
-    "email": null,
-    "address": null,
+    "email": "info@meykozmetik.com",
+    "address": "Orhanlı, Vakum Sk. No:26, 34956 Tuzla/İstanbul",
     "hours": null
+  },
+  "salesContact": {
+    "phone": {
+      "display": "+90 532 625 68 12",
+      "e164": "+905326256812"
+    },
+    "whatsapp": {
+      "display": "+90 532 625 68 12",
+      "e164": "+905326256812"
+    }
   },
   "social": {
     "instagram": null,

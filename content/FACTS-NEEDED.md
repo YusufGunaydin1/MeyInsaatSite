@@ -5,10 +5,11 @@
 > içerik dosyaları güncellenir; rozetler kendiliğinden kaybolur.
 
 ## 1. Kimlik ve tarihçe
-- [ ] Kurucu / yönetim isimleri (Kurumsal → Hikayemiz bölümü için)
-- [ ] Grubun kuruluş yılı (23 yıldan ~2002 çıkıyor — doğru mu?)
-- [ ] MEY İnşaat kuruluş yılı (6 yıldan ~2019 çıkıyor — doğru mu?)
-- [ ] Resmî ünvan (ör. "MEY İnşaat San. ve Tic. A.Ş.") — footer/künye için
+- [x] Kurucu: Yavuz Günaydın
+- [ ] Yönetim isimleri (paylaşılacaksa)
+- [ ] MEY Grubu kuruluş yılı
+- [x] MEY İnşaat kuruluş yılı: 2021
+- [x] Resmî ünvan: MEY İnşaat
 
 ## 2. Rakamlar (ana sayfa istatistik şeridi)
 - [ ] Tamamlanan proje sayısı
@@ -17,19 +18,21 @@
 - [ ] Faaliyet bölgesi / ilçeler
 
 ## 3. Projeler
-- [ ] Gerçek proje listesi: ad, ilçe, tür, durum, yıl, daire sayısı
+- [x] Gerçek proje adları: Maşuk Apartmanı, El Ele Apartmanı, Çamoğlu Apartmanı
+- [ ] Her proje için ilçe, tür, durum, yıl ve daire sayısı
 - [ ] Her proje için gerçek fotoğraflar
-- (Şu an sitede tek bir **ÖRNEK ŞABLON** proje var; gerçekler gelince silinir)
+- (Mevcut proje görselleri temsilîdir; gerçek fotoğraflar gelince değiştirilecek.)
 
 ## 4. Hizmet kapsamı
 - [ ] Sadece konut mu? Ticari ve/veya kentsel dönüşüm de var mı?
 - [ ] Belge / sertifika (ISO vb.), ödüller
 
 ## 5. İletişim
-- [ ] Telefon
-- [ ] WhatsApp numarası
-- [ ] E-posta
-- [ ] Adres
+- [x] Genel iletişim telefonu: +90 (0216) 394 05 51
+- [x] Satış telefonu: +90 532 625 68 12 (yalnız Satılık Daireler)
+- [x] Satış WhatsApp: +90 532 625 68 12 (yalnız Satılık Daireler)
+- [x] E-posta: info@meykozmetik.com
+- [x] Adres: Orhanlı, Vakum Sk. No:26, 34956 Tuzla/İstanbul
 - [ ] Çalışma saatleri
 - [ ] Sosyal medya hesapları (Instagram, LinkedIn…)
 

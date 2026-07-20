@@ -1,7 +1,7 @@
 ---
 /*
   WHY MEY — a trust strip on the dark theatre: two real numbers (group years,
-  construction years — sourced from company.json, never fabricated) + two
+  construction founding year — sourced from company.json, never fabricated) + two
   qualitative promises. Replaces the old placeholder-heavy stats grid.
   Labels + qualitative points from content/pages/home.<loc>.md (sections.why).
 */
@@ -19,7 +19,7 @@ const s = pageContent('home', locale)?.frontmatter?.sections?.why ?? {};
 // labels + the two qualitative cells.
 const cells: { num?: number; word?: string; label: string }[] = [
   { num: company.groupYears, label: s.groupLabel },
-  { num: company.constructionYears, label: s.constructionLabel },
+  { num: company.constructionFoundedYear, label: s.constructionLabel },
   ...(s.points ?? []).map((p: { value: string; label: string }) => ({
     word: p.value,
     label: p.label,

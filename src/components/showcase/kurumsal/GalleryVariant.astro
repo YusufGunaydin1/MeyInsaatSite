@@ -8,7 +8,7 @@
 */
 import { Image } from 'astro:assets';
 import StatsStrip from '../../StatsStrip.astro';
-import PlaceholderChip from '../../PlaceholderChip.astro';
+import { company } from '../../../lib/content';
 import { corp, img } from './data';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -153,9 +153,7 @@ const caps = [
         <p class="t-heading-m mt-3">{corp.vision}</p>
       </article>
     </div>
-    <p class="t-caption mt-6 text-graphite-400">
-      Kuruluş ve yönetim: <PlaceholderChip locale="tr" label="Kurucu" />
-    </p>
+    <p class="t-caption mt-6 text-graphite-400">Kurucu: {company.founder}</p>
   </section>
 
   <!-- CTA — kırmızı çizgi backdrop -->

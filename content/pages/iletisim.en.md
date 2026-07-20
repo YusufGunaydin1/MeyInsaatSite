@@ -3,8 +3,7 @@ locale: en
 machineTranslated: true
 title: "Contact"
 intro: >-
-  No forms, no waiting: reach us directly by phone, WhatsApp, or email.
-  We respond the same day during working hours.
+  Reach us directly by phone or email.
 note: >-
-  Contact details will be published once verified by MEY.
+  Working hours will be published once confirmed.
 ---

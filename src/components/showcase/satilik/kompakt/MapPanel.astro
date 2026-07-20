@@ -19,7 +19,16 @@ const { title = 'Yakın Lokasyonlar', compact = false } = Astro.props;
 
 <div class:list={['kc-map card', compact && 'kc-map-compact']} data-testid="kc-map">
   <div class="kc-map-canvas">
-    <Image src={vaziyet} alt={`${proje.ad} vaziyet planı üzerinde konum işareti`} widths={[480, 880]} sizes="(min-width: 900px) 420px, 94vw" class="kc-map-img" />
+    <Image
+      src={vaziyet}
+      alt={`${proje.ad} vaziyet planı üzerinde konum işareti`}
+      widths={[400, 720]}
+      sizes="(min-width: 900px) 420px, calc(100vw - 3rem)"
+      quality={74}
+      loading="lazy"
+      decoding="async"
+      class="kc-map-img"
+    />
     <span class="kc-map-pin" aria-hidden="true"><Icon name="pin" size={26} /></span>
     <span class="t-tech kc-map-tag">{proje.lokasyon}</span>
   </div>

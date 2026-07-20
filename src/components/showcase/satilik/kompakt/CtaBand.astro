@@ -1,15 +1,18 @@
 ---
 /*
-  Koyu CTA bandı — ref'lerdeki telefon numarası gerçek satış hattı yayınlanana
-  dek gösterilmez (company.json: phone=null, sayı UYDURULMAZ): telefon düğmesi
-  dürüst "yakında" diyaloğunu açar, Randevu Al gerçek iletişim sayfasına gider.
+  Koyu CTA bandı — satış telefonu yalnız for-sale yüzeylerinde yayınlanır;
+  genel şirket hattından ayrı tutulur.
 */
 import Icon from './Icon.astro';
+import { company } from '../../../../lib/content';
+import { contactNumber, telHref } from '../../../../lib/contact';
 
 interface Props {
   base: string;
 }
 const { base } = Astro.props;
+const salesPhone = contactNumber(company.salesContact.phone);
+const salesPhoneHref = telHref(company.salesContact.phone);
 ---
 
 <section class="kc-ctaband theatre" data-testid="kc-ctaband">
@@ -21,9 +24,11 @@ const { base } = Astro.props;
       </p>
     </div>
     <div class="kc-ctaband-actions">
-      <button type="button" class="btn-ghost" data-soon="Satış hattı" data-testid="kc-phone-soon">
-        <Icon name="phone" size={17} /> Satış hattı — yakında
-      </button>
+      {salesPhone && salesPhoneHref && (
+        <a class="btn-ghost" href={salesPhoneHref} data-testid="kc-sales-phone">
+          <Icon name="phone" size={17} /> {salesPhone.display}
+        </a>
+      )}
       <a class="btn-primary" href={base + '/iletisim'}>
         <Icon name="calendar" size={17} /> Randevu Al
       </a>

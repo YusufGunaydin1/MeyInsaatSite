@@ -9,6 +9,7 @@
   kullanımlarda (örn. eski vitrin) düğme hiç çizilmez.
 */
 import { useCallback, useEffect, useRef, useState } from 'react';
+import DeferredImage from './DeferredImage';
 
 const WIDE_KEY = 'kc-galeri-genis';
 
@@ -34,6 +35,7 @@ export default function Carousel({ items, label }: Props) {
   const [wide, setWide] = useState(false);
   const [canWide, setCanWide] = useState(false);
   const figRef = useRef<HTMLElement>(null);
+  const preloadRef = useRef<HTMLImageElement | null>(null);
   const n = items.length;
   const cur = items[index];
 
@@ -79,6 +81,28 @@ export default function Carousel({ items, label }: Props) {
     };
   }, [full, step]);
 
+  useEffect(() => {
+    if (n < 2) return;
+    const connection = (navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string };
+    }).connection;
+    if (connection?.saveData || connection?.effectiveType?.includes('2g')) return;
+
+    const timer = window.setTimeout(() => {
+      const next = items[(index + 1) % n];
+      const preload = new window.Image();
+      preload.srcset = next.srcset;
+      preload.sizes = wide ? '(min-width: 1100px) 960px, 94vw' : '(min-width: 1100px) 720px, 94vw';
+      preload.src = next.src;
+      preloadRef.current = preload;
+    }, 1200);
+
+    return () => {
+      window.clearTimeout(timer);
+      preloadRef.current = null;
+    };
+  }, [index, items, n, wide]);
+
   return (
     <figure className="kcar" aria-label={label} data-testid="kc-carousel" ref={figRef}>
       <div className="kcar-stage">
@@ -90,6 +114,9 @@ export default function Carousel({ items, label }: Props) {
           width={cur.width}
           height={cur.height}
           alt={cur.alt}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
           data-testid="kc-car-main"
         />
         <span className="t-tech kcar-count" data-testid="kc-car-count">{index + 1} / {n}</span>
@@ -123,14 +150,22 @@ export default function Carousel({ items, label }: Props) {
             aria-label={`Fotoğraf ${i + 1}: ${it.alt}`}
             data-testid={`kc-car-thumb-${i}`}
           >
-            <img src={it.thumb} alt="" loading="lazy" width="72" height="54" />
+            <DeferredImage
+              src={it.thumb}
+              alt=""
+              width={72}
+              height={54}
+              priority={i < 4}
+              rootSelector=".kcar-thumbs"
+              rootMargin="0px 56px"
+            />
           </button>
         ))}
       </div>
 
       {full && (
         <div className="kcar-overlay" role="dialog" aria-modal="true" aria-label={label} data-testid="kc-car-overlay">
-          <img src={cur.src} srcSet={cur.srcset} sizes="96vw" alt={cur.alt} data-testid="kc-car-overlay-img" />
+          <img src={cur.src} srcSet={cur.srcset} sizes="96vw" alt={cur.alt} decoding="async" data-testid="kc-car-overlay-img" />
           <p className="t-caption kcar-overlay-cap">{cur.caption} · {index + 1} / {n}</p>
           <button type="button" className="kcar-btn kcar-overlay-prev" onClick={() => step(-1)} aria-label="Önceki fotoğraf">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m14.5 5-7 7 7 7" /></svg>

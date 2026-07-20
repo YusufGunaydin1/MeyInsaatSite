@@ -56,7 +56,7 @@ sections:
     eyebrow: "05 — لماذا MEY"
     title: "مجموعة تفي بوعدها"
     groupLabel: "عاماً من ثقة مجموعة MEY"
-    constructionLabel: "أعوام من خبرة MEY İnşaat"
+    constructionLabel: "سنة تأسيس MEY İnşaat"
     points:
       - value: "تسليم مفتاح"
         label: "من الأرض إلى المفتاح"
@@ -65,5 +65,5 @@ sections:
   contact:
     eyebrow: "06 — التواصل"
     title: "لنتحدث عن مشاريعكم"
-    intro: "تواصلوا معنا مباشرة عبر الهاتف أو واتساب أو البريد الإلكتروني."
+    intro: "تواصلوا معنا مباشرة عبر الهاتف أو البريد الإلكتروني."
 ---

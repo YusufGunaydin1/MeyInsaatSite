@@ -134,7 +134,16 @@ const ozellikler = [
         </div>
         <div class="card kce-card kce-proje">
           <h2 class="t-heading-s">Proje Hakkında</h2>
-          <Image src={bina.img} alt={bina.alt} widths={[420, 720]} sizes="(min-width: 1024px) 300px, 94vw" class="kce-proje-img" />
+          <Image
+            src={bina.img}
+            alt={bina.alt}
+            widths={[360, 640]}
+            sizes="(min-width: 1024px) 300px, calc(100vw - 3rem)"
+            quality={74}
+            loading="lazy"
+            decoding="async"
+            class="kce-proje-img"
+          />
           <p class="t-caption kce-proje-text">{building.positioning} — {building.builder} yapımı, {proje.kat} katlı, {proje.toplamDaire} daireli bina.</p>
           <a class="kce-proje-link" href={basePrefix + '/projeler/el-ele-apartmani'}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
         </div>
@@ -226,5 +235,33 @@ const ozellikler = [
   }
   @media (max-width: 760px) {
     .kce-oda-cols { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .kce-crumbwrap { padding-block: 0.55rem 0.25rem; }
+    .kce-crumbwrap :global(.kc-crumb ol) {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 0.15rem;
+      scrollbar-width: none;
+    }
+    .kce-crumbwrap :global(.kc-crumb li) { flex-shrink: 0; font-size: 0.7rem; }
+    .kce-head { gap: 0.45rem; padding-bottom: 0.65rem; }
+    .kce-title { font-size: 1.15rem; line-height: 1.12; }
+    .kce-meta { gap: 0.35rem 0.55rem; margin-top: 0.35rem; }
+    .kce-meta span { font-size: 0.625rem; }
+    .kce-price-box {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25rem 0.45rem;
+      text-align: start;
+    }
+    .kce-price { font-size: 1.3rem; }
+    .kce-price-box :global(.kc-mock) { margin-inline-start: auto; padding: 0.2rem 0.4rem; font-size: 0.6rem; }
+    .kce-layout { gap: 1rem; padding-block: 0.75rem 1.5rem; }
+    .kce-main { gap: 1rem; }
+    .kce-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; padding: 0.75rem 0.8rem; }
+    .kce-card { padding: 0.8rem; }
   }
 </style>

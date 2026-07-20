@@ -83,7 +83,7 @@
   },
   "stats": {
     "groupYears": "года опыта группы",
-    "constructionYears": "лет в строительстве",
+    "constructionFoundedYear": "Год основания MEY İnşaat",
     "projectsCompleted": "Завершённых проектов",
     "unitsDelivered": "Переданных квартир",
     "builtAreaM2": "м² построенной площади",
@@ -233,7 +233,7 @@
   },
   "contact": {
     "title": "Обсудим ваши проекты",
-    "sub": "Свяжитесь с нами напрямую по телефону, в WhatsApp или по электронной почте.",
+    "sub": "Свяжитесь с нами напрямую по телефону или электронной почте.",
     "phone": "Телефон",
     "whatsapp": "WhatsApp",
     "email": "E-mail",

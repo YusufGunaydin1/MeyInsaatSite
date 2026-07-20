@@ -56,7 +56,7 @@ sections:
     eyebrow: "05 — ПОЧЕМУ MEY"
     title: "Группа, которая держит слово"
     groupLabel: "ЛЕТ ГАРАНТИИ ГРУППЫ MEY"
-    constructionLabel: "ЛЕТ ОПЫТА MEY İNŞAAT"
+    constructionLabel: "ГОД ОСНОВАНИЯ MEY İNŞAAT"
     points:
       - value: "ПОД КЛЮЧ"
         label: "ОТ УЧАСТКА ДО КЛЮЧЕЙ"
@@ -65,5 +65,5 @@ sections:
   contact:
     eyebrow: "06 — КОНТАКТЫ"
     title: "Обсудим ваши проекты"
-    intro: "Свяжитесь с нами напрямую по телефону, в WhatsApp или по электронной почте."
+    intro: "Свяжитесь с нами напрямую по телефону или электронной почте."
 ---

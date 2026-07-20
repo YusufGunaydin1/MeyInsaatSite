@@ -83,7 +83,7 @@
   },
   "stats": {
     "groupYears": "Years of group experience",
-    "constructionYears": "Years in construction",
+    "constructionFoundedYear": "MEY İnşaat founded",
     "projectsCompleted": "Projects completed",
     "unitsDelivered": "Units delivered",
     "builtAreaM2": "m² built area",
@@ -233,7 +233,7 @@
   },
   "contact": {
     "title": "Let's talk about your project",
-    "sub": "Reach us directly by phone, WhatsApp, or email.",
+    "sub": "Reach us directly by phone or email.",
     "phone": "Phone",
     "whatsapp": "WhatsApp",
     "email": "Email",

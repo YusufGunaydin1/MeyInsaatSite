@@ -1,9 +1,9 @@
 ---
 /*
   DAİRE DETAY — D-11 / Daire 1 (canlı; tasarım: daire-detay-ref-a mock).
-  Başlık+fiyat şeridi → galeri | künye → çapa sekmeleri → matris + genel bakış
-  → konum → ödeme planı + SSS → benzer daireler; sağda yapışkan ray.
-  NOINDEX: fiyatlar temsilî — gerçek satış verisiyle birlikte kaldırılacak.
+  Başlık+satış durumu → galeri | künye → çapa sekmeleri → matris + genel bakış
+  → konum → satış durumu + SSS → benzer daireler; sağda yapışkan ray.
+  NOINDEX: m² ve teknik değerler temsilî — gerçek verilerle birlikte kaldırılacak.
 */
 import Base from '../layouts/Base.astro';
 import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
@@ -12,14 +12,13 @@ import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro'
 import SpecGrid from '../components/showcase/satilik/kompakt/SpecGrid.astro';
 import AvailabilityMatrix from '../components/showcase/satilik/kompakt/AvailabilityMatrix.astro';
 import MapPanel from '../components/showcase/satilik/kompakt/MapPanel.astro';
-import PaymentPlan from '../components/showcase/satilik/kompakt/PaymentPlan.astro';
 import FaqList from '../components/showcase/satilik/kompakt/FaqList.astro';
 import SimilarUnits from '../components/showcase/satilik/kompakt/SimilarUnits.astro';
 import StickyRail from '../components/showcase/satilik/kompakt/StickyRail.astro';
 import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
 import Carousel from '../components/showcase/satilik/kompakt/Carousel.tsx';
 import { carouselItems } from '../components/showcase/satilik/kompakt/assets.ts';
-import { detay, specsD1, tl, proje } from '../components/showcase/satilik/kompakt/data.ts';
+import { detay, specsD1, proje, RECENTLY_SOLD_LABEL } from '../components/showcase/satilik/kompakt/data.ts';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui } from '../lib/content';
 import '../components/showcase/satilik/kompakt/kompakt.css';
@@ -39,7 +38,7 @@ const sekmeler = [
   { id: 'genel', label: 'Genel Bilgiler' },
   { id: 'konum-secimi', label: 'Daire Konumu' },
   { id: 'konum', label: 'Konum' },
-  { id: 'odeme', label: 'Ödeme Planı' },
+  { id: 'durum', label: 'Satış Durumu' },
   { id: 'sss', label: 'SSS' },
   { id: 'benzer', label: 'Benzer Daireler' },
 ];
@@ -59,7 +58,7 @@ const projeDetay = [
   page="satilik"
   path="/satilik-daireler/daire-1"
   title={d.baslik + ' — MEY İnşaat'}
-  description="El Ele Apartmanı D-11: deniz manzaralı 3+2 dubleks — galeri, künye, ödeme planı ve randevu."
+  description="El Ele Apartmanı D-11: yakın zamanda satılan deniz manzaralı 3+2 dubleks — galeri ve künye."
   noindex
 >
   <div class="container-site kcd-crumbwrap">
@@ -71,26 +70,23 @@ const projeDetay = [
     ]} />
   </div>
 
-  <!-- BAŞLIK + FİYAT ŞERİDİ -->
+  <!-- BAŞLIK + SATIŞ DURUMU -->
   <header class="container-site kcd-head">
     <div class="kcd-head-main">
       <h1 class="kcd-title">{d.baslik}</h1>
       <p class="kcd-chips">
-        <span class="t-tech kcd-chip is-red">SATILIK</span>
-        <span class="t-tech kcd-chip is-teal">HEMEN TESLİM</span>
+        <span class="t-tech kcd-chip is-red" data-testid="kc-sold-status">{RECENTLY_SOLD_LABEL}</span>
         <span class="t-tech kcd-chip">DUBLEKS</span>
         <span class="t-tech kcd-meta"><Icon name="pin" size={13} /> {proje.lokasyon}</span>
         <span class="t-tech kcd-meta">{d.unit.kat} · {d.unit.no} · Brüt {d.unit.brut} m² / Net {d.unit.net} m²</span>
       </p>
     </div>
     <div class="kcd-head-price">
-      <p class="kcd-price tabular-nums" data-testid="kc-price">{tl(d.unit.fiyat!)}</p>
-      <p class="t-caption kcd-kdv">KDV Dahil</p>
+      <p class="t-caption kcd-sold-summary">Satış işlemi tamamlandı</p>
       <MockChip />
     </div>
     <div class="kcd-head-actions">
-      <button type="button" class="kcd-mini" data-soon="Favoriler"><Icon name="bell" size={15} /> Favorilere Ekle</button>
-      <a class="kcd-mini" href={root + '/daire-2'} data-testid="kc-compare"><Icon name="compare" size={15} /> Diğer daireyle karşılaştır</a>
+      <a class="kcd-mini" href={root + '/daire-2'} data-testid="kc-compare"><Icon name="compare" size={15} /> Satıştaki D-12’yi İncele</a>
     </div>
   </header>
 
@@ -134,9 +130,14 @@ const projeDetay = [
         <MapPanel title="Yakın Çevre" />
       </section>
 
-      <section class="kcd-block" id="odeme" aria-label="Ödeme planı ve sorular">
+      <section class="kcd-block" id="durum" aria-label="Satış durumu ve sorular">
         <div class="kcd-two">
-          <div class="card kcd-card"><PaymentPlan fiyat={d.unit.fiyat!} /></div>
+          <div class="card kcd-card kcd-sold-card" data-testid="kc-sold-detail">
+            <p class="t-tech kcd-sold-kicker">{RECENTLY_SOLD_LABEL}</p>
+            <h2 class="t-heading-s kcd-sold-title">Bu dairenin satış işlemi tamamlandı.</h2>
+            <p class="t-caption kcd-sold-text">D-11 arşiv ve galeri bilgileri için yayında kalır. Satıştaki D-12 dairesini inceleyebilirsiniz.</p>
+            <a class="kcd-sold-next" href={root + '/daire-2'} data-testid="kc-sold-next">13.750.000 TL fiyatlı D-12’yi incele <Icon name="arrow-right" size={15} /></a>
+          </div>
           <div class="card kcd-card" id="sss"><FaqList /></div>
         </div>
       </section>
@@ -146,7 +147,7 @@ const projeDetay = [
       </section>
     </div>
 
-    <StickyRail konu="D-11 · 3+2 Dubleks" base={basePrefix} alarm />
+    <StickyRail konu="D-11 (satıldı) · benzer daireler" base={basePrefix} />
   </div>
 
   <SoonDialog />
@@ -177,14 +178,7 @@ const projeDetay = [
   .kcd-chip.is-teal { border-color: var(--color-mey-teal-700); color: var(--color-mey-teal-700); }
   .kcd-meta { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--color-graphite-400); }
   .kcd-head-price { text-align: end; display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
-  .kcd-price {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-    color: var(--color-graphite-900);
-    line-height: 1.05;
-  }
-  .kcd-kdv { color: var(--color-graphite-400); }
+  .kcd-sold-summary { color: var(--color-mey-red); font-weight: 600; }
   .kcd-head-actions { grid-column: 1 / -1; display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.2rem; }
   .kcd-mini {
     display: inline-flex;
@@ -229,11 +223,65 @@ const projeDetay = [
   .kcd-checklist { margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.45rem; }
   .kcd-checklist li { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.875rem; }
   .kcd-checklist :global(svg) { color: var(--color-mey-teal-700); flex-shrink: 0; transform: translateY(2px); }
+  .kcd-sold-card { border-inline-start: 3px solid var(--color-mey-red); }
+  .kcd-sold-kicker { color: var(--color-mey-red); font-weight: 600; }
+  .kcd-sold-title { margin-top: 0.35rem; }
+  .kcd-sold-text { margin-top: 0.45rem; color: var(--color-graphite-600); }
+  .kcd-sold-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.8rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-mey-red);
+  }
+  .kcd-sold-next:hover { color: var(--color-mey-red-700); text-decoration: underline; }
 
   @media (max-width: 1023px) {
     .kcd-layout { grid-template-columns: minmax(0, 1fr); }
     .kcd-head { grid-template-columns: minmax(0, 1fr); }
     .kcd-head-price { text-align: start; align-items: flex-start; }
     .kcd-two { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .kcd-crumbwrap { padding-block: 0.55rem 0.25rem; }
+    .kcd-crumbwrap :global(.kc-crumb ol) {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 0.15rem;
+      scrollbar-width: none;
+    }
+    .kcd-crumbwrap :global(.kc-crumb li) { flex-shrink: 0; font-size: 0.7rem; }
+    .kcd-head { gap: 0.3rem; padding-bottom: 0.4rem; }
+    .kcd-title { font-size: 1.15rem; line-height: 1.12; }
+    .kcd-chips { gap: 0.35rem 0.45rem; margin-top: 0.35rem; }
+    .kcd-chip { padding: 0.15rem 0.35rem; font-size: 0.625rem; }
+    .kcd-meta { font-size: 0.625rem; }
+    .kcd-head-price {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25rem 0.45rem;
+      text-align: start;
+    }
+    .kcd-head-price :global(.kc-mock) { margin-inline-start: auto; padding: 0.2rem 0.4rem; font-size: 0.6rem; }
+    .kcd-head-actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.45rem; margin-top: 0; }
+    .kcd-mini {
+      justify-content: center;
+      min-height: 40px;
+      padding: 0.35rem 0.45rem;
+      border: 1px solid var(--color-line);
+      border-radius: var(--radius-brand);
+      font-size: 0.7rem;
+      text-align: center;
+    }
+    .kcd-layout { gap: 1rem; padding-block: 0.75rem 1.5rem; }
+    .kcd-main { gap: 1rem; }
+    .kcd-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .kcd-tabs a { flex-shrink: 0; padding: 0.45rem 0.6rem; font-size: 0.75rem; }
+    .kcd-card { padding: 0.8rem; }
   }
 </style>

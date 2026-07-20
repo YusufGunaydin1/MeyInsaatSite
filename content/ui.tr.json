@@ -83,7 +83,7 @@
   },
   "stats": {
     "groupYears": "Yıllık grup deneyimi",
-    "constructionYears": "Yıldır inşaatta",
+    "constructionFoundedYear": "MEY İnşaat kuruluş yılı",
     "projectsCompleted": "Tamamlanan proje",
     "unitsDelivered": "Teslim edilen daire",
     "builtAreaM2": "m² inşa alanı",
@@ -233,7 +233,7 @@
   },
   "contact": {
     "title": "Projeleriniz için konuşalım",
-    "sub": "Telefon, WhatsApp veya e-posta ile doğrudan ulaşın.",
+    "sub": "Telefon veya e-posta ile doğrudan ulaşın.",
     "phone": "Telefon",
     "whatsapp": "WhatsApp",
     "email": "E-posta",

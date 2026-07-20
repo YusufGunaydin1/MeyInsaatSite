@@ -22,7 +22,8 @@ import { cardImage } from '../components/showcase/satilik/kompakt/assets.ts';
 import { listing, listingProjeler, katPlanlari, tl } from '../components/showcase/satilik/kompakt/data.ts';
 import { publicAsset } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
-import { ui } from '../lib/content';
+import { ui, company } from '../lib/content';
+import { contactNumber, telHref, whatsappHref } from '../lib/contact';
 import elEleImg from '../assets/projects/el-ele-apartmani.webp';
 import masukImg from '../assets/projects/masuk-apartmani.webp';
 import camogluImg from '../assets/projects/camoglu-apartmani.webp';
@@ -37,14 +38,16 @@ const t = ui(locale);
 /** yerel dil öneki dahil kök ('' | '/en' | ...) — bileşenlerin base'i */
 const basePrefix = localePath(locale, '/').replace(/\/$/, '');
 const root = basePrefix + '/satilik-daireler';
+const salesPhone = contactNumber(company.salesContact.phone);
+const salesWhatsapp = contactNumber(company.salesContact.whatsapp);
 
 const hero = publicAsset('daire-1/bina-dis.png');
 
 /* Proje dış cepheleri proje kartlarının görseli olur */
 async function assetImage(src: ImageMetadata, alt: string): Promise<ListingImage> {
-  const a = await getImage({ src, width: 480, format: 'webp' });
-  const b = await getImage({ src, width: 880, format: 'webp' });
-  return { src: a.src, srcset: `${a.src} 480w, ${b.src} 880w`, width: src.width, height: src.height, alt };
+  const a = await getImage({ src, width: 400, format: 'webp', quality: 74 });
+  const b = await getImage({ src, width: 720, format: 'webp', quality: 74 });
+  return { src: a.src, srcset: `${a.src} 400w, ${b.src} 720w`, width: src.width, height: src.height, alt };
 }
 const projeGorsel: Record<string, ImageMetadata> = {
   'el-ele': elEleImg,
@@ -68,7 +71,8 @@ const ilanlar: ListingCard[] = await Promise.all(
     kat: u.kat,
     katKey: u.katKey,
     fiyat: u.fiyat,
-    fiyatText: tl(u.fiyat),
+    fiyatText: u.fiyat === null ? null : tl(u.fiyat),
+    durum: u.durum,
     badge: u.badge,
     href: `${root}/${u.detay}`,
     img: await cardImage(u.imgKey!),
@@ -99,16 +103,26 @@ const projeler = [
 ];
 
 const stats = [
-  { icon: 'flag', deger: '23 Yıllık', alt: 'Tecrübe' },
+  { icon: 'flag', deger: '2021', alt: 'Kuruluş' },
   { icon: 'building', deger: '3 Proje', alt: 'İstanbul’da' },
-  { icon: 'key', deger: '6 Yıldır', alt: 'Konut Üretimi' },
+  { icon: 'key', deger: 'Mey İnşaat', alt: 'Resmî Unvan' },
 ];
 ---
 
 <Base locale={locale} page="satilik" path="/satilik-daireler" noindex>
   <!-- HERO -->
   <section class="ks-hero theatre">
-    <Image src={hero} alt="" widths={[880, 1440]} sizes="100vw" class="ks-hero-img" loading="eager" />
+    <Image
+      src={hero}
+      alt=""
+      widths={[480, 880, 1440]}
+      sizes="100vw"
+      quality={74}
+      class="ks-hero-img"
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+    />
     <div class="ks-hero-scrim" aria-hidden="true"></div>
     <div class="container-site ks-hero-in">
       <div class="ks-hero-left">
@@ -140,7 +154,15 @@ const stats = [
   <!-- LİSTE + RAY (ada) -->
   <section class="container-site ks-listing" aria-label="Satılık daire listesi">
     <p class="ks-mockline"><MockChip /></p>
-    <SaleListing client:load items={items} projeler={projeler} />
+    <SaleListing
+      client:load
+      items={items}
+      projeler={projeler}
+      salesPhone={salesPhone?.display ?? ''}
+      salesPhoneHref={telHref(company.salesContact.phone) ?? ''}
+      salesWhatsapp={salesWhatsapp?.display ?? ''}
+      salesWhatsappHref={whatsappHref(company.salesContact.whatsapp) ?? ''}
+    />
   </section>
 
   <!-- KAT PLANLARI -->
@@ -280,5 +302,66 @@ const stats = [
   @media (max-width: 1023px) {
     .ks-hero-in { grid-template-columns: minmax(0, 1fr); }
     .ks-hero-help { max-width: 380px; }
+  }
+
+  @media (max-width: 640px) {
+    .ks-hero-img { object-position: 64% 42%; }
+    .ks-hero-scrim {
+      background: linear-gradient(90deg, rgb(14 15 17 / 0.96) 0%, rgb(14 15 17 / 0.84) 68%, rgb(14 15 17 / 0.58) 100%);
+    }
+    .ks-hero-in {
+      gap: 0.75rem;
+      padding-block: 0.75rem 0.85rem;
+    }
+    .ks-hero-title { margin-top: 0.45rem; font-size: 1.85rem; }
+    .ks-hero-sub {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      margin-top: 0.35rem;
+      max-width: 40ch;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+    .ks-hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0;
+      margin-top: 0.75rem;
+    }
+    .ks-hero-stats li {
+      display: block;
+      min-width: 0;
+      padding-inline: 0.45rem;
+    }
+    .ks-hero-stats li:first-child { padding-inline-start: 0; }
+    .ks-hero-stats li + li { padding-inline-start: 0.55rem; }
+    .ks-stat-ic { display: none; }
+    .ks-stat-deger { overflow-wrap: anywhere; font-size: 0.75rem; }
+    .ks-stat-alt { margin-top: 0.1rem; font-size: 0.625rem; line-height: 1.25; }
+    .ks-hero-help {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.65rem;
+      align-items: center;
+      width: 100%;
+      max-width: none;
+      padding: 0.45rem 0.5rem 0.45rem 0.7rem;
+    }
+    .ks-help-ic, .ks-help-sub { display: none; }
+    .ks-help-title { margin-top: 0; font-size: 0.8125rem; }
+    .ks-help-cta {
+      min-height: 40px;
+      margin-top: 0;
+      padding: 0.45rem 0.75rem;
+      display: inline-flex;
+      align-items: center;
+    }
+    .ks-listing { padding-block: 0.7rem 1.5rem; }
+    .ks-mockline { margin-bottom: 0.4rem; }
+    .ks-plans { padding-bottom: 1.5rem; }
+    .ks-plans-grid { grid-template-columns: minmax(0, 1fr); gap: 0.65rem; }
+    .ks-cta { padding-bottom: 1.5rem; }
   }
 </style>

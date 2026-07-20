@@ -7,6 +7,7 @@
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import { publicAsset, entry } from '../media';
+import { satistakiDaireSayisi } from './data';
 import masukImg from '../../../../assets/projects/masuk-apartmani.webp';
 import camogluImg from '../../../../assets/projects/camoglu-apartmani.webp';
 
@@ -24,7 +25,7 @@ const elEle = { img: publicAsset(elEleKey), alt: entry(elEleKey).alt };
     <Image src={elEle.img} alt="" widths={[160]} sizes="72px" class="kc-ptile-img" />
     <div>
       <p class="kc-ptile-name">El Ele Apartmanı</p>
-      <p class="t-tech kc-ptile-sub">2 satılık dubleks</p>
+      <p class="t-tech kc-ptile-sub">{satistakiDaireSayisi} satılık dubleks</p>
     </div>
   </a>
   <a class="kc-ptile" href={base + '/projeler/masuk-apartmani'}>

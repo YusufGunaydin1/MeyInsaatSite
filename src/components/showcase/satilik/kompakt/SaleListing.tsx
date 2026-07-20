@@ -2,13 +2,15 @@
   Satılık listesi adası — liste-ref.png düzeni, dürüst envanterle: sekmeler
   (Tümü/Daireler/Projeler), canlı filtreler, sıralama, favoriler, kart ızgarası,
   sağ rayda karşılaştırma + hızlı form. Izgara iki tür kart taşır: gerçek ilanlar
-  (yalnız El Ele dubleksleri — fiyat/kalp/karşılaştırma) ve proje kartları
+  (El Ele dubleksleri — satıştaki daire fiyatlı, satılan daire durum etiketli)
+  ve proje kartları
   (satılmışlar kırmızı TÜMÜ SATILDI bandı taşır, fiyatsız, proje sayfasına çıkar).
   Birim filtreleri (kat/oda/m²/fiyat) aktifken proje kartları ızgaradan düşer;
   fiyat sıralaması fiyatsız proje kartlarını hep sona koyar. Henüz var olmayan
   uçlar (harita, karşılaştırma görünümü) ortak "yakında" diyaloğunu açar.
 */
 import { useMemo, useState } from 'react';
+import DeferredImage from './DeferredImage';
 import RailForm from './RailForm';
 
 export interface ListingImage {
@@ -33,8 +35,9 @@ export interface ListingItem {
   balkon: number;
   kat: string;
   katKey: string;
-  fiyat: number;
-  fiyatText: string;
+  fiyat: number | null;
+  fiyatText: string | null;
+  durum: 'musait' | 'rezerve' | 'satildi';
   badge?: string;
   href: string;
   img: ListingImage;
@@ -58,6 +61,10 @@ export type ListingCard = ListingItem | ListingProjeItem;
 interface Props {
   items: ListingCard[];
   projeler: { key: string; ad: string }[];
+  salesPhone: string;
+  salesPhoneHref: string;
+  salesWhatsapp: string;
+  salesWhatsappHref: string;
 }
 
 const TUMU = 'tumu';
@@ -83,6 +90,7 @@ const I = {
   harita: 'M9 4 4 6v14l5-2 6 2 5-2V4l-5 2-6-2Zm0 0v14m6-12v14',
   tel: 'M7 3.5h4L12.5 9l-2.3 1.6a12 12 0 0 0 3.2 3.2L15 11.5l5.5 1.5v4a1.8 1.8 0 0 1-2 1.8C10.5 18 6 13.5 5.2 5.5A1.8 1.8 0 0 1 7 3.5Z',
   chat: 'M4 5.5h16v11H9.5L5.5 20v-3.5H4v-11Z',
+  filtre: 'M4 6h16M7 12h10M10 18h4',
 };
 
 function Ic({ d, size = 16 }: { d: string; size?: number }) {
@@ -115,13 +123,23 @@ function matches(u: ListingCard, f: Filters, tab: string, favOnly: boolean, favs
   if (f.m2 === '0-100' && u.brut >= 100) return false;
   if (f.m2 === '100-150' && (u.brut < 100 || u.brut > 150)) return false;
   if (f.m2 === '150+' && u.brut < 150) return false;
-  if (f.fiyat === '0-6' && u.fiyat >= 6_000_000) return false;
-  if (f.fiyat === '6-10' && (u.fiyat < 6_000_000 || u.fiyat > 10_000_000)) return false;
-  if (f.fiyat === '10+' && u.fiyat < 10_000_000) return false;
+  if (f.fiyat !== TUMU) {
+    if (u.fiyat === null) return false;
+    if (f.fiyat === '0-6' && u.fiyat >= 6_000_000) return false;
+    if (f.fiyat === '6-10' && (u.fiyat < 6_000_000 || u.fiyat > 10_000_000)) return false;
+    if (f.fiyat === '10+' && u.fiyat < 10_000_000) return false;
+  }
   return true;
 }
 
-export default function SaleListing({ items, projeler }: Props) {
+export default function SaleListing({
+  items,
+  projeler,
+  salesPhone,
+  salesPhoneHref,
+  salesWhatsapp,
+  salesWhatsappHref,
+}: Props) {
   const [tab, setTab] = useState(TUMU);
   const [filters, setFilters] = useState<Filters>(EMPTY);
   const [sort, setSort] = useState<'asc' | 'desc'>('asc');
@@ -129,12 +147,16 @@ export default function SaleListing({ items, projeler }: Props) {
   const [favOnly, setFavOnly] = useState(false);
   const [shown, setShown] = useState(PAGE);
   const [compare, setCompare] = useState<string[]>(['d11', 'd12']);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const visible = useMemo(() => {
     const list = items.filter((u) => matches(u, filters, tab, favOnly, favs));
     list.sort((a, b) => {
       if (a.kind !== b.kind) return a.kind === 'ilan' ? -1 : 1; // fiyatsız proje kartları hep sonda
       if (a.kind !== 'ilan' || b.kind !== 'ilan') return 0;
+      if (a.fiyat === null && b.fiyat === null) return 0;
+      if (a.fiyat === null) return 1;
+      if (b.fiyat === null) return -1;
       return sort === 'asc' ? a.fiyat - b.fiyat : b.fiyat - a.fiyat;
     });
     return list;
@@ -181,17 +203,35 @@ export default function SaleListing({ items, projeler }: Props) {
           </div>
           <div className="kl-tab-actions">
             <button type="button" className="kl-ghost" onClick={() => openSoon('Harita görünümü')} data-testid="kl-harita">
-              <Ic d={I.harita} /> Harita Görünümü
+              <Ic d={I.harita} />
+              <span className="kl-desktop-label">Harita Görünümü</span>
+              <span className="kl-mobile-label">Harita</span>
             </button>
             <button type="button" className={favOnly ? 'kl-ghost is-active' : 'kl-ghost'}
               onClick={() => { setFavOnly((v) => !v); setShown(PAGE); }} data-testid="kl-favorilerim">
-              <Ic d={I.kalp} /> Favorilerim ({favs.size})
+              <Ic d={I.kalp} />
+              <span className="kl-desktop-label">Favorilerim ({favs.size})</span>
+              <span className="kl-mobile-label">Favoriler ({favs.size})</span>
+            </button>
+            <button
+              type="button"
+              className={filtersOpen ? 'kl-ghost kl-filter-toggle is-active' : 'kl-ghost kl-filter-toggle'}
+              aria-expanded={filtersOpen}
+              aria-controls="satilik-filtreler"
+              onClick={() => setFiltersOpen((open) => !open)}
+              data-testid="kl-filter-toggle"
+            >
+              <Ic d={I.filtre} /> Filtreler
             </button>
           </div>
         </div>
 
         {/* FİLTRE ÇUBUĞU — canlı */}
-        <div className="kl-filters" data-testid="kl-filters">
+        <div
+          id="satilik-filtreler"
+          className={filtersOpen ? 'kl-filters is-open' : 'kl-filters'}
+          data-testid="kl-filters"
+        >
           <label className="kx-field">
             <span className="kx-field-label">Proje Seçin</span>
             <select value={filters.proje} onChange={set('proje')} data-testid="kl-f-proje">
@@ -237,7 +277,7 @@ export default function SaleListing({ items, projeler }: Props) {
         <div className="kl-results-row">
           <p className="kl-count" data-testid="kl-count"><strong>{visible.length}</strong> sonuç bulundu</p>
           <label className="kl-sort">
-            Sırala:
+            <span className="kl-sort-label">Sırala:</span>
             <select value={sort} onChange={(e) => setSort(e.target.value as 'asc' | 'desc')} data-testid="kl-sort">
               <option value="asc">Fiyata (Düşükten Yükseğe)</option>
               <option value="desc">Fiyata (Yüksekten Düşüğe)</option>
@@ -247,12 +287,19 @@ export default function SaleListing({ items, projeler }: Props) {
 
         {/* KART IZGARASI */}
         <div className="kl-grid" data-testid="kl-grid">
-          {visible.slice(0, shown).map((u) => u.kind === 'proje' ? (
+          {visible.slice(0, shown).map((u, cardIndex) => u.kind === 'proje' ? (
             <article key={u.id} className={u.sold ? 'kl-card kl-card-bina is-sold' : 'kl-card kl-card-bina'}
               data-testid="kl-card" data-unit={u.id} data-kind="proje">
               <div className="kl-card-media">
-                <img src={u.img.src} srcSet={u.img.srcset} sizes="(min-width: 900px) 300px, 94vw"
-                  width={u.img.width} height={u.img.height} alt={u.img.alt} loading="lazy" />
+                <DeferredImage
+                  src={u.img.src}
+                  srcSet={u.img.srcset}
+                  sizes="(min-width: 1200px) 300px, (min-width: 640px) 46vw, calc(100vw - 2rem)"
+                  width={u.img.width}
+                  height={u.img.height}
+                  alt={u.img.alt}
+                  priority={cardIndex === 0}
+                />
                 {u.sold
                   ? <span className="kl-sold" data-testid={`kl-sold-${u.projeKey}`}>TÜMÜ SATILDI</span>
                   : u.rozet && <span className="kl-badge is-red">{u.rozet}</span>}
@@ -268,20 +315,42 @@ export default function SaleListing({ items, projeler }: Props) {
               </div>
             </article>
           ) : (
-            <article key={u.id} className="kl-card" data-testid="kl-card" data-unit={u.id} data-kind="ilan">
+            <article
+              key={u.id}
+              className={u.durum === 'satildi' ? 'kl-card is-sold' : 'kl-card'}
+              data-testid="kl-card"
+              data-unit={u.id}
+              data-kind="ilan"
+              data-status={u.durum}
+            >
               <div className="kl-card-media">
-                <img src={u.img.src} srcSet={u.img.srcset} sizes="(min-width: 900px) 300px, 94vw"
-                  width={u.img.width} height={u.img.height} alt={u.img.alt} loading="lazy" />
-                <span className="kl-badge is-red">SATILIK</span>
-                {u.badge && <span className="kl-badge is-dark">{u.badge}</span>}
-                <button type="button"
-                  className={favs.has(u.id) ? 'kl-heart is-active' : 'kl-heart'}
-                  aria-label={favs.has(u.id) ? 'Favorilerden çıkar' : 'Favorilere ekle'}
-                  aria-pressed={favs.has(u.id)}
-                  onClick={() => toggleFav(u.id)}
-                  data-testid={`kl-fav-${u.id}`}>
-                  <Ic d={I.kalp} size={17} />
-                </button>
+                <DeferredImage
+                  src={u.img.src}
+                  srcSet={u.img.srcset}
+                  sizes="(min-width: 1200px) 300px, (min-width: 640px) 46vw, calc(100vw - 2rem)"
+                  width={u.img.width}
+                  height={u.img.height}
+                  alt={u.img.alt}
+                  priority={cardIndex === 0}
+                />
+                {u.durum === 'satildi' ? (
+                  <span className="kl-sold kl-unit-sold" data-testid={`kl-recently-sold-${u.id}`}>
+                    {u.badge ?? 'YAKIN ZAMANDA SATILDI'}
+                  </span>
+                ) : (
+                  <>
+                    <span className="kl-badge is-red">SATILIK</span>
+                    {u.badge && <span className="kl-badge is-dark">{u.badge}</span>}
+                    <button type="button"
+                      className={favs.has(u.id) ? 'kl-heart is-active' : 'kl-heart'}
+                      aria-label={favs.has(u.id) ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+                      aria-pressed={favs.has(u.id)}
+                      onClick={() => toggleFav(u.id)}
+                      data-testid={`kl-fav-${u.id}`}>
+                      <Ic d={I.kalp} size={17} />
+                    </button>
+                  </>
+                )}
               </div>
               <div className="kl-card-body">
                 <h3 className="kl-card-title">{u.baslik}</h3>
@@ -294,7 +363,11 @@ export default function SaleListing({ items, projeler }: Props) {
                   <li><Ic d={I.kat} /><span>{u.kat.replace(' Kat', '')}</span><em>Kat</em></li>
                 </ul>
                 <div className="kl-card-foot">
-                  <p className="kl-price tabular-nums">{u.fiyatText}</p>
+                  {u.fiyatText ? (
+                    <p className="kl-price tabular-nums" data-testid={`kl-price-${u.id}`}>{u.fiyatText}</p>
+                  ) : (
+                    <p className="kl-unit-status" data-testid={`kl-status-${u.id}`}>Yakın zamanda satıldı</p>
+                  )}
                   <a className="kl-detail" href={u.href} data-testid={`kl-detay-${u.id}`}>Detayları Gör ›</a>
                 </div>
               </div>
@@ -326,11 +399,15 @@ export default function SaleListing({ items, projeler }: Props) {
             </div>
             {compareItems.map((u) => (
               <div key={u.id} className="kl-compare-item">
-                <img src={u.img.src} alt="" width="64" height="48" loading="lazy" />
+                <DeferredImage src={u.img.src} alt="" width={64} height={48} />
                 <div>
                   <p className="kl-compare-title">{u.baslik}</p>
                   <p className="kl-compare-sub">{u.proje} · {u.blokKat}</p>
-                  <p className="kl-compare-price tabular-nums">{u.fiyatText}</p>
+                  {u.fiyatText ? (
+                    <p className="kl-compare-price tabular-nums" data-testid={`kl-compare-price-${u.id}`}>{u.fiyatText}</p>
+                  ) : (
+                    <p className="kl-compare-status" data-testid={`kl-compare-status-${u.id}`}>Yakın zamanda satıldı</p>
+                  )}
                 </div>
                 <button type="button" aria-label={`${u.baslik} karşılaştırmadan çıkar`}
                   onClick={() => setCompare((c) => c.filter((id) => id !== u.id))}>
@@ -349,8 +426,12 @@ export default function SaleListing({ items, projeler }: Props) {
           <p className="t-caption kl-quick-sub">Size en uygun daireyi birlikte bulalım.</p>
           <RailForm konu="Satılık daireler" />
           <div className="kl-quick-lines">
-            <button type="button" onClick={() => openSoon('Satış hattı')}><Ic d={I.tel} /> Bizi arayın — yakında</button>
-            <button type="button" onClick={() => openSoon('WhatsApp hattı')}><Ic d={I.chat} /> WhatsApp — yakında</button>
+            {salesPhone && salesPhoneHref && (
+              <a href={salesPhoneHref} data-testid="kl-sales-phone"><Ic d={I.tel} /> {salesPhone}</a>
+            )}
+            {salesWhatsapp && salesWhatsappHref && (
+              <a href={salesWhatsappHref} data-testid="kl-sales-whatsapp"><Ic d={I.chat} /> WhatsApp · {salesWhatsapp}</a>
+            )}
           </div>
         </div>
       </aside>
