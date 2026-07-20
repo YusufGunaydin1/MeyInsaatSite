@@ -159,6 +159,8 @@ test('detay D-11: matris lejantı ve gerçek durum dağılımı', async ({ page 
 
 test('vitrin dizilimi: proje sekmeleri filtreler; teaser kartlar fiyat uydurmaz', async ({ page }) => {
   await page.goto(u(V));
+  const unitsIsland = page.locator('astro-island[component-url*="UnitsExplorer"]');
+  await expect.poll(() => unitsIsland.evaluate((element) => element.hasAttribute('ssr'))).toBe(false);
   await expect(page.getByTestId('kc-mock-chip')).toHaveCount(1);
   await expect(page.getByTestId('kx-card')).toHaveCount(4); // 2 gerçek + 2 teaser
   await page.getByTestId('kx-tab-el-ele').click();
@@ -247,6 +249,8 @@ test('detay: D-11 sold durumunda fiyatsız; D-12 fiyatı değişmeden satışta'
 
 test('ray formu: doğrulama → hata; mock başarı ve hata panelleri', async ({ page }) => {
   await page.goto(u(K + 'daire-2'));
+  const railFormIsland = page.locator('astro-island[component-url*="RailForm"]');
+  await expect.poll(() => railFormIsland.evaluate((element) => element.hasAttribute('ssr'))).toBe(false);
   await page.getByTestId('kcf-submit').click();
   await expect(page.getByTestId('kcf-err-name')).toBeVisible();
   await expect(page.getByTestId('kcf-err-contact')).toBeVisible();

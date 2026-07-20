@@ -19,7 +19,7 @@ import CtaBand from '../components/showcase/satilik/kompakt/CtaBand.astro';
 import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
 import SaleListing, { type ListingCard, type ListingImage } from '../components/showcase/satilik/kompakt/SaleListing.tsx';
 import { cardImage } from '../components/showcase/satilik/kompakt/assets.ts';
-import { listing, listingProjeler, katPlanlari, tl } from '../components/showcase/satilik/kompakt/data.ts';
+import { listing, listingProjeler, katPlanlari, satistakiDaireSayisi, tl } from '../components/showcase/satilik/kompakt/data.ts';
 import { publicAsset } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui, company } from '../lib/content';
@@ -28,11 +28,13 @@ import elEleImg from '../assets/projects/el-ele-apartmani.webp';
 import masukImg from '../assets/projects/masuk-apartmani.webp';
 import camogluImg from '../assets/projects/camoglu-apartmani.webp';
 import '../components/showcase/satilik/kompakt/kompakt.css';
+import '../components/showcase/satilik-mobile/mobile-sale-proposal.css';
 
 interface Props {
   locale: Locale;
+  mobileProposal?: boolean;
 }
-const { locale } = Astro.props;
+const { locale, mobileProposal = false } = Astro.props;
 const t = ui(locale);
 
 /** yerel dil öneki dahil kök ('' | '/en' | ...) — bileşenlerin base'i */
@@ -109,9 +111,15 @@ const stats = [
 ];
 ---
 
-<Base locale={locale} page="satilik" path="/satilik-daireler" noindex>
+<Base
+  locale={locale}
+  page="satilik"
+  path={mobileProposal ? '/showcases/satilik-mobile-kompakt' : '/satilik-daireler'}
+  title={mobileProposal ? 'Satılık Mobil Öneri — Tasarım Vitrini' : undefined}
+  noindex
+>
   <!-- HERO -->
-  <section class="ks-hero theatre">
+  <section class:list={['ks-hero', 'theatre', { 'smp-hero': mobileProposal }]} data-testid={mobileProposal ? 'smp-hero' : undefined}>
     <Image
       src={hero}
       alt=""
@@ -148,11 +156,27 @@ const stats = [
         <p class="ks-help-sub">Size en uygun daireyi bulmanızda ekibimiz yardımcı olsun.</p>
         <a class="btn-ghost ks-help-cta" href={basePrefix + '/iletisim'}>Bize Ulaşın</a>
       </aside>
+
+      {mobileProposal && (
+        <div class="smp-mobile-hero" data-testid="smp-mobile-hero">
+          <p class="smp-mobile-status"><span aria-hidden="true"></span>{satistakiDaireSayisi} DAİRE SATIŞTA · PENDİK</p>
+          <h1>Satılık Daireler</h1>
+          <p class="smp-mobile-sub">El Ele Apartmanı · Son 3+2 dubleks</p>
+          <div class="smp-mobile-actions" aria-label="Satış danışmanı">
+            <a href={telHref(company.salesContact.phone) ?? '#'} aria-label={`Satış danışmanını ara: ${salesPhone?.display ?? ''}`} data-testid="smp-call">
+              <Icon name="phone" size={16} /> Ara
+            </a>
+            <a href={whatsappHref(company.salesContact.whatsapp) ?? '#'} aria-label={`WhatsApp: ${salesWhatsapp?.display ?? ''}`} data-testid="smp-whatsapp">
+              <Icon name="chat" size={16} /> WhatsApp
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   </section>
 
   <!-- LİSTE + RAY (ada) -->
-  <section class="container-site ks-listing" aria-label="Satılık daire listesi">
+  <section class:list={['container-site', 'ks-listing', { 'smp-listing': mobileProposal }]} aria-label="Satılık daire listesi">
     <p class="ks-mockline"><MockChip /></p>
     <SaleListing
       client:load
@@ -162,6 +186,7 @@ const stats = [
       salesPhoneHref={telHref(company.salesContact.phone) ?? ''}
       salesWhatsapp={salesWhatsapp?.display ?? ''}
       salesWhatsappHref={whatsappHref(company.salesContact.whatsapp) ?? ''}
+      mobileProposal={mobileProposal}
     />
   </section>
 
@@ -363,5 +388,77 @@ const stats = [
     .ks-plans { padding-bottom: 1.5rem; }
     .ks-plans-grid { grid-template-columns: minmax(0, 1fr); gap: 0.65rem; }
     .ks-cta { padding-bottom: 1.5rem; }
+  }
+
+  .smp-mobile-hero { display: none; }
+
+  @media (max-width: 640px) {
+    .smp-hero .ks-hero-left,
+    .smp-hero .ks-hero-help { display: none; }
+    .smp-hero .ks-hero-in {
+      display: block;
+      padding-block: 0;
+    }
+    .smp-mobile-hero {
+      display: grid;
+      min-height: 156px;
+      align-content: center;
+      padding-block: 0.75rem;
+    }
+    .smp-mobile-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgb(255 255 255 / 0.74);
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+    }
+    .smp-mobile-status span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--color-mey-teal);
+      box-shadow: 0 0 0 3px rgb(73 193 198 / 0.16);
+    }
+    .smp-mobile-hero h1 {
+      margin-top: 0.2rem;
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 1.9rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    .smp-mobile-sub {
+      margin-top: 0.25rem;
+      color: rgb(255 255 255 / 0.68);
+      font-size: 0.6875rem;
+    }
+    .smp-mobile-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.45rem;
+      margin-top: 0.65rem;
+    }
+    .smp-mobile-actions a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      border: 1px solid rgb(255 255 255 / 0.38);
+      border-radius: var(--radius-brand);
+      color: #fff;
+      background: rgb(14 15 17 / 0.46);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .smp-mobile-actions a:last-child {
+      border-color: var(--color-mey-teal);
+      background: rgb(73 193 198 / 0.16);
+    }
+    .smp-listing .ks-mockline { display: none; }
   }
 </style>

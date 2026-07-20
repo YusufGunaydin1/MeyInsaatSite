@@ -65,6 +65,7 @@ interface Props {
   salesPhoneHref: string;
   salesWhatsapp: string;
   salesWhatsappHref: string;
+  mobileProposal?: boolean;
 }
 
 const TUMU = 'tumu';
@@ -132,6 +133,14 @@ function matches(u: ListingCard, f: Filters, tab: string, favOnly: boolean, favs
   return true;
 }
 
+type MobileStatus = 'tumu' | 'available' | 'sold';
+
+function matchesMobileStatus(item: ListingCard, status: MobileStatus) {
+  if (status === 'tumu') return true;
+  const sold = item.kind === 'proje' ? item.sold : item.durum === 'satildi';
+  return status === 'sold' ? sold : !sold;
+}
+
 export default function SaleListing({
   items,
   projeler,
@@ -139,6 +148,7 @@ export default function SaleListing({
   salesPhoneHref,
   salesWhatsapp,
   salesWhatsappHref,
+  mobileProposal = false,
 }: Props) {
   const [tab, setTab] = useState(TUMU);
   const [filters, setFilters] = useState<Filters>(EMPTY);
@@ -148,9 +158,13 @@ export default function SaleListing({
   const [shown, setShown] = useState(PAGE);
   const [compare, setCompare] = useState<string[]>(['d11', 'd12']);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [mobileStatus, setMobileStatus] = useState<MobileStatus>('tumu');
 
   const visible = useMemo(() => {
-    const list = items.filter((u) => matches(u, filters, tab, favOnly, favs));
+    const list = items.filter((u) =>
+      matches(u, filters, tab, favOnly, favs) &&
+      (!mobileProposal || matchesMobileStatus(u, mobileStatus))
+    );
     list.sort((a, b) => {
       if (a.kind !== b.kind) return a.kind === 'ilan' ? -1 : 1; // fiyatsız proje kartları hep sonda
       if (a.kind !== 'ilan' || b.kind !== 'ilan') return 0;
@@ -160,7 +174,7 @@ export default function SaleListing({
       return sort === 'asc' ? a.fiyat - b.fiyat : b.fiyat - a.fiyat;
     });
     return list;
-  }, [items, filters, tab, favOnly, favs, sort]);
+  }, [items, filters, tab, favOnly, favs, sort, mobileProposal, mobileStatus]);
 
   const counts = useMemo(
     () => ({
@@ -182,13 +196,100 @@ export default function SaleListing({
       return next;
     });
 
+  const clearAll = () => {
+    setFilters(EMPTY);
+    setMobileStatus('tumu');
+    setTab(TUMU);
+    setFavOnly(false);
+    setShown(PAGE);
+  };
+
+  const mobileActiveFilterCount =
+    Object.values(filters).filter((value) => value !== TUMU).length +
+    (mobileStatus === 'tumu' ? 0 : 1);
+
   const compareItems = compare
     .map((id) => items.find((u) => u.id === id))
     .filter((u): u is ListingItem => !!u && u.kind === 'ilan');
 
   return (
-    <div className="kl" data-testid="kl">
+    <div className={mobileProposal ? 'kl kl--mobile-proposal' : 'kl'} data-testid="kl">
       <div className="kl-main">
+        {mobileProposal && (
+          <div className="klm-controls" data-testid="klm-controls">
+            <div className="klm-tabs" role="tablist" aria-label="Sonuç türü">
+              {([
+                ['tumu', 'Tümü', counts.tumu],
+                ['ilan', 'Daire', counts.ilan],
+                ['proje', 'Proje', counts.proje],
+              ] as const).map(([key, label, count]) => (
+                <button
+                  key={key}
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === key}
+                  className={tab === key ? 'klm-tab is-active' : 'klm-tab'}
+                  onClick={() => { setTab(key); setShown(PAGE); }}
+                  data-testid={`klm-tab-${key}`}
+                >
+                  <span>{label}</span><strong>{count}</strong>
+                </button>
+              ))}
+            </div>
+
+            <div className="klm-command-row">
+              <p className="klm-count" data-testid="klm-count">
+                <strong>{visible.length}</strong> sonuç <span>· m² temsilî</span>
+              </p>
+              <button
+                type="button"
+                className={filtersOpen || mobileActiveFilterCount > 0 ? 'klm-filter is-active' : 'klm-filter'}
+                aria-expanded={filtersOpen}
+                aria-controls="satilik-mobil-filtreler"
+                onClick={() => setFiltersOpen((open) => !open)}
+                data-testid="klm-filter-toggle"
+              >
+                <Ic d={I.filtre} size={15} />
+                <span>Filtre</span>
+                {mobileActiveFilterCount > 0 && <strong className="klm-filter-count">{mobileActiveFilterCount}</strong>}
+              </button>
+              <label className="klm-sort">
+                <span className="klm-visually-hidden">Sıralama</span>
+                <select value={sort} onChange={(event) => setSort(event.target.value as 'asc' | 'desc')} data-testid="klm-sort">
+                  <option value="asc">Fiyat ↑</option>
+                  <option value="desc">Fiyat ↓</option>
+                </select>
+              </label>
+            </div>
+
+            {filtersOpen && (
+              <div id="satilik-mobil-filtreler" className="klm-filter-panel" data-testid="klm-filter-panel">
+                <label className="klm-field">
+                  <span>Proje</span>
+                  <select value={filters.proje} onChange={set('proje')} data-testid="klm-f-proje">
+                    <option value={TUMU}>Tüm projeler</option>
+                    {projeler.map((project) => <option key={project.key} value={project.key}>{project.ad}</option>)}
+                  </select>
+                </label>
+                <label className="klm-field">
+                  <span>Durum</span>
+                  <select value={mobileStatus} onChange={(event) => setMobileStatus(event.target.value as MobileStatus)} data-testid="klm-f-status">
+                    <option value="tumu">Tümü</option>
+                    <option value="available">Satışta</option>
+                    <option value="sold">Satıldı</option>
+                  </select>
+                </label>
+                <div className="klm-filter-actions">
+                  <button type="button" className="klm-clear" onClick={clearAll} data-testid="klm-clear">Temizle</button>
+                  <button type="button" className="klm-apply" onClick={() => setFiltersOpen(false)} data-testid="klm-apply">
+                    {visible.length} sonucu göster
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* SEKMELER + sağ eylemler */}
         <div className="kl-tabs-row">
           <div className="kl-tabs" role="tablist" aria-label="İlan tipi">
@@ -268,7 +369,7 @@ export default function SaleListing({
             </select>
           </label>
           <button type="button" className="kl-clear" data-testid="kl-clear"
-            onClick={() => { setFilters(EMPTY); setTab(TUMU); setFavOnly(false); setShown(PAGE); }}>
+            onClick={clearAll}>
             ⟳ Filtreyi Temizle
           </button>
         </div>
