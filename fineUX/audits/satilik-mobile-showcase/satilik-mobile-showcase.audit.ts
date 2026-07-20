@@ -77,21 +77,21 @@ async function captureLayout(page: Page): Promise<Record<string, LayoutEntry | n
   ), paritySelectors) as Promise<Record<string, LayoutEntry | null>>;
 }
 
-function expectDesktopParity(
+function expectReferenceParity(
   live: Record<string, LayoutEntry | null>,
-  proposal: Record<string, LayoutEntry | null>,
+  showcase: Record<string, LayoutEntry | null>,
   cell: AuditCell
 ) {
   for (const key of Object.keys(paritySelectors)) {
     expect(live[key], `${cell.name} live ${key}`).not.toBeNull();
-    expect(proposal[key], `${cell.name} proposal ${key}`).not.toBeNull();
+    expect(showcase[key], `${cell.name} showcase ${key}`).not.toBeNull();
     for (const metric of ['x', 'y', 'width', 'height'] as const) {
       expect(
-        Math.abs((proposal[key]?.rect[metric] ?? 0) - (live[key]?.rect[metric] ?? 0)),
-        `${cell.name} ${key}.${metric} changed above the mobile breakpoint`
+        Math.abs((showcase[key]?.rect[metric] ?? 0) - (live[key]?.rect[metric] ?? 0)),
+        `${cell.name} ${key}.${metric} differs from the live implementation`
       ).toBeLessThanOrEqual(0.5);
     }
-    expect(proposal[key]?.style, `${cell.name} ${key} computed-style drift`).toEqual(live[key]?.style);
+    expect(showcase[key]?.style, `${cell.name} ${key} computed-style drift`).toEqual(live[key]?.style);
   }
 }
 
@@ -123,7 +123,7 @@ async function inspect(page: Page, cell: AuditCell) {
     if (visibleH1s.length !== 1) issues.push(`expected one visible h1, found ${visibleH1s.length}`);
 
     const mobile = width <= 640;
-    const mobileHero = rect('[data-testid="smp-mobile-hero"]');
+    const mobileHero = rect('[data-testid="ksm-mobile-hero"]');
     const originalHeroCopy = rect('.ks-hero-left');
     const originalHelp = rect('.ks-hero-help');
     const mobileControls = rect('[data-testid="klm-controls"]');
@@ -141,7 +141,7 @@ async function inspect(page: Page, cell: AuditCell) {
       }
     }
 
-    const hero = rect('[data-testid="smp-hero"]');
+    const hero = rect('[data-testid="ksm-hero"]');
     const listing = rect('.ks-listing');
     const firstCard = rect('[data-testid="kl-card"]');
 
@@ -150,15 +150,15 @@ async function inspect(page: Page, cell: AuditCell) {
     }
 
     if (mobile && hero && mobileHero && mobileControls && firstCard) {
-      const status = rect('.smp-mobile-status');
-      const title = rect('.smp-mobile-hero h1');
-      const sub = rect('.smp-mobile-sub');
-      const actions = rect('.smp-mobile-actions');
+      const status = rect('.ksm-mobile-status');
+      const title = rect('.ksm-mobile-hero h1');
+      const sub = rect('.ksm-mobile-sub');
+      const actions = rect('.ksm-mobile-actions');
       const tabs = rect('.klm-tabs');
       const command = rect('.klm-command-row');
 
       if (!status || !title || !sub || !actions || !tabs || !command) {
-        issues.push('mobile proposal anatomy is incomplete');
+        issues.push('live compact-mobile anatomy is incomplete');
       } else {
         for (const [name, child] of [['status', status], ['title', title], ['sub', sub], ['actions', actions]] as const) {
           if (!inside(child, mobileHero)) issues.push(`${name} escapes the mobile hero`);
@@ -169,7 +169,7 @@ async function inspect(page: Page, cell: AuditCell) {
         if (tabs.bottom > command.y + 1) issues.push('category tabs overlap the command row');
       }
 
-      const titleColor = getComputedStyle(document.querySelector<HTMLElement>('.smp-mobile-hero h1')!).color;
+      const titleColor = getComputedStyle(document.querySelector<HTMLElement>('.ksm-mobile-hero h1')!).color;
       if (titleColor !== 'rgb(255, 255, 255)') issues.push(`mobile hero title contrast drift: ${titleColor}`);
       if (hero.height > 160) issues.push(`mobile hero too tall: ${rounded(hero.height)}px`);
       if (!filtersOpen && mobileControls.height > 108) issues.push(`closed mobile controls too tall: ${rounded(mobileControls.height)}px`);
@@ -184,7 +184,7 @@ async function inspect(page: Page, cell: AuditCell) {
       }
 
       const targetSelectors = [
-        '.smp-mobile-actions a',
+        '.ksm-mobile-actions a',
         '.klm-tab',
         '[data-testid="klm-filter-toggle"]',
         '.klm-sort',
@@ -240,7 +240,7 @@ async function inspect(page: Page, cell: AuditCell) {
     }
 
     const occlusionSelectors = mobile
-      ? ['[data-testid="smp-mobile-hero"]', '[data-testid="klm-controls"]', '[data-testid="kl-card"]']
+      ? ['[data-testid="ksm-mobile-hero"]', '[data-testid="klm-controls"]', '[data-testid="kl-card"]']
       : ['.ks-hero-in', '.kl-tabs-row', '[data-testid="kl-card"]'];
     for (const selector of occlusionSelectors) {
       const target = document.querySelector<HTMLElement>(selector);
@@ -263,7 +263,7 @@ async function inspect(page: Page, cell: AuditCell) {
     const shadowed = [...document.querySelectorAll<HTMLElement>('.klm-controls, .klm-filter-panel, .kl-card')]
       .filter(visible)
       .filter((element) => getComputedStyle(element).boxShadow !== 'none');
-    if (shadowed.length) issues.push(`${shadowed.length} proposal surfaces use an unapproved shadow`);
+    if (shadowed.length) issues.push(`${shadowed.length} compact surfaces use an unapproved shadow`);
 
     return {
       issues,
@@ -302,12 +302,8 @@ for (const cell of cells) {
       await expect(page.getByTestId('klm-filter-panel')).toBeVisible();
     }
 
-    const proposalLayout = await captureLayout(page);
-    if (cell.width > 640) expectDesktopParity(liveLayout, proposalLayout, cell);
-    if (cell.width <= 640) {
-      expect(proposalLayout.firstCard?.rect.width, `${cell.name} card width changed`).toBeCloseTo(liveLayout.firstCard?.rect.width ?? 0, 1);
-      expect(proposalLayout.firstCard?.rect.height, `${cell.name} card height changed`).toBeCloseTo(liveLayout.firstCard?.rect.height ?? 0, 1);
-    }
+    const showcaseLayout = await captureLayout(page);
+    if (!cell.filtersOpen) expectReferenceParity(liveLayout, showcaseLayout, cell);
 
     const result = await inspect(page, cell);
     expect(result.issues, `${cell.name}: ${JSON.stringify(result, null, 2)}`).toEqual([]);

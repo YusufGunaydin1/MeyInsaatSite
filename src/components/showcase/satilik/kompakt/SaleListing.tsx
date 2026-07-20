@@ -65,7 +65,6 @@ interface Props {
   salesPhoneHref: string;
   salesWhatsapp: string;
   salesWhatsappHref: string;
-  mobileProposal?: boolean;
 }
 
 const TUMU = 'tumu';
@@ -148,7 +147,6 @@ export default function SaleListing({
   salesPhoneHref,
   salesWhatsapp,
   salesWhatsappHref,
-  mobileProposal = false,
 }: Props) {
   const [tab, setTab] = useState(TUMU);
   const [filters, setFilters] = useState<Filters>(EMPTY);
@@ -163,7 +161,7 @@ export default function SaleListing({
   const visible = useMemo(() => {
     const list = items.filter((u) =>
       matches(u, filters, tab, favOnly, favs) &&
-      (!mobileProposal || matchesMobileStatus(u, mobileStatus))
+      matchesMobileStatus(u, mobileStatus)
     );
     list.sort((a, b) => {
       if (a.kind !== b.kind) return a.kind === 'ilan' ? -1 : 1; // fiyatsız proje kartları hep sonda
@@ -174,7 +172,7 @@ export default function SaleListing({
       return sort === 'asc' ? a.fiyat - b.fiyat : b.fiyat - a.fiyat;
     });
     return list;
-  }, [items, filters, tab, favOnly, favs, sort, mobileProposal, mobileStatus]);
+  }, [items, filters, tab, favOnly, favs, sort, mobileStatus]);
 
   const counts = useMemo(
     () => ({
@@ -213,10 +211,9 @@ export default function SaleListing({
     .filter((u): u is ListingItem => !!u && u.kind === 'ilan');
 
   return (
-    <div className={mobileProposal ? 'kl kl--mobile-proposal' : 'kl'} data-testid="kl">
+    <div className="kl kl--mobile-compact" data-testid="kl">
       <div className="kl-main">
-        {mobileProposal && (
-          <div className="klm-controls" data-testid="klm-controls">
+        <div className="klm-controls" data-testid="klm-controls">
             <div className="klm-tabs" role="tablist" aria-label="Sonuç türü">
               {([
                 ['tumu', 'Tümü', counts.tumu],
@@ -287,8 +284,7 @@ export default function SaleListing({
                 </div>
               </div>
             )}
-          </div>
-        )}
+        </div>
 
         {/* SEKMELER + sağ eylemler */}
         <div className="kl-tabs-row">

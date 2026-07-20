@@ -41,7 +41,14 @@ if (locale === 'ru') providers.unshift(providers.splice(1, 1)[0]);
     gap: 0.35rem 0.7rem;
   }
   .maplinks-label { color: var(--color-graphite-400); }
-  .maplinks a { color: var(--color-graphite-900); }
+  .maplinks a {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-graphite-900);
+  }
   .maplinks a:hover { color: var(--color-mey-red); }
   .maplinks a + a { position: relative; }
   .maplinks a + a::before {

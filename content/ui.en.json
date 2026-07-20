@@ -237,8 +237,7 @@
     "phone": "Phone",
     "whatsapp": "WhatsApp",
     "email": "Email",
-    "address": "Address",
-    "hours": "Working hours"
+    "address": "Address"
   },
   "footer": {
     "sitemap": "Sitemap",

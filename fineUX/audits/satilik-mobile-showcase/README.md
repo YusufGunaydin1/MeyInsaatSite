@@ -1,10 +1,10 @@
-# Satılık mobile-only showcase fineUX audit
+# Satılık compact-mobile live fineUX audit
 
 ## Scope
 
-- Proposal: `/showcases/satilik-mobile-kompakt`
-- Live reference: `/satilik-daireler`
-- Breakpoint contract: proposal styling is active only at widths up to 640px.
+- Showcase reference: `/showcases/satilik-mobile-kompakt`
+- Live implementation: `/satilik-daireler`
+- Breakpoint contract: compact styling is active only at widths up to 640px.
 - Cells: 1366×768, 1024×768, 641×740, 360×740 closed, and 360×740 with filters open.
 
 ## Utility contract
@@ -13,9 +13,9 @@ A phone buyer can see current availability, contact sales, choose a result type,
 
 ## User-feedback regressions
 
-- At 641px and above, hero, listing, tabs, filters, results row, and first-card geometry must match the live page within 0.5px.
-- The same desktop/tablet elements must also keep the same computed layout and visual-style fingerprint.
-- At 360px, the original listing-card width and height must match the live card; only hero and controls may change.
+- At every closed-state cell, the showcase reference and live page must match within 0.5px.
+- Desktop/tablet elements must keep the existing computed layout and visual-style fingerprint.
+- At 360px, the live compact hero and controls must preserve the unchanged inventory cards.
 - The mobile-only hero and controls must remain hidden above the breakpoint, while the original hero/filter composition must remain hidden inside it.
 
 ## Mobile composition contracts
@@ -37,4 +37,4 @@ A phone buyer can see current availability, contact sales, choose a result type,
 
 The repository does not contain the shared `fineUX/README.md`, `MEY_DESIGN_BRIEF.md`, or shared detector helpers, so this audit follows the established route-scoped detector pattern used by the repository’s existing audits.
 
-Status: PASS. Desktop/tablet/boundary parity, mobile closed/open composition, touch targets, overflow, image delivery, and occlusion checks are clean.
+Status: PASS. Live/showcase parity, desktop breakpoint isolation, mobile closed/open composition, touch targets, overflow, image delivery, and occlusion checks are clean.

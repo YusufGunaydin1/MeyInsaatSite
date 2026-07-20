@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import MapLinks from '../../MapLinks.astro';
+import Icon from '../satilik/kompakt/Icon.astro';
+import redLines from '../../../assets/photos/red-architectural-lines.webp';
+import { contactFacts, inquiryRoutes } from './data';
+---
+
+<section class="ccx theatre blueprint-grid" aria-labelledby="ccx-title" data-testid="contact-variant-c">
+  <Image
+    src={redLines}
+    alt=""
+    aria-hidden="true"
+    widths={[480, 880, 1440]}
+    sizes="100vw"
+    quality={72}
+    loading="lazy"
+    class="ccx-bg"
+  />
+  <div class="ccx-scrim" aria-hidden="true"></div>
+  <div class="container-site ccx-wrap">
+    <header class="ccx-head">
+      <div>
+        <p class="t-tech">MEY İNŞAAT · İLETİŞİM KÜNYESİ</p>
+        <h2 id="ccx-title">Tek merkez.<br />Üç net rota.</h2>
+      </div>
+      <p>Telefon ve e-posta genel merkez içindir. Satış görüşmesi yalnız Satılık Daireler akışından başlar.</p>
+    </header>
+
+    <div class="ccx-ledger">
+      <div class="ccx-channels">
+        <a href={contactFacts.phoneHref} class="ccx-channel" data-testid="contact-c-phone">
+          <span class="ccx-index">A</span>
+          <span><small>GENEL TELEFON</small><strong>{contactFacts.phone}</strong></span>
+          <Icon name="phone" size={19} />
+        </a>
+        <a href={contactFacts.emailHref} class="ccx-channel" data-testid="contact-c-email">
+          <span class="ccx-index">B</span>
+          <span><small>GENEL E-POSTA</small><strong>{contactFacts.email}</strong></span>
+          <Icon name="mail" size={19} />
+        </a>
+        <div class="ccx-address" data-testid="contact-c-office">
+          <span class="ccx-index">C</span>
+          <div>
+            <small>OFİS · TUZLA / İSTANBUL</small>
+            <address>{contactFacts.address}</address>
+            <MapLinks address={contactFacts.address} locale="tr" label="ROTA" />
+          </div>
+        </div>
+      </div>
+
+      <nav class="ccx-routes" aria-label="İletişim rotaları">
+        <p class="t-tech">KONUYA GÖRE DEVAM ET</p>
+        {inquiryRoutes.map((route) => (
+          <a href={route.href}>
+            <span class="t-tech">{route.number}</span>
+            <span><strong>{route.title}</strong><small>{route.action}</small></span>
+            <Icon name="arrow-right" size={18} />
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ccx { position: relative; overflow: hidden; padding-block: clamp(3.5rem, 8vw, 7rem); }
+  .ccx-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.42; }
+  .ccx-scrim { position: absolute; inset: 0; background: linear-gradient(110deg, rgb(14 15 17 / 0.98) 20%, rgb(14 15 17 / 0.84) 100%); }
+  .ccx-wrap { position: relative; }
+  .ccx-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.6fr); gap: 2rem; align-items: end; }
+  .ccx-head .t-tech { color: var(--color-red-on-dark); }
+  .ccx h2 { margin-top: 0.75rem; color: #fff; font-family: var(--font-display); font-size: clamp(3.5rem, 6.6vw, 6.2rem); font-weight: 600; letter-spacing: -0.02em; line-height: 0.94; text-transform: uppercase; }
+  .ccx-head > p { max-width: 38ch; color: rgb(244 244 242 / 0.66); font-size: 0.875rem; line-height: 1.6; }
+  .ccx-ledger { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr); margin-top: 2.5rem; border: 1px solid rgb(255 255 255 / 0.15); background: rgb(14 15 17 / 0.72); backdrop-filter: blur(10px); }
+  .ccx-channels { min-width: 0; }
+  .ccx-channel, .ccx-address { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; min-height: 92px; align-items: center; gap: 0.85rem; padding: 1rem 1.25rem; color: #fff; }
+  .ccx-channel + .ccx-channel, .ccx-address { border-top: 1px solid rgb(255 255 255 / 0.12); }
+  .ccx-channel:hover { background: rgb(255 255 255 / 0.06); }
+  .ccx-channel > svg { color: var(--color-mey-teal); }
+  .ccx-index { display: inline-grid; width: 30px; height: 30px; place-items: center; border: 1px solid rgb(255 255 255 / 0.22); color: var(--color-red-on-dark); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.6875rem; }
+  .ccx-channel small, .ccx-address small { display: block; color: rgb(244 244 242 / 0.44); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.625rem; letter-spacing: 0.1em; }
+  .ccx-channel strong { display: block; overflow-wrap: anywhere; margin-top: 0.25rem; font-size: clamp(0.9rem, 1.8vw, 1.2rem); font-weight: 500; }
+  .ccx-address { align-items: start; min-height: 126px; }
+  .ccx-address address { max-width: 48ch; margin-top: 0.3rem; color: rgb(244 244 242 / 0.84); font-size: 0.8125rem; font-style: normal; line-height: 1.45; }
+  .ccx-address :global(.maplinks) { margin-top: 0.4rem; }
+  .ccx-address :global(.maplinks-label) { color: rgb(244 244 242 / 0.4); }
+  .ccx-address :global(.maplinks a) { display: inline-flex; min-height: 44px; align-items: center; color: #fff; }
+  .ccx-address :global(.maplinks a:hover) { color: var(--color-mey-teal); }
+  .ccx-routes { padding: 1.2rem; border-inline-start: 1px solid rgb(255 255 255 / 0.15); background: rgb(25 27 30 / 0.82); }
+  .ccx-routes > p { padding: 0.35rem 0.35rem 0.85rem; color: var(--color-mey-teal); }
+  .ccx-routes a { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; min-height: 82px; align-items: center; gap: 0.75rem; padding: 0.75rem 0.35rem; border-top: 1px solid rgb(255 255 255 / 0.12); color: #fff; }
+  .ccx-routes a:hover { color: var(--color-red-on-dark); }
+  .ccx-routes a > .t-tech { color: var(--color-red-on-dark); }
+  .ccx-routes strong { display: block; font-size: 0.875rem; font-weight: 600; }
+  .ccx-routes small { display: block; margin-top: 0.2rem; color: rgb(244 244 242 / 0.46); font-size: 0.6875rem; }
+
+  @media (max-width: 700px) {
+    .ccx { padding-block: 2rem; }
+    .ccx-wrap { padding-inline: 1rem; }
+    .ccx-head { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+    .ccx h2 { font-size: clamp(2.7rem, 13vw, 3.8rem); }
+    .ccx-head > p { font-size: 0.75rem; }
+    .ccx-ledger { grid-template-columns: minmax(0, 1fr); margin-top: 1.5rem; }
+    .ccx-channel, .ccx-address { min-height: 76px; padding: 0.75rem; }
+    .ccx-address { min-height: 132px; }
+    .ccx-routes { border-inline-start: 0; border-top: 1px solid rgb(255 255 255 / 0.15); padding: 0.75rem; }
+    .ccx-routes a { min-height: 70px; }
+  }
+</style>

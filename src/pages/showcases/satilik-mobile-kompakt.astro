@@ -1,9 +1,6 @@
 ---
-/*
-  The production Satılık page is reused deliberately: desktop/tablet render the
-  exact live composition, while the opt-in proposal affects only <= 640px.
-*/
+/* Canlı Satılık bileşeni burada aynı kaynakla sergilenir. */
 import SatilikPage from '../../features/SatilikPage.astro';
 ---
 
-<SatilikPage locale="tr" mobileProposal />
+<SatilikPage locale="tr" showcasePreview />

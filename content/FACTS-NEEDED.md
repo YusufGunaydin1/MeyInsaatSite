@@ -33,7 +33,6 @@
 - [x] Satış WhatsApp: +90 532 625 68 12 (yalnız Satılık Daireler)
 - [x] E-posta: info@meykozmetik.com
 - [x] Adres: Orhanlı, Vakum Sk. No:26, 34956 Tuzla/İstanbul
-- [ ] Çalışma saatleri
 - [ ] Sosyal medya hesapları (Instagram, LinkedIn…)
 
 ## 6. Teknik

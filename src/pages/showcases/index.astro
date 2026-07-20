@@ -20,14 +20,24 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const demos: Demo[] = [
   {
-    title: 'ÖNERİ — Satılık: yalnız mobil hero + filtre',
+    title: 'CANLI — Satılık: kompakt mobil hero + filtre',
     desc:
-      '641 px ve üzerinde canlı tasarımla birebir aynı kalan, yalnız telefona özel aday: ' +
+      'Onaylanan telefon tasarımı canlı Satılık sayfasına alındı: ' +
       '156 px karar odaklı hero, doğrudan arama ve WhatsApp, sade kategori satırı ve yalnız ' +
       'istendiğinde açılan iki alanlı filtre. Kartlar ve masaüstü düzeni değiştirilmez.',
-    status: 'proposal',
-    meta: 'satilik-mobile-kompakt · mobile <= 640 px · desktop unchanged',
+    status: 'live',
+    meta: 'satilik-mobile-kompakt · canlı mobile <= 640 px · desktop unchanged',
     href: base + '/showcases/satilik-mobile-kompakt',
+  },
+  {
+    title: 'ÖNERİ — İletişim: 3 responsive tasarım yönü',
+    desc:
+      'Masaüstü ve telefonda çalışan üç gerçek-verili yön: A) koyu Doğrudan Masa, ' +
+      'B) açık Rota Panosu, C) teknik Ofis Künyesi. Genel telefon, e-posta ve ofis adresi ' +
+      'kullanılır; satış görüşmesi Satılık sayfasına ayrılır. B seçili adaydır ve kareli fonu kaldırılmıştır.',
+    status: 'proposal',
+    meta: 'iletisim-lab · B Rota ★ · 360 / 1024 / 1366',
+    href: base + '/showcases/iletisim-lab',
   },
   {
     title: 'CANLI — Proje detay mobil: Kompakt Akış',

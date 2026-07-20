@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import LabIntro from '../../components/showcase/LabIntro.astro';
+import Specimen from '../../components/showcase/Specimen.astro';
+import DirectDesk from '../../components/showcase/contact/DirectDesk.astro';
+import RouteBoard from '../../components/showcase/contact/RouteBoard.astro';
+import OfficeLedger from '../../components/showcase/contact/OfficeLedger.astro';
+---
+
+<Base
+  locale="tr"
+  page="contact"
+  path="/showcases/iletisim-lab"
+  title="İletişim Lab — Tasarım Vitrini"
+  description="MEY İnşaat iletişim sayfası için responsive tasarım yönleri."
+  noindex
+>
+  <LabIntro
+    kicker="MEY İnşaat · Dahili · İletişim Lab"
+    title="İletişim — Responsive Tasarım Yönleri"
+    desc="Üç yön de yalnız doğrulanmış genel telefon, e-posta ve ofis adresini kullanır. Satış görüşmesi Satılık Daireler akışına ayrılır; masaüstünde ve telefonda inceleyip bir yön seçebilirsiniz."
+  />
+
+  <Specimen
+    id="A · DİREKT"
+    name="Doğrudan Masa — koyu temas paneli + mimari yüzey"
+    why="En güçlü marka yönü: telefon ve e-posta ilk ekranda; ofis rotası görsel üzerinde; konu seçimi tek kısa şeritte. Mobilde sıralı ve kompakt bir temas akışına dönüşür."
+  >
+    <DirectDesk />
+  </Specimen>
+
+  <Specimen
+    id="B · ROTA ★"
+    name="Seçilen aday — sade rota panosu + konu yönlendirme"
+    why="Seçtiğiniz yön: kareli fon kaldırıldı ve sade sıcak beton yüzeye alındı. Genel temas ile satış/proje taleplerini iki ayrı karar alanına böler; adres ve harita sağlayıcıları tek koyu alt bantta kalır."
+  >
+    <RouteBoard />
+  </Specimen>
+
+  <Specimen
+    id="C · KÜNYE"
+    name="Ofis Künyesi — koyu teknik ledger + üç net rota"
+    why="En kompakt kurumsal yön: doğrulanmış kanalları A/B/C kayıtları gibi sunar; sağ rota rayı telefonda temas bilgilerinin altına iner."
+  >
+    <OfficeLedger />
+  </Specimen>
+</Base>

@@ -22,12 +22,13 @@ async function openReady(page: Page, route: string) {
   await expect.poll(() => saleListingIsland.evaluate((element) => element.hasAttribute('ssr'))).toBe(false);
 }
 
-test('showcases hub labels the proposal as mobile-only', async ({ page }) => {
+test('showcases hub labels the adopted mobile design as live', async ({ page }) => {
   await page.goto(u('showcases/'), { waitUntil: 'domcontentloaded' });
-  const proposal = page.locator('.sc-card').filter({ hasText: 'Satılık: yalnız mobil hero + filtre' });
-  await expect(proposal).toHaveCount(1);
-  await expect(proposal).toContainText('mobile <= 640 px · desktop unchanged');
-  await expect(proposal.locator('a.sc-open')).toHaveAttribute('href', /showcases\/satilik-mobile-kompakt$/);
+  const live = page.locator('.sc-card').filter({ hasText: 'Satılık: kompakt mobil hero + filtre' });
+  await expect(live).toHaveCount(1);
+  await expect(live).toContainText('● CANLIDA');
+  await expect(live).toContainText('canlı mobile <= 640 px · desktop unchanged');
+  await expect(live.locator('a.sc-open')).toHaveAttribute('href', /showcases\/satilik-mobile-kompakt$/);
 });
 
 test('showcase desktop geometry remains identical to the live Satılık page', async ({ page }, testInfo) => {
@@ -49,31 +50,28 @@ test('showcase desktop geometry remains identical to the live Satılık page', a
   const live = await rects(page, selectors);
 
   await openReady(page, ROUTE);
-  const proposal = await rects(page, selectors);
-  await expect(page.getByTestId('smp-mobile-hero')).toBeHidden();
+  const showcase = await rects(page, selectors);
+  await expect(page.getByTestId('ksm-mobile-hero')).toBeHidden();
   await expect(page.getByTestId('klm-controls')).toBeHidden();
 
   for (const key of Object.keys(selectors)) {
-    expect(proposal[key], `${key} exists in the showcase`).not.toBeNull();
+    expect(showcase[key], `${key} exists in the showcase`).not.toBeNull();
     expect(live[key], `${key} exists on the live page`).not.toBeNull();
     for (const metric of ['x', 'y', 'width', 'height'] as const) {
       expect(
-        Math.abs((proposal[key]?.[metric] ?? 0) - (live[key]?.[metric] ?? 0)),
+        Math.abs((showcase[key]?.[metric] ?? 0) - (live[key]?.[metric] ?? 0)),
         `${key}.${metric} desktop drift`
       ).toBeLessThanOrEqual(0.5);
     }
   }
 });
 
-test('mobile proposal changes only hero and controls, keeping the live cards intact', async ({ page }, testInfo) => {
+test('live mobile page uses the compact hero and matches its showcase reference', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-360', 'narrow-mobile contract');
 
   await openReady(page, LIVE_ROUTE);
-  const liveCard = await page.getByTestId('kl-card').first().boundingBox();
-
-  await openReady(page, ROUTE);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
-  await expect(page.getByTestId('smp-mobile-hero')).toBeVisible();
+  await expect(page.getByTestId('ksm-mobile-hero')).toBeVisible();
   await expect(page.locator('.ks-hero-left')).toBeHidden();
   await expect(page.locator('.ks-hero-help')).toBeHidden();
   await expect(page.getByTestId('klm-controls')).toBeVisible();
@@ -81,29 +79,41 @@ test('mobile proposal changes only hero and controls, keeping the live cards int
   await expect(page.getByTestId('kl-filters')).toBeHidden();
   await expect(page.locator('.kl-results-row')).toBeHidden();
 
-  await expect(page.getByTestId('smp-call')).toHaveAttribute('href', 'tel:+905326256812');
-  await expect(page.getByTestId('smp-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
+  await expect(page.getByTestId('ksm-call')).toHaveAttribute('href', 'tel:+905326256812');
+  await expect(page.getByTestId('ksm-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
   await expect(page.getByTestId('klm-count')).toContainText('5 sonuç');
   await expect(page.locator('[data-unit="d12"]')).toContainText('13.750.000 TL');
   await expect(page.locator('[data-unit="d11"]')).toContainText('YAKIN ZAMANDA SATILDI');
   await expect(page.locator('[data-unit="d11"]')).not.toContainText('14.900.000');
 
-  const geometry = await rects(page, {
-    hero: '[data-testid="smp-hero"]',
+  const liveGeometry = await rects(page, {
+    hero: '[data-testid="ksm-hero"]',
     controls: '[data-testid="klm-controls"]',
     firstCard: '[data-testid="kl-card"]',
   });
-  const proposalCard = await page.getByTestId('kl-card').first().boundingBox();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
   expect(overflow, 'no horizontal overflow').toBeLessThanOrEqual(0);
-  expect(geometry.hero?.height, 'mobile-only hero height').toBeLessThanOrEqual(160);
-  expect(geometry.controls?.height, 'closed mobile controls height').toBeLessThanOrEqual(108);
-  expect(geometry.firstCard?.y, 'inventory begins high in the first viewport').toBeLessThanOrEqual(370);
-  expect(Math.abs((proposalCard?.width ?? 0) - (liveCard?.width ?? 0)), 'card width is unchanged').toBeLessThanOrEqual(0.5);
-  expect(Math.abs((proposalCard?.height ?? 0) - (liveCard?.height ?? 0)), 'card height is unchanged').toBeLessThanOrEqual(0.5);
+  expect(liveGeometry.hero?.height, 'mobile-only hero height').toBeLessThanOrEqual(160);
+  expect(liveGeometry.controls?.height, 'closed mobile controls height').toBeLessThanOrEqual(108);
+  expect(liveGeometry.firstCard?.y, 'inventory begins high in the first viewport').toBeLessThanOrEqual(370);
 
-  for (const testId of ['smp-call', 'smp-whatsapp', 'klm-filter-toggle']) {
+  await openReady(page, ROUTE);
+  const showcaseGeometry = await rects(page, {
+    hero: '[data-testid="ksm-hero"]',
+    controls: '[data-testid="klm-controls"]',
+    firstCard: '[data-testid="kl-card"]',
+  });
+  for (const key of Object.keys(liveGeometry)) {
+    for (const metric of ['x', 'y', 'width', 'height'] as const) {
+      expect(
+        Math.abs((showcaseGeometry[key]?.[metric] ?? 0) - (liveGeometry[key]?.[metric] ?? 0)),
+        `${key}.${metric} mobile showcase drift`
+      ).toBeLessThanOrEqual(0.5);
+    }
+  }
+
+  for (const testId of ['ksm-call', 'ksm-whatsapp', 'klm-filter-toggle']) {
     const box = await page.getByTestId(testId).boundingBox();
     expect(box?.height, `${testId} touch height`).toBeGreaterThanOrEqual(44);
   }
@@ -114,7 +124,7 @@ test('mobile proposal changes only hero and controls, keeping the live cards int
 
 test('mobile filters disclose on demand and update the real inventory', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-360', 'narrow-mobile interaction');
-  await openReady(page, ROUTE);
+  await openReady(page, LIVE_ROUTE);
 
   await expect(page.getByTestId('klm-filter-panel')).toHaveCount(0);
   await page.getByTestId('klm-tab-ilan').click();

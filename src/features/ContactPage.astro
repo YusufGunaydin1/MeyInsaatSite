@@ -1,46 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
-import ContactChannels from '../components/ContactChannels.astro';
-import PlaceholderChip from '../components/PlaceholderChip.astro';
+import ContactRouteBoard from '../components/contact/ContactRouteBoard.astro';
 import { type Locale } from '../lib/i18n';
-import { ui, company, pageContent } from '../lib/content';
 
 interface Props {
   locale: Locale;
 }
 
 const { locale } = Astro.props;
-const t = ui(locale);
-const fm = pageContent('iletisim', locale)?.frontmatter ?? {};
 ---
 
 <Base locale={locale} page="contact" path="/iletisim">
-  <section class="container-site section-pad">
-    <div class="guide-line-v ps-6 sm:ps-10">
-      <p class="t-tech text-mey-red mb-4">{t.nav.contact.toUpperCase()}</p>
-      <h1 class="t-display-xl">{fm.title}</h1>
-      <p class="t-body-l mt-6 max-w-2xl">{fm.intro}</p>
-    </div>
-
-    <div class="mt-14">
-      <ContactChannels locale={locale} />
-    </div>
-
-    <div class="grid gap-px sm:grid-cols-2 bg-line border border-line rounded-brand overflow-hidden mt-4 max-w-3xl reveal">
-      <div class="bg-white p-5">
-        <p class="t-tech text-graphite-400">{t.contact.address}</p>
-        <p class="mt-2">
-          {company.contact.address ?? <PlaceholderChip locale={locale} />}
-        </p>
-      </div>
-      <div class="bg-white p-5">
-        <p class="t-tech text-graphite-400">{t.contact.hours}</p>
-        <p class="mt-2">
-          {company.contact.hours ?? <PlaceholderChip locale={locale} />}
-        </p>
-      </div>
-    </div>
-
-    {fm.note && <p class="t-caption text-graphite-400 mt-8 max-w-2xl">{fm.note}</p>}
-  </section>
+  <ContactRouteBoard locale={locale} />
 </Base>

@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import MapLinks from '../../MapLinks.astro';
+import Icon from '../satilik/kompakt/Icon.astro';
+import facade from '../../../assets/photos/facade-grid-detail.webp';
+import { contactFacts, inquiryRoutes } from './data';
+---
+
+<section class="ca" aria-labelledby="ca-title" data-testid="contact-variant-a">
+  <div class="container-site ca-wrap">
+    <div class="ca-shell">
+      <div class="ca-copy">
+        <p class="t-tech ca-kicker">MEY İNŞAAT · DOĞRUDAN İLETİŞİM</p>
+        <h2 id="ca-title">Doğrudan<br />konuşalım.</h2>
+        <p class="ca-intro">Sorunuzu araya form koymadan, doğru kanaldan bize iletin.</p>
+
+        <div class="ca-channels" aria-label="Genel iletişim kanalları">
+          <a href={contactFacts.phoneHref} class="ca-channel" data-testid="contact-a-phone">
+            <span class="ca-icon"><Icon name="phone" size={19} /></span>
+            <span><small>TELEFON</small><strong>{contactFacts.phone}</strong></span>
+            <Icon name="arrow-right" size={18} />
+          </a>
+          <a href={contactFacts.emailHref} class="ca-channel" data-testid="contact-a-email">
+            <span class="ca-icon"><Icon name="mail" size={19} /></span>
+            <span><small>E-POSTA</small><strong>{contactFacts.email}</strong></span>
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </div>
+      </div>
+
+      <div class="ca-visual">
+        <Image
+          src={facade}
+          alt=""
+          aria-hidden="true"
+          widths={[480, 720, 960]}
+          sizes="(max-width: 700px) 100vw, 42vw"
+          quality={74}
+          loading="lazy"
+          class="ca-image"
+        />
+        <div class="ca-image-scrim" aria-hidden="true"></div>
+        <div class="ca-office" data-testid="contact-a-office">
+          <p class="t-tech">OFİS · TUZLA / İSTANBUL</p>
+          <address>{contactFacts.address}</address>
+          <MapLinks address={contactFacts.address} locale="tr" label="HARİTADA AÇ" />
+        </div>
+      </div>
+    </div>
+
+    <div class="ca-routes" aria-label="İletişim konusu seçimi">
+      {inquiryRoutes.map((route) => (
+        <a href={route.href} class="ca-route">
+          <span class="t-tech ca-number">{route.number}</span>
+          <span><strong>{route.title}</strong><small>{route.action}</small></span>
+          <Icon name="arrow-right" size={17} />
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .ca { padding-block: clamp(2.5rem, 6vw, 5.5rem); background: var(--color-concrete-050); }
+  .ca-shell { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr); min-height: 540px; border: 1px solid var(--color-line); }
+  .ca-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(2rem, 5vw, 4.5rem); background: var(--color-night-950); }
+  .ca-kicker { color: var(--color-red-on-dark); }
+  .ca h2 { margin-top: 0.8rem; color: #fff; font-family: var(--font-display); font-size: clamp(3.4rem, 6vw, 5.6rem); font-weight: 600; letter-spacing: -0.02em; line-height: 0.94; text-transform: uppercase; }
+  .ca-intro { max-width: 39ch; margin-top: 1.25rem; color: rgb(244 244 242 / 0.68); font-size: 0.9375rem; line-height: 1.6; }
+  .ca-channels { display: grid; gap: 1px; margin-top: 2rem; background: rgb(255 255 255 / 0.12); }
+  .ca-channel { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; min-height: 76px; align-items: center; gap: 0.9rem; padding: 0.75rem 1rem; color: #fff; background: var(--color-night-800); }
+  .ca-channel:hover { background: #24272b; }
+  .ca-channel > svg { color: var(--color-red-on-dark); }
+  .ca-icon { display: inline-grid; width: 38px; height: 38px; place-items: center; border: 1px solid rgb(255 255 255 / 0.16); color: var(--color-mey-teal); }
+  .ca-channel span:nth-child(2) { min-width: 0; }
+  .ca-channel small { display: block; color: rgb(244 244 242 / 0.46); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.625rem; letter-spacing: 0.12em; }
+  .ca-channel strong { display: block; overflow-wrap: anywhere; margin-top: 0.2rem; font-size: clamp(0.82rem, 1.4vw, 1rem); font-weight: 500; }
+  .ca-visual { position: relative; min-height: 390px; overflow: hidden; }
+  .ca-image { width: 100%; height: 100%; object-fit: cover; }
+  .ca-image-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, rgb(14 15 17 / 0.76) 100%); }
+  .ca-office { position: absolute; inset-inline: 1.25rem; bottom: 1.25rem; padding: 1rem 1.1rem; border: 1px solid rgb(255 255 255 / 0.26); background: rgb(244 244 242 / 0.94); backdrop-filter: blur(8px); }
+  .ca-office > p { color: var(--color-mey-red); }
+  .ca-office address { max-width: 34ch; margin-top: 0.45rem; color: var(--color-graphite-900); font-size: 0.875rem; font-style: normal; line-height: 1.45; }
+  .ca-office :global(.maplinks) { margin-top: 0.55rem; }
+  .ca-office :global(.maplinks a) { display: inline-flex; min-height: 44px; align-items: center; }
+  .ca-routes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--color-line); border-top: 0; background: #fff; }
+  .ca-route { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; min-height: 88px; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; color: var(--color-graphite-900); }
+  .ca-route + .ca-route { border-inline-start: 1px solid var(--color-line); }
+  .ca-route:hover { background: var(--color-concrete-100); }
+  .ca-route > svg { color: var(--color-mey-red); }
+  .ca-number { color: var(--color-graphite-400); }
+  .ca-route strong { display: block; font-size: 0.875rem; font-weight: 600; }
+  .ca-route small { display: block; margin-top: 0.15rem; color: var(--color-graphite-400); font-size: 0.6875rem; }
+
+  @media (max-width: 700px) {
+    .ca { padding-block: 1.5rem; }
+    .ca-wrap { padding-inline: 1rem; }
+    .ca-shell { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+    .ca-copy { padding: 1.5rem 1rem 1rem; }
+    .ca h2 { font-size: clamp(2.8rem, 14vw, 4rem); }
+    .ca-intro { margin-top: 0.75rem; font-size: 0.8125rem; }
+    .ca-channels { margin-top: 1.25rem; }
+    .ca-channel { min-height: 68px; padding-inline: 0.75rem; }
+    .ca-visual { min-height: 270px; }
+    .ca-office { inset-inline: 0.75rem; bottom: 0.75rem; padding: 0.75rem; }
+    .ca-routes { grid-template-columns: minmax(0, 1fr); border-top: 0; }
+    .ca-route { min-height: 64px; }
+    .ca-route + .ca-route { border-inline-start: 0; border-top: 1px solid var(--color-line); }
+  }
+</style>

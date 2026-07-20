@@ -64,6 +64,8 @@ test('fineUX capture matrix: Satılık landing composition', async ({ page }, te
       help: await box(page, '.ks-hero-help'),
       listing: await box(page, '.ks-listing'),
       tabs: await box(page, '.kl-tabs-row'),
+      mobileHero: await box(page, '[data-testid="ksm-mobile-hero"]'),
+      mobileControls: await box(page, '[data-testid="klm-controls"]'),
       heroNaturalWidth: await naturalWidth(page, '.ks-hero-img'),
       images: await imageMetrics(page),
     };
@@ -75,16 +77,18 @@ test('fineUX capture matrix: Satılık landing composition', async ({ page }, te
     expect(overflow, `${cell.name}px horizontal overflow`).toBeLessThanOrEqual(0);
 
     if (cell.name === '360') {
-      expect(metrics.hero?.height, 'mobile hero height').toBeLessThanOrEqual(340);
-      expect(metrics.help?.height, 'mobile help row height').toBeLessThanOrEqual(64);
-      expect(metrics.listing?.y, 'listings should begin within the first screen').toBeLessThanOrEqual(420);
-      expect(metrics.tabs?.height, 'mobile controls stay compact').toBeLessThanOrEqual(106);
+      expect(metrics.hero?.height, 'mobile hero height').toBeLessThanOrEqual(160);
+      expect(metrics.mobileHero?.height, 'compact mobile hero is visible').toBeGreaterThan(0);
+      expect(metrics.help, 'desktop help card is hidden').toBeNull();
+      expect(metrics.tabs, 'desktop tabs are hidden').toBeNull();
+      expect(metrics.mobileControls?.height, 'mobile controls stay compact').toBeLessThanOrEqual(108);
+      expect(metrics.listing?.y, 'listings should begin within the first screen').toBeLessThanOrEqual(260);
       expect(metrics.heroNaturalWidth, 'mobile hero source width').toBeLessThanOrEqual(480);
       expect(metrics.images.count, 'initial landing image requests').toBeLessThanOrEqual(6);
-      await expect(page.getByTestId('kl-filters')).toBeHidden();
-      const filterBox = await page.getByTestId('kl-filter-toggle').boundingBox();
+      await expect(page.getByTestId('klm-filter-panel')).toHaveCount(0);
+      const filterBox = await page.getByTestId('klm-filter-toggle').boundingBox();
       expect(filterBox?.height, 'filter touch target').toBeGreaterThanOrEqual(40);
-      expect(await centerIsUnoccluded(page, '[data-testid="kl-filter-toggle"]'), 'filter control center').toBe(true);
+      expect(await centerIsUnoccluded(page, '[data-testid="klm-filter-toggle"]'), 'filter control center').toBe(true);
     } else {
       expect(metrics.hero?.height, `${cell.name}px hero height`).toBeLessThanOrEqual(330);
       await expect(page.getByTestId('kl-filters')).toBeVisible();

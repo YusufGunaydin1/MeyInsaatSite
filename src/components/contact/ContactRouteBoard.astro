@@ -1,0 +1,202 @@
+---
+import MapLinks from '../MapLinks.astro';
+import PlaceholderChip from '../PlaceholderChip.astro';
+import Icon from '../showcase/satilik/kompakt/Icon.astro';
+import { company, pageContent, ui } from '../../lib/content';
+import { contactNumber, telHref } from '../../lib/contact';
+import { localePath, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+  headingLevel?: 'h1' | 'h2';
+  headingId?: string;
+  rootTestId?: string;
+  testIdPrefix?: string;
+}
+
+const {
+  locale,
+  headingLevel = 'h1',
+  headingId = 'contact-route-board-title',
+  rootTestId = 'contact-route-board',
+  testIdPrefix = 'contact-live',
+} = Astro.props;
+
+const Heading = headingLevel;
+const t = ui(locale);
+const copy = pageContent('iletisim', locale)?.frontmatter ?? {};
+const contact = company.contact;
+const phone = contactNumber(contact.phone);
+const phoneHref = telHref(contact.phone);
+const titleLines = Array.isArray(copy.titleLines) ? copy.titleLines : [copy.title];
+
+const channels = [
+  {
+    key: 'phone',
+    label: t.contact.phone,
+    value: phone?.display,
+    href: phoneHref,
+    icon: 'phone',
+  },
+  {
+    key: 'email',
+    label: t.contact.email,
+    value: contact.email,
+    href: contact.email ? `mailto:${contact.email}` : null,
+    icon: 'mail',
+  },
+];
+
+const routes = [
+  {
+    key: 'sale',
+    title: copy.routes?.sale?.title,
+    text: copy.routes?.sale?.text,
+    href: localePath(locale, '/satilik-daireler'),
+  },
+  {
+    key: 'projects',
+    title: copy.routes?.projects?.title,
+    text: copy.routes?.projects?.text,
+    href: localePath(locale, '/projeler'),
+  },
+  ...(contact.email
+    ? [{
+        key: 'corporate',
+        title: copy.routes?.corporate?.title,
+        text: copy.routes?.corporate?.text,
+        href: `mailto:${contact.email}`,
+      }]
+    : []),
+];
+---
+
+<section class="cb" aria-labelledby={headingId} data-testid={rootTestId}>
+  <div class="container-site cb-wrap">
+    <header class="cb-head">
+      <div>
+        <p class="t-tech cb-kicker">
+          {copy.eyebrow} · {company.constructionFoundedYear}—
+        </p>
+        <Heading id={headingId} class="cb-title">
+          {titleLines.map((line: string, index: number) => (
+            <span>{line}{index < titleLines.length - 1 ? ' ' : ''}</span>
+          ))}
+        </Heading>
+      </div>
+      <p>{copy.intro}</p>
+    </header>
+
+    <div class="cb-grid">
+      <div class="cb-direct" aria-label={copy.labels?.generalAria}>
+        <p class="t-tech cb-section-label">{copy.labels?.direct}</p>
+        {channels.map((channel) => channel.href ? (
+          <a
+            href={channel.href}
+            class="cb-primary"
+            data-testid={`${testIdPrefix}-${channel.key}`}
+          >
+            <span>
+              <small>{channel.label}</small>
+              <strong><bdi dir="ltr">{channel.value}</bdi></strong>
+            </span>
+            <span class="cb-arrow"><Icon name={channel.icon} size={21} /></span>
+          </a>
+        ) : (
+          <div class="cb-primary cb-primary-static">
+            <span><small>{channel.label}</small><PlaceholderChip locale={locale} /></span>
+          </div>
+        ))}
+      </div>
+
+      <div class="cb-routeboard">
+        <p class="t-tech cb-section-label">{copy.labels?.topics}</p>
+        <div class="cb-route-list">
+          {routes.map((route, index) => (
+            <a href={route.href} class="cb-route" data-testid={`${testIdPrefix}-route-${route.key}`}>
+              <span class="t-tech">{String(index + 1).padStart(2, '0')}</span>
+              <span><strong>{route.title}</strong><small>{route.text}</small></span>
+              <Icon name="arrow-right" size={18} />
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="cb-office" data-testid={`${testIdPrefix}-office`}>
+      <div>
+        <p class="t-tech">{copy.labels?.office}</p>
+        {contact.address ? (
+          <address><bdi dir="ltr">{contact.address}</bdi></address>
+        ) : (
+          <PlaceholderChip locale={locale} onDark />
+        )}
+      </div>
+      {contact.address && (
+        <MapLinks address={contact.address} locale={locale} label={copy.labels?.map} />
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cb { padding-block: clamp(3rem, 7vw, 6rem); background: var(--color-concrete-050); }
+  .cb-wrap { position: relative; }
+  .cb-head { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr); gap: 2rem; align-items: end; padding: clamp(1.5rem, 3vw, 2.5rem); border: 1px solid var(--color-line); background: #fff; }
+  .cb-kicker { color: var(--color-mey-red); }
+  .cb-title { margin-top: 0.65rem; color: var(--color-graphite-900); font-family: var(--font-display); font-size: clamp(3.4rem, 6.3vw, 6rem); font-weight: 600; letter-spacing: -0.025em; line-height: 0.94; text-transform: uppercase; }
+  .cb-title > span { display: block; }
+  .cb-head > p { max-width: 38ch; padding-inline-start: 1rem; border-inline-start: 2px solid var(--color-mey-red); color: var(--color-graphite-600); font-size: 0.9375rem; line-height: 1.6; }
+  .cb-grid { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr); border-inline: 1px solid var(--color-line); background: #fff; }
+  .cb-direct, .cb-routeboard { min-width: 0; padding: clamp(1.25rem, 3vw, 2.5rem); }
+  .cb-routeboard { border-inline-start: 1px solid var(--color-line); }
+  .cb-section-label { margin-bottom: 0.9rem; color: var(--color-graphite-400); }
+  .cb-primary { display: grid; grid-template-columns: minmax(0, 1fr) auto; min-height: 92px; align-items: center; gap: 1rem; padding: 1rem 1.1rem; border-top: 1px solid var(--color-line); color: var(--color-graphite-900); }
+  .cb-primary:last-child { border-bottom: 1px solid var(--color-line); }
+  a.cb-primary:hover { padding-inline-start: 1.35rem; background: var(--color-concrete-050); }
+  .cb-primary small { display: block; color: var(--color-graphite-400); font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.11em; text-transform: uppercase; }
+  .cb-primary strong { display: block; overflow-wrap: anywhere; margin-top: 0.3rem; font-size: clamp(0.94rem, 1.7vw, 1.3rem); font-weight: 500; }
+  .cb-primary :global(.placeholder-chip) { margin-top: 0.35rem; }
+  .cb-primary-static { grid-template-columns: minmax(0, 1fr); }
+  .cb-arrow { display: inline-grid; width: 46px; height: 46px; place-items: center; border: 1px solid var(--color-graphite-900); color: var(--color-mey-red); }
+  .cb-route-list { border-top: 1px solid var(--color-line); }
+  .cb-route { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; min-height: 88px; align-items: center; gap: 0.9rem; padding: 0.8rem 0.25rem; border-bottom: 1px solid var(--color-line); color: var(--color-graphite-900); }
+  .cb-route:hover { color: var(--color-mey-red); }
+  .cb-route > .t-tech { color: var(--color-mey-red); }
+  .cb-route > :global(svg) { color: currentColor; }
+  .cb-route strong { display: block; font-size: 0.9375rem; font-weight: 600; }
+  .cb-route small { display: block; max-width: 42ch; margin-top: 0.2rem; color: var(--color-graphite-400); font-size: 0.75rem; line-height: 1.4; }
+  .cb-office { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1.5rem; padding: 1.25rem clamp(1.25rem, 3vw, 2.5rem); color: #fff; background: var(--color-night-950); }
+  .cb-office > div > p { color: var(--color-mey-teal); }
+  .cb-office address { max-width: 56ch; margin-top: 0.35rem; color: rgb(244 244 242 / 0.84); font-size: 0.875rem; font-style: normal; }
+  .cb-office :global(.maplinks-label) { color: rgb(244 244 242 / 0.45); }
+  .cb-office :global(.maplinks a) { color: #fff; }
+  .cb-office :global(.maplinks a:hover) { color: var(--color-mey-teal); }
+
+  :global([dir='rtl']) .cb-title {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+    line-height: 1.16;
+    text-transform: none;
+  }
+  :global([dir='rtl']) .cb .t-tech,
+  :global([dir='rtl']) .cb-primary small {
+    font-family: var(--font-arabic);
+    letter-spacing: 0;
+  }
+  :global([dir='rtl']) .cb-route > :global(svg) { transform: scaleX(-1); }
+
+  @media (max-width: 700px) {
+    .cb { padding-block: 1.5rem; }
+    .cb-wrap { padding-inline: 1rem; }
+    .cb-head { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding: 1.25rem 1rem; }
+    .cb-title { font-size: clamp(2.65rem, 13vw, 3.8rem); }
+    .cb-head > p { font-size: 0.8125rem; }
+    .cb-grid { grid-template-columns: minmax(0, 1fr); }
+    .cb-direct, .cb-routeboard { padding: 1.1rem 0.9rem; }
+    .cb-routeboard { border-inline-start: 0; border-top: 1px solid var(--color-line); }
+    .cb-primary { min-height: 72px; padding: 0.75rem 0.5rem; }
+    .cb-route { min-height: 78px; gap: 0.65rem; }
+    .cb-office { grid-template-columns: minmax(0, 1fr); gap: 0.55rem; padding: 1rem; }
+  }
+</style>

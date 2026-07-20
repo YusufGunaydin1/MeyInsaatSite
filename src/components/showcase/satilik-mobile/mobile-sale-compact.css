@@ -3,13 +3,13 @@
 }
 
 @media (max-width: 640px) {
-  .kl--mobile-proposal > .kl-main > .kl-tabs-row,
-  .kl--mobile-proposal > .kl-main > .kl-filters,
-  .kl--mobile-proposal > .kl-main > .kl-results-row {
+  .kl--mobile-compact > .kl-main > .kl-tabs-row,
+  .kl--mobile-compact > .kl-main > .kl-filters,
+  .kl--mobile-compact > .kl-main > .kl-results-row {
     display: none;
   }
 
-  .kl--mobile-proposal .klm-controls {
+  .kl--mobile-compact .klm-controls {
     display: grid;
     padding: 0 0.6rem 0.55rem;
     border: 1px solid var(--color-line);
