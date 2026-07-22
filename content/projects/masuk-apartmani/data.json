@@ -2,6 +2,7 @@
   "_comment": "Gerçek MEY projesi — Maşuk Apartmanı (eski slug 'ali' → /projeler/masuk-apartmani'ye yönlendirilir). Adres MEY'den doğrulandı (2026-07). Kalan sert gerçekler (yıl/daire) gelene kadar null → site görünür [Bilgi bekleniyor] rozetiyle gösterir. Görseller AI-render (gerçek foto değil); gerçek fotoğraf geldiğinde değişecek. Maşuk için henüz inşaat kare dizisi yok → stages boş.",
   "slug": "masuk-apartmani",
   "location": "Batı Mah. Maşuk Sok. No:10, Pendik/İstanbul",
+  "coordinates": { "lat": 40.874297, "lng": 29.229697 },
   "district": "Pendik",
   "type": "konut",
   "status": "completed",

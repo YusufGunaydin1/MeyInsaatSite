@@ -2,6 +2,7 @@
   "_comment": "Gerçek MEY projesi. Adres MEY'den doğrulandı (2026-07). Kalan sert gerçekler (yıl/daire) gelene kadar null → site görünür [Bilgi bekleniyor] rozetiyle gösterir. Görseller AI-render (gerçek foto değil); gerçek fotoğraf geldiğinde değişecek.",
   "slug": "el-ele-apartmani",
   "location": "Batı Mah. Çiğdem Sok. No:6, Pendik/İstanbul",
+  "coordinates": { "lat": 40.875102, "lng": 29.227424 },
   "district": "Pendik",
   "type": "konut",
   "status": "completed",
