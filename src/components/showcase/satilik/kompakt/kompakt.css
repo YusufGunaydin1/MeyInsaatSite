@@ -698,18 +698,7 @@
   border-radius: var(--radius-brand);
   padding: 0.9rem 1rem 1rem;
 }
-.kcf-demo {
-  display: flex;
-  gap: 0.7rem;
-  align-items: center;
-  flex-wrap: wrap;
-  border: 1px dashed rgb(102 105 109 / 0.45);
-  border-radius: var(--radius-brand);
-  padding: 0.45rem 0.6rem;
-  margin-bottom: 0.7rem;
-}
-.kcf-demo legend { float: left; color: var(--color-graphite-400); padding-inline-end: 0.5rem; }
-.kcf-demo-opt { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--color-graphite-600); cursor: pointer; }
+.kcf-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .kcf-fields { display: flex; flex-direction: column; gap: 0.6rem; }
 .kcf-wide .kcf-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 0.9rem; }
 .kcf-wide .kcf-row-msg { grid-column: 1 / -1; }

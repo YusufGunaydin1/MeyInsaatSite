@@ -4,17 +4,15 @@
   varsayılanına eşitlendi: galeri | künye (.kcg, ortak); eski ref-b geniş karusel
   artık galeri adasındaki ⟷ anahtarıyla SEÇMELİ geniş görünüm. Sayfanın geri
   kalanı ref-b kimliğini korur: özellik çipleri, oda ölçüleri, genel bakış +
-  proje + konum üçlüsü, finansman şeridi, kendi benzer sırası.
-  NOINDEX: fiyatlar temsilî — gerçek satış verisiyle birlikte kaldırılacak.
+  proje + konum üçlüsü, kendi benzer sırası.
+  İNDEKSLENİR: veriler gerçek (sahibinden ilan 1317631166) — noindex kaldırıldı.
 */
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
-import MockChip from '../components/showcase/satilik/kompakt/MockChip.astro';
 import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
 import SpecGrid from '../components/showcase/satilik/kompakt/SpecGrid.astro';
 import MapPanel from '../components/showcase/satilik/kompakt/MapPanel.astro';
-import PaymentPlan from '../components/showcase/satilik/kompakt/PaymentPlan.astro';
 import SimilarUnits from '../components/showcase/satilik/kompakt/SimilarUnits.astro';
 import StickyRail from '../components/showcase/satilik/kompakt/StickyRail.astro';
 import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
@@ -57,8 +55,7 @@ const ozellikler = [
   page="satilik"
   path="/satilik-daireler/daire-2"
   title={d.baslik + ' — MEY İnşaat'}
-  description="El Ele Apartmanı D-12: çatı avlulu 3+2 dubleks — galeri, özellikler, oda ölçüleri, finansman."
-  noindex
+  description="El Ele Apartmanı D-12: çatı avlulu 3+2 dubleks, 160 m² brüt, 5. kat — galeri, özellikler, oda ölçüleri. 13.750.000 TL."
 >
   <div class="container-site kce-crumbwrap">
     <Breadcrumb items={[
@@ -83,7 +80,6 @@ const ozellikler = [
     <div class="kce-price-box">
       <p class="kce-price tabular-nums" data-testid="kc-price">{tl(d.unit.fiyat!)}</p>
       <p class="t-caption kce-kdv">KDV Dahil</p>
-      <MockChip />
     </div>
   </header>
 
@@ -147,10 +143,8 @@ const ozellikler = [
           <p class="t-caption kce-proje-text">{building.positioning} — {building.builder} yapımı, {proje.kat} katlı, {proje.toplamDaire} daireli bina.</p>
           <a class="kce-proje-link" href={basePrefix + '/projeler/el-ele-apartmani'}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
         </div>
-        <MapPanel compact title="Yakın Çevre" />
+        <MapPanel compact title="Yakın Çevre" locale={locale} />
       </section>
-
-      <PaymentPlan fiyat={d.unit.fiyat!} mode="strip" />
 
       <section id="benzer">
         <SimilarUnits current="daire-2" base={basePrefix} />

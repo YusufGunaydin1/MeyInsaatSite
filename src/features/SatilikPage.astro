@@ -1,19 +1,17 @@
 ---
 /*
-  SATILIK DAİRELER — canlı listeleme sayfası (tasarım: liste-ref mock, vitrinden
-  terfi 2026-07-16). Koyu hero (başlık + 3 stat + yardım kartı) → sekme/filtre/
-  sıralama + kart ızgarası + karşılaştırma & hızlı iletişim rayı → kat planları
-  → CTA. TR + [lang] rotaları bu bileşeni sarar; sayfa içeriği şimdilik TR.
+  SATILIK DAİRELER — canlı listeleme sayfası. Koyu hero (başlık + 3 stat + yardım
+  kartı) → sekme/filtre/sıralama + kart ızgarası + hızlı iletişim rayı → kat
+  planları → CTA. TR + [lang] rotaları bu bileşeni sarar; sayfa içeriği şimdilik TR.
 
-  NOINDEX BİLEREK AÇIK: fiyat/m² değerleri temsilîdir (kompakt/data.ts, sayfada
-  çip). Gerçek satış verisi girildiğinde noindex'i ve astro.config'teki sitemap
-  istisnasını BİRLİKTE kaldır.
+  İNDEKSLENİR: D-12 gerçek satış verisiyle canlıya alındı (sahibinden ilanı) →
+  noindex kaldırıldı, sitemap istisnası da kaldırıldı (astro.config.mjs — yalnız
+  daire-1 sitemap dışı, çünkü satıldı).
 */
 import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
-import MockChip from '../components/showcase/satilik/kompakt/MockChip.astro';
 import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
 import CtaBand from '../components/showcase/satilik/kompakt/CtaBand.astro';
 import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
@@ -32,9 +30,8 @@ import '../components/showcase/satilik-mobile/mobile-sale-compact.css';
 
 interface Props {
   locale: Locale;
-  showcasePreview?: boolean;
 }
-const { locale, showcasePreview = false } = Astro.props;
+const { locale } = Astro.props;
 const t = ui(locale);
 
 /** yerel dil öneki dahil kök ('' | '/en' | ...) — bileşenlerin base'i */
@@ -114,9 +111,7 @@ const stats = [
 <Base
   locale={locale}
   page="satilik"
-  path={showcasePreview ? '/showcases/satilik-mobile-kompakt' : '/satilik-daireler'}
-  title={showcasePreview ? 'Satılık Mobil Tasarım — Tasarım Vitrini' : undefined}
-  noindex
+  path="/satilik-daireler"
 >
   <!-- HERO -->
   <section class="ks-hero theatre ksm-hero" data-testid="ksm-hero">
@@ -175,7 +170,6 @@ const stats = [
 
   <!-- LİSTE + RAY (ada) -->
   <section class="container-site ks-listing ksm-listing" aria-label="Satılık daire listesi">
-    <p class="ks-mockline"><MockChip /></p>
     <SaleListing
       client:load
       items={items}
@@ -184,6 +178,7 @@ const stats = [
       salesPhoneHref={telHref(company.salesContact.phone) ?? ''}
       salesWhatsapp={salesWhatsapp?.display ?? ''}
       salesWhatsappHref={whatsappHref(company.salesContact.whatsapp) ?? ''}
+      formAccessKey={company.contact.formAccessKey ?? ''}
     />
   </section>
 
@@ -210,7 +205,7 @@ const stats = [
         </article>
       ))}
     </div>
-    <p class="t-caption ks-plans-note">Kat planı görselleri hazırlanıyor — şema temsilîdir.</p>
+    <p class="t-caption ks-plans-note">Kat planı görselleri hazırlanıyor.</p>
   </section>
 
   <!-- CTA -->

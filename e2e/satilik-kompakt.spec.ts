@@ -2,15 +2,14 @@ import { test, expect, type Page } from '@playwright/test';
 import { u } from './util';
 
 /*
-  Satılık Daireler — CANLI listeleme ailesi (/satilik-daireler + iki detay) ve
-  vitrindeki alternatif dizilim. Ölçülen şeyler kullanıcının GÖRDÜĞÜ davranış:
+  Satılık Daireler — CANLI listeleme ailesi (/satilik-daireler + iki detay).
+  Ölçülen şeyler kullanıcının GÖRDÜĞÜ davranış:
   sekme/filtre/sıralama/favori kart sayısını değiştirir, karusel çalışır, D-11
   sold durumunda hiçbir fiyat göstermez, D-12 doğrulanmış fiyatını korur, ray
   formu mock sonuç panellerini gösterir ve mobilde taşma yoktur.
 */
 
 const K = 'satilik-daireler/';
-const V = 'showcases/satilik-daireler/kompakt/vitrin';
 
 const decoded = async (page: Page, sel: string) => {
   await expect
@@ -34,16 +33,16 @@ const revealMobileFilters = async (page: Page) => {
   await expect(page.getByTestId('kl-filters')).toBeVisible();
 };
 
-test('liste: nav Satılık aktif + sekmeler/filtre/ray + tek temsilî-veri çipi', async ({ page }) => {
+test('liste: nav Satılık aktif + sekmeler/filtre/ray + gerçek veri (temsilî çip yok)', async ({ page }) => {
   await page.goto(u(K));
-  // temsilî m² ve ödeme bilgileri yayında kaldığı sürece bilinçli noindex
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+  // gerçek satış verisi (D-12 sahibinden ilanı) → indekslenir, noindex YOK
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
   await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveText(/^satılık$/i);
   await expect(page.getByTestId('kl-tab-tumu')).toContainText('Tümü (5)');
   await revealMobileFilters(page);
-  await expect(page.getByTestId('kl-compare')).toBeVisible();
   await expect(page.getByTestId('kcf-form')).toBeVisible(); // hızlı iletişim
-  await expect(page.getByTestId('kc-mock-chip')).toHaveCount(1);
+  await expect(page.getByTestId('kc-mock-chip')).toHaveCount(0); // temsilî çip kaldırıldı
+  await expect(page.locator('body')).not.toContainText('temsilî');
   await expect(page.getByTestId('kl-sales-phone')).toHaveAttribute('href', 'tel:+905326256812');
   await expect(page.getByTestId('kl-sales-phone')).toContainText('+90 532 625 68 12');
   await expect(page.getByTestId('kl-sales-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
@@ -70,8 +69,6 @@ test('liste: D-11 yakın zamanda satıldı ve fiyatsız; D-12 13.750.000 TL kal�
   await expect(d12).toHaveAttribute('data-status', 'musait');
   await expect(page.getByTestId('kl-price-d12')).toHaveText('13.750.000 TL');
   await expect(page.getByTestId('kl-fav-d12')).toBeVisible();
-  await expect(page.getByTestId('kl-compare-status-d11')).toHaveText('Yakın zamanda satıldı');
-  await expect(page.getByTestId('kl-compare-price-d12')).toHaveText('13.750.000 TL');
   await expect(page.locator('[data-kind="proje"] .kl-price')).toHaveCount(0);
   await expect(page.locator('[data-kind="proje"] .kl-heart')).toHaveCount(0);
   await expect(page.locator('[data-kind="proje"]').filter({ hasText: ' TL' })).toHaveCount(0);
@@ -165,27 +162,6 @@ test('detay D-11: matris lejantı ve gerçek durum dağılımı', async ({ page 
   await expect(matrix.locator('td[data-durum="musait"]').first()).toContainText('Müsait');
 });
 
-test('vitrin dizilimi: proje sekmeleri filtreler; teaser kartlar fiyat uydurmaz', async ({ page }) => {
-  await page.goto(u(V));
-  const unitsIsland = page.locator('astro-island[component-url*="UnitsExplorer"]');
-  await expect.poll(() => unitsIsland.evaluate((element) => element.hasAttribute('ssr'))).toBe(false);
-  await expect(page.getByTestId('kc-mock-chip')).toHaveCount(1);
-  await expect(page.getByTestId('kx-card')).toHaveCount(4); // 2 gerçek + 2 teaser
-  await page.getByTestId('kx-tab-el-ele').click();
-  await expect(page.getByTestId('kx-card')).toHaveCount(2);
-  const d11 = page.locator('[data-unit="d11"]');
-  const d12 = page.locator('[data-unit="d12"]');
-  await expect(d11).toContainText('YAKIN ZAMANDA SATILDI');
-  await expect(d11).not.toContainText('14.900.000');
-  await expect(d12).toContainText('13.750.000 TL');
-  await page.getByTestId('kx-tab-masuk-apartmani').click();
-  const teaser = page.getByTestId('kx-card');
-  await expect(teaser).toHaveCount(1);
-  await expect(teaser).toContainText('Tümü satıldı');
-  await expect(teaser).not.toContainText(' TL');
-  await expect(page.getByTestId('kc-tum-daireler')).toHaveAttribute('href', /\/satilik-daireler$/);
-});
-
 test('detay: varsayılan galeri|künye; ⟷ geniş görünümü açar, tercih iki sayfada da tutulur', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-360', 'dar ekranda düzen zaten tek sütun, düğme gizli');
   await page.goto(u(K + 'daire-1'));
@@ -248,26 +224,48 @@ test('detay: D-11 sold durumunda fiyatsız; D-12 fiyatı değişmeden satışta'
 
   await page.goto(u(K + 'daire-2'));
   await expect(page.getByTestId('kc-price')).toHaveText('13.750.000 TL');
-  await expect(page.getByTestId('kc-finance')).toBeVisible();
   await expect(page.locator('body')).not.toContainText('14.900.000');
   const similarD11 = page.getByTestId('kc-sim-unit-d11');
   await expect(page.getByTestId('kc-sim-status-d11')).toHaveText('YAKIN ZAMANDA SATILDI');
   await expect(similarD11.locator('.kc-sim-fiyat')).toHaveCount(0);
 });
 
-test('ray formu: doğrulama → hata; mock başarı ve hata panelleri', async ({ page }) => {
+test('ray formu: doğrulama → gerçek gönderim (Web3Forms) hata ve başarı panelleri', async ({ page }) => {
+  // Web3Forms uç noktası mock'lanır; gerçek servise asla çıkılmaz.
+  let relay: 'ok' | 'fail' = 'fail';
+  let lastBody: any = null;
+  await page.route('https://api.web3forms.com/submit', async (route) => {
+    lastBody = JSON.parse(route.request().postData() ?? '{}');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(relay === 'ok'
+        ? { success: true, message: 'Message sent successfully' }
+        : { success: false, message: 'Invalid access key' }),
+    });
+  });
+
   await page.goto(u(K + 'daire-2'));
   const railFormIsland = page.locator('astro-island[component-url*="RailForm"]');
   await expect.poll(() => railFormIsland.evaluate((element) => element.hasAttribute('ssr'))).toBe(false);
+
+  // boş gönderim → doğrulama hataları, ağ çağrısı yok
   await page.getByTestId('kcf-submit').click();
   await expect(page.getByTestId('kcf-err-name')).toBeVisible();
   await expect(page.getByTestId('kcf-err-contact')).toBeVisible();
+
   await page.getByTestId('kcf-name').fill('Deneme Ziyaretçi');
-  await page.getByTestId('kcf-contact').fill('05xx xxx xx xx');
-  await page.getByTestId('kcf-demo-failure').check();
+  await page.getByTestId('kcf-contact').fill('deneme@example.com');
+
+  // servis başarısız → dürüst hata paneli (sahte başarı yok)
   await page.getByTestId('kcf-submit').click();
-  await expect(page.getByTestId('kcf-failure')).toBeVisible({ timeout: 5000 });
-  await page.getByTestId('kcf-demo-success').check();
+  await expect(page.getByTestId('kcf-error')).toBeVisible({ timeout: 5000 });
+  // gönderilen gövde alanları doğru eşlendi
+  expect(lastBody).toMatchObject({ name: 'Deneme Ziyaretçi', email: 'deneme@example.com' });
+  expect(String(lastBody.message)).toContain('deneme@example.com');
+
+  // servis başarılı → talep alındı paneli
+  relay = 'ok';
   await page.getByTestId('kcf-submit').click();
   await expect(page.getByTestId('kcf-success')).toBeVisible({ timeout: 5000 });
   await page.getByTestId('kcf-again').click();
@@ -308,16 +306,16 @@ test('yerelleştirilmiş rotalar ayakta: /en, /ru, /ar listeye ulaşır', async 
   }
 });
 
-test('mobil: canlı üç sayfa + vitrin — yatay taşma yok, görseller çözülür, menü açılır', async ({ page }, testInfo) => {
+test('mobil: canlı üç sayfa — yatay taşma yok, görseller çözülür, menü açılır', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-360', 'yalnız mobil projede');
-  for (const route of [K, K + 'daire-1', K + 'daire-2', V]) {
+  for (const route of [K, K + 'daire-1', K + 'daire-2']) {
     await page.goto(u(route));
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth
     );
     expect(overflow, route + ' yatay taşma').toBeLessThanOrEqual(0);
     await decoded(page, 'main img');
-  }
+}
   // dar ekranda geniş-görünüm anahtarı GİZLİ (düzen zaten tek sütun)
   await page.goto(u(K + 'daire-1'));
   await expect(page.getByTestId('kc-car-main')).toBeVisible();

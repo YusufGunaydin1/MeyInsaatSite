@@ -65,6 +65,7 @@ interface Props {
   salesPhoneHref: string;
   salesWhatsapp: string;
   salesWhatsappHref: string;
+  formAccessKey: string;
 }
 
 const TUMU = 'tumu';
@@ -147,6 +148,7 @@ export default function SaleListing({
   salesPhoneHref,
   salesWhatsapp,
   salesWhatsappHref,
+  formAccessKey,
 }: Props) {
   const [tab, setTab] = useState(TUMU);
   const [filters, setFilters] = useState<Filters>(EMPTY);
@@ -154,7 +156,6 @@ export default function SaleListing({
   const [favs, setFavs] = useState<Set<string>>(new Set());
   const [favOnly, setFavOnly] = useState(false);
   const [shown, setShown] = useState(PAGE);
-  const [compare, setCompare] = useState<string[]>(['d11', 'd12']);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [mobileStatus, setMobileStatus] = useState<MobileStatus>('tumu');
 
@@ -206,10 +207,6 @@ export default function SaleListing({
     Object.values(filters).filter((value) => value !== TUMU).length +
     (mobileStatus === 'tumu' ? 0 : 1);
 
-  const compareItems = compare
-    .map((id) => items.find((u) => u.id === id))
-    .filter((u): u is ListingItem => !!u && u.kind === 'ilan');
-
   return (
     <div className="kl kl--mobile-compact" data-testid="kl">
       <div className="kl-main">
@@ -236,7 +233,7 @@ export default function SaleListing({
 
             <div className="klm-command-row">
               <p className="klm-count" data-testid="klm-count">
-                <strong>{visible.length}</strong> sonuç <span>· m² temsilî</span>
+                <strong>{visible.length}</strong> sonuç
               </p>
               <button
                 type="button"
@@ -340,7 +337,7 @@ export default function SaleListing({
             <span className="kx-field-label">Kat</span>
             <select value={filters.kat} onChange={set('kat')} data-testid="kl-f-kat">
               <option value={TUMU}>Tümü</option>
-              <option value="5-6">5.–6. Kat</option>
+              <option value="5-6">5. Kat</option>
             </select>
           </label>
           <label className="kx-field">
@@ -486,42 +483,10 @@ export default function SaleListing({
 
       {/* SAĞ RAY */}
       <aside className="kl-rail">
-        {compareItems.length > 0 && (
-          <div className="kl-compare" data-testid="kl-compare">
-            <div className="kl-compare-head">
-              <p className="t-tech">KARŞILAŞTIRMA ({compareItems.length}/3)</p>
-              <button type="button" aria-label="Karşılaştırmayı kapat" onClick={() => setCompare([])} data-testid="kl-compare-close">
-                <Ic d={I.x} size={15} />
-              </button>
-            </div>
-            {compareItems.map((u) => (
-              <div key={u.id} className="kl-compare-item">
-                <DeferredImage src={u.img.src} alt="" width={64} height={48} />
-                <div>
-                  <p className="kl-compare-title">{u.baslik}</p>
-                  <p className="kl-compare-sub">{u.proje} · {u.blokKat}</p>
-                  {u.fiyatText ? (
-                    <p className="kl-compare-price tabular-nums" data-testid={`kl-compare-price-${u.id}`}>{u.fiyatText}</p>
-                  ) : (
-                    <p className="kl-compare-status" data-testid={`kl-compare-status-${u.id}`}>Yakın zamanda satıldı</p>
-                  )}
-                </div>
-                <button type="button" aria-label={`${u.baslik} karşılaştırmadan çıkar`}
-                  onClick={() => setCompare((c) => c.filter((id) => id !== u.id))}>
-                  <Ic d={I.x} size={13} />
-                </button>
-              </div>
-            ))}
-            <button type="button" className="kl-compare-cta" onClick={() => openSoon('Karşılaştırma görünümü')} data-testid="kl-compare-cta">
-              Karşılaştır
-            </button>
-          </div>
-        )}
-
         <div className="kl-quick">
           <h3 className="t-heading-s">Hızlı İletişim</h3>
           <p className="t-caption kl-quick-sub">Size en uygun daireyi birlikte bulalım.</p>
-          <RailForm konu="Satılık daireler" />
+          <RailForm konu="Satılık daireler" accessKey={formAccessKey} />
           <div className="kl-quick-lines">
             {salesPhone && salesPhoneHref && (
               <a href={salesPhoneHref} data-testid="kl-sales-phone"><Ic d={I.tel} /> {salesPhone}</a>

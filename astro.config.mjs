@@ -27,10 +27,10 @@ export default defineConfig({
     '/ar/projeler/sapanbaglari': '/ar/projeler/camoglu-apartmani',
   },
   // /showcases = dahili tasarım vitrini: sitemap dışı (sayfa ayrıca noindex).
-  // /satilik-daireler = canlı ama fiyatlar TEMSİLÎ: gerçek satış verisi girilince
-  // bu istisnayı ve features/Satilik*Page'deki noindex'i BİRLİKTE kaldır.
+  // /satilik-daireler = CANLI ve gerçek (D-12 sahibinden ilanı) → sitemap'e girer.
+  // Tek istisna daire-1: satıldı + noindex, o yüzden sitemap dışı bırakılır.
   integrations: [react(), sitemap({
-    filter: (page) => !page.includes('/showcases') && !page.includes('/satilik-daireler'),
+    filter: (page) => !page.includes('/showcases') && !page.includes('/satilik-daireler/daire-1'),
   })],
   i18n: {
     locales: ['tr', 'en', 'ru', 'ar'],

@@ -1,17 +1,28 @@
 /*
-  SATILIK DAİRELER — KOMPAKT yön: merkezi TEMSİLÎ (mock) sayı modeli.
-  Satış durumu ve D-12 fiyatı doğrulanmıştır; m², kat, mesafe ve ödeme planı gibi
-  kalan sayısal alanlar `mock: true` ile işaretlidir. Sayfa başına TEK temsilî
-  veri çipi bu ayrımı görünür kılar (MockChip).
+  SATILIK DAİRELER — KOMPAKT veri modeli.
 
-  Gerçek (uydurma OLMAYAN) çekirdek ../data.ts'ten gelir: El Ele Apartmanı,
-  Mey İnşaat ve iki 3+2 dubleks gerçektir: D-11 yakın zamanda satıldı; D-12
-  13.750.000 TL fiyatla satıştadır. Matris aynı durumu tek kaynaktan taşır.
+  D-12 (satıştaki TEK daire) 100% GERÇEK — sahibinden ilanı 1317631166
+  (21.07.2026): 160/135 m², 5. kat çatı dubleksi, 5 katlı sıfır bina,
+  13.750.000 TL. Bu dairenin hiçbir alanı tahmin değildir.
+
+  Diğer sayılar İÇ TAHMİNDİR (D-11 dışındaki 8 daire ve m²'leri, D-11'in m²/kat'ı,
+  oda ölçüleri, çevre mesafeleri, kat planı m², ödeme oranları). `mock: true` bunu
+  KOD düzeyinde işaretler; kullanıcıya "temsilî" olarak SUNULMAZ — arayüzdeki
+  temsilî çip ve notlar kaldırıldı. Yeni doğrulanan bilgi geldikçe ilgili tahmini
+  gerçek değerle değiştir (D-12 gibi).
+
+  Gerçek çekirdek ../data.ts'ten gelir: El Ele Apartmanı, Mey İnşaat, iki 3+2
+  dubleks; D-11 yakın zamanda satıldı, D-12 satışta.
 */
 import { daire1, daire2, building } from '../data';
+import type { MapCoordinates } from '../../../../lib/maps';
+import elEleProjectData from '../../../../../content/projects/el-ele-apartmani/data.json';
 
-export const MOCK = true;
-export const MOCK_NOTICE = 'm² ve ödeme verileri temsilîdir — teyit edilecektir';
+const verifiedElEle = elEleProjectData as {
+  location: string;
+  coordinates: MapCoordinates;
+};
+
 export const RECENTLY_SOLD_LABEL = 'YAKIN ZAMANDA SATILDI';
 
 export const tl = (n: number) => n.toLocaleString('tr-TR') + ' TL';
@@ -20,9 +31,10 @@ export const tl = (n: number) => n.toLocaleString('tr-TR') + ' TL';
 export const proje = {
   ad: building.name,
   slug: 'el-ele-apartmani',
-  lokasyon: 'Pendik / İstanbul',
+  lokasyon: 'Batı Mah., Pendik / İstanbul',
   /** MEY'in doğruladığı açık adres — harita bağlantıları bundan türetilir */
-  adres: 'Batı Mah. Çiğdem Sok. No:6, Pendik/İstanbul',
+  adres: verifiedElEle.location,
+  coordinates: verifiedElEle.coordinates,
   toplamDaire: 10,
   blok: 1,
   kat: 6,
@@ -31,8 +43,10 @@ export const proje = {
 };
 
 /* ─── Daire envanteri ───
-   Gerçek: D-11 = yakın zamanda satıldı; D-12 = 13.750.000 TL ve müsait.
-   Kalan 8 daire temsilî doluluk — satılmış gösterilir, fiyat taşımaz. */
+   D-12 = 13.750.000 TL, müsait, sahibinden ilanıyla GERÇEK (160/135 m², 5. kat).
+   D-11 = yakın zamanda satıldı (gerçek); m²/kat İÇ TAHMİN (D-12'nin ikizi).
+   Kalan 8 daire İÇ TAHMİN doluluk — satılmış gösterilir, fiyat taşımaz;
+   arayüzde tahmin olduğu belirtilmez. */
 export type Durum = 'musait' | 'rezerve' | 'satildi';
 
 export interface KUnit {
@@ -59,14 +73,16 @@ export interface KUnit {
 }
 
 export const units: KUnit[] = [
+  // D-11 — gerçek (yakın zamanda satıldı); brut/net/kat İÇ TAHMİN (D-12'nin ikizi).
   {
-    id: 'd11', mock: true, apartmentId: 'daire-1', no: 'D-11', kat: '5.–6. Kat', katKey: '5-6',
+    id: 'd11', mock: true, apartmentId: 'daire-1', no: 'D-11', kat: '5. Kat', katKey: '5-6',
     tip: '3+2 Dubleks', oda: '3+2', brut: 182, net: 148, fiyat: null, durum: 'satildi',
     cephe: 'Deniz — teras katı', badge: RECENTLY_SOLD_LABEL, foto: 'daire-1/d1-salon-alt.png', detay: 'daire-1',
   },
+  // D-12 — 100% GERÇEK (sahibinden ilan 1317631166): 160/135 m², 5. kat çatı dubleksi.
   {
-    id: 'd12', mock: true, apartmentId: 'daire-2', no: 'D-12', kat: '5.–6. Kat', katKey: '5-6',
-    tip: '3+2 Dubleks', oda: '3+2', brut: 176, net: 143, fiyat: 13_750_000, durum: 'musait',
+    id: 'd12', mock: true, apartmentId: 'daire-2', no: 'D-12', kat: '5. Kat', katKey: '5-6',
+    tip: '3+2 Dubleks', oda: '3+2', brut: 160, net: 135, fiyat: 13_750_000, durum: 'musait',
     cephe: 'Çatı avlusu — şehir', badge: 'SON DAİRE', foto: 'daire-2/d2-salon-ust-1.png', detay: 'daire-2',
   },
   ...([
@@ -133,7 +149,7 @@ export const matris: { rows: MatrixRow[]; legend: { durum: Durum; label: string 
   ],
 };
 
-/* ─── Yakın çevre (mesafeler temsilî) ─── */
+/* ─── Yakın çevre — mesafeler İÇ TAHMİN (arayüzde temsilî denmez; netleşince değiştir) ─── */
 export interface Yer { ad: string; mesafe: string; icon: string }
 export const yakinCevre: Yer[] = [
   { ad: 'Sahil & yürüyüş parkuru', mesafe: '350 m', icon: 'park' },
@@ -163,8 +179,9 @@ export interface Tip {
   adet: string;
 }
 export const tipler: Tip[] = [
-  { ad: '3+2 Dubleks', ozet: 'İki kat, iki salon, teras', m2: '176 m² brüt',
+  { ad: '3+2 Dubleks', ozet: 'İki kat, iki salon, teras', m2: '160 m² brüt',
     fiyatText: tl(13_750_000), durum: 'musait', adet: `${satistakiDaireSayisi} daire müsait` },
+  // 3+1 m² İÇ TAHMİN — bu tipten satılık kalmadı.
   { ad: '3+1', ozet: 'Tek kat aile dairesi', m2: '128 m² brüt',
     fiyatText: 'Tümü teslim edildi', durum: 'tukendi', adet: '8 daire — satıldı' },
 ];
@@ -172,19 +189,25 @@ export const tipler: Tip[] = [
 /* ─── Detay sayfası spec ızgaraları ─── */
 export interface SpecItem { label: string; value: string }
 
+/* Bina + daire künyesi. D-12 için TÜM değerler sahibinden ilanıyla birebir;
+   Cephe (ikisinde) ve D-11'in brüt/net/kat'ı İÇ TAHMİN. */
 function commonSpecs(u: KUnit): SpecItem[] {
   return [
     { label: 'Brüt / Net', value: `${u.brut} m² / ${u.net} m²` },
     { label: 'Oda / Salon', value: '3+2 / 2 salon' },
     { label: 'Tip', value: u.tip },
     { label: 'Bulunduğu Kat', value: u.kat + ' (çatı dubleksi)' },
-    { label: 'Bina Kat Sayısı', value: '6' },
-    { label: 'Bina Yaşı', value: '0 (Sıfır)' },
+    { label: 'Bina Kat Sayısı', value: '5' },
+    { label: 'Bina Yaşı', value: '0 (Oturuma Hazır)' },
     { label: 'Banyo Sayısı', value: '2' },
+    { label: 'Mutfak', value: 'Kapalı' },
     { label: 'Isıtma', value: 'Kombi (doğalgaz)' },
+    { label: 'Balkon', value: 'Var' },
+    { label: 'Asansör', value: 'Var' },
     { label: 'Otopark', value: 'Kapalı otopark' },
     { label: 'Eşyalı', value: 'Hayır' },
     { label: 'Kullanım Durumu', value: u.durum === 'satildi' ? 'Yakın zamanda satıldı' : 'Boş — teslime hazır' },
+    { label: 'Site İçinde', value: 'Hayır' },
     { label: 'Tapu Durumu', value: 'Kat mülkiyeti' },
     { label: 'Krediye Uygun', value: 'Evet' },
     { label: 'Takas', value: 'Hayır' },
@@ -193,9 +216,15 @@ function commonSpecs(u: KUnit): SpecItem[] {
   ];
 }
 export const specsD1 = commonSpecs(units[0]);
-export const specsD2 = commonSpecs(units[1]);
+// D-12'ye gerçek sahibinden ilan kimliği eklenir (yalnız bu daireye özel).
+export const specsD2: SpecItem[] = [
+  ...commonSpecs(units[1]),
+  { label: 'İlan No', value: '1317631166' },
+  { label: 'İlan Tarihi', value: '21 Temmuz 2026' },
+];
 
-/* ─── Ödeme planı — satırlar toplamı fiyata EŞİT olmak zorunda (spec bunu ölçer) ─── */
+/* ─── Ödeme planı — oranlar İÇ TAHMİN senaryosu (30/40/30); toplam gerçek fiyata
+   eşittir. Şu an arayüzde render EDİLMİYOR (PaymentPlan kaldırıldı). ─── */
 export interface OdemeSatiri { ad: string; oran: string; tutar: number }
 export function odemePlani(fiyat: number): { rows: OdemeSatiri[]; toplam: number } {
   const pesinat = Math.round(fiyat * 0.3);
@@ -219,7 +248,8 @@ export function finansman(fiyat: number) {
   return { pesinatOran: '%30', pesinat, kalanOran: '%70', kalan, vade: '120 Ay', taksit };
 }
 
-/* ─── Oda ölçüleri (detay B "kat planı" paneli — plan görseli hazır değil) ─── */
+/* ─── Oda ölçüleri (detay B "kat planı" paneli) — ölçüler İÇ TAHMİN; plan görseli
+   hazır değil. Kesin ölçüler gelince değiştir (arayüzde tahmin olduğu belirtilmez). ─── */
 export const odaOlculeriD2: { grup: string; odalar: SpecItem[] }[] = [
   { grup: 'Alt kat', odalar: [
     { label: 'Salon', value: '27,4 m²' },
@@ -291,10 +321,10 @@ export interface ListingUnit {
 
 export const listing: ListingUnit[] = [
   { id: 'd11', mock: true, tip: 'dubleks', baslik: '3+2 Dubleks', proje: 'El Ele Apartmanı', projeKey: 'el-ele',
-    blokKat: 'A Blok · 5.–6. Kat', oda: units[0].oda, brut: units[0].brut, banyo: 2, balkon: 2, kat: units[0].kat, katKey: units[0].katKey,
+    blokKat: 'A Blok · 5. Kat', oda: units[0].oda, brut: units[0].brut, banyo: 2, balkon: 2, kat: units[0].kat, katKey: units[0].katKey,
     fiyat: units[0].fiyat, durum: units[0].durum, badge: units[0].badge, imgKey: units[0].foto, detay: units[0].detay },
   { id: 'd12', mock: true, tip: 'dubleks', baslik: '3+2 Dubleks', proje: 'El Ele Apartmanı', projeKey: 'el-ele',
-    blokKat: 'A Blok · 5.–6. Kat', oda: units[1].oda, brut: units[1].brut, banyo: 2, balkon: 2, kat: units[1].kat, katKey: units[1].katKey,
+    blokKat: 'A Blok · 5. Kat', oda: units[1].oda, brut: units[1].brut, banyo: 2, balkon: 2, kat: units[1].kat, katKey: units[1].katKey,
     fiyat: units[1].fiyat, durum: units[1].durum, badge: units[1].badge, imgKey: units[1].foto, detay: units[1].detay },
 ];
 
@@ -321,8 +351,8 @@ export const listingProjeler: ListingProje[] = [
     sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'camoglu-apartmani' },
 ];
 
-/* Kat planı bandı — plan görselleri hazır değil; stilize şema + temsilî m².
-   Yalnız satıştaki tip: 3+2 dubleks. */
+/* Kat planı bandı — plan görselleri hazır değil; stilize şema. m² değerleri
+   İÇ TAHMİN (arayüzde tahmin olduğu belirtilmez). Yalnız satıştaki tip: 3+2 dubleks. */
 export const katPlanlari = [
   { ad: '3+2 Dubleks Alt Kat', m2: '96 m²' },
   { ad: '3+2 Dubleks Üst Kat', m2: '86 m²' },

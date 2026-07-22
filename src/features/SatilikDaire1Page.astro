@@ -3,11 +3,11 @@
   DAİRE DETAY — D-11 / Daire 1 (canlı; tasarım: daire-detay-ref-a mock).
   Başlık+satış durumu → galeri | künye → çapa sekmeleri → matris + genel bakış
   → konum → satış durumu + SSS → benzer daireler; sağda yapışkan ray.
-  NOINDEX: m² ve teknik değerler temsilî — gerçek verilerle birlikte kaldırılacak.
+  NOINDEX (bilerek): daire SATILDI + m²/kat İÇ TAHMİN; Google'a gönderilmez
+  (sitemap'ten de dışlanır). Arayüzde temsilî ibaresi YOK.
 */
 import Base from '../layouts/Base.astro';
 import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
-import MockChip from '../components/showcase/satilik/kompakt/MockChip.astro';
 import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
 import SpecGrid from '../components/showcase/satilik/kompakt/SpecGrid.astro';
 import AvailabilityMatrix from '../components/showcase/satilik/kompakt/AvailabilityMatrix.astro';
@@ -83,7 +83,6 @@ const projeDetay = [
     </div>
     <div class="kcd-head-price">
       <p class="t-caption kcd-sold-summary">Satış işlemi tamamlandı</p>
-      <MockChip />
     </div>
     <div class="kcd-head-actions">
       <a class="kcd-mini" href={root + '/daire-2'} data-testid="kc-compare"><Icon name="compare" size={15} /> Satıştaki D-12’yi İncele</a>
@@ -127,7 +126,7 @@ const projeDetay = [
       </section>
 
       <section class="kcd-block" id="konum" aria-label="Konum ve yakın çevre">
-        <MapPanel title="Yakın Çevre" />
+        <MapPanel title="Yakın Çevre" locale={locale} />
       </section>
 
       <section class="kcd-block" id="durum" aria-label="Satış durumu ve sorular">

@@ -1,37 +1,58 @@
 /*
-  "Hızlı Bilgi Alın" mini formu — VİTRİN sürümü: gerçek gönderim yok; doğrulama,
-  gönderim, başarı ve hata durumları canlandırılır. Sonuç, formun üstündeki
-  açıkça işaretli vitrin kontrolüyle seçilir (shared/ViewingForm ile aynı disiplin,
-  ray/band için sıkılaştırılmış alan seti).
+  "Hızlı Bilgi Alın" mini formu — gönderim GERÇEK: alanlar Web3Forms üzerinden
+  şirketin doğrulanmış gelen kutusuna e-posta olarak iletilir (statik site,
+  arka uç yok). Erişim anahtarı yoksa ya da ağ hatasında dürüst hata paneli
+  ziyaretçiyi telefon/WhatsApp'a yönlendirir; hiçbir zaman sahte başarı gösterilmez.
 */
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { WEB3FORMS_ENDPOINT, leadPayload } from '../../../../lib/contact';
 
 interface Props {
   /** hangi daire hakkında — konu satırına yazılır */
   konu: string;
-  /** geniş (iki sütun) yerleşim — vitrin B bandı */
+  /** Web3Forms erişim anahtarı (public); boşsa form hata paneline düşer */
+  accessKey?: string;
+  /** geniş (iki sütun) yerleşim */
   wide?: boolean;
 }
 
-type Status = 'idle' | 'sending' | 'success' | 'failure';
+type Status = 'idle' | 'sending' | 'success' | 'error';
 
-export default function RailForm({ konu, wide = false }: Props) {
+export default function RailForm({ konu, accessKey = '', wide = false }: Props) {
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>('idle');
-  const [demo, setDemo] = useState<'success' | 'failure'>('success');
+  const honeypot = useRef<HTMLInputElement>(null);
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     const next: Record<string, string> = {};
     if (!name.trim()) next.name = 'Lütfen adınızı yazın.';
     if (!contact.trim()) next.contact = 'Telefon ya da e-posta gerekli.';
     setErrors(next);
     if (Object.keys(next).length > 0) return;
+
+    // bal küpü doluysa bot — sessizce başarı göster, hiçbir şey gönderme
+    if (honeypot.current?.value) {
+      setStatus('success');
+      return;
+    }
+
+    // anahtar yoksa/hatalıysa Web3Forms success:false döner → dürüst hata paneli
     setStatus('sending');
-    window.setTimeout(() => setStatus(demo), 800);
+    try {
+      const res = await fetch(WEB3FORMS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(leadPayload({ accessKey, konu, name, contact, message })),
+      });
+      const data = await res.json();
+      setStatus(data?.success ? 'success' : 'error');
+    } catch {
+      setStatus('error');
+    }
   }
 
   if (status === 'success') {
@@ -49,20 +70,10 @@ export default function RailForm({ konu, wide = false }: Props) {
 
   return (
     <form className={wide ? 'kcf kcf-wide' : 'kcf'} onSubmit={submit} noValidate data-testid="kcf-form">
-      <fieldset className="kcf-demo" data-testid="kcf-demo">
-        <legend className="t-tech">VİTRİN KONTROLÜ — sonucu seç:</legend>
-        {(['success', 'failure'] as const).map((k) => (
-          <label key={k} className="t-tech kcf-demo-opt">
-            <input type="radio" name={`kcf-demo-${konu}`} checked={demo === k} onChange={() => setDemo(k)} data-testid={`kcf-demo-${k}`} />
-            {k === 'success' ? 'Başarılı' : 'Hatalı'}
-          </label>
-        ))}
-      </fieldset>
-
-      {status === 'failure' && (
-        <div className="kcf-failure" role="alert" data-testid="kcf-failure">
-          <p className="kcf-panel-title">Gönderilemedi</p>
-          <p className="kcf-panel-text">Bağlantı sorunu canlandırıldı — tekrar deneyin.</p>
+      {status === 'error' && (
+        <div className="kcf-failure" role="alert" data-testid="kcf-error">
+          <p className="kcf-panel-title">Şu an gönderilemedi</p>
+          <p className="kcf-panel-text">Lütfen tekrar deneyin ya da aşağıdaki telefon/WhatsApp ile ulaşın.</p>
         </div>
       )}
 
@@ -72,6 +83,7 @@ export default function RailForm({ konu, wide = false }: Props) {
           <input
             id={`kcf-name-${wide}`}
             type="text"
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             aria-invalid={!!errors.name}
@@ -85,6 +97,7 @@ export default function RailForm({ konu, wide = false }: Props) {
             id={`kcf-contact-${wide}`}
             type="text"
             inputMode="email"
+            autoComplete="email"
             value={contact}
             onChange={(e) => setContact(e.target.value)}
             aria-invalid={!!errors.contact}
@@ -104,10 +117,21 @@ export default function RailForm({ konu, wide = false }: Props) {
         </div>
       </div>
 
+      {/* bal küpü — insanlara görünmez, botları yakalar */}
+      <input
+        ref={honeypot}
+        type="text"
+        name="website"
+        className="kcf-hp"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
+
       <button type="submit" className="kcf-submit" disabled={status === 'sending'} data-testid="kcf-submit">
         {status === 'sending' ? 'Gönderiliyor…' : 'Gönder'}
       </button>
-      <p className="kcf-privacy">Bilgileriniz yalnız dönüş için kullanılır.</p>
+      <p className="kcf-privacy">Bilgileriniz yalnız size dönüş için kullanılır.</p>
     </form>
   );
 }

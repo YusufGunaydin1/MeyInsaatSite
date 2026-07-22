@@ -52,7 +52,7 @@ const trust = [
   <div class="kc-rail-form">
     <h3 class="t-heading-s">Hızlı Bilgi Alın</h3>
     <p class="t-caption kc-rail-formsub">{konu} hakkında bilgi isteyin; size dönelim.</p>
-    <RailForm client:load konu={konu} />
+    <RailForm client:load konu={konu} accessKey={company.contact.formAccessKey ?? ''} />
   </div>
 
   {docs && (
