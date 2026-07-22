@@ -1,0 +1,86 @@
+---
+import type { ProjectLocation } from '../../../lib/projectLocations';
+
+interface Props {
+  locations: ProjectLocation[];
+}
+
+const { locations } = Astro.props;
+const lats = locations.map((location) => location.coordinates.lat);
+const lngs = locations.map((location) => location.coordinates.lng);
+const minLat = Math.min(...lats);
+const maxLat = Math.max(...lats);
+const minLng = Math.min(...lngs);
+const maxLng = Math.max(...lngs);
+const latRange = maxLat - minLat || 1;
+const lngRange = maxLng - minLng || 1;
+const points = locations.map((location) => ({
+  ...location,
+  x: 14 + ((location.coordinates.lng - minLng) / lngRange) * 72,
+  y: 80 - ((location.coordinates.lat - minLat) / latRange) * 60,
+}));
+---
+
+<section class="km-atlas" data-testid="location-variant-b">
+  <header class="km-atlas-head">
+    <div>
+      <p class="t-tech km-kicker">B · PENDİK ATLASI</p>
+      <h2>Üç bina, tek koordinat paftası.</h2>
+    </div>
+    <p>
+      Harici harita yüklemeden bütün MEY konumlarını karşılaştırır. Noktaların göreli
+      yerleşimi gerçek koordinatlardan hesaplanır; her pin kesin sağlayıcı linkine açılır.
+    </p>
+  </header>
+
+  <div class="km-atlas-grid">
+    <div class="km-atlas-plot" data-testid="location-b-plot">
+      <div class="km-atlas-traces" aria-hidden="true"></div>
+      <div class="km-atlas-axis km-atlas-axis-x" aria-hidden="true"></div>
+      <div class="km-atlas-axis km-atlas-axis-y" aria-hidden="true"></div>
+      <span class="t-tech km-atlas-north" aria-hidden="true">N ↑</span>
+      <span class="t-tech km-atlas-scale" aria-hidden="true">PENDİK · 40.87—40.88 N</span>
+
+      {points.map((location, index) => (
+        <a
+          class:list={['km-atlas-pin', { 'is-east': location.x > 60 }]}
+          href={location.mapProviders.find((provider) => provider.name === 'Google')?.href}
+          target="_blank"
+          rel="noopener"
+          style={`--pin-x:${location.x}%;--pin-y:${location.y}%`}
+          aria-label={`${location.name} kesin pinini Google Maps'te aç`}
+          data-testid={`location-b-pin-${location.slug}`}
+        >
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <strong>{location.name}</strong>
+        </a>
+      ))}
+
+      <p class="t-tech km-atlas-note">ŞEMATİK PİN DAĞILIMI · YOL AĞI DEĞİLDİR</p>
+    </div>
+
+    <div class="km-atlas-list">
+      {locations.map((location, index) => (
+        <article class="km-atlas-card" data-testid={`location-b-card-${location.slug}`}>
+          <div class="km-atlas-card-no t-tech">{String(index + 1).padStart(2, '0')}</div>
+          <div class="km-atlas-card-copy">
+            <p class="t-tech">{location.code} · {location.status}</p>
+            <h3>{location.name}</h3>
+            <address>{location.address}</address>
+            <p class="t-tech km-coordinate">{location.coordinateLabel}</p>
+          </div>
+          <div class="km-atlas-actions">
+            {location.mapProviders.map((provider) => (
+              <a
+                href={provider.href}
+                target="_blank"
+                rel="noopener"
+                data-testid={`location-b-${location.slug}-${provider.name.toLowerCase()}`}
+              >{provider.name}</a>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

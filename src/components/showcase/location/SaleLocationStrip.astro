@@ -1,0 +1,39 @@
+---
+/*
+  Satılık şerit — en hafif konum bloğu: harita isteği YOK. Pin rozeti + adres +
+  doğrulanmış koordinat çipi + tek "Yol tarifi" düğmesi. Yoğun ilan ızgarası /
+  liste satırı için; her kartın altına düşük ağırlıkla oturur.
+*/
+import { directionsItems, type ProjectLocation } from '../../../lib/projectLocations';
+import DirectionsMenu from './DirectionsMenu';
+
+interface Props {
+  location: ProjectLocation;
+}
+const { location } = Astro.props;
+---
+
+<div class="km-strip" data-testid="location-variant-e">
+  <span class="km-strip-pin" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z" />
+      <circle cx="12" cy="10" r="2" />
+    </svg>
+  </span>
+
+  <div class="km-strip-copy">
+    <strong>{location.name}</strong>
+    <address>{location.address}</address>
+    <p class="t-tech km-coordinate">{location.code} · {location.coordinateLabel}</p>
+  </div>
+
+  <DirectionsMenu
+    client:visible
+    layout="menu"
+    tone="light"
+    size="sm"
+    primaryHref={location.googleDirectionsHref}
+    items={directionsItems(location)}
+    testid="location-e-directions"
+  />
+</div>

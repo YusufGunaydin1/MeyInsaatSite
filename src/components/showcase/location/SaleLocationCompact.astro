@@ -1,0 +1,74 @@
+---
+/*
+  I · Kompakt split — orta boy harita + sağda 2 sütunlu yakın-çevre ızgarası
+  (6 satır liste yerine 3x2 kompakt hücre) + tek "Yol tarifi". G'nin dikeyde
+  yarısı; okunaklı ve dengeli.
+*/
+import { directionsItems, type ProjectLocation } from '../../../lib/projectLocations';
+import DirectionsMenu from './DirectionsMenu';
+import SaleMapExpand from './SaleMapExpand';
+import LeafletMap from './LeafletMap';
+import Icon from '../satilik/kompakt/Icon.astro';
+import { yakinCevre } from '../satilik/kompakt/data';
+
+interface Props {
+  location: ProjectLocation;
+}
+const { location } = Astro.props;
+const prefix = 'location-i';
+---
+
+<div class="km-cmp" data-testid="location-variant-i">
+  <div class="km-cmp-map" data-map="leaflet" data-testid={`${prefix}-map`}>
+    <LeafletMap
+      client:visible
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      label={location.name}
+      zoom={16}
+      testid={`${prefix}-leaflet`}
+    />
+    <span class="km-sale-badge t-tech">{location.code}</span>
+    <SaleMapExpand
+      client:visible
+      map="leaflet"
+      prefix={prefix}
+      name={location.name}
+      code={location.code}
+      address={location.address}
+      coordinateLabel={location.coordinateLabel}
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      osmEmbedHref={location.osmEmbedHref}
+      osmMapHref={location.osmMapHref}
+      primaryHref={location.googleDirectionsHref}
+      items={directionsItems(location)}
+    />
+  </div>
+
+  <div class="km-cmp-side">
+    <p class="t-tech km-sale-status">{location.code} · {location.status}</p>
+    <h3 class="km-cmp-name">{location.name}</h3>
+    <address class="km-cmp-addr">{location.address}</address>
+
+    <div class="km-cmp-amen">
+      {yakinCevre.map((y) => (
+        <div class="km-cmp-a" title={y.ad}>
+          <span class="km-cmp-ic"><Icon name={y.icon} size={15} /></span>
+          <span class="km-cmp-ad">{y.ad}</span>
+          <span class="km-cmp-d tabular-nums">{y.mesafe}</span>
+        </div>
+      ))}
+    </div>
+
+    <DirectionsMenu
+      client:visible
+      layout="split"
+      tone="light"
+      openUp
+      primaryHref={location.googleDirectionsHref}
+      items={directionsItems(location)}
+      testid={`${prefix}-directions`}
+    />
+  </div>
+</div>

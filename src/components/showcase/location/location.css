@@ -1,0 +1,378 @@
+/* ============================================================
+   Location components — shared styles for the reusable map/directions
+   building blocks: LeafletMap, DirectionsMenu, SaleMapExpand, plus the
+   code badge / expand control / enlarged-map modal chrome.
+   Imported by production surfaces (e.g. the daire-page konum block) and
+   re-used by the /showcases/konum-lab specimen sheet.
+   ============================================================ */
+
+/* Calm loading / empty state — faint blueprint grid + a centered survey
+   crosshair on institutional concrete. Flat, no streaks; reads as intentional. */
+.km-map-fallback {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(var(--color-line) 1px, transparent 1px) 0 0 / 100% 38px,
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px) 0 0 / 38px 100%,
+    var(--color-concrete-050);
+}
+.km-map-fallback span { display: none; }
+.km-map-fallback::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  opacity: 0.4;
+  background:
+    linear-gradient(var(--color-graphite-400), var(--color-graphite-400)) center / 1px 100% no-repeat,
+    linear-gradient(var(--color-graphite-400), var(--color-graphite-400)) center / 100% 1px no-repeat;
+}
+.km-map-fallback::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid var(--color-graphite-400);
+  border-radius: 50%;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .km-map-fallback::after { animation: km-empty-pulse 2.2s ease-in-out infinite; }
+}
+@keyframes km-empty-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.22; }
+}
+
+/* KESİN PİN badge (map overlay, used in the enlarged modal) */
+.km-map-badge {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  color: #fff;
+  background: rgb(14 15 17 / 0.9);
+}
+.km-map-badge svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.km-map-badge svg { color: var(--color-red-on-dark); }
+.km-map-badge small,
+.km-map-badge span { display: block; }
+.km-map-badge small { color: rgb(255 255 255 / 0.56); font: 500 0.58rem/1.2 var(--font-mono); letter-spacing: 0.09em; }
+.km-map-badge span { font: 500 0.7rem/1.35 var(--font-mono); letter-spacing: 0.08em; }
+
+/* OSM attribution chip (iframe map path only) */
+.km-osm-link {
+  position: absolute;
+  z-index: 2;
+  right: 0.6rem;
+  bottom: 2.5rem;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding-inline: 0.65rem;
+  color: #fff;
+  background: rgb(14 15 17 / 0.86);
+  font: 500 0.62rem/1 var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.km-coordinate { margin-top: 0.65rem; color: var(--color-graphite-400); font-size: 0.625rem; }
+
+/* ============================================================
+   Directions control — one tap-driven "Yol tarifi" button that
+   discloses Google · Yandex · Apple. Tap/click always works;
+   hover-open is enhancement-only (JS-gated to hover-capable pointers).
+   ============================================================ */
+.km-dir { position: relative; width: 100%; }
+.km-dir-bar { display: flex; width: 100%; }
+
+.km-dir-primary,
+.km-dir-single,
+.km-dir-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 52px;
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.km-dir[data-size='sm'] .km-dir-primary,
+.km-dir[data-size='sm'] .km-dir-single,
+.km-dir[data-size='sm'] .km-dir-toggle { min-height: 46px; font-size: 0.82rem; }
+
+.km-dir-primary {
+  flex: 1;
+  padding-inline: 0.9rem;
+  color: #fff;
+  background: var(--color-mey-red);
+}
+.km-dir-primary:hover { background: var(--color-mey-red-700); }
+
+.km-dir-toggle {
+  flex: 0 0 52px;
+  justify-content: center;
+  border-inline-start: 0;
+  border-color: var(--color-line);
+  color: var(--color-graphite-900);
+  background: #fff;
+}
+.km-dir[data-size='sm'] .km-dir-toggle { flex-basis: 46px; }
+.km-dir-toggle:hover { color: var(--color-mey-red); background: var(--color-concrete-050); }
+
+.km-dir-single {
+  flex: 1;
+  padding-inline: 0.9rem 0.75rem;
+  color: #fff;
+  background: var(--color-mey-red);
+}
+.km-dir-single > span { margin-inline-end: auto; padding-inline-start: 0.5rem; }
+.km-dir-single:hover { background: var(--color-mey-red-700); }
+
+.km-dir svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.km-dir-primary svg,
+.km-dir-single > svg:first-child { fill: currentColor; stroke: none; }
+.km-dir-toggle svg,
+.km-dir-single > svg:last-child { transition: transform 0.15s ease; }
+.km-dir[data-open='true'] .km-dir-toggle svg,
+.km-dir[data-open='true'] .km-dir-single > svg:last-child { transform: rotate(180deg); }
+
+.km-dir-pop {
+  position: absolute;
+  z-index: 30;
+  inset-inline: 0;
+  top: calc(100% + 4px);
+  display: grid;
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+.km-dir[data-openup='true'] .km-dir-pop { top: auto; bottom: calc(100% + 4px); }
+.km-dir-pop[hidden] { display: none; }
+.km-dir-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0 0.6rem;
+  min-height: 50px;
+  padding: 0.5rem 0.85rem;
+  color: var(--color-graphite-900);
+}
+.km-dir-item + .km-dir-item { border-top: 1px solid var(--color-line); }
+.km-dir-item:hover,
+.km-dir-item:focus-visible { outline: none; color: var(--color-mey-red); background: var(--color-concrete-050); }
+.km-dir-item-name { font-size: 0.9rem; font-weight: 600; }
+.km-dir-item-sub { color: var(--color-graphite-400); font-size: 0.6rem; text-align: end; }
+/* compact dropdown for small buttons — shorter rows, tighter type */
+.km-dir[data-size='sm'] .km-dir-item { min-height: 38px; padding: 0.36rem 0.7rem; }
+.km-dir[data-size='sm'] .km-dir-item-name { font-size: 0.82rem; }
+.km-dir[data-size='sm'] .km-dir-item-sub { font-size: 0.54rem; }
+.km-dir-item-go { color: var(--color-graphite-400); }
+.km-dir-item:hover .km-dir-item-sub,
+.km-dir-item:hover .km-dir-item-go,
+.km-dir-item:focus-visible .km-dir-item-sub,
+.km-dir-item:focus-visible .km-dir-item-go { color: var(--color-mey-red); }
+
+.km-dir[data-tone='dark'] .km-dir-toggle {
+  color: #fff;
+  background: rgb(14 15 17 / 0.5);
+  border-color: rgb(255 255 255 / 0.2);
+}
+.km-dir[data-tone='dark'] .km-dir-toggle:hover { color: var(--color-red-on-dark); background: rgb(14 15 17 / 0.75); }
+.km-dir[data-tone='dark'] .km-dir-pop { border-color: rgb(255 255 255 / 0.14); background: var(--color-night-950); }
+.km-dir[data-tone='dark'] .km-dir-item { color: #fff; }
+.km-dir[data-tone='dark'] .km-dir-item + .km-dir-item { border-top-color: rgb(255 255 255 / 0.12); }
+.km-dir[data-tone='dark'] .km-dir-item:hover,
+.km-dir[data-tone='dark'] .km-dir-item:focus-visible { color: var(--color-red-on-dark); background: rgb(255 255 255 / 0.06); }
+.km-dir[data-tone='dark'] .km-dir-item-sub,
+.km-dir[data-tone='dark'] .km-dir-item-go { color: rgb(244 244 242 / 0.5); }
+.km-dir[data-tone='dark'] .km-dir-item:hover .km-dir-item-sub,
+.km-dir[data-tone='dark'] .km-dir-item:hover .km-dir-item-go { color: var(--color-red-on-dark); }
+
+/* code chip on the map (e.g. PEN-01) */
+.km-sale-badge {
+  position: absolute;
+  z-index: 2;
+  top: 0.6rem;
+  left: 0.6rem;
+  padding: 0.3rem 0.55rem;
+  color: #fff;
+  background: rgb(14 15 17 / 0.9);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+/* expand overlay button — sits below the map's own zoom (+/-) cluster */
+.km-sale-expand {
+  position: absolute;
+  z-index: 2;
+  top: 4.6rem;
+  right: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--color-graphite-900);
+  background: #fff;
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+.km-sale-expand:hover { color: var(--color-mey-red); background: var(--color-concrete-050); }
+.km-sale-expand svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+/* ============================================================
+   Enlarged-map modal — big map on demand.
+   ============================================================ */
+.km-mapmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.25rem, 1vw, 0.6rem);
+  background: rgb(14 15 17 / 0.62);
+  animation: km-modal-in 0.14s ease;
+}
+.km-mapmodal-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(1280px, 100%);
+  max-height: 98vh;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+.km-mapmodal-head {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.7rem;
+  padding: 0.28rem 0.35rem 0.28rem 1.1rem;
+  border-bottom: 1px solid var(--color-line);
+}
+.km-mapmodal-head h3 { color: var(--color-graphite-900); font-size: 0.95rem; font-weight: 600; }
+.km-mapmodal-tag { margin-inline-end: auto; color: var(--color-mey-red); }
+.km-mapmodal-close {
+  display: grid;
+  flex: 0 0 30px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--color-graphite-900);
+  background: #fff;
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+.km-mapmodal-close:hover { color: var(--color-mey-red); background: var(--color-concrete-050); }
+.km-mapmodal-close svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.km-mapmodal-map {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 384px;
+  overflow: hidden;
+  background: #d9ddd9;
+}
+.km-mapmodal-map iframe {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: saturate(0.62) contrast(1.03);
+}
+.km-mapmodal-foot {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem 1.25rem;
+  padding: 0.28rem 0.5rem 0.28rem 1.1rem;
+  border-top: 1px solid var(--color-line);
+}
+.km-mapmodal-addr {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 0.75rem;
+}
+.km-mapmodal-addr address { color: var(--color-graphite-600); font-size: 0.82rem; font-style: normal; }
+.km-mapmodal-addr .km-coordinate { margin-top: 0; }
+.km-mapmodal-foot .km-dir { width: auto; flex: 0 0 auto; min-width: 216px; }
+.km-mapmodal-foot .km-dir-primary,
+.km-mapmodal-foot .km-dir-toggle,
+.km-mapmodal-foot .km-dir-single { min-height: 40px; }
+
+@keyframes km-modal-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .km-mapmodal { animation: none; } }
+
+@media (max-width: 560px) {
+  .km-mapmodal-foot { flex-direction: column; align-items: stretch; }
+  .km-mapmodal-foot .km-dir { width: 100%; min-width: 0; }
+}
+
+/* ============================================================
+   Leaflet map + compact ⓘ attribution.
+   ============================================================ */
+.km-leaflet { position: absolute; inset: 0; z-index: 1; }
+.km-leaflet,
+.km-leaflet.leaflet-container {
+  background:
+    linear-gradient(var(--color-line) 1px, transparent 1px) 0 0 / 38px 38px,
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px) 0 0 / 38px 38px,
+    var(--color-concrete-050);
+}
+.km-leaflet-pin svg { display: block; width: 28px; height: 28px; }
+.km-leaflet-pin path { fill: var(--color-mey-red); stroke: #fff; stroke-width: 1.1; }
+.km-leaflet-pin circle { fill: #fff; stroke: none; }
+
+.km-attrib { display: flex; align-items: stretch; }
+.km-attrib-toggle {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--color-graphite-600);
+  background: rgb(255 255 255 / 0.92);
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+.km-attrib-toggle:hover { color: var(--color-mey-red); }
+.km-attrib-credit {
+  display: none;
+  align-items: center;
+  padding: 0 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--color-graphite-600);
+  background: rgb(255 255 255 / 0.92);
+  border: 1px solid var(--color-line);
+  border-inline-start: 0;
+}
+.km-attrib-credit a { color: var(--color-graphite-900); }
+.km-attrib.is-open .km-attrib-credit { display: flex; }
+@media (hover: hover) {
+  .km-attrib:hover .km-attrib-credit { display: flex; }
+}

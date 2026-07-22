@@ -1,0 +1,75 @@
+---
+import { directionsItems, type ProjectLocation } from '../../../lib/projectLocations';
+import DirectionsMenu from './DirectionsMenu';
+
+interface Props {
+  location: ProjectLocation;
+  others: ProjectLocation[];
+}
+
+const { location, others } = Astro.props;
+---
+
+<section class="km-dossier" data-testid="location-variant-c">
+  <div class="km-dossier-map" data-testid="location-c-map">
+    <div class="km-map-fallback" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <iframe
+      src={location.osmEmbedHref}
+      title={`${location.name} gerçek konum haritası`}
+      loading="lazy"
+    ></iframe>
+    <div class="km-dossier-index">
+      <span class="t-tech">KONUM / {location.code}</span>
+      <strong>40° N<br />29° E</strong>
+    </div>
+    <a class="km-osm-link" href={location.osmMapHref} target="_blank" rel="noopener">
+      © OpenStreetMap katkıcıları
+    </a>
+  </div>
+
+  <div class="km-dossier-copy">
+    <p class="t-tech km-kicker">C · DAİRE DETAY MODÜLÜ</p>
+    <h2>Adresi değil,<br />binanın kendisini açın.</h2>
+    <p class="km-dossier-intro">
+      Tek proje sayfası için en güçlü yön: gerçek sokak haritası, açık adres ve yol
+      tarifi aynı karar alanında; üçüncü taraf bağlantıları kesin koordinatı taşır.
+    </p>
+
+    <div class="km-dossier-address">
+      <span class="t-tech">{location.code} · DOĞRULANMIŞ PİN</span>
+      <h3>{location.name}</h3>
+      <address>{location.address}</address>
+      <p class="t-tech km-coordinate">{location.coordinateLabel}</p>
+    </div>
+
+    <div class="km-dossier-actions">
+      <DirectionsMenu
+        client:visible
+        layout="split"
+        tone="dark"
+        primaryHref={location.googleDirectionsHref}
+        items={directionsItems(location)}
+        testid="location-c-directions"
+      />
+    </div>
+  </div>
+
+  <footer class="km-dossier-others">
+    <p class="t-tech">DİĞER MEY BİNALARI</p>
+    <div>
+      {others.map((other) => (
+        <a
+          href={other.mapProviders.find((provider) => provider.name === 'Google')?.href}
+          target="_blank"
+          rel="noopener"
+          data-testid={`location-c-other-${other.slug}`}
+        >
+          <span>{other.name}</span>
+          <small>{other.address}</small>
+        </a>
+      ))}
+    </div>
+  </footer>
+</section>

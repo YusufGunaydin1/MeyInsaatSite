@@ -1,0 +1,75 @@
+---
+/*
+  H · Harita-hero — harita tüm bloğu kaplar; altta koyu yüzen bilgi şeridi
+  (adres + tek "Yol tarifi") ve üstünde kaydırılabilir yakın-çevre çipleri
+  (ikon + mesafe). En harita-baskın, dikeyde en kompakt yön.
+*/
+import { directionsItems, type ProjectLocation } from '../../../lib/projectLocations';
+import DirectionsMenu from './DirectionsMenu';
+import SaleMapExpand from './SaleMapExpand';
+import LeafletMap from './LeafletMap';
+import Icon from '../satilik/kompakt/Icon.astro';
+import { yakinCevre } from '../satilik/kompakt/data';
+
+interface Props {
+  location: ProjectLocation;
+}
+const { location } = Astro.props;
+const prefix = 'location-h';
+---
+
+<div class="km-hero" data-testid="location-variant-h">
+  <div class="km-hero-map" data-map="leaflet" data-testid={`${prefix}-map`}>
+    <LeafletMap
+      client:visible
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      label={location.name}
+      zoom={16}
+      testid={`${prefix}-leaflet`}
+    />
+    <span class="km-sale-badge t-tech">{location.code}</span>
+    <SaleMapExpand
+      client:visible
+      map="leaflet"
+      prefix={prefix}
+      name={location.name}
+      code={location.code}
+      address={location.address}
+      coordinateLabel={location.coordinateLabel}
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      osmEmbedHref={location.osmEmbedHref}
+      osmMapHref={location.osmMapHref}
+      primaryHref={location.googleDirectionsHref}
+      items={directionsItems(location)}
+    />
+
+    <div class="km-hero-bar">
+      <div class="km-hero-amen" role="list" aria-label="Yakın çevre mesafeleri">
+        {yakinCevre.map((y) => (
+          <span class="km-chip is-dark" role="listitem" title={y.ad}>
+            <Icon name={y.icon} size={13} />
+            <span class="km-chip-d">{y.mesafe}</span>
+          </span>
+        ))}
+      </div>
+      <div class="km-hero-row">
+        <div class="km-hero-info">
+          <p class="t-tech">{location.code} · {location.status}</p>
+          <h3>{location.name}</h3>
+          <address>{location.address}</address>
+        </div>
+        <DirectionsMenu
+          client:visible
+          layout="split"
+          tone="dark"
+          openUp
+          primaryHref={location.googleDirectionsHref}
+          items={directionsItems(location)}
+          testid={`${prefix}-directions`}
+        />
+      </div>
+    </div>
+  </div>
+</div>

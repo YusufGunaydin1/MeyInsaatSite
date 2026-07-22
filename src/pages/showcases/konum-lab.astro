@@ -1,0 +1,162 @@
+---
+import Base from '../../layouts/Base.astro';
+import LabIntro from '../../components/showcase/LabIntro.astro';
+import Specimen from '../../components/showcase/Specimen.astro';
+import LocationExplorer from '../../components/showcase/location/LocationExplorer';
+import CoordinateAtlas from '../../components/showcase/location/CoordinateAtlas.astro';
+import LocationDossier from '../../components/showcase/location/LocationDossier.astro';
+import SaleLocationCard from '../../components/showcase/location/SaleLocationCard.astro';
+import SaleLocationStrip from '../../components/showcase/location/SaleLocationStrip.astro';
+import SaleLocationBlock from '../../components/showcase/location/SaleLocationBlock.astro';
+import SaleLocationHero from '../../components/showcase/location/SaleLocationHero.astro';
+import SaleLocationCompact from '../../components/showcase/location/SaleLocationCompact.astro';
+import SaleLocationBand from '../../components/showcase/location/SaleLocationBand.astro';
+import { projectLocations } from '../../lib/projectLocations';
+import '../../components/showcase/location/location-lab.css';
+
+const locations = projectLocations('tr');
+const featuredLocation = locations[0];
+const otherLocations = locations.slice(1);
+---
+
+<Base
+  locale="tr"
+  page="projects"
+  path="/showcases/konum-lab"
+  title="Konum Lab — Tasarım Vitrini"
+  description="MEY İnşaat bina konumları için kesin pinli responsive harita tasarım yönleri."
+  noindex
+>
+  <LabIntro
+    kicker="MEY İnşaat · Dahili · Konum Lab"
+    title="Konum — Kesin Pin & Tek Yol Tarifi Düğmesi"
+    desc="El Ele, Maşuk ve Çamoğlu Apartmanı için adres seviyesinde doğrulanmış koordinatlar. OpenStreetMap gömülü harita görseli taşır; navigasyon ise ÜÇ ayrı düğme değil, tek 'Yol tarifi' düğmesidir — dokun/tıkla (veya masaüstünde üzerine gel) → Google · Yandex · Apple açılır. Aşağıda binalar sayfası (zengin) ile satılık daireler sayfası (kompakt) için ayrı yönler var."
+  />
+
+  <!-- ============================================================
+       BİNALAR SAYFASI — zengin, tek harita, çok binalı seçici
+       ============================================================ -->
+  <Specimen
+    id="A · BİNALAR"
+    name="Portföy gezgini — bina seçici + gerçek harita + tek yol tarifi düğmesi (bölünmüş)"
+    why="Binalar sayfası için ana yön. Bina seçimi haritayı ve tek 'Yol tarifi' düğmesini aynı kesin pine geçirir. Düğme bölünmüş: sol taraf tek dokunuşta Google yol tarifini açar, sağdaki ok Yandex ve Apple'ı ortaya çıkarır. Harici harita yalnız görünür olduğunda yüklenir."
+  >
+    <LocationExplorer client:load locations={locations} />
+  </Specimen>
+
+  <Specimen
+    id="C · DETAY"
+    name="Tek bina detay modülü — büyük gerçek harita + koyu zemin + tek yol tarifi düğmesi"
+    why="Bir binanın kendi sayfası için güçlü, koyu zeminli yön. Adres, kesin koordinat, gerçek harita ve tek bölünmüş 'Yol tarifi' düğmesi aynı karar alanında. Aşağıdaki örnek El Ele Apartmanı'dır."
+  >
+    <LocationDossier location={featuredLocation} others={otherLocations} />
+  </Specimen>
+
+  <Specimen
+    id="B · ATLAS"
+    name="Hafif koordinat paftası — üç doğrulanmış pin, sıfır harita isteği"
+    why="En hızlı, en kurumsal yön. Yol ağı iddiası taşımaz; üç binanın göreli konumunu gerçek koordinatlardan çizer. Genel bir 'Konum' bölümü veya sayfa altbilgisi için uygundur."
+  >
+    <CoordinateAtlas locations={locations} />
+  </Specimen>
+
+  <!-- ============================================================
+       SATILIK DAİRELER SAYFASI — kompakt, tekrarlanabilir, ilan başına
+       ============================================================ -->
+  <Specimen
+    id="D · SATILIK KART"
+    name="Kompakt konum kartı — küçük gerçek harita + tek 'Yol tarifi' menüsü"
+    why="Satılık daireler sayfasındaki bir ilan kartının konum bloğu için ölçeklendi. Küçük gömülü harita + tek düğme (menü düzeni: dokun/tıkla → Google · Yandex · Apple). İlan ızgarasında tekrarlanır; aşağıda üç bina yan yana."
+  >
+    <div class="container-site km-lab-pad">
+      <div class="km-sale-grid">
+        {locations.map((location) => (
+          <SaleLocationCard location={location} />
+        ))}
+      </div>
+    </div>
+  </Specimen>
+
+  <Specimen
+    id="G · DAİRE SAYFASI KONUM BÖLÜMÜ"
+    name="Gerçek daire sayfası önizlemesi — Leaflet harita + Yakın Lokasyonlar + tek Yol tarifi"
+    why="Üretimde daire-1 / daire-2 sayfalarındaki MapPanel'in yerine geçecek hâlin bire bir önizlemesi. Sahte vaziyet görseli yerine kendi Leaflet haritamız (pin, zoom, büyüt→modal, küçük ⓘ atıf); sağda mevcut 'Yakın Lokasyonlar' mesafe listesi korunur; üç link yerine tek 'Yol tarifi' düğmesi. Bunu onaylarsan gerçek sayfalara taşırım."
+  >
+    <div class="container-site km-lab-pad">
+      <SaleLocationBlock location={featuredLocation} />
+    </div>
+  </Specimen>
+
+  <Specimen
+    id="H · KONUM — HARİTA-HERO"
+    name="Daha akıllı & kompakt: harita tüm bloğu kaplar, altta yüzen bilgi şeridi + çip mesafeler"
+    why="G'nin harita-baskın alternatifi. Harita hero olur; adres ve tek 'Yol tarifi' altta koyu yüzen şeritte; yakın çevre 6 satırlık liste yerine ikon+mesafe çipleri (kaydırılabilir). Ayrı yan panel yok — dikeyde en kompakt, en görsel."
+  >
+    <div class="container-site km-lab-pad">
+      <SaleLocationHero location={featuredLocation} />
+    </div>
+  </Specimen>
+
+  <Specimen
+    id="I · KONUM — KOMPAKT SPLIT"
+    name="Orta harita + 2 sütunlu yakın-çevre ızgarası (6 satır yerine 3×2) + tek Yol tarifi"
+    why="G ile aynı iki sütun, ama daha sıkı: harita küçülür, yakın çevre 2 sütunlu kompakt ızgaraya iner (dikeyde ~yarı yükseklik), okunaklılığı korur. Dengeli 'akıllı kompakt' yön."
+  >
+    <div class="container-site km-lab-pad">
+      <SaleLocationCompact location={featuredLocation} />
+    </div>
+  </Specimen>
+
+  <Specimen
+    id="J · KONUM — ŞERİT"
+    name="Kısa geniş harita bandı + tek satır kaydırılabilir çip şeridi + satır-içi Yol tarifi"
+    why="Dikeyde en kısa yön. Kısa harita bandı; altında ad + 'Yol tarifi' ve tek satır kaydırılabilir yakın-çevre çip şeridi. Yoğun daire sayfası ya da dar sağ ray için."
+  >
+    <div class="container-site km-lab-pad">
+      <SaleLocationBand location={featuredLocation} />
+    </div>
+  </Specimen>
+
+  <Specimen
+    id="F · SATILIK KART (LEAFLET)"
+    name="Aynı kart, kendi çizdiğimiz Leaflet haritası — dev atıf çubuğu yerine küçük ⓘ"
+    why="D ile birebir aynı düzen; fark harita motoru. OpenStreetMap iframe'i yerine kendi Leaflet haritamız: pan/zoom ve büyütme aynen çalışır, ama zorunlu 'Report a problem · Make a Donation · terms' çubuğu yok — yalnız köşede küçük bir ⓘ (dokun/üzerine gel → © OpenStreetMap). Ücretsiz; canlıda karolar için sağlayıcı (MapTiler/Carto) anahtarına geçilir."
+  >
+    <div class="container-site km-lab-pad">
+      <div class="km-sale-grid">
+        {locations.map((location) => (
+          <SaleLocationCard location={location} map="leaflet" />
+        ))}
+      </div>
+    </div>
+  </Specimen>
+
+  <Specimen
+    id="E · SATILIK ŞERİT"
+    name="Ultra-kompakt şerit — harita isteği YOK, tek 'Yol tarifi' menüsü"
+    why="En hafif yön: sıfır harita/tile maliyeti. Pin rozeti + adres + doğrulanmış koordinat çipi + tek düğme. Yoğun ilan listesi satırında ya da bir daire kartının altbilgisinde düşük ağırlıkla oturur."
+  >
+    <div class="container-site km-lab-pad">
+      <div class="km-strip-stack">
+        {locations.map((location) => (
+          <SaleLocationStrip location={location} />
+        ))}
+      </div>
+    </div>
+  </Specimen>
+</Base>
+
+<style>
+  .km-lab-pad { padding-block: clamp(1.75rem, 5vw, 3rem); }
+  .km-sale-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .km-strip-stack {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 680px;
+  }
+</style>

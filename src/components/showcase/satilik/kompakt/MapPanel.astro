@@ -1,39 +1,75 @@
 ---
 /*
-  Konum paneli — harici karo servisi YOK: mevcut vaziyet görseli stilize zemin,
-  üstünde pin; yanında mesafe listesi (mesafeler temsilî — sayfa çipi kapsar).
-  Gerçek adres bağlantıları (MapLinks) sağlayıcı haritasını yeni sekmede açar.
+  Konum paneli — kendi çizdiğimiz Leaflet haritası (harici karo iframe'i YOK):
+  kesin pin, zoom, büyüt→modal, köşede küçük ⓘ atıf. Yanında bina adı + satır-içi
+  tek "Yol tarifi" düğmesi (Google · Yandex · Apple) ve yakın çevre mesafe listesi.
+  Mesafeler İÇ TAHMİN — arayüzde belirtilmez. Bina: El Ele Apartmanı.
 */
-import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
-import MapLinks from '../../../MapLinks.astro';
-import { yakinCevre, proje } from './data';
-import vaziyet from '../../../../assets/projects/el-ele-apartmani-vaziyet.webp';
+import LeafletMap from '../../location/LeafletMap';
+import SaleMapExpand from '../../location/SaleMapExpand';
+import DirectionsMenu from '../../location/DirectionsMenu';
+import { yakinCevre } from './data';
+import { projectLocations, directionsItems } from '../../../../lib/projectLocations';
+import type { Locale } from '../../../../lib/i18n';
+import '../../location/location.css';
 
 interface Props {
   title?: string;
   compact?: boolean;
+  locale?: Locale;
 }
-const { title = 'Yakın Lokasyonlar', compact = false } = Astro.props;
+const { title = 'Yakın Lokasyonlar', compact = false, locale = 'tr' } = Astro.props;
+
+const loc = projectLocations(locale).find((l) => l.slug === 'el-ele-apartmani');
+if (!loc) throw new Error('MapPanel: El Ele Apartmanı konum verisi bulunamadı');
+const prefix = 'kc-loc';
 ---
 
 <div class:list={['kc-map card', compact && 'kc-map-compact']} data-testid="kc-map">
-  <div class="kc-map-canvas">
-    <Image
-      src={vaziyet}
-      alt={`${proje.ad} vaziyet planı üzerinde konum işareti`}
-      widths={[400, 720]}
-      sizes="(min-width: 900px) 420px, calc(100vw - 3rem)"
-      quality={74}
-      loading="lazy"
-      decoding="async"
-      class="kc-map-img"
+  <div class="kc-map-canvas" data-map="leaflet">
+    <LeafletMap
+      client:visible
+      lat={loc.coordinates.lat}
+      lng={loc.coordinates.lng}
+      label={loc.name}
+      zoom={16}
+      testid={`${prefix}-leaflet`}
     />
-    <span class="kc-map-pin" aria-hidden="true"><Icon name="pin" size={26} /></span>
-    <span class="t-tech kc-map-tag">{proje.lokasyon}</span>
+    <span class="km-sale-badge t-tech">{loc.code}</span>
+    <SaleMapExpand
+      client:visible
+      map="leaflet"
+      prefix={prefix}
+      name={loc.name}
+      code={loc.code}
+      address={loc.address}
+      coordinateLabel={loc.coordinateLabel}
+      lat={loc.coordinates.lat}
+      lng={loc.coordinates.lng}
+      osmEmbedHref={loc.osmEmbedHref}
+      osmMapHref={loc.osmMapHref}
+      primaryHref={loc.googleDirectionsHref}
+      items={directionsItems(loc)}
+    />
   </div>
+
   <div class="kc-map-list">
-    <h3 class="t-heading-s">{title}</h3>
+    <div class="kc-loc-titlerow">
+      <h3 class="t-heading-s kc-loc-name">{loc.name}</h3>
+      <DirectionsMenu
+        client:visible
+        layout="split"
+        tone="light"
+        size="sm"
+        primaryHref={loc.googleDirectionsHref}
+        items={directionsItems(loc)}
+        testid={`${prefix}-directions`}
+      />
+    </div>
+    <address class="kc-loc-addr">{loc.address}</address>
+
+    <h4 class="t-heading-s kc-loc-heading">{title}</h4>
     <ul>
       {yakinCevre.map((y) => (
         <li>
@@ -43,9 +79,6 @@ const { title = 'Yakın Lokasyonlar', compact = false } = Astro.props;
         </li>
       ))}
     </ul>
-    <div class="kc-map-links">
-      <MapLinks address={proje.adres} locale="tr" label="HARİTADA AÇ" />
-    </div>
   </div>
 </div>
 
@@ -56,30 +89,30 @@ const { title = 'Yakın Lokasyonlar', compact = false } = Astro.props;
     overflow: hidden;
   }
   .kc-map-compact { grid-template-columns: minmax(0, 1fr); }
-  .kc-map-canvas { position: relative; min-height: 220px; }
-  .kc-map-img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.55) contrast(0.95); }
-  .kc-map-pin {
-    position: absolute;
-    top: 44%;
-    left: 52%;
-    transform: translate(-50%, -90%);
-    color: var(--color-mey-red);
-    background: #fff;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-brand);
-    padding: 0.3rem;
-    display: inline-flex;
+  .kc-map-canvas { position: relative; min-height: 340px; overflow: hidden; background: #d9ddd9; }
+  .kc-map-canvas :global(.km-sale-expand) { top: 5.1rem; right: 0.65rem; }
+
+  .kc-map-list { display: flex; flex-direction: column; padding: 1rem 1.1rem 1.1rem; }
+  .kc-loc-titlerow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem 1rem;
   }
-  .kc-map-tag {
-    position: absolute;
-    bottom: 0.6rem;
-    left: 0.6rem;
-    background: rgb(14 15 17 / 0.82);
-    color: var(--color-concrete-100);
-    padding: 0.25rem 0.55rem;
-    border-radius: var(--radius-brand);
+  .kc-loc-name { color: var(--color-graphite-900); }
+  .kc-loc-titlerow :global(.km-dir) { width: auto; flex: 0 0 auto; }
+  .kc-loc-titlerow :global(.km-dir-primary),
+  .kc-loc-titlerow :global(.km-dir-toggle) { min-height: 40px; }
+  .kc-loc-titlerow :global(.km-dir-pop) { left: auto; right: 0; min-width: 212px; }
+  .kc-loc-addr {
+    margin-top: 0.35rem;
+    color: var(--color-graphite-600);
+    font-size: 0.85rem;
+    font-style: normal;
+    line-height: 1.5;
   }
-  .kc-map-list { padding: 1rem 1.1rem 1.1rem; }
+  .kc-loc-heading { margin-top: 1rem; }
+
   .kc-map-list ul { margin-top: 0.6rem; }
   .kc-map-list li {
     display: flex;
@@ -90,7 +123,6 @@ const { title = 'Yakın Lokasyonlar', compact = false } = Astro.props;
     font-size: 0.9rem;
   }
   .kc-map-list li:last-child { border-bottom: none; }
-  .kc-map-links { margin-block-start: 0.8rem; padding-block-start: 0.7rem; border-block-start: 1px solid var(--color-line); }
   .kc-map-ic { color: var(--color-mey-teal-700); display: inline-flex; flex-shrink: 0; }
   .kc-map-ad { min-width: 0; }
   .kc-map-mesafe {
@@ -102,6 +134,6 @@ const { title = 'Yakın Lokasyonlar', compact = false } = Astro.props;
   }
   @media (max-width: 760px) {
     .kc-map { grid-template-columns: minmax(0, 1fr); }
-    .kc-map-canvas { min-height: 180px; }
+    .kc-map-canvas { min-height: 280px; }
   }
 </style>

@@ -1,0 +1,78 @@
+---
+/*
+  Satılık daire — KONUM bölümü önizlemesi. Gerçek daire sayfasındaki MapPanel'in
+  Leaflet'li hâli: sol tarafta kendi çizdiğimiz Leaflet haritası (pin, zoom,
+  büyüt→modal, köşede küçük ⓘ atıf), sağ tarafta "Yakın Lokasyonlar" listesi +
+  tek "Yol tarifi" düğmesi. Üretime almadan önce vitrinde değerlendirmek için.
+*/
+import { directionsItems, type ProjectLocation } from '../../../lib/projectLocations';
+import DirectionsMenu from './DirectionsMenu';
+import SaleMapExpand from './SaleMapExpand';
+import LeafletMap from './LeafletMap';
+import Icon from '../satilik/kompakt/Icon.astro';
+import { yakinCevre } from '../satilik/kompakt/data';
+
+interface Props {
+  location: ProjectLocation;
+  title?: string;
+}
+const { location, title = 'Yakın Lokasyonlar' } = Astro.props;
+const prefix = 'location-g';
+---
+
+<div class="km-block" data-testid="location-variant-g">
+  <div class="km-block-map" data-map="leaflet" data-testid={`${prefix}-map`}>
+    <LeafletMap
+      client:visible
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      label={location.name}
+      zoom={16}
+      testid={`${prefix}-leaflet`}
+    />
+    <span class="km-sale-badge t-tech">{location.code}</span>
+    <SaleMapExpand
+      client:visible
+      map="leaflet"
+      prefix={prefix}
+      name={location.name}
+      code={location.code}
+      address={location.address}
+      coordinateLabel={location.coordinateLabel}
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      osmEmbedHref={location.osmEmbedHref}
+      osmMapHref={location.osmMapHref}
+      primaryHref={location.googleDirectionsHref}
+      items={directionsItems(location)}
+    />
+  </div>
+
+  <div class="km-block-side">
+    <p class="t-tech km-sale-status">{location.status}</p>
+    <div class="km-block-titlerow">
+      <h3 class="km-block-name">{location.name}</h3>
+      <DirectionsMenu
+        client:visible
+        layout="split"
+        tone="light"
+        size="sm"
+        primaryHref={location.googleDirectionsHref}
+        items={directionsItems(location)}
+        testid={`${prefix}-directions`}
+      />
+    </div>
+    <address class="km-block-addr">{location.address}</address>
+
+    <h4 class="t-heading-s km-block-heading">{title}</h4>
+    <ul class="km-block-amen">
+      {yakinCevre.map((y) => (
+        <li>
+          <span class="km-block-ic"><Icon name={y.icon} size={17} /></span>
+          <span class="km-block-ad">{y.ad}</span>
+          <span class="km-block-mesafe tabular-nums">{y.mesafe}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>

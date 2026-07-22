@@ -1,0 +1,76 @@
+---
+/*
+  J · Şerit — kısa geniş harita bandı + altında tek satır kaydırılabilir
+  yakın-çevre çip şeridi ve satır-içi "Yol tarifi". Dikeyde en kısa; yoğun
+  ilan sayfası / dar alan için.
+*/
+import { directionsItems, type ProjectLocation } from '../../../lib/projectLocations';
+import DirectionsMenu from './DirectionsMenu';
+import SaleMapExpand from './SaleMapExpand';
+import LeafletMap from './LeafletMap';
+import Icon from '../satilik/kompakt/Icon.astro';
+import { yakinCevre } from '../satilik/kompakt/data';
+
+interface Props {
+  location: ProjectLocation;
+}
+const { location } = Astro.props;
+const prefix = 'location-j';
+---
+
+<div class="km-band" data-testid="location-variant-j">
+  <div class="km-band-map" data-map="leaflet" data-testid={`${prefix}-map`}>
+    <LeafletMap
+      client:visible
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      label={location.name}
+      zoom={15}
+      testid={`${prefix}-leaflet`}
+    />
+    <span class="km-sale-badge t-tech">{location.code}</span>
+    <SaleMapExpand
+      client:visible
+      map="leaflet"
+      prefix={prefix}
+      name={location.name}
+      code={location.code}
+      address={location.address}
+      coordinateLabel={location.coordinateLabel}
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      osmEmbedHref={location.osmEmbedHref}
+      osmMapHref={location.osmMapHref}
+      primaryHref={location.googleDirectionsHref}
+      items={directionsItems(location)}
+    />
+  </div>
+
+  <div class="km-band-foot">
+    <div class="km-band-head">
+      <div class="km-band-info">
+        <strong>{location.name}</strong>
+        <address>{location.address}</address>
+      </div>
+      <DirectionsMenu
+        client:visible
+        layout="split"
+        tone="light"
+        size="sm"
+        openUp
+        primaryHref={location.googleDirectionsHref}
+        items={directionsItems(location)}
+        testid={`${prefix}-directions`}
+      />
+    </div>
+    <div class="km-band-amen" aria-label="Yakın çevre mesafeleri">
+      {yakinCevre.map((y) => (
+        <span class="km-chip" title={y.ad}>
+          <Icon name={y.icon} size={13} />
+          <span class="km-chip-t">{y.ad}</span>
+          <span class="km-chip-d">{y.mesafe}</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</div>

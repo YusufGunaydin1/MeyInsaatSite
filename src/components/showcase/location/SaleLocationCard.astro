@@ -1,0 +1,81 @@
+---
+/*
+  Satılık daire kartı — tek bina, kompakt gerçek harita + tek "Yol tarifi"
+  düğmesi (menü düzeni: dokun/tıkla → Google · Yandex · Apple). Satılık liste
+  sayfasındaki bir ilan kartının konum bloğu için ölçeklendi.
+
+  map="iframe" → OpenStreetMap gömülü iframe (harici atıf çubuğu).
+  map="leaflet" → kendi çizdiğimiz Leaflet haritası (küçük ⓘ atıf).
+*/
+import { directionsItems, type ProjectLocation } from '../../../lib/projectLocations';
+import DirectionsMenu from './DirectionsMenu';
+import SaleMapExpand from './SaleMapExpand';
+import LeafletMap from './LeafletMap';
+
+interface Props {
+  location: ProjectLocation;
+  map?: 'iframe' | 'leaflet';
+}
+const { location, map = 'iframe' } = Astro.props;
+const prefix = map === 'leaflet' ? 'location-f' : 'location-d';
+const variant = map === 'leaflet' ? 'location-variant-f' : 'location-variant-d';
+---
+
+<article class="km-sale-card" data-testid={variant}>
+  <div class="km-sale-map" data-map={map} data-testid={`${prefix}-map`}>
+    {map === 'leaflet' ? (
+      <LeafletMap
+        client:visible
+        lat={location.coordinates.lat}
+        lng={location.coordinates.lng}
+        label={location.name}
+        zoom={16}
+        testid={`${prefix}-leaflet`}
+      />
+    ) : (
+      <>
+        <div class="km-map-fallback" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <iframe
+          src={location.osmEmbedHref}
+          title={`${location.name} gerçek konum haritası`}
+          loading="lazy"
+        ></iframe>
+      </>
+    )}
+    <span class="km-sale-badge t-tech">{location.code}</span>
+    <SaleMapExpand
+      client:visible
+      map={map}
+      prefix={prefix}
+      name={location.name}
+      code={location.code}
+      address={location.address}
+      coordinateLabel={location.coordinateLabel}
+      lat={location.coordinates.lat}
+      lng={location.coordinates.lng}
+      osmEmbedHref={location.osmEmbedHref}
+      osmMapHref={location.osmMapHref}
+      primaryHref={location.googleDirectionsHref}
+      items={directionsItems(location)}
+    />
+  </div>
+
+  <div class="km-sale-body">
+    <p class="t-tech km-sale-status">{location.status}</p>
+    <h3>{location.name}</h3>
+    <address>{location.address}</address>
+    <p class="t-tech km-coordinate">{location.coordinateLabel}</p>
+
+    <DirectionsMenu
+      client:visible
+      layout="menu"
+      tone="light"
+      size="sm"
+      primaryHref={location.googleDirectionsHref}
+      items={directionsItems(location)}
+      testid={`${prefix}-directions`}
+    />
+  </div>
+</article>

@@ -1,0 +1,996 @@
+.km-explorer,
+.km-atlas {
+  padding-block: clamp(2.5rem, 7vw, 5.5rem);
+  background: var(--color-concrete-050);
+}
+
+.km-explorer-head,
+.km-atlas-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.65fr);
+  gap: 2rem;
+  align-items: end;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.km-kicker {
+  color: var(--color-mey-red);
+}
+
+.km-explorer-head h2,
+.km-atlas-head h2,
+.km-dossier-copy h2 {
+  margin-top: 0.55rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.35rem, 5vw, 4.8rem);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 0.98;
+  text-transform: uppercase;
+}
+
+.km-explorer-head > p,
+.km-atlas-head > p {
+  max-width: 44ch;
+  padding-inline-start: 1rem;
+  border-inline-start: 2px solid var(--color-mey-red);
+  color: var(--color-graphite-600);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.km-explorer-grid,
+.km-atlas-grid {
+  display: grid;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.km-explorer-grid {
+  grid-template-columns: minmax(0, 1.4fr) minmax(340px, 0.6fr);
+}
+
+.km-map-frame,
+.km-dossier-map {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  background: #d9ddd9;
+}
+
+.km-map-frame {
+  min-height: 560px;
+  border: 1px solid var(--color-line);
+}
+
+.km-map-frame iframe,
+.km-dossier-map iframe {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: saturate(0.62) contrast(1.03);
+}
+
+/* Calm loading / empty state — faint blueprint grid + a centered survey
+   crosshair on institutional concrete. Flat, no streaks; reads as intentional. */
+.km-map-fallback {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(var(--color-line) 1px, transparent 1px) 0 0 / 100% 38px,
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px) 0 0 / 38px 100%,
+    var(--color-concrete-050);
+}
+.km-map-fallback span { display: none; }
+.km-map-fallback::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  opacity: 0.4;
+  background:
+    linear-gradient(var(--color-graphite-400), var(--color-graphite-400)) center / 1px 100% no-repeat,
+    linear-gradient(var(--color-graphite-400), var(--color-graphite-400)) center / 100% 1px no-repeat;
+}
+.km-map-fallback::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid var(--color-graphite-400);
+  border-radius: 50%;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .km-map-fallback::after { animation: km-empty-pulse 2.2s ease-in-out infinite; }
+}
+@keyframes km-empty-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.22; }
+}
+
+.km-map-badge {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  color: #fff;
+  background: rgb(14 15 17 / 0.9);
+}
+
+.km-map-badge svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+
+.km-map-badge svg { color: var(--color-red-on-dark); }
+.km-map-badge small,
+.km-map-badge span { display: block; }
+.km-map-badge small { color: rgb(255 255 255 / 0.56); font: 500 0.58rem/1.2 var(--font-mono); letter-spacing: 0.09em; }
+.km-map-badge span { font: 500 0.7rem/1.35 var(--font-mono); letter-spacing: 0.08em; }
+
+.km-osm-link {
+  position: absolute;
+  z-index: 2;
+  right: 0.6rem;
+  bottom: 2.5rem;
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding-inline: 0.65rem;
+  color: #fff;
+  background: rgb(14 15 17 / 0.86);
+  font: 500 0.62rem/1 var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.km-explorer-panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1.2rem;
+  border: 1px solid var(--color-line);
+  border-inline-start: 0;
+  background: #fff;
+}
+
+.km-location-tabs {
+  border-top: 1px solid var(--color-line);
+}
+
+.km-location-tabs button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  width: 100%;
+  min-height: 76px;
+  gap: 0.25rem 0.75rem;
+  padding: 0.75rem 0.55rem;
+  border-bottom: 1px solid var(--color-line);
+  text-align: start;
+  color: var(--color-graphite-600);
+  cursor: pointer;
+}
+
+.km-location-tabs button > span {
+  grid-row: 1 / 3;
+  align-self: start;
+  padding-top: 0.15rem;
+  color: var(--color-graphite-400);
+}
+
+.km-location-tabs button strong,
+.km-location-tabs button small { display: block; }
+.km-location-tabs button strong { color: var(--color-graphite-900); font-size: 0.875rem; font-weight: 600; }
+.km-location-tabs button small { font-size: 0.7rem; line-height: 1.35; }
+.km-location-tabs button:hover { background: var(--color-concrete-050); }
+.km-location-tabs button.is-active { border-inline-start: 3px solid var(--color-mey-red); background: var(--color-concrete-050); }
+.km-location-tabs button.is-active > span { color: var(--color-mey-red); }
+
+.km-active-address {
+  margin-top: auto;
+  padding-block: 1.2rem;
+}
+
+.km-active-address > p:first-child,
+.km-atlas-card-copy > p:first-child,
+.km-dossier-address > span { color: var(--color-mey-red); }
+.km-active-address h3,
+.km-dossier-address h3 { margin-top: 0.4rem; color: var(--color-graphite-900); font-size: 1.15rem; font-weight: 600; }
+.km-active-address address,
+.km-atlas-card address,
+.km-dossier-address address { margin-top: 0.35rem; color: var(--color-graphite-600); font-size: 0.875rem; font-style: normal; line-height: 1.5; }
+.km-coordinate { margin-top: 0.65rem; color: var(--color-graphite-400); font-size: 0.625rem; }
+
+.km-explorer-panel .km-dir { margin-top: 0.3rem; }
+
+.km-atlas { background: #fff; }
+.km-atlas-grid { grid-template-columns: minmax(0, 1fr) minmax(420px, 0.8fr); }
+.km-atlas-plot {
+  position: relative;
+  min-height: 600px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  color: #fff;
+  background: var(--color-night-950);
+}
+.km-atlas-traces {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 18% 26%, transparent 0 15%, rgb(73 193 198 / 0.1) 15.2% 15.5%, transparent 15.8% 28%, rgb(73 193 198 / 0.06) 28.2% 28.5%, transparent 28.8%),
+    radial-gradient(ellipse at 80% 76%, transparent 0 16%, rgb(73 193 198 / 0.09) 16.2% 16.5%, transparent 16.8% 30%, rgb(73 193 198 / 0.05) 30.2% 30.5%, transparent 30.8%),
+    linear-gradient(31deg, transparent 0 46%, rgb(255 255 255 / 0.05) 46.2% 46.55%, transparent 46.75%),
+    linear-gradient(-19deg, transparent 0 62%, rgb(255 255 255 / 0.04) 62.2% 62.5%, transparent 62.7%);
+}
+.km-atlas-axis { position: absolute; background: rgb(73 193 198 / 0.35); }
+.km-atlas-axis-x { top: 50%; right: 8%; left: 8%; height: 1px; }
+.km-atlas-axis-y { top: 8%; bottom: 8%; left: 50%; width: 1px; }
+.km-atlas-north { position: absolute; top: 1rem; right: 1rem; color: var(--color-mey-teal); }
+.km-atlas-scale { position: absolute; top: 1rem; left: 1rem; color: rgb(255 255 255 / 0.5); }
+.km-atlas-note { position: absolute; right: 1rem; bottom: 1rem; color: rgb(255 255 255 / 0.4); font-size: 0.6rem; }
+.km-atlas-pin {
+  position: absolute;
+  z-index: 2;
+  top: var(--pin-y);
+  left: var(--pin-x);
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 0.55rem;
+  transform: translate(-22px, -50%);
+  color: #fff;
+}
+.km-atlas-pin.is-east {
+  flex-direction: row-reverse;
+  transform: translate(calc(-100% + 22px), -50%);
+}
+.km-atlas-pin > span {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border: 1px solid var(--color-red-on-dark);
+  color: #fff;
+  background: var(--color-mey-red);
+  font: 500 0.65rem/1 var(--font-mono);
+}
+.km-atlas-pin strong {
+  max-width: 10rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  background: rgb(14 15 17 / 0.84);
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.km-atlas-pin:hover strong { border-color: var(--color-red-on-dark); }
+.km-atlas-list { border-block: 1px solid var(--color-line); border-inline-end: 1px solid var(--color-line); }
+.km-atlas-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 0.85rem;
+  min-height: 200px;
+  padding: 1.2rem;
+  background: var(--color-concrete-050);
+}
+.km-atlas-card + .km-atlas-card { border-top: 1px solid var(--color-line); }
+.km-atlas-card-no { color: var(--color-mey-red); }
+.km-atlas-card-copy h3 { margin-top: 0.35rem; color: var(--color-graphite-900); font-size: 1rem; font-weight: 600; }
+.km-atlas-actions {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.8rem;
+  margin-top: 0.65rem;
+}
+.km-atlas-actions a {
+  display: inline-flex;
+  min-width: 52px;
+  min-height: 44px;
+  align-items: center;
+  color: var(--color-graphite-900);
+  font: 500 0.65rem/1 var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.km-atlas-actions a:hover { color: var(--color-mey-red); }
+
+.km-dossier {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
+  color: var(--color-concrete-100);
+  background: var(--color-night-950);
+}
+.km-dossier-map { min-height: 640px; border-inline-end: 1px solid rgb(255 255 255 / 0.1); }
+.km-dossier-map iframe { filter: grayscale(0.25) saturate(0.55) contrast(1.06); }
+.km-dossier-index {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.75rem 0.85rem;
+  color: #fff;
+  background: rgb(14 15 17 / 0.9);
+}
+.km-dossier-index span { display: block; color: var(--color-red-on-dark); }
+.km-dossier-index strong { display: block; margin-top: 0.35rem; font: 600 1.25rem/1.15 var(--font-display); }
+.km-dossier-copy { padding: clamp(1.5rem, 4vw, 3.5rem); }
+.km-dossier-copy .km-kicker { color: var(--color-red-on-dark); }
+.km-dossier-copy h2 { color: #fff; font-size: clamp(2.7rem, 5vw, 5rem); }
+.km-dossier-intro { max-width: 43ch; margin-top: 1.2rem; color: rgb(244 244 242 / 0.62); font-size: 0.9rem; line-height: 1.6; }
+.km-dossier-address { margin-top: 2rem; padding-block: 1rem; border-block: 1px solid rgb(255 255 255 / 0.12); }
+.km-dossier-address h3 { color: #fff; }
+.km-dossier-address address { color: rgb(244 244 242 / 0.76); }
+.km-dossier-address .km-coordinate { color: rgb(244 244 242 / 0.42); }
+.km-dossier-actions { margin-top: 1rem; border-top: 1px solid rgb(255 255 255 / 0.12); }
+.km-dossier-actions > a {
+  display: flex;
+  min-height: 62px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  color: #fff;
+}
+.km-dossier-actions > a:hover { color: var(--color-red-on-dark); }
+.km-dossier-actions > a span:first-child { display: flex; align-items: center; gap: 0.75rem; font-weight: 500; }
+.km-dossier-actions small { color: var(--color-red-on-dark); font: 500 0.62rem/1 var(--font-mono); }
+.km-dossier-others {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1rem clamp(1rem, 4vw, 3.5rem);
+  border-top: 1px solid rgb(255 255 255 / 0.12);
+}
+.km-dossier-others > p { color: var(--color-mey-teal); }
+.km-dossier-others > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.km-dossier-others a {
+  display: flex;
+  min-height: 62px;
+  flex-direction: column;
+  justify-content: center;
+  padding-inline: 1rem;
+  border-inline-start: 1px solid rgb(255 255 255 / 0.12);
+  color: #fff;
+}
+.km-dossier-others a:hover { color: var(--color-red-on-dark); }
+.km-dossier-others span { font-size: 0.85rem; font-weight: 500; }
+.km-dossier-others small { margin-top: 0.2rem; color: rgb(244 244 242 / 0.45); font-size: 0.68rem; }
+
+@media (min-width: 640px) {
+  .km-explorer-head,
+  .km-atlas-head,
+  .km-explorer-grid,
+  .km-atlas-grid { padding-inline: 1.5rem; }
+}
+
+@media (max-width: 900px) {
+  .km-explorer-grid,
+  .km-atlas-grid,
+  .km-dossier { grid-template-columns: minmax(0, 1fr); }
+  .km-explorer-panel { border-inline-start: 1px solid var(--color-line); border-top: 0; }
+  .km-map-frame { min-height: 440px; }
+  .km-atlas-list { border-inline-start: 1px solid var(--color-line); }
+  .km-dossier-map { min-height: 440px; border-inline-end: 0; border-bottom: 1px solid rgb(255 255 255 / 0.1); }
+}
+
+@media (max-width: 700px) {
+  .km-explorer,
+  .km-atlas { padding-block: 1.5rem 2.5rem; }
+  .km-explorer-head,
+  .km-atlas-head { grid-template-columns: minmax(0, 1fr); gap: 1rem; margin-bottom: 1rem; }
+  .km-explorer-head h2,
+  .km-atlas-head h2 { font-size: clamp(2.35rem, 13vw, 3.5rem); }
+  .km-explorer-head > p,
+  .km-atlas-head > p { font-size: 0.8125rem; }
+  .km-map-frame { min-height: 310px; }
+  .km-explorer-panel { padding: 0.85rem; }
+  .km-location-tabs button { min-height: 70px; }
+  .km-atlas-plot { min-height: 430px; }
+  .km-atlas-pin {
+    left: clamp(64px, var(--pin-x), calc(100% - 64px));
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .km-atlas-pin.is-east { flex-direction: column; }
+  .km-atlas-pin,
+  .km-atlas-pin.is-east { transform: translate(-50%, -50%); }
+  .km-atlas-pin strong { max-width: 7.5rem; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem; }
+  .km-atlas-note { right: 0.65rem; bottom: 0.65rem; left: 0.65rem; }
+  .km-atlas-card { min-height: 190px; padding: 1rem; }
+  .km-dossier-map { min-height: 320px; }
+  .km-osm-link { bottom: 3.25rem; }
+  .km-dossier-copy { padding: 1.35rem 1rem 1.5rem; }
+  .km-dossier-copy h2 { font-size: clamp(2.65rem, 14vw, 4rem); }
+  .km-dossier-others { grid-template-columns: minmax(0, 1fr); gap: 0.65rem; padding: 1rem; }
+  .km-dossier-others > div { grid-template-columns: minmax(0, 1fr); }
+  .km-dossier-others a { border-inline-start: 0; border-top: 1px solid rgb(255 255 255 / 0.12); padding-inline: 0; }
+}
+
+/* ============================================================
+   Directions control — one tap-driven "Yol tarifi" button that
+   discloses Google · Yandex · Apple. Shared by A, C, D, E.
+   Tap/click always works; hover-open is enhancement-only (JS-gated
+   to hover-capable pointers), so touch users are never stranded.
+   ============================================================ */
+.km-dir { position: relative; width: 100%; }
+.km-dir-bar { display: flex; width: 100%; }
+
+.km-dir-primary,
+.km-dir-single,
+.km-dir-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 52px;
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.km-dir[data-size='sm'] .km-dir-primary,
+.km-dir[data-size='sm'] .km-dir-single,
+.km-dir[data-size='sm'] .km-dir-toggle { min-height: 46px; font-size: 0.82rem; }
+
+.km-dir-primary {
+  flex: 1;
+  padding-inline: 0.9rem;
+  color: #fff;
+  background: var(--color-mey-red);
+}
+.km-dir-primary:hover { background: var(--color-mey-red-700); }
+
+.km-dir-toggle {
+  flex: 0 0 52px;
+  justify-content: center;
+  border-inline-start: 0;
+  border-color: var(--color-line);
+  color: var(--color-graphite-900);
+  background: #fff;
+}
+.km-dir[data-size='sm'] .km-dir-toggle { flex-basis: 46px; }
+.km-dir-toggle:hover { color: var(--color-mey-red); background: var(--color-concrete-050); }
+
+.km-dir-single {
+  flex: 1;
+  padding-inline: 0.9rem 0.75rem;
+  color: #fff;
+  background: var(--color-mey-red);
+}
+.km-dir-single > span { margin-inline-end: auto; padding-inline-start: 0.5rem; }
+.km-dir-single:hover { background: var(--color-mey-red-700); }
+
+.km-dir svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.km-dir-primary svg,
+.km-dir-single > svg:first-child { fill: currentColor; stroke: none; }
+.km-dir-toggle svg,
+.km-dir-single > svg:last-child { transition: transform 0.15s ease; }
+.km-dir[data-open='true'] .km-dir-toggle svg,
+.km-dir[data-open='true'] .km-dir-single > svg:last-child { transform: rotate(180deg); }
+
+.km-dir-pop {
+  position: absolute;
+  z-index: 30;
+  inset-inline: 0;
+  top: calc(100% + 4px);
+  display: grid;
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+.km-dir[data-openup='true'] .km-dir-pop { top: auto; bottom: calc(100% + 4px); }
+.km-dir-pop[hidden] { display: none; }
+.km-dir-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0 0.6rem;
+  min-height: 50px;
+  padding: 0.5rem 0.85rem;
+  color: var(--color-graphite-900);
+}
+.km-dir-item + .km-dir-item { border-top: 1px solid var(--color-line); }
+.km-dir-item:hover,
+.km-dir-item:focus-visible { outline: none; color: var(--color-mey-red); background: var(--color-concrete-050); }
+.km-dir-item-name { font-size: 0.9rem; font-weight: 600; }
+.km-dir-item-sub { color: var(--color-graphite-400); font-size: 0.6rem; text-align: end; }
+/* compact dropdown for small buttons — shorter rows, tighter type */
+.km-dir[data-size='sm'] .km-dir-item { min-height: 38px; padding: 0.36rem 0.7rem; }
+.km-dir[data-size='sm'] .km-dir-item-name { font-size: 0.82rem; }
+.km-dir[data-size='sm'] .km-dir-item-sub { font-size: 0.54rem; }
+.km-dir-item-go { color: var(--color-graphite-400); }
+.km-dir-item:hover .km-dir-item-sub,
+.km-dir-item:hover .km-dir-item-go,
+.km-dir-item:focus-visible .km-dir-item-sub,
+.km-dir-item:focus-visible .km-dir-item-go { color: var(--color-mey-red); }
+
+.km-dir[data-tone='dark'] .km-dir-toggle {
+  color: #fff;
+  background: rgb(14 15 17 / 0.5);
+  border-color: rgb(255 255 255 / 0.2);
+}
+.km-dir[data-tone='dark'] .km-dir-toggle:hover { color: var(--color-red-on-dark); background: rgb(14 15 17 / 0.75); }
+.km-dir[data-tone='dark'] .km-dir-pop { border-color: rgb(255 255 255 / 0.14); background: var(--color-night-950); }
+.km-dir[data-tone='dark'] .km-dir-item { color: #fff; }
+.km-dir[data-tone='dark'] .km-dir-item + .km-dir-item { border-top-color: rgb(255 255 255 / 0.12); }
+.km-dir[data-tone='dark'] .km-dir-item:hover,
+.km-dir[data-tone='dark'] .km-dir-item:focus-visible { color: var(--color-red-on-dark); background: rgb(255 255 255 / 0.06); }
+.km-dir[data-tone='dark'] .km-dir-item-sub,
+.km-dir[data-tone='dark'] .km-dir-item-go { color: rgb(244 244 242 / 0.5); }
+.km-dir[data-tone='dark'] .km-dir-item:hover .km-dir-item-sub,
+.km-dir[data-tone='dark'] .km-dir-item:hover .km-dir-item-go { color: var(--color-red-on-dark); }
+
+/* ============================================================
+   D · Satılık kompakt kart — tek bina, küçük gerçek harita.
+   ============================================================ */
+.km-sale-card {
+  display: flex;
+  flex-direction: column;
+  max-width: 420px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+.km-sale-map {
+  position: relative;
+  min-height: 210px;
+  overflow: hidden;
+  background: #d9ddd9;
+}
+.km-sale-map iframe {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: saturate(0.62) contrast(1.03);
+}
+.km-sale-badge {
+  position: absolute;
+  z-index: 2;
+  top: 0.6rem;
+  left: 0.6rem;
+  padding: 0.3rem 0.55rem;
+  color: #fff;
+  background: rgb(14 15 17 / 0.9);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+.km-sale-body { display: flex; flex-direction: column; padding: 0.95rem 1rem 1.05rem; }
+.km-sale-status { color: var(--color-mey-red); }
+.km-sale-body h3 { margin-top: 0.35rem; color: var(--color-graphite-900); font-size: 1.05rem; font-weight: 600; }
+.km-sale-body address { margin-top: 0.3rem; color: var(--color-graphite-600); font-size: 0.85rem; font-style: normal; line-height: 1.5; }
+.km-sale-body .km-coordinate { margin-bottom: 0.9rem; }
+.km-sale-body .km-dir { margin-top: auto; }
+
+/* expand overlay button — sits just below OSM's own zoom (+/-) cluster,
+   top-right, so it reads as the next control in that column. */
+.km-sale-expand {
+  position: absolute;
+  z-index: 2;
+  top: 4.6rem;
+  right: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--color-graphite-900);
+  background: #fff;
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+.km-sale-expand:hover { color: var(--color-mey-red); background: var(--color-concrete-050); }
+.km-sale-expand svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+/* ============================================================
+   Enlarged-map modal — "version A" big map on demand.
+   ============================================================ */
+.km-mapmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.25rem, 1vw, 0.6rem);
+  background: rgb(14 15 17 / 0.62);
+  animation: km-modal-in 0.14s ease;
+}
+.km-mapmodal-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(1280px, 100%);
+  max-height: 98vh;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+/* Header + footer are deliberately minimal — the map is the point. */
+.km-mapmodal-head {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.7rem;
+  padding: 0.28rem 0.35rem 0.28rem 1.1rem;
+  border-bottom: 1px solid var(--color-line);
+}
+.km-mapmodal-head h3 { color: var(--color-graphite-900); font-size: 0.95rem; font-weight: 600; }
+.km-mapmodal-tag { margin-inline-end: auto; color: var(--color-mey-red); }
+.km-mapmodal-close {
+  display: grid;
+  flex: 0 0 30px;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--color-graphite-900);
+  background: #fff;
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+.km-mapmodal-close:hover { color: var(--color-mey-red); background: var(--color-concrete-050); }
+.km-mapmodal-close svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.km-mapmodal-map {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 384px;
+  overflow: hidden;
+  background: #d9ddd9;
+}
+.km-mapmodal-map iframe {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: saturate(0.62) contrast(1.03);
+}
+.km-mapmodal-foot {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem 1.25rem;
+  padding: 0.28rem 0.5rem 0.28rem 1.1rem;
+  border-top: 1px solid var(--color-line);
+}
+.km-mapmodal-addr {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 0.75rem;
+}
+.km-mapmodal-addr address { color: var(--color-graphite-600); font-size: 0.82rem; font-style: normal; }
+.km-mapmodal-addr .km-coordinate { margin-top: 0; }
+.km-mapmodal-foot .km-dir { width: auto; flex: 0 0 auto; min-width: 216px; }
+/* compact CTA so the footer bar stays minimal — the map is the point */
+.km-mapmodal-foot .km-dir-primary,
+.km-mapmodal-foot .km-dir-toggle,
+.km-mapmodal-foot .km-dir-single { min-height: 40px; }
+
+@keyframes km-modal-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .km-mapmodal { animation: none; } }
+
+@media (max-width: 560px) {
+  .km-mapmodal-foot { flex-direction: column; align-items: stretch; }
+  .km-mapmodal-foot .km-dir { width: 100%; min-width: 0; }
+}
+
+/* ============================================================
+   E · Satılık şerit — harita isteği YOK, en hafif konum bloğu.
+   ============================================================ */
+.km-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: 640px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+.km-strip-pin {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  color: #fff;
+  background: var(--color-mey-red);
+}
+.km-strip-pin svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.km-strip-copy { min-width: 0; flex: 1; }
+.km-strip-copy strong { display: block; color: var(--color-graphite-900); font-size: 0.9rem; font-weight: 600; }
+.km-strip-copy address {
+  display: block;
+  margin-top: 0.1rem;
+  overflow: hidden;
+  color: var(--color-graphite-600);
+  font-size: 0.78rem;
+  font-style: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.km-strip-copy .km-coordinate { margin-top: 0.2rem; }
+.km-strip .km-dir { width: auto; flex: 0 0 auto; }
+.km-strip .km-dir-single { min-width: 156px; }
+
+@media (max-width: 560px) {
+  .km-sale-card { max-width: none; }
+  .km-strip { flex-wrap: wrap; }
+  .km-strip .km-dir { flex-basis: 100%; width: 100%; }
+}
+
+/* ============================================================
+   Leaflet variant (F) — self-rendered map, tiny ⓘ attribution.
+   ============================================================ */
+.km-leaflet { position: absolute; inset: 0; z-index: 1; }
+.km-leaflet,
+.km-leaflet.leaflet-container {
+  background:
+    linear-gradient(var(--color-line) 1px, transparent 1px) 0 0 / 38px 38px,
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px) 0 0 / 38px 38px,
+    var(--color-concrete-050);
+}
+.km-leaflet-pin svg { display: block; width: 28px; height: 28px; }
+.km-leaflet-pin path { fill: var(--color-mey-red); stroke: #fff; stroke-width: 1.1; }
+.km-leaflet-pin circle { fill: #fff; stroke: none; }
+
+/* nudge the expand control below Leaflet's own top-right zoom cluster */
+.km-sale-map[data-map='leaflet'] .km-sale-expand { top: 5.1rem; right: 0.65rem; }
+
+/* compact attribution: a ~20px ⓘ that expands to the credit on tap/hover */
+.km-attrib { display: flex; align-items: stretch; }
+.km-attrib-toggle {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--color-graphite-600);
+  background: rgb(255 255 255 / 0.92);
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+.km-attrib-toggle:hover { color: var(--color-mey-red); }
+.km-attrib-credit {
+  display: none;
+  align-items: center;
+  padding: 0 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--color-graphite-600);
+  background: rgb(255 255 255 / 0.92);
+  border: 1px solid var(--color-line);
+  border-inline-start: 0;
+}
+.km-attrib-credit a { color: var(--color-graphite-900); }
+.km-attrib.is-open .km-attrib-credit { display: flex; }
+@media (hover: hover) {
+  .km-attrib:hover .km-attrib-credit { display: flex; }
+}
+
+/* ============================================================
+   G · Satılık daire KONUM bölümü — gerçek sayfa (MapPanel) önizlemesi.
+   Sol Leaflet harita + sağ Yakın Lokasyonlar + tek Yol tarifi.
+   ============================================================ */
+.km-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+.km-block-map {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  background: #d9ddd9;
+}
+.km-block-map[data-map='leaflet'] .km-sale-expand { top: 5.1rem; right: 0.65rem; }
+.km-block-side { display: flex; flex-direction: column; padding: 1.1rem 1.2rem 1.2rem; }
+.km-block-titlerow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-top: 0.35rem;
+}
+.km-block-name { color: var(--color-graphite-900); font-size: 1.15rem; font-weight: 600; }
+.km-block-titlerow .km-dir { position: relative; width: auto; flex: 0 0 auto; }
+.km-block-titlerow .km-dir-primary,
+.km-block-titlerow .km-dir-toggle { min-height: 40px; }
+.km-block-titlerow .km-dir-pop { left: auto; right: 0; min-width: 212px; }
+.km-block-addr { margin-top: 0.3rem; color: var(--color-graphite-600); font-size: 0.875rem; font-style: normal; line-height: 1.5; }
+.km-block-heading { margin-top: 1rem; }
+.km-block-amen { margin-top: 0.5rem; }
+.km-block-amen li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-block: 0.42rem;
+  border-bottom: 1px solid var(--color-line);
+  font-size: 0.875rem;
+}
+.km-block-amen li:last-child { border-bottom: 0; }
+.km-block-ic { display: inline-flex; flex-shrink: 0; color: var(--color-mey-teal-700); }
+.km-block-ad { min-width: 0; }
+.km-block-mesafe {
+  margin-inline-start: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-graphite-900);
+  white-space: nowrap;
+}
+.km-block-titlerow .km-dir { margin-top: 0; }
+
+@media (max-width: 760px) {
+  .km-block { grid-template-columns: minmax(0, 1fr); }
+  .km-block-map { min-height: 300px; }
+}
+
+/* ============================================================
+   Shared amenity chip — icon + (label) + distance.
+   ============================================================ */
+.km-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  padding: 0.24rem 0.5rem;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  white-space: nowrap;
+}
+.km-chip svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--color-mey-teal-700); }
+.km-chip-t { font-size: 0.75rem; font-weight: 500; color: var(--color-graphite-900); }
+.km-chip-d { font: 500 0.72rem/1 var(--font-mono); color: var(--color-graphite-600); }
+.km-chip.is-dark {
+  border-color: rgb(255 255 255 / 0.18);
+  background: rgb(14 15 17 / 0.82);
+}
+.km-chip.is-dark svg { color: var(--color-mey-teal); }
+.km-chip.is-dark .km-chip-d { color: rgb(244 244 242 / 0.82); }
+
+/* ============================================================
+   H · Harita-hero — map fills, dark floating bar + chip strip overlay.
+   ============================================================ */
+.km-hero { border: 1px solid var(--color-line); }
+.km-hero-map {
+  position: relative;
+  min-height: 460px;
+  overflow: hidden;
+  background: #d9ddd9;
+}
+.km-hero-map[data-map='leaflet'] .km-sale-expand { top: 5.1rem; right: 0.65rem; }
+.km-hero-bar {
+  position: absolute;
+  z-index: 3;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.7rem 0.85rem 0.8rem;
+  background: linear-gradient(to top, rgb(14 15 17 / 0.92) 62%, rgb(14 15 17 / 0));
+  color: #fff;
+}
+.km-hero-amen {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.1rem;
+  scrollbar-width: none;
+}
+.km-hero-amen::-webkit-scrollbar { display: none; }
+.km-hero-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+.km-hero-info { min-width: 0; }
+.km-hero-info > p { color: var(--color-red-on-dark); }
+.km-hero-info h3 { margin-top: 0.15rem; color: #fff; font-size: 1.1rem; font-weight: 600; }
+.km-hero-info address { margin-top: 0.15rem; color: rgb(244 244 242 / 0.78); font-size: 0.82rem; font-style: normal; }
+.km-hero-row .km-dir { width: auto; flex: 0 0 auto; min-width: 214px; }
+
+@media (max-width: 620px) {
+  .km-hero-map { min-height: 400px; }
+  .km-hero-row { flex-direction: column; align-items: stretch; }
+  .km-hero-row .km-dir { width: 100%; min-width: 0; }
+}
+
+/* ============================================================
+   I · Kompakt split — medium map + 2-col amenity grid.
+   ============================================================ */
+.km-cmp {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  border: 1px solid var(--color-line);
+  background: #fff;
+}
+.km-cmp-map {
+  position: relative;
+  min-height: 280px;
+  overflow: hidden;
+  background: #d9ddd9;
+}
+.km-cmp-map[data-map='leaflet'] .km-sale-expand { top: 5.1rem; right: 0.65rem; }
+.km-cmp-side { display: flex; flex-direction: column; padding: 0.95rem 1.1rem 1.05rem; }
+.km-cmp-name { margin-top: 0.3rem; color: var(--color-graphite-900); font-size: 1.05rem; font-weight: 600; }
+.km-cmp-addr { margin-top: 0.25rem; color: var(--color-graphite-600); font-size: 0.82rem; font-style: normal; line-height: 1.45; }
+.km-cmp-amen {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.9rem;
+  margin: 0.85rem 0 1rem;
+}
+.km-cmp-a { display: flex; align-items: center; gap: 0.45rem; min-width: 0; }
+.km-cmp-ic { display: inline-flex; flex-shrink: 0; color: var(--color-mey-teal-700); }
+.km-cmp-ad { min-width: 0; overflow: hidden; font-size: 0.78rem; color: var(--color-graphite-900); white-space: nowrap; text-overflow: ellipsis; }
+.km-cmp-d { margin-inline-start: auto; font: 500 0.72rem/1 var(--font-mono); color: var(--color-graphite-600); white-space: nowrap; }
+.km-cmp-side .km-dir { margin-top: auto; }
+
+@media (max-width: 760px) {
+  .km-cmp { grid-template-columns: minmax(0, 1fr); }
+  .km-cmp-map { min-height: 240px; }
+  .km-cmp-amen { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ============================================================
+   J · Şerit — short wide map band + horizontal chip strip.
+   ============================================================ */
+.km-band { border: 1px solid var(--color-line); background: #fff; }
+.km-band-map {
+  position: relative;
+  min-height: 200px;
+  overflow: hidden;
+  background: #d9ddd9;
+}
+.km-band-map[data-map='leaflet'] .km-sale-expand { top: 5.1rem; right: 0.65rem; }
+.km-band-foot { display: flex; flex-direction: column; gap: 0.6rem; padding: 0.7rem 0.85rem 0.8rem; }
+.km-band-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem 1rem; flex-wrap: wrap; }
+.km-band-info { min-width: 0; }
+.km-band-info strong { display: block; color: var(--color-graphite-900); font-size: 0.95rem; font-weight: 600; }
+.km-band-info address {
+  display: block;
+  margin-top: 0.1rem;
+  overflow: hidden;
+  color: var(--color-graphite-600);
+  font-size: 0.78rem;
+  font-style: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.km-band-head .km-dir { width: auto; flex: 0 0 auto; min-width: 180px; }
+.km-band-amen { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.1rem; scrollbar-width: none; }
+.km-band-amen::-webkit-scrollbar { display: none; }
+
+@media (max-width: 560px) {
+  .km-band-head .km-dir { width: 100%; min-width: 0; }
+}
