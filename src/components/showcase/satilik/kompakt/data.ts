@@ -242,7 +242,7 @@ export const sss: { soru: string; cevap: string }[] = [
   { soru: 'Aracı komisyonu var mı?',
     cevap: 'Hayır. Daireler binayı yapan Mey İnşaat’tan doğrudan satın alınır; süreç tek muhatapla ilerler.' },
   { soru: 'Daireyi yerinde görebilir miyim?',
-    cevap: 'Evet — formdan randevu bırakın, satıştaki D-12’yi size uyan saatte gezdirelim.' },
+    cevap: 'Evet — satış hattını arayın ya da WhatsApp’tan yazın; satıştaki D-12’yi size uyan saatte gezdirelim.' },
 ];
 
 /* ─── Benzer daireler / proje teaser kartları ─── */

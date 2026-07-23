@@ -81,7 +81,12 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': ['Product', 'Residence'],
+      // Apartment (Accommodation altı) — numberOfRooms/numberOfBedrooms/
+      // numberOfBathroomsTotal/floorLevel/floorSize alanlarının HEPSİ bu tipte
+      // tanımlı. Residence bunlardan yalnız floorLevel'ı tanımlar; schema.org'da
+      // 'numberOfFloors' diye bir özellik ise hiç yok — dubleks bilgisi
+      // accommodationCategory'ye taşındı.
+      '@type': ['Product', 'Apartment'],
       '@id': detailUrl + '#unit',
       name: 'El Ele Apartmanı — Çatı Avlulu 3+2 Dubleks (D-12)',
       description:
@@ -95,7 +100,12 @@ const jsonLd = {
       numberOfBathroomsTotal: 2,
       floorSize: { '@type': 'QuantitativeValue', value: 160, unitCode: 'MTK' },
       floorLevel: '5',
-      numberOfFloors: 2,
+      accommodationCategory: '3+2 çatı dubleksi (iki katlı daire)',
+      amenityFeature: [
+        { '@type': 'LocationFeatureSpecification', name: 'Asansör', value: true },
+        { '@type': 'LocationFeatureSpecification', name: 'Kapalı otopark', value: true },
+        { '@type': 'LocationFeatureSpecification', name: 'Çatı terası', value: true },
+      ],
       address: {
         '@type': 'PostalAddress',
         streetAddress: 'Batı Mah. Çiğdem Sok. No:6',
