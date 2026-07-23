@@ -10,12 +10,6 @@ boilerplate: >-
   apartment buildings in Istanbul, delivered on time.
 ---
 
-<!--
-  TRANSLATED CONTENT — English (translated from the Turkish master text).
-  [PLACEHOLDER] = hard facts only MEY can provide — never invented.
-  Hard data (figures, contact details) now lives in content/company.json.
-  Open questions: see the "facts needed" list at the repo root.
--->
 
 ## Who We Are
 

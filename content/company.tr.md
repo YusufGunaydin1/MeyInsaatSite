@@ -9,12 +9,6 @@ boilerplate: >-
   taşıyor; İstanbul'da modern, sağlam ve zamanında teslim edilen apartmanlar üretiyoruz.
 ---
 
-<!--
-  MASTER CONTENT — Türkçe (kaynak metin). Önce burada onaylanır, sonra EN/RU/AR'a çevrilir.
-  [PLACEHOLDER] = yalnızca MEY'in verebileceği sert bilgi — asla uydurulmaz.
-  Sert veriler (rakamlar, iletişim) artık content/company.json'dadır.
-  Açık sorular: bkz. repo kökündeki "facts needed" listesi.
--->
 
 ## Biz Kimiz
 

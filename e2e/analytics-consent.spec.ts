@@ -98,12 +98,31 @@ test.describe('ölçümleme açıkken', () => {
         .map((a: IArguments) => ({ name: a[1], params: a[2] }))
     );
     const lead = events.find((e: any) => e.name === 'generate_lead');
-    expect(lead?.params).toMatchObject({ method: 'call' });
+    expect(lead?.params).toMatchObject({ method: 'call', line: 'sales' });
 
     if (ADS && CALL_LABEL) {
       const conv = events.find((e: any) => e.name === 'conversion');
       expect(conv?.params?.send_to).toBe(`${ADS}/${CALL_LABEL}`);
     }
+  });
+
+  test('ofis santrali GA4 olayı gönderir ama Ads dönüşümü YAZMAZ', async ({ page }) => {
+    // Footer'daki 0216 hattı her sayfada; satış hattı sayılsaydı her footer
+    // dokunuşu reklam dönüşümü gibi görünür ve teklif algoritması bozulurdu.
+    await page.goto(LANDING);
+    const office = page.locator('a[href="tel:+902163940551"]').first();
+    await office.evaluate((el) => el.addEventListener('click', (e) => e.preventDefault()));
+    await office.click();
+    const events = await page.evaluate(() =>
+      ((window as any).dataLayer ?? [])
+        .filter((a: IArguments) => a[0] === 'event')
+        .map((a: IArguments) => ({ name: a[1], params: a[2] }))
+    );
+    expect(events.find((e: any) => e.name === 'generate_lead')?.params).toMatchObject({
+      method: 'call',
+      line: 'office',
+    });
+    expect(events.find((e: any) => e.name === 'conversion')).toBeUndefined();
   });
 
   test('WhatsApp dokunuşu whatsapp yöntemiyle raporlanır', async ({ page }) => {
