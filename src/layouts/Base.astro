@@ -4,6 +4,8 @@ import { LOCALES, DEFAULT_LOCALE, dir, localePath, type Locale } from '../lib/i1
 import { seo, ui } from '../lib/content';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Analytics from '../components/analytics/Analytics.astro';
+import { siteVerification } from '../lib/analytics';
 
 // Display = Oswald variable (500–700), self-hosted. Latin-ext carries the Turkish
 // glyphs (ğ ş İ ı); cyrillic carries RU display natively (no more Plex fallback).
@@ -75,7 +77,9 @@ const OG_LOCALES: Record<Locale, string> = {
     <title>{docTitle}</title>
     <meta name="description" content={docDescription} />
     <meta name="robots" content={noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large'} />
-    {verification && <meta name="google-site-verification" content={verification} />}
+    {(verification ?? siteVerification) && (
+      <meta name="google-site-verification" content={verification ?? siteVerification} />
+    )}
     <link rel="canonical" href={canonical} />
     {LOCALES.map((l) => (
       <link rel="alternate" hreflang={l} href={site + localePath(l, path)} />
@@ -146,6 +150,7 @@ const OG_LOCALES: Record<Locale, string> = {
       <slot />
     </main>
     <Footer locale={locale} path={path} />
+    <Analytics locale={locale} />
 
     <!-- Inline on purpose: reveals must not wait for a module fetch on slow networks -->
     <script is:inline>

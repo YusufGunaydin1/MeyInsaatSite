@@ -245,5 +245,11 @@
     "languages": "Languages",
     "groupNote": "MEY İnşaat is a MEY Group brand.",
     "rights": "All rights reserved."
+  },
+  "consent": {
+    "title": "Cookie preference",
+    "text": "We use cookies for visit statistics and advertising measurement. If you decline, only what the site needs to work is kept.",
+    "accept": "Accept",
+    "reject": "Decline"
   }
 }

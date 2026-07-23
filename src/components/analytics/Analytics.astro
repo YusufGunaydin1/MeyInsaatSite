@@ -1,0 +1,94 @@
+---
+/*
+  GA4 + Google Ads dönüşüm ölçümü, Consent Mode v2 ile.
+
+  Kimlikler content/analytics.json'da boşsa bu bileşen HİÇBİR şey basmaz —
+  ne script, ne çerez, ne onay bandı. Sitenin bugünkü performansı aynen korunur.
+
+  Dönüşüm yakalama, tek bir delege edilmiş click dinleyicisiyle yapılır:
+  telefon ve WhatsApp bağlantıları sitede altı ayrı bileşende (mobil bant, ray,
+  kart, hero, footer, React adası) üretiliyor — her birine ayrı ayrı kod eklemek
+  yerine yakalama fazında (capture) tek dinleyici hepsini görür. React adaları
+  olayı yutsa bile capture fazı önce çalışır.
+*/
+import { ga4Id, adsId, loaderId, conversionTarget, consentBannerEnabled, CONSENT_KEY } from '../../lib/analytics';
+import ConsentBanner from './ConsentBanner.astro';
+import type { Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const enabled = Boolean(loaderId);
+const targets = {
+  call: conversionTarget('call'),
+  whatsapp: conversionTarget('whatsapp'),
+  form: conversionTarget('form'),
+};
+---
+
+{enabled && (
+  <>
+    <script
+      is:inline
+      define:vars={{
+        GA4: ga4Id,
+        ADS: adsId,
+        TARGETS: targets,
+        KEY: CONSENT_KEY,
+        NEEDS_CONSENT: consentBannerEnabled,
+      }}
+    >
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      window.gtag = gtag;
+
+      var stored = null;
+      try { stored = window.localStorage.getItem(KEY); } catch (e) { /* private mode */ }
+      var granted = NEEDS_CONSENT ? stored === 'granted' : true;
+      var state = granted ? 'granted' : 'denied';
+
+      // Consent Mode v2 — config'den ÖNCE gelmeli.
+      gtag('consent', 'default', {
+        ad_storage: state,
+        ad_user_data: state,
+        ad_personalization: state,
+        analytics_storage: state,
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500,
+      });
+      // Çerez yokken bile gclid'i URL üzerinden taşı; reddedildiğinde veriyi kıs.
+      gtag('set', 'url_passthrough', true);
+      gtag('set', 'ads_data_redaction', !granted);
+
+      gtag('js', new Date());
+      if (GA4) gtag('config', GA4);
+      if (ADS) gtag('config', ADS);
+
+      window.meyTrackLead = function (method, where) {
+        var params = { method: method, link_location: where || 'unknown' };
+        gtag('event', 'generate_lead', params);
+        var target = TARGETS[method];
+        if (target) gtag('event', 'conversion', { send_to: target });
+      };
+
+      document.addEventListener(
+        'click',
+        function (e) {
+          var el = e.target;
+          if (!el || typeof el.closest !== 'function') return;
+          var a = el.closest('a[href^="tel:"], a[href*="wa.me/"]');
+          if (!a) return;
+          var href = a.getAttribute('href') || '';
+          var method = href.indexOf('wa.me/') > -1 ? 'whatsapp' : 'call';
+          window.meyTrackLead(method, a.getAttribute('data-testid') || a.className || 'link');
+        },
+        true
+      );
+    </script>
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${loaderId}`}></script>
+    {consentBannerEnabled && <ConsentBanner locale={locale} />}
+  </>
+)}

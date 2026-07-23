@@ -1,0 +1,17 @@
+{
+  "_comment": "ÖLÇÜMLEME AYARLARI — tek kaynak. Boş bırakılan kimlikler için hiçbir script yüklenmez (sıfır maliyet, çerez yok, onay bandı yok). Kimlikleri yapıştırdığınız anda ölçüm devreye girer. Bu dosya herkese açık depoda durur; GA4/Ads kimlikleri zaten sayfa kaynağında görünen genel kimliklerdir, gizli anahtar DEĞİLDİR.",
+  "googleSiteVerification": "",
+  "_verificationHelp": "Search Console'da 'HTML etiketi' yöntemini seçerseniz verilen <meta name=\"google-site-verification\" content=\"...\"> içindeki content değerini buraya yapıştırın; site her sayfaya basar. Alan adı (DNS TXT) doğrulaması yaparsanız buraya bir şey yazmanıza gerek yoktur.",
+  "ga4MeasurementId": "",
+  "_ga4Help": "GA4 → Yönetici → Veri akışları → web akışı → 'Ölçüm Kimliği'. Biçim: G-XXXXXXXXXX",
+  "adsConversionId": "",
+  "_adsHelp": "Google Ads → Hedefler → Dönüşümler → bir dönüşüm eylemi → Etiket kurulumu. Biçim: AW-123456789",
+  "adsConversionLabels": {
+    "call": "",
+    "whatsapp": "",
+    "form": ""
+  },
+  "_labelsHelp": "Her dönüşüm eyleminin kendi etiketi vardır; Ads'in verdiği 'AW-123456789/AbC-D_efG' dizesinin EĞİK ÇİZGİDEN SONRAKİ kısmını yazın. Etiketi boş kalan eylem için Ads dönüşümü gönderilmez (GA4 olayı yine de gider).",
+  "consentBanner": true,
+  "_consentHelp": "true: ziyaretçi kabul edene kadar çerezler kapalı (Consent Mode v2 varsayılan 'denied') ve alt bantta onay kutusu gösterilir — KVKK/GDPR için savunulabilir varsayılan. false: onay bandı gösterilmez ve izin 'granted' başlar; yalnız hukuk danışmanınız bunu onaylarsa kullanın."
+}

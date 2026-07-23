@@ -46,7 +46,9 @@ const waHref = whatsappHref(company.salesContact.whatsapp);
     display: none;
     position: fixed;
     inset-inline: 0;
-    bottom: 0;
+    /* Çerez onay bandı görünürken onun üstüne çıkar (değişkeni bant kendi yüksekliğiyle
+       doldurur, kapanınca 0'lar) — arama/WhatsApp butonları hiçbir an örtülmesin. */
+    bottom: var(--mey-consent-h, 0px);
     z-index: 40;
     align-items: center;
     justify-content: space-between;

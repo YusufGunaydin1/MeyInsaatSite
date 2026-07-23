@@ -245,5 +245,11 @@
     "languages": "Diller",
     "groupNote": "MEY İnşaat bir MEY Grubu markasıdır.",
     "rights": "Tüm hakları saklıdır."
+  },
+  "consent": {
+    "title": "Çerez tercihi",
+    "text": "Ziyaret istatistikleri ve reklam ölçümü için çerez kullanıyoruz. Reddederseniz yalnızca sitenin çalışması için gerekli olanlar kalır.",
+    "accept": "Kabul et",
+    "reject": "Reddet"
   }
 }

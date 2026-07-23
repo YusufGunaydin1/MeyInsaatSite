@@ -1,0 +1,106 @@
+---
+/*
+  Çerez onayı — yalnızca ölçüm kimlikleri tanımlıyken basılır (bkz. Analytics.astro).
+
+  Ziyaretçi bir seçim yapana kadar Consent Mode varsayılanı 'denied'; buradaki
+  seçim gtag'e 'update' olarak iletilir ve localStorage'a yazılır. Sunucu yok,
+  çerez bankası yok — tek karar, tek anahtar.
+
+  Bant sayfanın en altına sabitlenir ve satılık sayfalarındaki mobil arama
+  bandının (z-index 40) üstünde durur; tek dokunuşla kapanır ve bir daha çıkmaz.
+*/
+import { ui } from '../../lib/content';
+import { CONSENT_KEY } from '../../lib/analytics';
+import type { Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = ui(locale).consent;
+---
+
+<div class="mey-consent" data-testid="consent-banner" role="dialog" aria-live="polite" aria-label={t.title} hidden>
+  <p class="mey-consent-text">{t.text}</p>
+  <div class="mey-consent-actions">
+    <button type="button" class="mey-consent-btn is-ghost" data-consent="denied" data-testid="consent-reject">{t.reject}</button>
+    <button type="button" class="mey-consent-btn is-solid" data-consent="granted" data-testid="consent-accept">{t.accept}</button>
+  </div>
+</div>
+
+<script is:inline define:vars={{ KEY: CONSENT_KEY }}>
+  (function () {
+    var box = document.querySelector('.mey-consent');
+    if (!box) return;
+    var stored = null;
+    try { stored = window.localStorage.getItem(KEY); } catch (e) { /* private mode */ }
+    if (stored === 'granted' || stored === 'denied') return;
+    box.hidden = false;
+
+    // Satılık sayfalarındaki sabit arama bandı (.kc-mbar) bandın ALTINDA kalmasın:
+    // reklam trafiğinin tek CTA'sı hiçbir an örtülmemeli.
+    var lift = function (px) { document.documentElement.style.setProperty('--mey-consent-h', px + 'px'); };
+    lift(box.offsetHeight);
+    window.addEventListener('resize', function () { if (!box.hidden) lift(box.offsetHeight); });
+
+    box.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-consent]');
+      if (!btn) return;
+      var value = btn.getAttribute('data-consent');
+      try { window.localStorage.setItem(KEY, value); } catch (err) { /* private mode */ }
+      if (typeof window.gtag === 'function') {
+        window.gtag('consent', 'update', {
+          ad_storage: value,
+          ad_user_data: value,
+          ad_personalization: value,
+          analytics_storage: value,
+        });
+        window.gtag('set', 'ads_data_redaction', value !== 'granted');
+      }
+      box.hidden = true;
+      lift(0);
+    });
+  })();
+</script>
+
+<style>
+  .mey-consent {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 70;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem 1.25rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--color-concrete-050);
+    border-top: 1px solid var(--color-line);
+  }
+  .mey-consent[hidden] { display: none; }
+  .mey-consent-text {
+    font-family: var(--font-sans);
+    font-size: 0.78125rem;
+    line-height: 1.45;
+    color: var(--color-graphite-600);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .mey-consent:lang(ar) .mey-consent-text { font-family: var(--font-arabic); }
+  .mey-consent-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+  .mey-consent-btn {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    min-height: 40px;
+    padding: 0.4rem 1.1rem;
+    border-radius: var(--radius-brand);
+    cursor: pointer;
+  }
+  .mey-consent-btn:lang(ar) { font-family: var(--font-arabic); text-transform: none; }
+  .mey-consent-btn.is-solid { background: var(--color-mey-red); color: #fff; border: 1px solid var(--color-mey-red); }
+  .mey-consent-btn.is-ghost { background: transparent; color: var(--color-graphite-600); border: 1px solid var(--color-line); }
+  .mey-consent-btn.is-ghost:hover { border-color: var(--color-graphite-400); color: var(--color-graphite-900); }
+</style>
