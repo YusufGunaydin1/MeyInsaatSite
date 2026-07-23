@@ -98,7 +98,7 @@
   },
   "projects": {
     "empty": "The project portfolio is being prepared. Real project information and photos will be here soon.",
-    "lead": "Residential projects completed by MEY İnşaat to date.",
+    "lead": "The three residential buildings MEY İnşaat has completed in Pendik, Istanbul: El Ele, Çamoğlu and Maşuk apartments. Each was built with a reinforced-concrete frame, run under one roof from land assessment to turnkey delivery. Every page carries the building's address, location and construction stages.",
     "filters": {
       "all": "All",
       "type": "Type",
@@ -229,7 +229,8 @@
       "samplesNote": "Values shown in grey — year, floors, units and the timeline — are sample placements; they will be updated once MEY İnşaat confirms them. Interior, site-plan and axonometric visuals are representative.",
       "prevShort": "Previous",
       "nextShort": "Next"
-    }
+    },
+    "heading": "Completed Housing Projects in Pendik"
   },
   "contact": {
     "title": "Let's talk about your project",

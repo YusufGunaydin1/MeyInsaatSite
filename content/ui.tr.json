@@ -98,7 +98,7 @@
   },
   "projects": {
     "empty": "Proje portföyü hazırlanıyor. Gerçek proje bilgileri ve fotoğrafları yakında burada olacak.",
-    "lead": "MEY İnşaat'ın bugüne kadar tamamladığı konut projeleri.",
+    "lead": "MEY İnşaat'ın İstanbul Pendik'te tamamladığı üç konut binası: El Ele, Çamoğlu ve Maşuk apartmanları. Her biri betonarme karkas sistemle, arsa değerlendirmesinden anahtar teslimine tek elden inşa edildi. Her sayfada binanın adresi, konumu ve yapım aşamaları yer alır.",
     "filters": {
       "all": "Tümü",
       "type": "Tür",
@@ -229,7 +229,8 @@
       "samplesNote": "Gri renkte gösterilen yıl, kat, daire ve zaman çizelgesi değerleri örnek yerleşimdir; MEY İnşaat doğruladığında güncellenecek. İç mekân, vaziyet ve aksonometri görselleri temsilîdir.",
       "prevShort": "Önceki",
       "nextShort": "Sonraki"
-    }
+    },
+    "heading": "Pendik'te Tamamlanan Konut Projeleri"
   },
   "contact": {
     "title": "Projeleriniz için konuşalım",
