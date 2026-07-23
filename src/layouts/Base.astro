@@ -1,7 +1,8 @@
 ---
 import '../styles/global.css';
 import { LOCALES, DEFAULT_LOCALE, dir, localePath, type Locale } from '../lib/i18n';
-import { seo, ui } from '../lib/content';
+import { seo, ui, company } from '../lib/content';
+import { websiteLd } from '../lib/schema';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/analytics/Analytics.astro';
@@ -108,17 +109,27 @@ const OG_LOCALES: Record<Locale, string> = {
       type="application/ld+json"
       set:html={JSON.stringify({
         '@context': 'https://schema.org',
-        '@type': 'RealEstateAgent',
+        // MEY hem inşa eder hem kendi dairesini satar; iki tip de LocalBusiness
+        // altındadır, ikisini birden vermek en spesifik ve dürüst tanımdır.
+        '@type': ['GeneralContractor', 'RealEstateAgent'],
         '@id': site + '/#org',
         name: s.siteName,
         url: site + '/',
         logo: site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/logo.png',
         image: site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/og-default.jpg',
-        // NAP mirrors content/company.json — sales line + Tuzla HQ (single source there)
-        telephone: '+905326256812',
-        email: 'info@meykozmetik.com',
-        foundingDate: '2021',
-        areaServed: { '@type': 'City', name: 'İstanbul' },
+        description: s.orgDescription,
+        // NAP tek eşleşme: kayıtlı adres + o adresin sabit hattı. Google Business
+        // Profile ve tüm dizin kayıtları bu ikiliyi birebir tekrarlamalı; satış
+        // cep hattı ayrı bir contactPoint olarak durur (rolü açıkça yazılı).
+        telephone: company.contact.phone.e164,
+        email: company.contact.email,
+        foundingDate: String(company.constructionFoundedYear),
+        founder: { '@type': 'Person', name: company.founder },
+        knowsLanguage: LOCALES,
+        areaServed: [
+          { '@type': 'City', name: 'İstanbul' },
+          { '@type': 'AdministrativeArea', name: 'Pendik' },
+        ],
         address: {
           '@type': 'PostalAddress',
           streetAddress: 'Orhanlı, Vakum Sk. No:26',
@@ -127,9 +138,19 @@ const OG_LOCALES: Record<Locale, string> = {
           postalCode: '34956',
           addressCountry: 'TR',
         },
-        parentOrganization: { '@type': 'Organization', name: 'MEY Grubu' },
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            contactType: 'sales',
+            telephone: company.salesContact.phone.e164,
+            areaServed: 'TR',
+            availableLanguage: LOCALES,
+          },
+        ],
+        parentOrganization: { '@type': 'Organization', name: company.group },
       })}
     />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteLd(Astro.site, locale, s.siteName))} />
     {jsonLdNodes.map((node) => (
       <script type="application/ld+json" set:html={JSON.stringify(node)} />
     ))}

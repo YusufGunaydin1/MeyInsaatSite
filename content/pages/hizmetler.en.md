@@ -3,21 +3,35 @@ locale: en
 machineTranslated: true
 title: "Services"
 intro: >-
-  MEY İnşaat's focus is residential development. We run the process from
-  land to turnkey delivery under one roof, applying the same standard at
-  every stage.
+  MEY İnşaat develops housing: we run the process under one roof, from
+  assessing the land to handing over the keys. The three buildings completed
+  so far — El Ele, Çamoğlu and Maşuk apartments — are in Pendik, Istanbul.
 services:
   - name: "Residential Project Development"
     desc: >-
-      Modern apartment projects in Istanbul: land assessment, project design,
-      permitting, construction, and delivery. Reinforced-concrete frame
-      system, selected materials, and transparent process management.
+      Assessing the plot's zoning status and ground conditions, working out the
+      floor plans and apartment layouts, and setting the cost and schedule
+      framework. The drawing is the commitment itself.
     confirmed: true
-  - name: "[OTHER SERVICE AREAS — TO BE VERIFIED]"
+  - name: "Permits and Project Management"
     desc: >-
-      Additional service areas such as commercial buildings or urban renewal
-      will be published here once verified by MEY.
-    confirmed: false
+      Preparing the architectural, structural and building-services designs,
+      following the municipal permit process, setting up the site and writing
+      the work schedule. The timeline is clear from the start; if it changes,
+      we say so.
+    confirmed: true
+  - name: "Reinforced-Concrete Structural Work"
+    desc: >-
+      From excavation and foundations to the frame: reinforced-concrete column
+      and shear-wall system, slabs and roof. Every stage follows the work
+      schedule and is supervised on site.
+    confirmed: true
+  - name: "Finishing Works and Turnkey Delivery"
+    desc: >-
+      Façade, common areas, mechanical and electrical finishes, in-unit works
+      and handover. The process is followed through to condominium title and
+      key delivery.
+    confirmed: true
 process:
   title: "How we work"
   steps:

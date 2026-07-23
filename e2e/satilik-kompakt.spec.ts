@@ -88,9 +88,9 @@ test('liste: D-11 yakın zamanda satıldı ve fiyatsız; D-12 13.750.000 TL kal�
   // El Ele projesinde bir daire satışta: proje kartı doğru sayıyı taşır.
   await expect(page.getByTestId('kl-sold-el-ele')).toHaveCount(0);
   await expect(page.locator('[data-unit="p-el-ele"]')).toContainText('1 satılık dubleks');
-  await expect(page.getByTestId('kl-proje-el-ele')).toHaveAttribute('href', /projeler\/el-ele-apartmani$/);
-  await expect(page.getByTestId('kl-proje-masuk')).toHaveAttribute('href', /projeler\/masuk-apartmani$/);
-  await expect(page.getByTestId('kl-detay-d11')).toHaveAttribute('href', /satilik-daireler\/el-ele-apartmani-3-2-dubleks-satildi$/);
+  await expect(page.getByTestId('kl-proje-el-ele')).toHaveAttribute('href', /projeler\/el-ele-apartmani\/$/);
+  await expect(page.getByTestId('kl-proje-masuk')).toHaveAttribute('href', /projeler\/masuk-apartmani\/$/);
+  await expect(page.getByTestId('kl-detay-d11')).toHaveAttribute('href', /satilik-daireler\/el-ele-apartmani-3-2-dubleks-satildi\/$/);
   // CTA hiyerarşisi: ilan Detayları Gör beyaz-üstü-kırmızı; proje Projeyi İncele hayalet kalır
   const cta = page.getByTestId('kl-detay-d11');
   const [ctaBg, ctaFg] = await cta.evaluate((el) => {
@@ -238,7 +238,7 @@ test('detay: D-11 sold durumunda fiyatsız; D-12 fiyatı değişmeden satışta'
   await expect(page.getByTestId('kc-payment')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('14.900.000');
   await expect(page.getByTestId('kc-sold-next')).toContainText('13.750.000 TL');
-  await expect(page.getByTestId('kc-sold-next')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks$/);
+  await expect(page.getByTestId('kc-sold-next')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks\/$/);
 
   await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
   await expect(page.getByTestId('kc-price')).toHaveText('13.750.000 TL');
@@ -268,8 +268,8 @@ test('ray formu: Web3Forms anahtarı yokken nazikçe kapalı — ölü gönderim
 
 test('detay satış contact links are live; YAKINDA belge ölü-uçları kaldırıldı', async ({ page }) => {
   await page.goto(u(K + 'el-ele-apartmani-3-2-dubleks-satildi'));
-  await expect(page.getByTestId('kc-compare')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks$/);
-  await expect(page.getByTestId('kc-sim-daire-2')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks$/);
+  await expect(page.getByTestId('kc-compare')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks\/$/);
+  await expect(page.getByTestId('kc-sim-daire-2')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks\/$/);
   await expect(page.getByTestId('kc-rail-phone')).toHaveAttribute('href', 'tel:+905326256812');
   await expect(page.getByTestId('kc-rail-phone')).toContainText('+90 532 625 68 12');
   await expect(page.getByTestId('kc-rail-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
@@ -280,7 +280,7 @@ test('detay satış contact links are live; YAKINDA belge ölü-uçları kaldır
   await expect(page.getByTestId('kc-rail-doc')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('YAKINDA');
   // kırıntı listeye döner
-  await expect(page.getByTestId('kc-breadcrumb').locator('a').nth(1)).toHaveAttribute('href', /\/satilik-daireler$/);
+  await expect(page.getByTestId('kc-breadcrumb').locator('a').nth(1)).toHaveAttribute('href', /\/satilik-daireler\/$/);
 });
 
 test('yerelleştirilmiş rotalar ayakta: /en, /ru, /ar listeye ulaşır', async ({ page }, testInfo) => {
@@ -293,7 +293,7 @@ test('yerelleştirilmiş rotalar ayakta: /en, /ru, /ar listeye ulaşır', async 
     // mobilde masaüstü nav gizli — görünürlük değil varlık + doğru hedef ölçülür
     await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveAttribute(
       'href',
-      new RegExp(prefix.replace('/', '') + '/satilik-daireler$')
+      new RegExp(prefix.replace('/', '') + '/satilik-daireler/$')
     );
   }
 });

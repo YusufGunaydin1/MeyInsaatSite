@@ -13,11 +13,13 @@ const SITE = 'https://meyinsaat.com';
 export default defineConfig({
   site: SITE,
   base: '/',
-  // 'always' matches how the static host actually serves the build: directory
-  // output means /kurumsal/index.html, and a request for /kurumsal is 301'd to
-  // /kurumsal/. Dev/preview now enforce the same form, so a link that would
-  // redirect in production fails locally instead of quietly costing crawl budget.
-  trailingSlash: 'always',
+  // 'ignore' on purpose. The site's ONE canonical form is the trailing-slash one
+  // (localePath emits it; GitHub Pages 301s /kurumsal → /kurumsal/), but 'always'
+  // makes dev/preview answer 404 for the unslashed form — stricter than the real
+  // host, which merely redirects. That turns a working production URL into a local
+  // failure. The canonical form is enforced where it actually matters instead:
+  // e2e/seo-urls.spec.ts asserts it against the built output.
+  trailingSlash: 'ignore',
   // Eski proje slug'ları (yayında linklenmiş olabilir) → gerçek bina adlarına.
   // Statik çıktıda Astro bunlar için meta-refresh HTML sayfası üretir.
   redirects: {

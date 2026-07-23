@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import StatsStrip from '../components/StatsStrip.astro';
 import { type Locale } from '../lib/i18n';
+import { breadcrumbLd } from '../lib/schema';
 import { ui, companyContent } from '../lib/content';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -12,6 +13,10 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = ui(locale);
+const jsonLd = breadcrumbLd(Astro.site, locale, [
+  { name: t.nav.home, path: '/' },
+  { name: t.nav.corporate },
+]);
 const prose = companyContent(locale);
 const Content = prose?.Content;
 
@@ -22,7 +27,7 @@ const photos = import.meta.glob<{ default: ImageMetadata }>(
 const hero = photos['../assets/photos/hero-residential-corner-building.webp']!.default;
 ---
 
-<Base locale={locale} page="corporate" path="/kurumsal">
+<Base locale={locale} page="corporate" path="/kurumsal" jsonLd={jsonLd}>
   <section class="container-site section-pad">
     <div class="guide-line-v ps-6 sm:ps-10">
       <p class="t-tech text-mey-red mb-4">{t.nav.corporate.toUpperCase()}</p>

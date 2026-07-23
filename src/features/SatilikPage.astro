@@ -195,8 +195,10 @@ const stats = [
       </aside>
 
       <div class="ksm-mobile-hero" data-testid="ksm-mobile-hero">
-          <p class="ksm-mobile-status"><span aria-hidden="true"></span>{satistakiDaireSayisi} DAİRE SATIŞTA · PENDİK</p>
-          <p class="ksm-mobile-h1">Satılık Daireler</p>
+          <p class="ksm-mobile-status"><span aria-hidden="true"></span>{satistakiDaireSayisi} DAİRE SATIŞTA</p>
+          <!-- Gerçek h1: masaüstü başlığı bu genişlikte display:none, yani mobil
+               tarayan Googlebot yalnız bunu görür. Metin masaüstüyle aynı olmalı. -->
+          <h1 class="ksm-mobile-h1">Pendik Satılık Daireler</h1>
           <p class="ksm-mobile-sub">El Ele Apartmanı · Son 3+2 dubleks</p>
           <div class="ksm-mobile-actions" aria-label="Satış danışmanı">
             <a href={telHref(company.salesContact.phone) ?? '#'} aria-label={`Satış danışmanını ara: ${salesPhone?.display ?? ''}`} data-testid="ksm-call">

@@ -3,20 +3,33 @@ locale: tr
 machineTranslated: false
 title: "Hizmetler"
 intro: >-
-  MEY İnşaat'ın odağı konut geliştirmedir. Süreci arsadan anahtar teslime
-  tek elden yürütür; her aşamada aynı standardı uygularız.
+  MEY İnşaat konut geliştirir: arsanın değerlendirilmesinden anahtar teslimine
+  kadar süreci tek elden yürütürüz. Bugüne kadar tamamladığımız üç bina —
+  El Ele, Çamoğlu ve Maşuk apartmanları — İstanbul Pendik'te.
 services:
-  - name: "Konut Projeleri Geliştirme"
+  - name: "Konut Projesi Geliştirme"
     desc: >-
-      İstanbul'da modern apartman projeleri: arsa değerlendirme, proje tasarımı,
-      ruhsat süreçleri, yapım ve teslim. Betonarme karkas sistem, seçilmiş
-      malzemeler ve şeffaf süreç yönetimi.
+      Arsanın imar durumunun ve zemin koşullarının değerlendirilmesi, kat
+      planlarının ve daire kurgusunun çıkarılması, maliyet ve takvim
+      çerçevesinin netleştirilmesi. Çizim, taahhüdün kendisidir.
     confirmed: true
-  - name: "[DİĞER HİZMET ALANLARI — DOĞRULANACAK]"
+  - name: "Ruhsat ve Proje Yönetimi"
     desc: >-
-      Ticari yapılar veya kentsel dönüşüm gibi ek hizmet alanları MEY tarafından
-      doğrulandığında burada yayınlanacaktır.
-    confirmed: false
+      Mimari, statik ve tesisat projelerinin hazırlanması, belediye ruhsat
+      süreçlerinin takibi, şantiye kurulumu ve iş programının yazılması.
+      Takvim baştan bellidir; değişirse söylenir.
+    confirmed: true
+  - name: "Betonarme Kaba Yapı"
+    desc: >-
+      Kazı ve temelden karkasa: betonarme kolon-perde sistemi, döşemeler ve
+      çatı. Her aşama iş programına göre ilerler ve şantiyede denetlenir.
+    confirmed: true
+  - name: "İnce İşler ve Anahtar Teslim"
+    desc: >-
+      Cephe, ortak alanlar, mekanik ve elektrik tesisat bitişleri, daire içi
+      imalatlar ve teslim. Süreç kat mülkiyeti ve anahtar teslimine kadar
+      takip edilir.
+    confirmed: true
 process:
   title: "Nasıl çalışırız"
   steps:
