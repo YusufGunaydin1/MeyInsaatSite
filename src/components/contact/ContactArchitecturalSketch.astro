@@ -1,0 +1,217 @@
+---
+import { Image } from 'astro:assets';
+import constructionSkyline from '../../assets/contact/construction-skyline.png';
+---
+
+<div
+  class="cb-architectural"
+  data-testid="contact-hero-illustration"
+  aria-hidden="true"
+>
+  <div class="cb-drafting-field" data-testid="contact-drafting-field">
+    <span class="cb-drawing-grid"></span>
+    <span class="cb-dimension cb-dimension-x"></span>
+    <span class="cb-dimension cb-dimension-y"></span>
+    <span class="cb-drawing-line cb-drawing-line-a"></span>
+    <span class="cb-drawing-line cb-drawing-line-b"></span>
+    <span class="cb-drawing-line cb-drawing-line-c"></span>
+    <span class="cb-drawing-node cb-drawing-node-a"></span>
+    <span class="cb-drawing-node cb-drawing-node-b"></span>
+    <span class="cb-drawing-node cb-drawing-node-c"></span>
+    <span class="cb-setout cb-setout-a"></span>
+    <span class="cb-setout cb-setout-b"></span>
+  </div>
+
+  <Image
+    src={constructionSkyline}
+    alt=""
+    width={1280}
+    widths={[420, 720, 1120, 1280]}
+    sizes="(max-width: 700px) calc(100vw - 2rem), (min-width: 1360px) 700px, 52vw"
+    quality={88}
+    class="cb-architectural-image"
+    loading="eager"
+    decoding="async"
+    fetchpriority="high"
+  />
+</div>
+
+<style>
+  .cb-architectural {
+    position: absolute;
+    z-index: 1;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    width: 54%;
+    height: 83%;
+    pointer-events: none;
+  }
+
+  .cb-drafting-field {
+    position: absolute;
+    z-index: 0;
+    inset: 2% 0 3% 2%;
+    overflow: hidden;
+  }
+
+  .cb-drawing-grid {
+    position: absolute;
+    inset: 5% 3% 6% 8%;
+    background-image:
+      linear-gradient(to right, rgb(130 134 138 / 0.13) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(130 134 138 / 0.13) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: linear-gradient(
+      135deg,
+      transparent 2%,
+      #000 26%,
+      #000 76%,
+      transparent 98%
+    );
+    mask-image: linear-gradient(
+      135deg,
+      transparent 2%,
+      #000 26%,
+      #000 76%,
+      transparent 98%
+    );
+  }
+
+  .cb-dimension {
+    position: absolute;
+    display: block;
+    color: rgb(75 78 80 / 0.42);
+  }
+
+  .cb-dimension::before,
+  .cb-dimension::after {
+    position: absolute;
+    background-color: currentColor;
+    content: "";
+  }
+
+  .cb-dimension-x {
+    inset-block-start: 8%;
+    inset-inline: 12% 6%;
+    border-block-start: 1px solid currentColor;
+  }
+
+  .cb-dimension-x::before,
+  .cb-dimension-x::after {
+    width: 1px;
+    height: 11px;
+    inset-block-start: -6px;
+  }
+
+  .cb-dimension-x::before { inset-inline-start: 0; }
+  .cb-dimension-x::after { inset-inline-end: 0; }
+
+  .cb-dimension-y {
+    inset-block: 14% 12%;
+    inset-inline-end: 4%;
+    border-inline-end: 1px solid currentColor;
+  }
+
+  .cb-dimension-y::before,
+  .cb-dimension-y::after {
+    width: 11px;
+    height: 1px;
+    inset-inline-end: -6px;
+  }
+
+  .cb-dimension-y::before { inset-block-start: 0; }
+  .cb-dimension-y::after { inset-block-end: 0; }
+
+  .cb-drawing-line {
+    position: absolute;
+    z-index: 1;
+    height: 1px;
+    background-color: rgb(15 117 122 / 0.28);
+    transform-origin: left center;
+  }
+
+  .cb-drawing-line-a {
+    width: 44%;
+    inset-block-start: 37%;
+    inset-inline-start: 4%;
+    transform: rotate(14deg);
+  }
+
+  .cb-drawing-line-b {
+    width: 56%;
+    inset-block-start: 69%;
+    inset-inline-start: 33%;
+    transform: rotate(-12deg);
+  }
+
+  .cb-drawing-line-c {
+    width: 30%;
+    inset-block-start: 52%;
+    inset-inline-start: 58%;
+    transform: rotate(39deg);
+  }
+
+  .cb-drawing-node {
+    position: absolute;
+    z-index: 1;
+    width: 8px;
+    height: 8px;
+    border: 1px solid rgb(15 117 122 / 0.42);
+    border-radius: 50%;
+    background-color: var(--color-concrete-100);
+  }
+
+  .cb-drawing-node-a { inset-block-start: 44%; inset-inline-start: 27%; }
+  .cb-drawing-node-b { inset-block-start: 61%; inset-inline-start: 54%; }
+  .cb-drawing-node-c { inset-block-start: 76%; inset-inline-end: 14%; }
+
+  .cb-setout {
+    position: absolute;
+    z-index: 1;
+    width: 22px;
+    height: 22px;
+  }
+
+  .cb-setout-a {
+    inset-block-start: 4%;
+    inset-inline-start: 8%;
+    border-block-start: 1px solid rgb(181 35 35 / 0.6);
+    border-inline-start: 1px solid rgb(181 35 35 / 0.6);
+  }
+
+  .cb-setout-b {
+    inset-inline-end: 3%;
+    inset-block-end: 5%;
+    border-inline-end: 1px solid rgb(75 78 80 / 0.5);
+    border-block-end: 1px solid rgb(75 78 80 / 0.5);
+  }
+
+  .cb-architectural-image {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  @media (max-width: 700px) {
+    .cb-architectural {
+      inset-inline-end: 0;
+      width: 100%;
+      height: 220px;
+    }
+
+    .cb-drafting-field { inset: 1% 0 2%; }
+    .cb-drawing-grid {
+      inset-inline: 3%;
+      background-size: 32px 32px;
+      opacity: 0.72;
+    }
+    .cb-dimension-y,
+    .cb-drawing-line-c,
+    .cb-drawing-node-c { display: none; }
+  }
+</style>
