@@ -4,28 +4,32 @@
   "siteName": "MEY İnşaat",
   "pages": {
     "home": {
-      "title": "MEY İnşaat — We build your living spaces with care",
-      "description": "MEY İnşaat develops modern residential projects in Istanbul, backed by MEY Group's 23-year track record. Solid, on time, and at the quality we promise."
+      "title": "MEY İnşaat — Home Building in Pendik, Istanbul",
+      "description": "MEY İnşaat develops and builds housing in Pendik, Istanbul: El Ele, Çamoğlu and Maşuk apartments. The construction brand of the 23-year-old MEY Group."
     },
     "projects": {
-      "title": "Projects — MEY İnşaat",
-      "description": "MEY İnşaat's residential projects in Istanbul: completed and ongoing buildings."
+      "title": "Completed Housing Projects in Pendik — MEY İnşaat",
+      "description": "The residential buildings MEY İnşaat has completed in Pendik, Istanbul: El Ele, Çamoğlu and Maşuk apartments — address, location and how they were built."
     },
     "satilik": {
       "title": "Apartments for Sale in Pendik, Istanbul — MEY İnşaat",
       "description": "New 3+2 rooftop duplex in Pendik, direct from builder MEY İnşaat: 160 m², rooftop terrace, covered parking. El Ele Apartmanı — 13,750,000 TL."
     },
     "corporate": {
-      "title": "Corporate — MEY İnşaat",
-      "description": "The story, values, mission, and vision of MEY İnşaat, born from MEY Group's 23-year corporate history."
+      "title": "About — MEY İnşaat, Home Builder in Pendik",
+      "description": "Founded in 2021, MEY İnşaat is the construction brand of the 23-year-old MEY Group. Our story, values and the buildings completed in Pendik."
     },
     "services": {
-      "title": "Services — MEY İnşaat",
-      "description": "MEY İnşaat's service areas and how we work, with residential development at the core."
+      "title": "Residential Construction Services — MEY İnşaat",
+      "description": "From land assessment to turnkey delivery: project development, permits and project management, reinforced-concrete structure, finishing works. Pendik/Istanbul."
     },
     "contact": {
-      "title": "Contact — MEY İnşaat",
-      "description": "Contact MEY İnşaat directly by phone, WhatsApp, or email."
+      "title": "Contact — MEY İnşaat, Tuzla/Istanbul",
+      "description": "Reach MEY İnşaat by phone or email. Office: Orhanlı, Vakum Sk. No:26, Tuzla/Istanbul."
+    },
+    "projectDetail": {
+      "titleTemplate": "{name} — Housing Project in {district}, Istanbul",
+      "descriptionTemplate": "{summary} Location: {location}."
     }
   },
   "orgDescription": "The MEY Grubu brand that develops and builds housing in Pendik, Istanbul. Three completed buildings: El Ele, Çamoğlu and Maşuk apartments."

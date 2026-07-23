@@ -4,28 +4,32 @@
   "siteName": "MEY İnşaat",
   "pages": {
     "home": {
-      "title": "MEY İnşaat — Yaşam alanlarınızı özenle inşa ediyoruz",
-      "description": "MEY İnşaat, 23 yıllık MEY Grubu güvencesiyle İstanbul'da modern konut projeleri geliştirir. Sağlam, zamanında ve söz verdiğimiz kalitede."
+      "title": "MEY İnşaat — Pendik'te Konut İnşaatı ve Satılık Daire",
+      "description": "MEY İnşaat, İstanbul Pendik'te konut geliştirir ve inşa eder: El Ele, Çamoğlu ve Maşuk apartmanları. 23 yıllık MEY Grubu'nun inşaat markası."
     },
     "projects": {
-      "title": "Projeler — MEY İnşaat",
-      "description": "MEY İnşaat'ın İstanbul'daki konut projeleri: tamamlanan ve devam eden yapılar."
+      "title": "Pendik'te Tamamlanan Konut Projeleri — MEY İnşaat",
+      "description": "MEY İnşaat'ın İstanbul Pendik'te tamamladığı konut binaları: El Ele, Çamoğlu ve Maşuk apartmanları — adres, konum ve yapım süreci."
     },
     "satilik": {
       "title": "Pendik Satılık 3+2 Dubleks Daire — MEY İnşaat",
       "description": "Pendik El Ele Apartmanı'nda MEY İnşaat'tan sıfır 3+2 çatı dubleksi: 160 m², çatı terası, kapalı otopark. Son daire 13.750.000 TL — randevu alın."
     },
     "corporate": {
-      "title": "Kurumsal — MEY İnşaat",
-      "description": "MEY Grubu'nun 23 yıllık kurumsal geçmişinden doğan MEY İnşaat'ın hikayesi, değerleri, misyonu ve vizyonu."
+      "title": "Kurumsal — Pendik'te Konut Geliştiren MEY İnşaat",
+      "description": "2021'de kurulan MEY İnşaat, 23 yıllık MEY Grubu'nun inşaat markasıdır. Hikayemiz, değerlerimiz ve Pendik'te tamamladığımız binalar."
     },
     "services": {
-      "title": "Hizmetler — MEY İnşaat",
-      "description": "Konut geliştirme başta olmak üzere MEY İnşaat'ın hizmet alanları ve çalışma süreci."
+      "title": "Konut İnşaatı Hizmetleri — MEY İnşaat, İstanbul",
+      "description": "Arsa değerlendirmeden anahtar teslime: konut projesi geliştirme, ruhsat ve proje yönetimi, betonarme kaba yapı, ince işler. Pendik/İstanbul."
     },
     "contact": {
-      "title": "İletişim — MEY İnşaat",
-      "description": "MEY İnşaat ile telefon, WhatsApp veya e-posta üzerinden doğrudan iletişime geçin."
+      "title": "İletişim — MEY İnşaat, Tuzla/İstanbul",
+      "description": "MEY İnşaat'a telefon veya e-posta ile ulaşın. Ofis: Orhanlı, Vakum Sk. No:26, Tuzla/İstanbul."
+    },
+    "projectDetail": {
+      "titleTemplate": "{name} — {district}'te MEY İnşaat Konut Projesi",
+      "descriptionTemplate": "{summary} Konum: {location}."
     }
   },
   "orgDescription": "İstanbul Pendik'te konut geliştiren ve inşa eden MEY Grubu markası. Tamamlanan üç bina: El Ele, Çamoğlu ve Maşuk apartmanları."

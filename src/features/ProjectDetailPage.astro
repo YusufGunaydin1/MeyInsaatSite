@@ -5,8 +5,9 @@ import ProjectStory from '../components/ProjectStory.astro';
 import XrayReveal from '../components/XrayReveal.astro';
 import DetailStage from '../components/projectDetail/DetailStage.astro';
 import { localePath, type Locale } from '../lib/i18n';
-import { ui, project, projectDetailOverride, mergeDeep } from '../lib/content';
+import { ui, seo, project, projectDetailOverride, mergeDeep } from '../lib/content';
 import { breadcrumbLd, buildingLd } from '../lib/schema';
+import { listingProjeler, listing, DETAY_SLUG, tl } from '../components/showcase/satilik/kompakt/data.ts';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -63,6 +64,27 @@ const hasStage =
   stageImgs.dokular.every(Boolean);
 const typeLabel = String(t.projects.types?.[data.type] ?? data.type).toLocaleUpperCase(locale);
 const statusLabel = String(t.projects.status[data.status] ?? data.status).toLocaleUpperCase(locale);
+/* Bu binada CANLI satılık daire var mı? Varsa sayfadan ilana bağlamsal bir
+   bağlantı çıkar: satış sayfasına giden tek yol menüdeki "Satılık" değil, bu.
+   Kaynak satılık verisinin kendisi — bina adı burada elle yazılmaz. */
+// Satılık bölümü henüz yalnız Türkçe (bkz. SatilikPage trOnly) → bağlantı da TR'de.
+const projeKarti = locale === 'tr' ? listingProjeler.find((lp) => lp.slug === slug) : undefined;
+const canliDaire = projeKarti && !projeKarti.sold
+  ? listing.find((u) => u.projeKey === projeKarti.projeKey && u.durum === 'musait')
+  : undefined;
+const canliDaireHref = canliDaire
+  ? localePath(locale, `/satilik-daireler/${DETAY_SLUG[canliDaire.detay!]}`)
+  : null;
+
+const seoTpl = seo(locale).pages.projectDetail ?? {};
+const fill = (tpl: string | undefined, fallback: string) =>
+  (tpl ?? fallback)
+    .replace('{name}', fm.name ?? slug)
+    .replace('{district}', data.district ?? 'Pendik')
+    .replace('{summary}', fm.summary ?? '')
+    .replace('{location}', data.location ?? '');
+const detailTitle = fill(seoTpl.titleTemplate, '{name} — MEY İnşaat');
+const detailDescription = fill(seoTpl.descriptionTemplate, '{summary}');
 const jsonLd = [
   breadcrumbLd(Astro.site, locale, [
     { name: t.nav.home, path: '/' },
@@ -77,8 +99,8 @@ const jsonLd = [
   locale={locale}
   page="projects"
   path={`/projeler/${slug}`}
-  title={`${fm.name ?? slug} — MEY İnşaat`}
-  description={fm.summary}
+  title={detailTitle}
+  description={detailDescription}
   jsonLd={jsonLd}
 >
   <!-- Geri bağlantısı — her iki hero varyantının üstünde ortak -->
@@ -87,6 +109,20 @@ const jsonLd = [
       <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">←</span> {t.cta.allProjects}
     </a>
   </div>
+
+  {canliDaire && canliDaireHref && (
+    <div class="container-site pd-sale-pad">
+      <a href={canliDaireHref} class="pd-sale" data-testid="pd-sale-link">
+        <span class="pd-sale-tag t-tech">SATILIK</span>
+        <span class="pd-sale-text">
+          Bu binada satılık {canliDaire.baslik.toLocaleLowerCase('tr')} var —
+          {' '}{canliDaire.brut} m² brüt, {canliDaire.kat}
+          {canliDaire.fiyat !== null && <>, {tl(canliDaire.fiyat)}</>}
+        </span>
+        <span class="pd-sale-go" aria-hidden="true">→</span>
+      </a>
+    </div>
+  )}
 
   {/* Yatay detay sahnesi: foto sabit solda, sağ pencere scroll ile üç kareyi tarar.
       Galeri seti eksikse dürüst basit hero (aşağıdaki) kalır. */}
@@ -176,6 +212,28 @@ const jsonLd = [
 </Base>
 
 <style>
+  .pd-sale-pad { padding-block: 0 1.25rem; }
+  .pd-sale {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--color-line);
+    border-inline-start: 3px solid var(--color-mey-red);
+    border-radius: var(--radius-brand);
+    background: #fff;
+    color: var(--color-graphite-900);
+    text-decoration: none;
+  }
+  .pd-sale:hover { border-color: var(--color-graphite-400); }
+  .pd-sale-tag {
+    color: var(--color-mey-red);
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+  .pd-sale-text { font-size: 0.9375rem; line-height: 1.4; }
+  .pd-sale-go { margin-inline-start: auto; color: var(--color-mey-red); }
+
   .pd-back {
     display: inline-flex;
     align-items: center;
