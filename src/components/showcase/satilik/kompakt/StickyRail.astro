@@ -40,13 +40,19 @@ const trust = [
       </a>
     )}
     {salesWhatsapp && salesWhatsappHref && (
-      <a class="kc-rail-btn" href={salesWhatsappHref} data-testid="kc-rail-whatsapp">
+      <a class="kc-rail-btn" href={whatsappHref(company.salesContact.whatsapp, `Merhaba, ${konu} hakkında bilgi almak istiyorum.`) ?? salesWhatsappHref} data-testid="kc-rail-whatsapp">
         <Icon name="chat" size={17} /> WhatsApp · {salesWhatsapp.display}
       </a>
     )}
-    <a class="kc-rail-btn is-solid" href={base + '/iletisim/'}>
-      <Icon name="mail" size={17} /> Mesaj Gönder
-    </a>
+    {salesWhatsapp && (
+      <a
+        class="kc-rail-btn is-solid"
+        href={whatsappHref(company.salesContact.whatsapp, `Merhaba, ${konu} için yerinde randevu almak istiyorum.`) ?? '#'}
+        data-testid="kc-rail-randevu"
+      >
+        <Icon name="calendar" size={17} /> Randevu Al
+      </a>
+    )}
   </div>
 
   <div class="kc-rail-form">

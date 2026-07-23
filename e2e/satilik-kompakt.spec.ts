@@ -263,7 +263,12 @@ test('ray formu: Web3Forms anahtarı yokken nazikçe kapalı — ölü gönderim
 
   // birincil eylem satış hattı telefon + WhatsApp (rayın üstünde canlı)
   await expect(page.getByTestId('kc-rail-phone')).toHaveAttribute('href', 'tel:+905326256812');
-  await expect(page.getByTestId('kc-rail-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
+  // WhatsApp ön dolu mesajla açılır: ziyaretçi ilk satırı yazmaz, talep hangi
+  // daire için geldiği belli düşer.
+  await expect(page.getByTestId('kc-rail-whatsapp')).toHaveAttribute(
+    'href',
+    /^https:\/\/wa\.me\/905326256812\?text=Merhaba/
+  );
 });
 
 test('detay satış contact links are live; YAKINDA belge ölü-uçları kaldırıldı', async ({ page }) => {
@@ -272,7 +277,12 @@ test('detay satış contact links are live; YAKINDA belge ölü-uçları kaldır
   await expect(page.getByTestId('kc-sim-daire-2')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks\/$/);
   await expect(page.getByTestId('kc-rail-phone')).toHaveAttribute('href', 'tel:+905326256812');
   await expect(page.getByTestId('kc-rail-phone')).toContainText('+90 532 625 68 12');
-  await expect(page.getByTestId('kc-rail-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
+  // WhatsApp ön dolu mesajla açılır: ziyaretçi ilk satırı yazmaz, talep hangi
+  // daire için geldiği belli düşer.
+  await expect(page.getByTestId('kc-rail-whatsapp')).toHaveAttribute(
+    'href',
+    /^https:\/\/wa\.me\/905326256812\?text=Merhaba/
+  );
   await expect(page.getByTestId('kc-rail-whatsapp')).toContainText('+90 532 625 68 12');
   await expect(page.getByTestId('kc-rail-alarm')).toHaveCount(0);
   // canlı D-12 detayında YAKINDA belge ölü-uçları kaldırıldı (docs prop düştü)

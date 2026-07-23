@@ -38,11 +38,12 @@ in other sectors.
 
 We founded **MEY İnşaat** in 2021. Our aim was clear: to carry the trust we had earned over
 years in cosmetics into the largest investment in people's lives — their home. From our first
-project to today, we have completed [NUMBER OF PROJECTS — PLACEHOLDER] residential projects,
+project to today, the buildings we have completed — **El Ele**, **Çamoğlu** and **Maşuk
+apartments**, all in Pendik, Istanbul —
 and in every one of them we have kept the same principle: we build what we draw.
 
-Today, MEY İnşaat continues to develop housing in the [DISTRICT(S) — PLACEHOLDER] area of
-Istanbul, following a controlled and sustainable strategy that prioritizes growing right
+Today, MEY İnşaat continues to develop housing in Pendik and the surrounding districts on the
+Anatolian side of Istanbul, following a controlled and sustainable strategy that prioritizes growing right
 over growing fast.
 
 ## Our Values

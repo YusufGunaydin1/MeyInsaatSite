@@ -140,6 +140,11 @@ const jsonLd = {
     },
   ],
 };
+/* EN/RU/AR satılık sayfaları gövde metnini HENÜZ çevirmiyor (künye, oda adları,
+   açıklamalar TR). Çeviri gelene kadar bu üç dil noindex ve hreflang kümesi
+   dışında: aynı Türkçe metni "İngilizce sayfa" diye ilan etmek yeni bir alan
+   adında kopya içerik sinyalidir. TR sayfa etkilenmez. */
+const trOnly = locale !== 'tr';
 ---
 
 <Base
@@ -153,6 +158,8 @@ const jsonLd = {
   ogImageAlt="El Ele Apartmanı D-12 — çatı avlulu 3+2 dubleks üst kat salonu, Pendik"
   jsonLd={jsonLd}
   extraMeta={extraMeta}
+  noindex={trOnly}
+  hreflangLocales={[locale]}
 >
   <div class="container-site kce-crumbwrap">
     <Breadcrumb items={[

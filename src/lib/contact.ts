@@ -20,9 +20,13 @@ export function telHref(value: unknown): string | null {
   return number ? `tel:${number.e164}` : null;
 }
 
-export function whatsappHref(value: unknown): string | null {
+/** `message` verilirse sohbet o cümleyle açılır: ziyaretçi ilk satırı yazmak
+    zorunda kalmaz ve talep, hangi daire için geldiği belli olarak düşer. */
+export function whatsappHref(value: unknown, message?: string): string | null {
   const number = contactNumber(value);
-  return number ? `https://wa.me/${number.e164.slice(1)}` : null;
+  if (!number) return null;
+  const base = `https://wa.me/${number.e164.slice(1)}`;
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
 /*

@@ -37,11 +37,14 @@ interface Props {
   extraMeta?: { property?: string; name?: string; content: string }[];
   /** google-site-verification token (homepage only, typically) */
   verification?: string;
+  /** hreflang kümesi — çevrilmemiş bir bölüm yalnız kendi dilini ilan etsin */
+  hreflangLocales?: Locale[];
 }
 
 const {
   locale, page, path, title, description, noindex = false,
   ogType = 'website', ogImage: ogImageProp, ogImageAlt, jsonLd, extraMeta, verification,
+  hreflangLocales = LOCALES,
 } = Astro.props;
 const s = seo(locale);
 const t = ui(locale);
@@ -82,10 +85,12 @@ const OG_LOCALES: Record<Locale, string> = {
       <meta name="google-site-verification" content={verification ?? siteVerification} />
     )}
     <link rel="canonical" href={canonical} />
-    {LOCALES.map((l) => (
+    {hreflangLocales.map((l) => (
       <link rel="alternate" hreflang={l} href={site + localePath(l, path)} />
     ))}
-    <link rel="alternate" hreflang="x-default" href={site + localePath(DEFAULT_LOCALE, path)} />
+    {hreflangLocales.length > 1 && (
+      <link rel="alternate" hreflang="x-default" href={site + localePath(DEFAULT_LOCALE, path)} />
+    )}
     <link rel="icon" type="image/png" href={import.meta.env.BASE_URL.replace(/\/$/, '') + '/favicon.png'} />
     <link rel="apple-touch-icon" href={import.meta.env.BASE_URL.replace(/\/$/, '') + '/apple-touch-icon.png'} />
     <meta name="theme-color" content="#f4f4f2" />

@@ -34,11 +34,11 @@ Her şey 23 yıl önce, **MEY Kozmetik**'in kuruluşuyla başladı. **Yavuz Gün
 disiplini zamanla farklı sektörlerde de uygulamanın yollarını aradı.
 
 2021 yılında **MEY İnşaat**'ı kurduk. Amacımız açıktı: kozmetikte yıllar içinde kazandığımız güveni,
-insanların hayatlarındaki en büyük yatırıma — konuta — taşımak. İlk projemizden bugüne
-[PROJE SAYISI — PLACEHOLDER] konut projesini hayata geçirdik ve her birinde aynı ilkeyi koruduk:
-çizdiğimizi inşa ederiz.
+insanların hayatlarındaki en büyük yatırıma — konuta — taşımak. Tamamladığımız binalar —
+**El Ele**, **Çamoğlu** ve **Maşuk apartmanları** — İstanbul Pendik'te; her birinde aynı ilkeyi
+koruduk: çizdiğimizi inşa ederiz.
 
-Bugün MEY İnşaat, İstanbul'un [BÖLGE(LER) — PLACEHOLDER] bölgesinde konut geliştirmeye devam
+Bugün MEY İnşaat, İstanbul'un Anadolu yakasında, Pendik ve çevresinde konut geliştirmeye devam
 ediyor; hızlı değil, doğru büyümeyi önceleyen kontrollü ve sürdürülebilir bir strateji izliyor.
 
 ## Değerlerimiz

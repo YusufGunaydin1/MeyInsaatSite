@@ -136,6 +136,11 @@ const stats = [
   { icon: 'stairs', deger: '3+2 Dubleks', alt: 'Çatı katı · 5. kat' },
   { icon: 'key', deger: tl(13_750_000), alt: 'Müteahhitten sıfır' },
 ];
+/* EN/RU/AR satılık sayfaları gövde metnini HENÜZ çevirmiyor (künye, oda adları,
+   açıklamalar TR). Çeviri gelene kadar bu üç dil noindex ve hreflang kümesi
+   dışında: aynı Türkçe metni "İngilizce sayfa" diye ilan etmek yeni bir alan
+   adında kopya içerik sinyalidir. TR sayfa etkilenmez. */
+const trOnly = locale !== 'tr';
 ---
 
 <Base
@@ -145,6 +150,8 @@ const stats = [
   ogImage={ogHero.src}
   ogImageAlt="El Ele Apartmanı — Pendik Batı Mahallesi'nde müteahhitten sıfır 3+2 dubleks daireli bina"
   jsonLd={breadcrumbLd}
+  noindex={trOnly}
+  hreflangLocales={[locale]}
 >
   <!-- HERO -->
   <section class="ks-hero theatre ksm-hero" data-testid="ksm-hero">
@@ -191,7 +198,11 @@ const stats = [
         <span class="ks-help-ic"><Icon name="chat" size={22} /></span>
         <p class="ks-help-title">Size yardımcı olalım</p>
         <p class="ks-help-sub">Size en uygun daireyi bulmanızda ekibimiz yardımcı olsun.</p>
-        <a class="btn-ghost ks-help-cta" href={localePath(locale, '/iletisim')}>Bize Ulaşın</a>
+        <a
+          class="btn-ghost ks-help-cta"
+          href={whatsappHref(company.salesContact.whatsapp, 'Merhaba, Pendik’teki satılık daire hakkında bilgi almak istiyorum.') ?? '#'}
+          data-testid="ks-help-whatsapp"
+        >Bize Ulaşın</a>
       </aside>
 
       <div class="ksm-mobile-hero" data-testid="ksm-mobile-hero">

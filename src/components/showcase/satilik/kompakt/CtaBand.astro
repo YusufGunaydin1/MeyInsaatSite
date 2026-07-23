@@ -5,7 +5,7 @@
 */
 import Icon from './Icon.astro';
 import { company } from '../../../../lib/content';
-import { contactNumber, telHref } from '../../../../lib/contact';
+import { contactNumber, telHref, whatsappHref } from '../../../../lib/contact';
 
 interface Props {
   base: string;
@@ -29,7 +29,11 @@ const salesPhoneHref = telHref(company.salesContact.phone);
           <Icon name="phone" size={17} /> {salesPhone.display}
         </a>
       )}
-      <a class="btn-primary" href={base + '/iletisim/'}>
+      <a
+        class="btn-primary"
+        href={whatsappHref(company.salesContact.whatsapp, 'Merhaba, satılık daireyi yerinde görmek için randevu almak istiyorum.') ?? '#'}
+        data-testid="kc-ctaband-randevu"
+      >
         <Icon name="calendar" size={17} /> Randevu Al
       </a>
     </div>
