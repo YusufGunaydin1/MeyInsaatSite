@@ -28,7 +28,7 @@
       "description": "Reach MEY İnşaat by phone or email. Office: Orhanlı, Vakum Sk. No:26, Tuzla/Istanbul."
     },
     "projectDetail": {
-      "titleTemplate": "{name} — Housing Project in {district}, Istanbul",
+      "titleTemplate": "{name} — MEY İnşaat Housing Project in {district}",
       "descriptionTemplate": "{summary} Location: {location}."
     }
   },

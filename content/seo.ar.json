@@ -28,7 +28,7 @@
       "description": "تواصل مع MEY İnşaat هاتفياً أو عبر البريد الإلكتروني. المكتب: Orhanlı, Vakum Sk. No:26، توزلا/إسطنبول."
     },
     "projectDetail": {
-      "titleTemplate": "{name} — مشروع سكني في {district}، إسطنبول",
+      "titleTemplate": "{name} — مشروع MEY İnşaat السكني في {district}",
       "descriptionTemplate": "{summary} الموقع: {location}."
     }
   },

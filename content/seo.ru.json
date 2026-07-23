@@ -28,7 +28,7 @@
       "description": "Свяжитесь с MEY İnşaat по телефону или электронной почте. Офис: Orhanlı, Vakum Sk. No:26, Тузла/Стамбул."
     },
     "projectDetail": {
-      "titleTemplate": "{name} — жилой дом в районе {district}, Стамбул",
+      "titleTemplate": "{name} — жилой дом MEY İnşaat в районе {district}",
       "descriptionTemplate": "{summary} Адрес: {location}."
     }
   },
