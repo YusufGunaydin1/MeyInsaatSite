@@ -86,10 +86,14 @@ const waHref = whatsappHref(company.salesContact.whatsapp, `Merhaba, ${konu} hak
   @media (max-width: 1023px) {
     .kc-mbar { display: flex; }
   }
-  /* 360px gibi çok dar ekranda WhatsApp etiketini simgeye indir (taşmayı önler) */
+  /* 360px'te yer açmak için ikincil etiket satırı düşer — "WhatsApp" kelimesi
+     KALIR. Etiketsiz teal bir konuşma balonu tanınmıyor ve reklamla gelen
+     ziyaretçinin iki eyleminden biri okunamaz hale geliyordu. */
   @media (max-width: 400px) {
-    .kc-mbar-wa span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-    .kc-mbar-actions a { padding-inline: 0.75rem; }
+    .kc-mbar-etiket { display: none; }
+    .kc-mbar { padding-inline: 0.6rem; gap: 0.5rem; }
+    .kc-mbar-actions { gap: 0.35rem; }
+    .kc-mbar-actions a { padding-inline: 0.6rem; font-size: 0.8125rem; }
   }
 </style>
 

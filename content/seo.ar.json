@@ -30,6 +30,10 @@
     "projectDetail": {
       "titleTemplate": "{name} — مشروع MEY İnşaat السكني في {district}",
       "descriptionTemplate": "{summary} الموقع: {location}."
+    },
+    "privacy": {
+      "title": "سياسة الخصوصية وملفات تعريف الارتباط — MEY İnşaat",
+      "description": "ما البيانات التي يعالجها موقع meyinsaat.com، وأي ملفات تعريف ارتباط تُستخدم، ومدد الحفظ، وحقوقك بموجب قانون KVKK."
     }
   },
   "orgDescription": "العلامة الإنشائية لمجموعة MEY، تطوّر وتبني مشاريع سكنية في بنديك بإسطنبول. ثلاثة مبانٍ منجزة: «إل إله» و«تشاموغلو» و«ماشوك»."

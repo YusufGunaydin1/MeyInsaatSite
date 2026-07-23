@@ -30,6 +30,10 @@
     "projectDetail": {
       "titleTemplate": "{name} — MEY İnşaat Housing Project in {district}",
       "descriptionTemplate": "{summary} Location: {location}."
+    },
+    "privacy": {
+      "title": "Privacy and Cookie Policy — MEY İnşaat",
+      "description": "What data meyinsaat.com processes, which cookies are used, how long data is kept, and your rights under Turkish data-protection law (KVKK)."
     }
   },
   "orgDescription": "The MEY Grubu brand that develops and builds housing in Pendik, Istanbul. Three completed buildings: El Ele, Çamoğlu and Maşuk apartments."

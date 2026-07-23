@@ -25,6 +25,10 @@ const items = [
   { href: '/kurumsal', label: t.nav.corporate },
   { href: '/hizmetler', label: t.nav.services },
   { href: '/iletisim', label: t.nav.contact },
+  // Çerez bandının arkasındaki metin — her sayfadan erişilebilir olmalı (KVKK).
+  // Sayfa yalnız TR yayınlanıyor (hukuki metin makine çevirisiyle yayınlanmaz), bu
+  // yüzden dil öneki EKLENMEZ: localePath('en', …) var olmayan bir URL üretirdi.
+  { href: '/gizlilik-ve-cerez-politikasi', label: t.footer.privacy, trOnly: true },
 ];
 ---
 
@@ -46,7 +50,7 @@ const items = [
         <ul class="space-y-2">
           {items.map((item) => (
             <li>
-              <a href={localePath(locale, item.href)} class="t-caption text-concrete-100/85 hover:text-white">
+              <a href={item.trOnly ? item.href + '/' : localePath(locale, item.href)} class="t-caption text-concrete-100/85 hover:text-white">
                 {item.label}
               </a>
             </li>

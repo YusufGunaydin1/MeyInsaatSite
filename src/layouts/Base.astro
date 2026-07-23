@@ -123,10 +123,11 @@ const OG_LOCALES: Record<Locale, string> = {
         logo: site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/logo.png',
         image: site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/og-default.jpg',
         description: s.orgDescription,
-        // NAP tek eşleşme: kayıtlı adres + o adresin sabit hattı. Google Business
-        // Profile ve tüm dizin kayıtları bu ikiliyi birebir tekrarlamalı; satış
-        // cep hattı ayrı bir contactPoint olarak durur (rolü açıkça yazılı).
-        telephone: company.contact.phone.e164,
+        // Birincil numara SATIŞ HATTI. Sabit hat (0216 394 05 51) meykozmetik.com'da
+        // aynı adresle yayınlanıyor — aynı bina + aynı numara ikilisi Google'da iki
+        // işletmeyi tek kayda bağlar (Business Profile'da birleştirme/kopya riski).
+        // İnşaat tüzel kişiliğinin kendi numarası olmalı; sabit hat ayrı contactPoint.
+        telephone: company.salesContact.phone.e164,
         email: company.contact.email,
         foundingDate: String(company.constructionFoundedYear),
         founder: { '@type': 'Person', name: company.founder },
@@ -150,6 +151,12 @@ const OG_LOCALES: Record<Locale, string> = {
             telephone: company.salesContact.phone.e164,
             areaServed: 'TR',
             availableLanguage: LOCALES,
+          },
+          {
+            '@type': 'ContactPoint',
+            contactType: 'customer service',
+            telephone: company.contact.phone.e164,
+            areaServed: 'TR',
           },
         ],
         parentOrganization: { '@type': 'Organization', name: company.group },

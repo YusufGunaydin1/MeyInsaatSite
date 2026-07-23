@@ -30,6 +30,10 @@
     "projectDetail": {
       "titleTemplate": "{name} — жилой дом MEY İnşaat в районе {district}",
       "descriptionTemplate": "{summary} Адрес: {location}."
+    },
+    "privacy": {
+      "title": "Политика конфиденциальности и cookie — MEY İnşaat",
+      "description": "Какие данные обрабатывает meyinsaat.com, какие cookie используются, сроки хранения и ваши права по закону KVKK."
     }
   },
   "orgDescription": "Бренд группы MEY, который проектирует и строит жильё в районе Пендик, Стамбул. Три завершённых дома: «Эль Эле», «Чамоглу» и «Машук»."

@@ -23,6 +23,8 @@ import { detay, specsD2, odaOlculeriD2, tl, proje, sss, DETAY_SLUG } from '../co
 import { building } from '../components/showcase/satilik/data.ts';
 import { publicAsset, entry } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
+import { company } from '../lib/content';
+import { contactNumber, telHref, whatsappHref } from '../lib/contact';
 import { ui } from '../lib/content';
 import '../components/showcase/satilik/kompakt/kompakt.css';
 
@@ -155,6 +157,9 @@ const jsonLd = {
    dışında: aynı Türkçe metni "İngilizce sayfa" diye ilan etmek yeni bir alan
    adında kopya içerik sinyalidir. TR sayfa etkilenmez. */
 const trOnly = locale !== 'tr';
+const salesPhone = contactNumber(company.salesContact.phone);
+/* Ön dolu WhatsApp mesajı — hangi daire için yazıldığı belli olsun. */
+const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hakkında bilgi almak istiyorum.';
 ---
 
 <Base
@@ -196,6 +201,14 @@ const trOnly = locale !== 'tr';
     <div class="kce-price-box">
       <p class="kce-price tabular-nums" data-testid="kc-price">{tl(d.unit.fiyat!)}</p>
       <p class="t-caption kce-kdv">KDV Dahil</p>
+      <div class="kce-head-cta">
+        <a class="kce-cta-call" href={telHref(company.salesContact.phone) ?? '#'} data-testid="kce-head-call">
+          <Icon name="phone" size={16} /> Ara · {salesPhone?.display ?? ''}
+        </a>
+        <a class="kce-cta-wa" href={whatsappHref(company.salesContact.whatsapp, WA_KONU) ?? '#'} data-testid="kce-head-whatsapp">
+          <Icon name="chat" size={16} /> WhatsApp'tan Sor
+        </a>
+      </div>
     </div>
   </header>
 
@@ -282,6 +295,33 @@ const trOnly = locale !== 'tr';
 
 <style>
   .kce-crumbwrap { padding-block: 0.9rem 0.4rem; }
+  /* Hero'da eylem yoktu: sayfadaki ilk tel:/wa.me bağlantısı 4.691px aşağıdaydı.
+     Reklamla gelen ziyaretçi fiyatı gördüğü anda arayabilmeli. */
+  .kce-head-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+    justify-content: flex-end;
+  }
+  .kce-head-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius-brand);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .kce-cta-call { background: var(--color-mey-red); color: #fff; }
+  .kce-cta-wa { border: 1px solid var(--color-mey-teal-700); color: var(--color-mey-teal-700); }
+  @media (max-width: 640px) {
+    .kce-head-cta { justify-content: flex-start; width: 100%; }
+    .kce-head-cta a { flex: 1 1 auto; justify-content: center; }
+  }
+
   .kce-head {
     display: flex;
     align-items: flex-start;

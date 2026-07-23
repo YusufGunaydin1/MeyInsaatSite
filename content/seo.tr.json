@@ -4,8 +4,8 @@
   "siteName": "MEY İnşaat",
   "pages": {
     "home": {
-      "title": "MEY İnşaat — Pendik'te Konut İnşaatı ve Satılık Daire",
-      "description": "MEY İnşaat, İstanbul Pendik'te konut geliştirir ve inşa eder: El Ele, Çamoğlu ve Maşuk apartmanları. 23 yıllık MEY Grubu'nun inşaat markası."
+      "title": "MEY İnşaat İstanbul — Pendik'te Konut Projeleri",
+      "description": "İstanbul Pendik'te konut projeleri geliştiren ve inşa eden MEY Grubu markası. Tamamladığımız apartmanları görün; satıştaki 3+2 çatı dubleksi için arayın."
     },
     "projects": {
       "title": "Pendik'te Tamamlanan Konut Projeleri — MEY İnşaat",
@@ -30,6 +30,10 @@
     "projectDetail": {
       "titleTemplate": "{name} — {district}'te MEY İnşaat Konut Projesi",
       "descriptionTemplate": "{summary} Konum: {location}."
+    },
+    "privacy": {
+      "title": "Gizlilik ve Çerez Politikası — MEY İnşaat",
+      "description": "meyinsaat.com'da hangi verilerin işlendiği, çerez kullanımı, saklama süreleri ve KVKK kapsamındaki haklarınız."
     }
   },
   "orgDescription": "İstanbul Pendik'te konut geliştiren ve inşa eden MEY Grubu markası. Tamamlanan üç bina: El Ele, Çamoğlu ve Maşuk apartmanları."

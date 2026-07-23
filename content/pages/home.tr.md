@@ -2,11 +2,11 @@
 locale: tr
 machineTranslated: false
 hero:
-  eyebrow: "GERÇEK ŞANTİYE · İSTANBUL"
+  eyebrow: "GERÇEK ŞANTİYE · PENDİK, İSTANBUL"
   headline: "YAŞAM ALANLARINIZI\nÖZENLE İNŞA EDİYORUZ."
   sub: >-
-    23 yıllık MEY Grubu deneyimiyle, ailelerin huzurla yaşayacağı modern
-    konutlar üretiyoruz.
+    23 yıllık MEY Grubu deneyimiyle, 2021'den bu yana İstanbul Pendik'te
+    ailelerin huzurla yaşayacağı konutlar inşa ediyoruz.
   primaryCta: "Projeleri gör"
   secondaryCta: "İletişim"
   mediaTag: "TESLİM EDİLDİ · 3 BLOK"

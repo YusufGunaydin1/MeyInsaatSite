@@ -1,0 +1,53 @@
+---
+/*
+  Gizlilik ve Çerez Politikası — çerez onayı bandının arkasındaki metin.
+
+  Yalnızca TR: hukuki metin makine çevirisiyle yayınlanmaz. Diğer diller bu sayfayı
+  TR içerikle görür (content fallback) ve sitemap'e yalnız TR sürümü girer.
+
+  Sayfa doğrulanmış olgulardan yazıldı; tam ticaret ünvanı, MERSİS/vergi numarası ve
+  VERBİS kaydı gerekip gerekmediği sahibinden beklenen bilgilerdir (bkz. runbook §10).
+*/
+import Base from '../layouts/Base.astro';
+import { type Locale } from '../lib/i18n';
+import { pageContent } from '../lib/content';
+import { breadcrumbLd } from '../lib/schema';
+import { ui } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = ui(locale);
+const fm = pageContent('gizlilik', locale)?.frontmatter ?? {};
+const jsonLd = breadcrumbLd(Astro.site, locale, [
+  { name: t.nav.home, path: '/' },
+  { name: fm.title },
+]);
+---
+
+<Base
+  locale={locale}
+  page="privacy"
+  path="/gizlilik-ve-cerez-politikasi"
+  jsonLd={jsonLd}
+  hreflangLocales={[locale]}
+>
+  <section class="container-site section-pad">
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red mb-4">KVKK</p>
+      <h1 class="t-display-xl">{fm.title}</h1>
+      <p class="t-body-l mt-6 max-w-2xl">{fm.intro}</p>
+      {fm.updated && <p class="t-tech text-graphite-400 mt-4">SON GÜNCELLEME · {fm.updated}</p>}
+    </div>
+
+    <div class="mt-14 grid gap-4 md:grid-cols-2 max-w-5xl">
+      {(fm.sections ?? []).map((s: { title: string; body: string }) => (
+        <div class="card p-6">
+          <h2 class="t-heading-m">{s.title}</h2>
+          <p class="t-body mt-3">{s.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
