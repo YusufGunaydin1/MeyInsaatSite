@@ -339,7 +339,7 @@
     linear-gradient(90deg, var(--color-line) 1px, transparent 1px) 0 0 / 38px 38px,
     var(--color-concrete-050);
 }
-.km-leaflet-pin svg { display: block; width: 28px; height: 28px; }
+.km-leaflet-pin svg { display: block; width: 38px; height: 38px; }
 .km-leaflet-pin path { fill: var(--color-mey-red); stroke: #fff; stroke-width: 1.1; }
 .km-leaflet-pin circle { fill: #fff; stroke: none; }
 

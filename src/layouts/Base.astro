@@ -4,7 +4,6 @@ import { LOCALES, DEFAULT_LOCALE, dir, localePath, type Locale } from '../lib/i1
 import { seo, ui } from '../lib/content';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import ShowcasesSaleEntry from '../components/showcase/ShowcasesSaleEntry.astro';
 
 // Display = Oswald variable (500–700), self-hosted. Latin-ext carries the Turkish
 // glyphs (ğ ş İ ı); cyrillic carries RU display natively (no more Plex fallback).
@@ -24,9 +23,23 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  /** og:type — 'website' (default) or 'product' for a for-sale listing */
+  ogType?: string;
+  /** absolute URL, or base-aware root-relative (a getImage .src); falls back to og-default.jpg */
+  ogImage?: string;
+  ogImageAlt?: string;
+  /** page-specific JSON-LD node(s), appended to the site-wide organization graph */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** extra <meta> tags (e.g. product:price:amount) */
+  extraMeta?: { property?: string; name?: string; content: string }[];
+  /** google-site-verification token (homepage only, typically) */
+  verification?: string;
 }
 
-const { locale, page, path, title, description, noindex = false } = Astro.props;
+const {
+  locale, page, path, title, description, noindex = false,
+  ogType = 'website', ogImage: ogImageProp, ogImageAlt, jsonLd, extraMeta, verification,
+} = Astro.props;
 const s = seo(locale);
 const t = ui(locale);
 const pageSeo = s.pages[page] ?? s.pages.home;
@@ -34,9 +47,10 @@ const docTitle = title ?? pageSeo.title;
 const docDescription = description ?? pageSeo.description;
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const canonical = site + localePath(locale, path);
-const ogImage = site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/og-default.jpg';
-const isShowcasesHub = locale === 'tr' && path.replace(/\/$/, '') === '/showcases';
-
+const ogImage = ogImageProp
+  ? (ogImageProp.startsWith('http') ? ogImageProp : site + ogImageProp)
+  : site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/og-default.jpg';
+const jsonLdNodes = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const PRELOADS: Record<Locale, string[]> = {
   tr: [oswaldLatin, oswaldLatinExt],
   en: [oswaldLatin],
@@ -60,7 +74,8 @@ const OG_LOCALES: Record<Locale, string> = {
     <meta name="generator" content={Astro.generator} />
     <title>{docTitle}</title>
     <meta name="description" content={docDescription} />
-    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="robots" content={noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large'} />
+    {verification && <meta name="google-site-verification" content={verification} />}
     <link rel="canonical" href={canonical} />
     {LOCALES.map((l) => (
       <link rel="alternate" hreflang={l} href={site + localePath(l, path)} />
@@ -69,23 +84,51 @@ const OG_LOCALES: Record<Locale, string> = {
     <link rel="icon" type="image/png" href={import.meta.env.BASE_URL.replace(/\/$/, '') + '/favicon.png'} />
     <link rel="apple-touch-icon" href={import.meta.env.BASE_URL.replace(/\/$/, '') + '/apple-touch-icon.png'} />
     <meta name="theme-color" content="#f4f4f2" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={s.siteName} />
     <meta property="og:title" content={docTitle} />
     <meta property="og:description" content={docDescription} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
     <meta property="og:locale" content={OG_LOCALES[locale]} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={docTitle} />
+    <meta name="twitter:description" content={docDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    {ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
+    {extraMeta?.map((m) => <meta property={m.property} name={m.name} content={m.content} />)}
     <script
       type="application/ld+json"
       set:html={JSON.stringify({
         '@context': 'https://schema.org',
-        '@type': 'Organization',
+        '@type': 'RealEstateAgent',
+        '@id': site + '/#org',
         name: s.siteName,
         url: site + '/',
         logo: site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/logo.png',
+        image: site + import.meta.env.BASE_URL.replace(/\/$/, '') + '/og-default.jpg',
+        // NAP mirrors content/company.json — sales line + Tuzla HQ (single source there)
+        telephone: '+905326256812',
+        email: 'info@meykozmetik.com',
+        foundingDate: '2021',
+        areaServed: { '@type': 'City', name: 'İstanbul' },
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Orhanlı, Vakum Sk. No:26',
+          addressLocality: 'Tuzla',
+          addressRegion: 'İstanbul',
+          postalCode: '34956',
+          addressCountry: 'TR',
+        },
+        parentOrganization: { '@type': 'Organization', name: 'MEY Grubu' },
       })}
     />
+    {jsonLdNodes.map((node) => (
+      <script type="application/ld+json" set:html={JSON.stringify(node)} />
+    ))}
     {PRELOADS[locale].map((href) => (
       <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
     ))}
@@ -101,7 +144,6 @@ const OG_LOCALES: Record<Locale, string> = {
     <Header locale={locale} path={path} />
     <main id="main" class="flex-1">
       <slot />
-      {isShowcasesHub && <ShowcasesSaleEntry />}
     </main>
     <Footer locale={locale} path={path} />
 

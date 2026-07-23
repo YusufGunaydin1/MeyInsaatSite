@@ -14,17 +14,20 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
 import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
 import CtaBand from '../components/showcase/satilik/kompakt/CtaBand.astro';
-import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
+import MobileSaleBar from '../components/showcase/satilik/kompakt/MobileSaleBar.astro';
 import SaleListing, { type ListingCard, type ListingImage } from '../components/showcase/satilik/kompakt/SaleListing.tsx';
 import { cardImage } from '../components/showcase/satilik/kompakt/assets.ts';
-import { listing, listingProjeler, katPlanlari, satistakiDaireSayisi, tl } from '../components/showcase/satilik/kompakt/data.ts';
-import { publicAsset } from '../components/showcase/satilik/media.ts';
+import { listing, listingProjeler, satistakiDaireSayisi, tl, DETAY_SLUG } from '../components/showcase/satilik/kompakt/data.ts';
+import { publicAsset, entry } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui, company } from '../lib/content';
 import { contactNumber, telHref, whatsappHref } from '../lib/contact';
 import elEleImg from '../assets/projects/el-ele-apartmani.webp';
 import masukImg from '../assets/projects/masuk-apartmani.webp';
 import camogluImg from '../assets/projects/camoglu-apartmani.webp';
+import elEleData from '../../content/projects/el-ele-apartmani/data.json';
+import masukData from '../../content/projects/masuk-apartmani/data.json';
+import camogluData from '../../content/projects/camoglu-apartmani/data.json';
 import '../components/showcase/satilik/kompakt/kompakt.css';
 import '../components/showcase/satilik-mobile/mobile-sale-compact.css';
 
@@ -40,7 +43,23 @@ const root = basePrefix + '/satilik-daireler';
 const salesPhone = contactNumber(company.salesContact.phone);
 const salesWhatsapp = contactNumber(company.salesContact.whatsapp);
 
-const hero = publicAsset('daire-1/bina-dis.png');
+const heroKey = 'daire-1/bina-dis.png';
+const hero = publicAsset(heroKey);
+const heroAlt = entry(heroKey).alt;
+
+/* Paylaşım/reklam önizlemesi: jenerik og-default yerine binanın kendisi (1200×630). */
+const ogHero = await getImage({ src: hero, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 72 });
+
+/* Kırıntı yapısal verisi (BreadcrumbList) — görünür Breadcrumb ile aynı kaynak. */
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://meyinsaat.com';
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: t.nav.home, item: siteUrl + localePath(locale, '/') },
+    { '@type': 'ListItem', position: 2, name: t.nav.forSale, item: siteUrl + localePath(locale, '/satilik-daireler') },
+  ],
+};
 
 /* Proje dış cepheleri proje kartlarının görseli olur */
 async function assetImage(src: ImageMetadata, alt: string): Promise<ListingImage> {
@@ -52,6 +71,13 @@ const projeGorsel: Record<string, ImageMetadata> = {
   'el-ele': elEleImg,
   masuk: masukImg,
   camoglu: camogluImg,
+};
+
+/* Harita görünümü için proje/bina koordinatları (tek kaynak: content/projects) */
+const projeCoords: Record<string, { lat: number; lng: number }> = {
+  'el-ele': elEleData.coordinates,
+  masuk: masukData.coordinates,
+  camoglu: camogluData.coordinates,
 };
 
 const ilanlar: ListingCard[] = await Promise.all(
@@ -73,8 +99,10 @@ const ilanlar: ListingCard[] = await Promise.all(
     fiyatText: u.fiyat === null ? null : tl(u.fiyat),
     durum: u.durum,
     badge: u.badge,
-    href: `${root}/${u.detay}`,
+    href: `${root}/${DETAY_SLUG[u.detay!]}`,
     img: await cardImage(u.imgKey!),
+    lat: projeCoords[u.projeKey]?.lat,
+    lng: projeCoords[u.projeKey]?.lng,
   }))
 );
 
@@ -90,6 +118,8 @@ const projeKartlari: ListingCard[] = await Promise.all(
     rozet: p.rozet,
     href: `${basePrefix}/projeler/${p.slug}`,
     img: await assetImage(projeGorsel[p.projeKey], `${p.ad} dış cephe`),
+    lat: projeCoords[p.projeKey]?.lat,
+    lng: projeCoords[p.projeKey]?.lng,
   }))
 );
 
@@ -102,9 +132,9 @@ const projeler = [
 ];
 
 const stats = [
-  { icon: 'flag', deger: '2021', alt: 'Kuruluş' },
-  { icon: 'building', deger: '3 Proje', alt: 'İstanbul’da' },
-  { icon: 'key', deger: 'Mey İnşaat', alt: 'Resmî Unvan' },
+  { icon: 'building', deger: '160 m²', alt: 'Brüt alan' },
+  { icon: 'stairs', deger: '3+2 Dubleks', alt: 'Çatı katı · 5. kat' },
+  { icon: 'key', deger: tl(13_750_000), alt: 'Müteahhitten sıfır' },
 ];
 ---
 
@@ -112,12 +142,15 @@ const stats = [
   locale={locale}
   page="satilik"
   path="/satilik-daireler"
+  ogImage={ogHero.src}
+  ogImageAlt="El Ele Apartmanı — Pendik Batı Mahallesi'nde müteahhitten sıfır 3+2 dubleks daireli bina"
+  jsonLd={breadcrumbLd}
 >
   <!-- HERO -->
   <section class="ks-hero theatre ksm-hero" data-testid="ksm-hero">
     <Image
       src={hero}
-      alt=""
+      alt={heroAlt}
       widths={[480, 880, 1440]}
       sizes="100vw"
       quality={74}
@@ -132,9 +165,10 @@ const stats = [
         <div class="ks-hero-crumb">
           <Breadcrumb items={[{ label: t.nav.home, href: localePath(locale, '/') }, { label: t.nav.forSale }]} />
         </div>
-        <h1 class="ks-hero-title">Satılık Daireler</h1>
+        <h1 class="ks-hero-title">Pendik Satılık Daireler</h1>
         <p class="ks-hero-sub">
-          Mey İnşaat güvencesiyle, modern yaşam alanlarına yatırım yapın. Size en uygun daireyi bulun.
+          El Ele Apartmanı’nda satılık son daire: 3+2 çatı dubleksi, 160 m² brüt, 5. kat.
+          Müteahhitten sıfır, aracısız — {tl(13_750_000)}.
         </p>
         <ul class="ks-hero-stats">
           {stats.map((s) => (
@@ -144,6 +178,14 @@ const stats = [
             </li>
           ))}
         </ul>
+        <div class="ks-hero-cta" aria-label="Satış danışmanı">
+          <a class="ks-hero-cta-call" href={telHref(company.salesContact.phone) ?? '#'} data-testid="ks-hero-call">
+            <Icon name="phone" size={17} /> Ara · {salesPhone?.display ?? ''}
+          </a>
+          <a class="ks-hero-cta-wa" href={whatsappHref(company.salesContact.whatsapp) ?? '#'} data-testid="ks-hero-whatsapp">
+            <Icon name="chat" size={17} /> WhatsApp
+          </a>
+        </div>
       </div>
       <aside class="ks-hero-help">
         <span class="ks-help-ic"><Icon name="chat" size={22} /></span>
@@ -154,7 +196,7 @@ const stats = [
 
       <div class="ksm-mobile-hero" data-testid="ksm-mobile-hero">
           <p class="ksm-mobile-status"><span aria-hidden="true"></span>{satistakiDaireSayisi} DAİRE SATIŞTA · PENDİK</p>
-          <h1>Satılık Daireler</h1>
+          <p class="ksm-mobile-h1">Satılık Daireler</p>
           <p class="ksm-mobile-sub">El Ele Apartmanı · Son 3+2 dubleks</p>
           <div class="ksm-mobile-actions" aria-label="Satış danışmanı">
             <a href={telHref(company.salesContact.phone) ?? '#'} aria-label={`Satış danışmanını ara: ${salesPhone?.display ?? ''}`} data-testid="ksm-call">
@@ -170,6 +212,7 @@ const stats = [
 
   <!-- LİSTE + RAY (ada) -->
   <section class="container-site ks-listing ksm-listing" aria-label="Satılık daire listesi">
+    <h2 class="kc-h2 ks-listing-h2">Satıştaki ve Tamamlanan Daireler</h2>
     <SaleListing
       client:load
       items={items}
@@ -182,30 +225,21 @@ const stats = [
     />
   </section>
 
-  <!-- KAT PLANLARI -->
-  <section class="container-site ks-plans" aria-label="Kat planları">
-    <div class="ks-plans-head">
-      <h2 class="kc-h2">Kat Planları</h2>
-      <button type="button" class="ks-plans-all" data-soon="Kat planları">Tüm Kat Planlarını Gör →</button>
+  <!-- TANITIM / indekslenebilir metin (konum + yatırım) -->
+  <section class="container-site ks-intro" aria-label="El Ele Apartmanı hakkında">
+    <h2 class="kc-h2">Pendik’te Müteahhitten Sıfır 3+2 Çatı Dubleksi</h2>
+    <div class="ks-intro-cols">
+      <p>
+        El Ele Apartmanı, Mey İnşaat’ın Pendik Batı Mahallesi’nde tamamladığı, kat mülkiyetli
+        sıfır bir konut binasıdır. Bina teslime hazırdır; şu an yalnızca 5. kattaki 3+2 çatı
+        dubleksi (D-12) satılıktır ve aracısız, doğrudan binayı yapan Mey İnşaat’tan satın alınır.
+      </p>
+      <p>
+        Bina; sahil parkı, market, eczane ve ilkokulun yürüme mesafesinde, Marmaray ve metro
+        bağlantılarına yakın bir konumda yer alır. Pendik’in kıyı hattına yakınlığı, hem oturmak
+        hem de uzun vadeli yatırım için elverişli bir konum sunar.
+      </p>
     </div>
-    <div class="ks-plans-grid" data-testid="ks-plans">
-      {katPlanlari.map((p) => (
-        <article class="ks-plan card">
-          <div class="ks-plan-canvas">
-            <svg viewBox="0 0 96 64" aria-hidden="true">
-              <rect x="2" y="2" width="92" height="60" />
-              <path d="M2 24h40M42 2v40M42 42h52M70 42v20M42 24h24M66 2v22" />
-            </svg>
-            <button type="button" class="ks-plan-zoom" data-soon={p.ad} aria-label={`${p.ad} büyüt`}>
-              <Icon name="expand" size={15} />
-            </button>
-          </div>
-          <p class="ks-plan-ad">{p.ad}</p>
-          <p class="ks-plan-m2 t-tech">{p.m2}</p>
-        </article>
-      ))}
-    </div>
-    <p class="t-caption ks-plans-note">Kat planı görselleri hazırlanıyor.</p>
   </section>
 
   <!-- CTA -->
@@ -213,7 +247,7 @@ const stats = [
     <CtaBand base={basePrefix} />
   </div>
 
-  <SoonDialog />
+  <MobileSaleBar fiyat={tl(13_750_000)} etiket="Son daire · D-12" />
 </Base>
 
 <style>
@@ -237,7 +271,7 @@ const stats = [
     grid-template-columns: minmax(0, 1fr) 300px;
     gap: 1.5rem;
     align-items: center;
-    padding-block: 2.25rem 2.5rem;
+    padding-block: 1.6rem 1.75rem;
   }
   .ks-hero-crumb :global(.kc-crumb a) { color: rgb(244 244 242 / 0.6); }
   .ks-hero-crumb :global(.kc-crumb a:hover) { color: #fff; }
@@ -254,7 +288,7 @@ const stats = [
     margin-top: 0.9rem;
   }
   .ks-hero-sub { margin-top: 0.6rem; max-width: 46ch; color: rgb(244 244 242 / 0.8); font-size: 0.9375rem; }
-  .ks-hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.4rem; }
+  .ks-hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1.1rem; }
   .ks-hero-stats li { display: flex; align-items: center; gap: 0.6rem; }
   .ks-hero-stats li + li { border-inline-start: 1px solid rgb(255 255 255 / 0.18); padding-inline-start: 2rem; }
   .ks-stat-ic { color: var(--color-red-on-dark); display: inline-flex; }
@@ -271,48 +305,29 @@ const stats = [
   .ks-help-sub { font-size: 0.8125rem; color: rgb(244 244 242 / 0.65); margin-top: 0.25rem; line-height: 1.45; }
   .ks-help-cta { margin-top: 0.8rem; padding: 0.5rem 1rem; font-size: 0.875rem; }
 
+  .ks-hero-cta { display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
+  .ks-hero-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--radius-brand);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+  .ks-hero-cta-call { background: var(--color-mey-red); color: #fff; }
+  .ks-hero-cta-call:hover { background: var(--color-mey-red-700); }
+  .ks-hero-cta-wa { border: 1px solid rgb(255 255 255 / 0.5); color: #fff; }
+  .ks-hero-cta-wa:hover { background: rgb(255 255 255 / 0.08); }
+
   .ks-listing { padding-block: 1.25rem 2rem; }
   .ks-mockline { margin-bottom: 0.6rem; text-align: end; }
 
-  .ks-plans { padding-block: 0 2rem; }
-  .ks-plans-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-  .ks-plans-all {
-    font: inherit;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-mey-red);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-  }
-  .ks-plans-all:hover { color: var(--color-mey-red-700); text-decoration: underline; }
-  .ks-plans-grid {
-    margin-top: 0.9rem;
-    display: grid;
-    /* 360px tavanı: iki plan kartı yarım ekrana yayılıp bandı şişirmesin */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 360px));
-    gap: 0.9rem;
-  }
-  .ks-plan { padding: 0.9rem 1rem 1rem; }
-  .ks-plan-canvas { position: relative; background: var(--color-concrete-050); border-radius: var(--radius-brand); padding: 0.9rem; }
-  .ks-plan-canvas svg { width: 100%; height: auto; fill: none; stroke: var(--color-graphite-400); stroke-width: 1.4; }
-  .ks-plan-zoom {
-    position: absolute;
-    right: 0.5rem;
-    bottom: 0.5rem;
-    display: inline-flex;
-    padding: 0.35rem;
-    background: #fff;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-brand);
-    color: var(--color-graphite-600);
-    cursor: pointer;
-  }
-  .ks-plan-zoom:hover { color: var(--color-mey-red); border-color: var(--color-mey-red); }
-  .ks-plan-ad { margin-top: 0.6rem; font-weight: 600; font-size: 0.875rem; color: var(--color-graphite-900); }
-  .ks-plan-m2 { color: var(--color-graphite-400); margin-top: 0.15rem; }
-  .ks-plans-note { color: var(--color-graphite-400); margin-top: 0.6rem; }
+  .ks-intro { padding-block: 1.5rem 0.5rem; }
+  .ks-intro-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem 2rem; margin-top: 0.8rem; }
+  .ks-intro-cols p { color: var(--color-graphite-600); font-size: 0.9375rem; line-height: 1.65; }
+  .ks-listing-h2 { margin-bottom: 0.9rem; }
 
   .ks-cta { padding-bottom: 2rem; }
 
@@ -377,8 +392,8 @@ const stats = [
     }
     .ks-listing { padding-block: 0.7rem 1.5rem; }
     .ks-mockline { margin-bottom: 0.4rem; }
-    .ks-plans { padding-bottom: 1.5rem; }
-    .ks-plans-grid { grid-template-columns: minmax(0, 1fr); gap: 0.65rem; }
+    .ks-intro { padding-block: 1rem 0.25rem; }
+    .ks-intro-cols { grid-template-columns: minmax(0, 1fr); gap: 0.6rem; }
     .ks-cta { padding-bottom: 1.5rem; }
   }
 
@@ -413,7 +428,7 @@ const stats = [
       background: var(--color-mey-teal);
       box-shadow: 0 0 0 3px rgb(73 193 198 / 0.16);
     }
-    .ksm-mobile-hero h1 {
+    .ksm-mobile-hero .ksm-mobile-h1 {
       margin-top: 0.2rem;
       color: #fff;
       font-family: var(--font-display);

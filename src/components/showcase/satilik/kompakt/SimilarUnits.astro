@@ -6,7 +6,7 @@
 */
 import { Image } from 'astro:assets';
 import { publicAsset, entry } from '../media';
-import { detay, projeTeasers, RECENTLY_SOLD_LABEL, tl, unitById } from './data';
+import { detay, projeTeasers, RECENTLY_SOLD_LABEL, tl, unitById, DETAY_SLUG } from './data';
 import masukImg from '../../../../assets/projects/masuk-apartmani.webp';
 import camogluImg from '../../../../assets/projects/camoglu-apartmani.webp';
 
@@ -36,7 +36,7 @@ const kompaktBase = base + '/satilik-daireler/';
             <p class="kc-sim-ad">{u.tip} — {u.kat}</p>
             <p class="kc-sim-meta">Brüt {u.brut} m² · {u.cephe}</p>
             {u.fiyat !== null && <p class="kc-sim-fiyat tabular-nums" data-testid={`kc-sim-price-${u.id}`}>{tl(u.fiyat)}</p>}
-            <a class="kc-sim-cta" href={kompaktBase + u.detay} data-testid={`kc-sim-${u.detay}`}>Detaylı İncele</a>
+            <a class="kc-sim-cta" href={kompaktBase + DETAY_SLUG[u.detay!]} data-testid={`kc-sim-${u.detay}`}>Detaylı İncele</a>
           </div>
         </article>
       );

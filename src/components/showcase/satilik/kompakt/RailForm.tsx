@@ -55,6 +55,21 @@ export default function RailForm({ konu, accessKey = '', wide = false }: Props) 
     }
   }
 
+  // Web3Forms anahtarı yoksa form e-posta gönderemez. Ölü bir "Gönder" düğmesi
+  // göstermek yerine dürüstçe telefon/WhatsApp'a yönlendiren bir not göster;
+  // anahtar company.json'a eklenince form otomatik olarak geri gelir.
+  if (!accessKey.trim()) {
+    return (
+      <div className="kcf kcf-offline" role="note" data-testid="kcf-offline">
+        <p className="t-tech kcf-kicker">HIZLI İLETİŞİM</p>
+        <p className="kcf-panel-title">Formu kısa süre içinde açıyoruz</p>
+        <p className="kcf-panel-text">
+          {konu} için şimdi telefon veya WhatsApp ile ulaşın — aynı gün dönüş yapalım.
+        </p>
+      </div>
+    );
+  }
+
   if (status === 'success') {
     return (
       <div className="kcf kcf-success" role="status" data-testid="kcf-success">

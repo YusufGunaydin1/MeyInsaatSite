@@ -25,6 +25,16 @@ const verifiedElEle = elEleProjectData as {
 
 export const RECENTLY_SOLD_LABEL = 'YAKIN ZAMANDA SATILDI';
 
+/* Yayınlanan URL slug'ları — veri/medya kimliğinden (daire-1/daire-2) AYRIK.
+   Route dosya adları bu slug'lardır; detay linki üreten her yer buradan okur.
+   Kimlik anahtarlarını (klasör adı, apartmentId, detay object anahtarı, testid)
+   ASLA değiştirme — burada değişen yalnızca ziyaretçinin gördüğü/aranan URL'dir. */
+export const DETAY_SLUG = {
+  'daire-1': 'el-ele-apartmani-3-2-dubleks-satildi',
+  'daire-2': 'pendik-satilik-3-2-dubleks',
+} as const;
+export type DetaySlugKey = keyof typeof DETAY_SLUG;
+
 export const tl = (n: number) => n.toLocaleString('tr-TR') + ' TL';
 
 /* ─── Proje üst bilgisi (stat bar) ─── */
@@ -37,7 +47,7 @@ export const proje = {
   coordinates: verifiedElEle.coordinates,
   toplamDaire: 10,
   blok: 1,
-  kat: 6,
+  kat: 5,
   teslim: 'Hazır — sıfır',
   durum: 'Tamamlandı',
 };
@@ -100,64 +110,17 @@ export const unitById = (id: string) => units.find((u) => u.id === id);
 export const satistakiDaireler = units.filter((u) => u.apartmentId && u.durum === 'musait');
 export const satistakiDaireSayisi = satistakiDaireler.length;
 
-/* ─── Müsaitlik matrisi (kat × daire) ─── */
-export interface MatrixCell {
-  label: string;
-  sub?: string;
-  durum: Durum | 'yok';
-}
-export interface MatrixRow {
-  kat: string;
-  cells: [MatrixCell, MatrixCell];
-}
-
-export const matris: { rows: MatrixRow[]; legend: { durum: Durum; label: string }[] } = {
-  rows: [
-    { kat: 'ÇATI', cells: [
-      { label: 'D-11 üst kat', sub: 'teras', durum: 'satildi' },
-      { label: 'D-12 üst kat', sub: 'teras', durum: 'musait' },
-    ] },
-    { kat: '5. KAT', cells: [
-      { label: 'D-11', sub: '3+2 dubleks', durum: 'satildi' },
-      { label: 'D-12', sub: '3+2 dubleks', durum: 'musait' },
-    ] },
-    { kat: '4. KAT', cells: [
-      { label: 'D-8', sub: '3+1', durum: 'satildi' },
-      { label: 'D-7', sub: '3+1', durum: 'satildi' },
-    ] },
-    { kat: '3. KAT', cells: [
-      { label: 'D-6', sub: '3+1', durum: 'satildi' },
-      { label: 'D-5', sub: '3+1', durum: 'satildi' },
-    ] },
-    { kat: '2. KAT', cells: [
-      { label: 'D-4', sub: '3+1', durum: 'satildi' },
-      { label: 'D-3', sub: '3+1', durum: 'satildi' },
-    ] },
-    { kat: '1. KAT', cells: [
-      { label: 'D-2', sub: '3+1', durum: 'satildi' },
-      { label: 'D-1', sub: '3+1', durum: 'satildi' },
-    ] },
-    { kat: 'ZEMİN', cells: [
-      { label: 'Giriş', durum: 'yok' },
-      { label: 'Kapalı otopark', durum: 'yok' },
-    ] },
-  ],
-  legend: [
-    { durum: 'musait', label: 'Müsait' },
-    { durum: 'rezerve', label: 'Rezerve' },
-    { durum: 'satildi', label: 'Satıldı' },
-  ],
-};
-
-/* ─── Yakın çevre — mesafeler İÇ TAHMİN (arayüzde temsilî denmez; netleşince değiştir) ─── */
-export interface Yer { ad: string; mesafe: string; icon: string }
+/* ─── Yakın çevre — nitel liste (yürüme / kısa araç mesafesi). Kesin metreler İÇ
+   TAHMİN olduğu için yayından çıkarıldı; ölçülüp doğrulanınca geri eklenebilir.
+   Konumu zaten gerçek Leaflet haritası kanıtlıyor. ─── */
+export interface Yer { ad: string; icon: string }
 export const yakinCevre: Yer[] = [
-  { ad: 'Sahil & yürüyüş parkuru', mesafe: '350 m', icon: 'park' },
-  { ad: 'Market & fırın', mesafe: '400 m', icon: 'cart' },
-  { ad: 'Eczane', mesafe: '300 m', icon: 'plus' },
-  { ad: 'İlkokul', mesafe: '650 m', icon: 'school' },
-  { ad: 'Marmaray / metro', mesafe: '1,4 km', icon: 'train' },
-  { ad: 'Devlet hastanesi', mesafe: '2,1 km', icon: 'hospital' },
+  { ad: 'Sahil & yürüyüş parkuru', icon: 'park' },
+  { ad: 'Market & fırın', icon: 'cart' },
+  { ad: 'Eczane', icon: 'plus' },
+  { ad: 'İlkokul', icon: 'school' },
+  { ad: 'Marmaray / metro', icon: 'train' },
+  { ad: 'Devlet hastanesi', icon: 'hospital' },
 ];
 
 /* ─── Neden El Ele (foto destekli nitelikler — ../data.ts karakteriyle uyumlu) ─── */
@@ -248,23 +211,25 @@ export function finansman(fiyat: number) {
   return { pesinatOran: '%30', pesinat, kalanOran: '%70', kalan, vade: '120 Ay', taksit };
 }
 
-/* ─── Oda ölçüleri (detay B "kat planı" paneli) — ölçüler İÇ TAHMİN; plan görseli
-   hazır değil. Kesin ölçüler gelince değiştir (arayüzde tahmin olduğu belirtilmez). ─── */
+/* ─── Oda ölçüleri (detay B) — YAKLAŞIK değerler, kesin ölçü değil. Toplam
+   160 m² brüt / 135 m² net KESİNDİR (sahibinden ilanı); oda kırılımları yuvarlanmış
+   yaklaşık değerlerdir ("~" ile ve "Yaklaşık" başlığıyla sunulur). Ondalık hassasiyet
+   BİLEREK kaldırıldı — ölçüm iddiası doğurmasın. Kesin kat planı gelince güncellenir. ─── */
 export const odaOlculeriD2: { grup: string; odalar: SpecItem[] }[] = [
   { grup: 'Alt kat', odalar: [
-    { label: 'Salon', value: '27,4 m²' },
-    { label: 'Mutfak', value: '11,8 m²' },
-    { label: 'Yatak odası 1', value: '13,6 m²' },
-    { label: 'Yatak odası 2', value: '11,2 m²' },
-    { label: 'Banyo + hol', value: '9,4 m²' },
-    { label: 'Balkon', value: '4,2 m²' },
+    { label: 'Salon', value: '~27 m²' },
+    { label: 'Mutfak', value: '~12 m²' },
+    { label: 'Yatak odası 1', value: '~14 m²' },
+    { label: 'Yatak odası 2', value: '~11 m²' },
+    { label: 'Banyo + hol', value: '~9 m²' },
+    { label: 'Balkon', value: '~4 m²' },
   ] },
   { grup: 'Üst kat (çatı)', odalar: [
-    { label: 'İkinci salon', value: '21,6 m²' },
-    { label: 'Mutfak nişi', value: '6,8 m²' },
-    { label: 'Çatı odası', value: '12,4 m²' },
-    { label: 'Banyo', value: '4,6 m²' },
-    { label: 'Teras', value: '19,5 m²' },
+    { label: 'İkinci salon', value: '~22 m²' },
+    { label: 'Mutfak nişi', value: '~7 m²' },
+    { label: 'Çatı odası', value: '~12 m²' },
+    { label: 'Banyo', value: '~5 m²' },
+    { label: 'Teras', value: '~20 m²' },
   ] },
 ];
 
@@ -349,13 +314,6 @@ export const listingProjeler: ListingProje[] = [
     sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'masuk-apartmani' },
   { id: 'p-camoglu', ad: 'Çamoğlu Apartmanı', projeKey: 'camoglu', konum: 'Pendik, İstanbul',
     sold: true, not: 'Bu projede satılık daire kalmadı', slug: 'camoglu-apartmani' },
-];
-
-/* Kat planı bandı — plan görselleri hazır değil; stilize şema. m² değerleri
-   İÇ TAHMİN (arayüzde tahmin olduğu belirtilmez). Yalnız satıştaki tip: 3+2 dubleks. */
-export const katPlanlari = [
-  { ad: '3+2 Dubleks Alt Kat', m2: '96 m²' },
-  { ad: '3+2 Dubleks Üst Kat', m2: '86 m²' },
 ];
 
 /* Detay sayfası başlıkları + kart sıraları (klon değil: kendi vurgusu, kendi sırası) */

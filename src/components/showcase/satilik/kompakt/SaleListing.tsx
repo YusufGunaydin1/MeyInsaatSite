@@ -12,6 +12,7 @@
 import { useMemo, useState } from 'react';
 import DeferredImage from './DeferredImage';
 import RailForm from './RailForm';
+import LeafletMap from '../../location/LeafletMap';
 
 export interface ListingImage {
   src: string;
@@ -41,6 +42,9 @@ export interface ListingItem {
   badge?: string;
   href: string;
   img: ListingImage;
+  /** harita görünümü için bina koordinatı */
+  lat?: number;
+  lng?: number;
 }
 
 export interface ListingProjeItem {
@@ -54,6 +58,9 @@ export interface ListingProjeItem {
   rozet?: string;
   href: string;
   img: ListingImage;
+  /** harita görünümü için proje koordinatı */
+  lat?: number;
+  lng?: number;
 }
 
 export type ListingCard = ListingItem | ListingProjeItem;
@@ -70,15 +77,6 @@ interface Props {
 
 const TUMU = 'tumu';
 const PAGE = 6;
-
-function openSoon(title: string) {
-  const dialog = document.querySelector<HTMLDialogElement>('.kc-soon');
-  const t = dialog?.querySelector<HTMLElement>('[data-soon-title]');
-  if (dialog && t) {
-    t.textContent = `${title} — hazırlanıyor`;
-    dialog.showModal();
-  }
-}
 
 const I = {
   oda: 'M4 17v-5.5A1.5 1.5 0 0 1 5.5 10H12v7M12 10h6.5A1.5 1.5 0 0 1 20 11.5V17M4 15h16M7 10V7.5h4V10',
@@ -99,6 +97,34 @@ function Ic({ d, size = 16 }: { d: string; size?: number }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d={d} />
     </svg>
+  );
+}
+
+/* Kart görsel alanı — "Harita Görünümü"nde fotoğraf yerine binanın konum mini-haritası.
+   Aynı 16/10 kutusunu doldurur; rozetler üstünde kalır. */
+function CardMedia({ u, priority, mapView }: { u: ListingCard; priority: boolean; mapView: boolean }) {
+  if (mapView && typeof u.lat === 'number' && typeof u.lng === 'number') {
+    return (
+      <LeafletMap
+        lat={u.lat}
+        lng={u.lng}
+        label={u.kind === 'ilan' ? `${u.proje} konumu` : `${u.ad} konumu`}
+        zoom={15}
+        preview
+        testid={`kl-cardmap-${u.id}`}
+      />
+    );
+  }
+  return (
+    <DeferredImage
+      src={u.img.src}
+      srcSet={u.img.srcset}
+      sizes="(min-width: 1200px) 300px, (min-width: 640px) 46vw, calc(100vw - 2rem)"
+      width={u.img.width}
+      height={u.img.height}
+      alt={u.img.alt}
+      priority={priority}
+    />
   );
 }
 
@@ -158,6 +184,7 @@ export default function SaleListing({
   const [shown, setShown] = useState(PAGE);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [mobileStatus, setMobileStatus] = useState<MobileStatus>('tumu');
+  const [view, setView] = useState<'grid' | 'map'>('grid');
 
   const visible = useMemo(() => {
     const list = items.filter((u) =>
@@ -247,6 +274,16 @@ export default function SaleListing({
                 <span>Filtre</span>
                 {mobileActiveFilterCount > 0 && <strong className="klm-filter-count">{mobileActiveFilterCount}</strong>}
               </button>
+              <button
+                type="button"
+                className={view === 'map' ? 'klm-filter is-active' : 'klm-filter'}
+                aria-pressed={view === 'map'}
+                onClick={() => setView((v) => (v === 'map' ? 'grid' : 'map'))}
+                data-testid="klm-harita"
+              >
+                <Ic d={I.harita} size={15} />
+                <span>{view === 'map' ? 'Liste' : 'Harita'}</span>
+              </button>
               <label className="klm-sort">
                 <span className="klm-visually-hidden">Sıralama</span>
                 <select value={sort} onChange={(event) => setSort(event.target.value as 'asc' | 'desc')} data-testid="klm-sort">
@@ -296,10 +333,12 @@ export default function SaleListing({
             ))}
           </div>
           <div className="kl-tab-actions">
-            <button type="button" className="kl-ghost" onClick={() => openSoon('Harita görünümü')} data-testid="kl-harita">
+            <button type="button" className={view === 'map' ? 'kl-ghost is-active' : 'kl-ghost'}
+              aria-pressed={view === 'map'}
+              onClick={() => setView((v) => (v === 'map' ? 'grid' : 'map'))} data-testid="kl-harita">
               <Ic d={I.harita} />
-              <span className="kl-desktop-label">Harita Görünümü</span>
-              <span className="kl-mobile-label">Harita</span>
+              <span className="kl-desktop-label">{view === 'map' ? 'Liste Görünümü' : 'Harita Görünümü'}</span>
+              <span className="kl-mobile-label">{view === 'map' ? 'Liste' : 'Harita'}</span>
             </button>
             <button type="button" className={favOnly ? 'kl-ghost is-active' : 'kl-ghost'}
               onClick={() => { setFavOnly((v) => !v); setShown(PAGE); }} data-testid="kl-favorilerim">
@@ -379,21 +418,13 @@ export default function SaleListing({
           </label>
         </div>
 
-        {/* KART IZGARASI */}
+        {/* KART IZGARASI — "Harita Görünümü"nde kart görselleri mini haritaya döner */}
         <div className="kl-grid" data-testid="kl-grid">
           {visible.slice(0, shown).map((u, cardIndex) => u.kind === 'proje' ? (
             <article key={u.id} className={u.sold ? 'kl-card kl-card-bina is-sold' : 'kl-card kl-card-bina'}
               data-testid="kl-card" data-unit={u.id} data-kind="proje">
               <div className="kl-card-media">
-                <DeferredImage
-                  src={u.img.src}
-                  srcSet={u.img.srcset}
-                  sizes="(min-width: 1200px) 300px, (min-width: 640px) 46vw, calc(100vw - 2rem)"
-                  width={u.img.width}
-                  height={u.img.height}
-                  alt={u.img.alt}
-                  priority={cardIndex === 0}
-                />
+                <CardMedia u={u} priority={cardIndex === 0} mapView={view === 'map'} />
                 {u.sold
                   ? <span className="kl-sold" data-testid={`kl-sold-${u.projeKey}`}>TÜMÜ SATILDI</span>
                   : u.rozet && <span className="kl-badge is-red">{u.rozet}</span>}
@@ -418,15 +449,7 @@ export default function SaleListing({
               data-status={u.durum}
             >
               <div className="kl-card-media">
-                <DeferredImage
-                  src={u.img.src}
-                  srcSet={u.img.srcset}
-                  sizes="(min-width: 1200px) 300px, (min-width: 640px) 46vw, calc(100vw - 2rem)"
-                  width={u.img.width}
-                  height={u.img.height}
-                  alt={u.img.alt}
-                  priority={cardIndex === 0}
-                />
+                <CardMedia u={u} priority={cardIndex === 0} mapView={view === 'map'} />
                 {u.durum === 'satildi' ? (
                   <span className="kl-sold kl-unit-sold" data-testid={`kl-recently-sold-${u.id}`}>
                     {u.badge ?? 'YAKIN ZAMANDA SATILDI'}

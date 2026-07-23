@@ -7,18 +7,19 @@
   proje + konum üçlüsü, kendi benzer sırası.
   İNDEKSLENİR: veriler gerçek (sahibinden ilan 1317631166) — noindex kaldırıldı.
 */
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
 import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
 import SpecGrid from '../components/showcase/satilik/kompakt/SpecGrid.astro';
 import MapPanel from '../components/showcase/satilik/kompakt/MapPanel.astro';
+import FaqList from '../components/showcase/satilik/kompakt/FaqList.astro';
 import SimilarUnits from '../components/showcase/satilik/kompakt/SimilarUnits.astro';
 import StickyRail from '../components/showcase/satilik/kompakt/StickyRail.astro';
-import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
+import MobileSaleBar from '../components/showcase/satilik/kompakt/MobileSaleBar.astro';
 import Carousel from '../components/showcase/satilik/kompakt/Carousel.tsx';
 import { carouselItems } from '../components/showcase/satilik/kompakt/assets.ts';
-import { detay, specsD2, odaOlculeriD2, tl, proje } from '../components/showcase/satilik/kompakt/data.ts';
+import { detay, specsD2, odaOlculeriD2, tl, proje, sss, DETAY_SLUG } from '../components/showcase/satilik/kompakt/data.ts';
 import { building } from '../components/showcase/satilik/data.ts';
 import { publicAsset, entry } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
@@ -41,21 +42,117 @@ const bina = { img: publicAsset(binaKey), alt: entry(binaKey).alt };
 
 /* Özellik çipleri — fotoğrafların desteklediği + oda ölçüleri modülünden gelen değerler */
 const ozellikler = [
-  { icon: 'sea', title: 'Çatı Terası', sub: '19,5 m²' },
+  { icon: 'sea', title: 'Çatı Terası', sub: '~20 m²' },
   { icon: 'stairs', title: 'Dubleks', sub: 'İki katlı yaşam' },
   { icon: 'cart', title: 'İkinci Mutfak', sub: 'Üst kat nişi' },
   { icon: 'car', title: 'Kapalı Otopark', sub: 'Bina içinde' },
   { icon: 'expand', title: 'Dam Pencereleri', sub: 'Üç çatı odası' },
   { icon: 'shield', title: '2 Banyo', sub: 'Siyah profil duş' },
 ];
+
+/* ─── SEO: yayın slug'u, kanonik yol, OG görseli (gerçek daire), JSON-LD ─── */
+const slug = DETAY_SLUG['daire-2'];
+const detailPath = `/satilik-daireler/${slug}`;
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://meyinsaat.com';
+const detailUrl = siteUrl + localePath(locale, detailPath);
+const abs = (s: string) => (s.startsWith('http') ? s : siteUrl + s);
+
+// Paylaşım/reklam önizlemesi = gerçek dairenin salonu (1200×630); şema için de birkaç gerçek kare.
+const ogHero = await getImage({ src: publicAsset('daire-2/d2-salon-ust-1.png'), width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 72 });
+const ogTeras = await getImage({ src: publicAsset('daire-2/d2-teras.png'), width: 1200, format: 'webp', quality: 74 });
+const ogBina = await getImage({ src: publicAsset(binaKey), width: 1200, format: 'webp', quality: 74 });
+const schemaImages = [abs(ogHero.src), abs(ogTeras.src), abs(ogBina.src)];
+
+const metaTitle = 'Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı D-12';
+const metaDesc =
+  "Pendik El Ele Apartmanı'nda sıfır 3+2 çatı dubleksi (D-12): 160/135 m², 5. kat, çatı terası, 2 banyo, kapalı otopark. 13.750.000 TL — yerinde gezin.";
+const h1 = 'Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı';
+
+// og:type=product için fiyat meta'ları (scraper'lar fiyatı önizlemede göstersin)
+const extraMeta = [
+  { property: 'product:price:amount', content: '13750000' },
+  { property: 'product:price:currency', content: 'TRY' },
+  { property: 'og:availability', content: 'instock' },
+];
+
+/* JSON-LD @graph — YALNIZ doğrulanmış D-12 değerleri (sahibinden 1317631166).
+   Tahminler (oda m², mesafeler) ŞEMAYA GİRMEZ. */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': ['Product', 'Residence'],
+      '@id': detailUrl + '#unit',
+      name: 'El Ele Apartmanı — Çatı Avlulu 3+2 Dubleks (D-12)',
+      description:
+        "Pendik Batı Mah. sıfır El Ele Apartmanı'nda 5. kat çatı dubleksi: 160 m² brüt / 135 m² net, 3+2, 2 banyo, çatı terası, kapalı otopark.",
+      url: detailUrl,
+      image: schemaImages,
+      brand: { '@type': 'Organization', name: 'MEY İnşaat' },
+      category: 'Satılık Daire',
+      numberOfRooms: 5,
+      numberOfBedrooms: 3,
+      numberOfBathroomsTotal: 2,
+      floorSize: { '@type': 'QuantitativeValue', value: 160, unitCode: 'MTK' },
+      floorLevel: '5',
+      numberOfFloors: 2,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Batı Mah. Çiğdem Sok. No:6',
+        addressLocality: 'Pendik',
+        addressRegion: 'İstanbul',
+        addressCountry: 'TR',
+      },
+      geo: { '@type': 'GeoCoordinates', latitude: 40.875102, longitude: 29.227424 },
+      offers: {
+        '@type': 'Offer',
+        price: 13750000,
+        priceCurrency: 'TRY',
+        availability: 'https://schema.org/InStock',
+        priceValidUntil: '2026-12-31',
+        url: detailUrl,
+        seller: { '@id': siteUrl + '/#org' },
+      },
+    },
+    {
+      '@type': 'RealEstateListing',
+      '@id': detailUrl + '#listing',
+      url: detailUrl,
+      name: 'El Ele Apartmanı 3+2 Dubleks — Satılık (D-12)',
+      datePosted: '2026-07-21',
+      mainEntity: { '@id': detailUrl + '#unit' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: t.nav.home, item: siteUrl + localePath(locale, '/') },
+        { '@type': 'ListItem', position: 2, name: t.nav.forSale, item: siteUrl + localePath(locale, '/satilik-daireler') },
+        { '@type': 'ListItem', position: 3, name: '3+2 Dubleks · D-12' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: sss.map((q) => ({
+        '@type': 'Question',
+        name: q.soru,
+        acceptedAnswer: { '@type': 'Answer', text: q.cevap },
+      })),
+    },
+  ],
+};
 ---
 
 <Base
   locale={locale}
   page="satilik"
-  path="/satilik-daireler/daire-2"
-  title={d.baslik + ' — MEY İnşaat'}
-  description="El Ele Apartmanı D-12: çatı avlulu 3+2 dubleks, 160 m² brüt, 5. kat — galeri, özellikler, oda ölçüleri. 13.750.000 TL."
+  path={detailPath}
+  title={metaTitle}
+  description={metaDesc}
+  ogType="product"
+  ogImage={ogHero.src}
+  ogImageAlt="El Ele Apartmanı D-12 — çatı avlulu 3+2 dubleks üst kat salonu, Pendik"
+  jsonLd={jsonLd}
+  extraMeta={extraMeta}
 >
   <div class="container-site kce-crumbwrap">
     <Breadcrumb items={[
@@ -69,10 +166,12 @@ const ozellikler = [
   <!-- BAŞLIK ŞERİDİ -->
   <header class="container-site kce-head">
     <div>
-      <h1 class="kce-title">{d.baslik}</h1>
+      <h1 class="kce-title">{h1}</h1>
       <p class="kce-meta">
         <span class="t-tech"><Icon name="pin" size={13} /> {proje.lokasyon}</span>
         <span class="t-tech">{proje.ad}</span>
+        <span class="t-tech">3+2 Dubleks</span>
+        <span class="t-tech">{d.unit.brut} m² / {d.unit.net} m²</span>
         <span class="t-tech">{d.unit.kat}</span>
         <span class="t-tech">No: {d.unit.no}</span>
       </p>
@@ -86,8 +185,11 @@ const ozellikler = [
   <!-- GÖVDE -->
   <div class="container-site kce-layout">
     <div class="kce-main">
-      <section class="kcg" data-gallery aria-label="Galeri ve künye">
-        <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
+      <section class="kcg kcg-hasmap" data-gallery aria-label="Galeri, konum ve künye">
+        <div class="kcg-media">
+          <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
+          <MapPanel mode="map" locale={locale} />
+        </div>
         <div class="kcg-specside card">
           <h2 class="t-heading-s">Künye</h2>
           <SpecGrid items={specsD2} columns={1} testid="kc-specs-d2" />
@@ -106,8 +208,8 @@ const ozellikler = [
 
       <section aria-label="Oda ölçüleri">
         <div class="card kce-card" data-testid="kc-oda-olculeri">
-          <h2 class="t-heading-s">Oda Ölçüleri</h2>
-          <p class="t-caption kce-plan-note">Kat planı görseli hazırlanıyor — ölçüler aşağıda.</p>
+          <h2 class="t-heading-s">Yaklaşık Oda Ölçüleri</h2>
+          <p class="t-caption kce-plan-note">Toplam 160 m² brüt / 135 m² net kesindir (sahibinden ilanı). Oda bazındaki değerler yaklaşıktır; kesin ölçüler yerinde teyit edilir.</p>
           <div class="kce-oda-cols">
             {odaOlculeriD2.map((g) => (
               <div class="kce-oda-grup">
@@ -143,7 +245,11 @@ const ozellikler = [
           <p class="t-caption kce-proje-text">{building.positioning} — {building.builder} yapımı, {proje.kat} katlı, {proje.toplamDaire} daireli bina.</p>
           <a class="kce-proje-link" href={basePrefix + '/projeler/el-ele-apartmani'}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
         </div>
-        <MapPanel compact title="Yakın Çevre" locale={locale} />
+        <MapPanel mode="info" title="Pendik Batı Mah. — Yakın Çevre" locale={locale} />
+      </section>
+
+      <section id="sss" aria-label="Sıkça sorulan sorular">
+        <div class="card kce-card"><FaqList /></div>
       </section>
 
       <section id="benzer">
@@ -151,10 +257,10 @@ const ozellikler = [
       </section>
     </div>
 
-    <StickyRail konu="D-12 · 3+2 Dubleks" base={basePrefix} docs />
+    <StickyRail konu="D-12 · 3+2 Dubleks" base={basePrefix} />
   </div>
 
-  <SoonDialog />
+  <MobileSaleBar fiyat={tl(d.unit.fiyat!)} etiket="Son daire · D-12" />
 </Base>
 
 <style>

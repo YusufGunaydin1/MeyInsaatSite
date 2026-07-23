@@ -35,12 +35,13 @@ const revealMobileFilters = async (page: Page) => {
 
 test('liste: nav Satılık aktif + sekmeler/filtre/ray + gerçek veri (temsilî çip yok)', async ({ page }) => {
   await page.goto(u(K));
-  // gerçek satış verisi (D-12 sahibinden ilanı) → indekslenir, noindex YOK
-  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+  // gerçek satış verisi (D-12 sahibinden ilanı) → indekslenir (noindex DEĞİL)
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index,follow,max-image-preview:large');
   await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveText(/^satılık$/i);
   await expect(page.getByTestId('kl-tab-tumu')).toContainText('Tümü (5)');
   await revealMobileFilters(page);
-  await expect(page.getByTestId('kcf-form')).toBeVisible(); // hızlı iletişim
+  // Web3Forms anahtarı boş → hızlı iletişim formu nazikçe kapalı (dürüst not, ölü gönderim yok)
+  await expect(page.getByTestId('kcf-offline')).toBeVisible();
   await expect(page.getByTestId('kc-mock-chip')).toHaveCount(0); // temsilî çip kaldırıldı
   await expect(page.locator('body')).not.toContainText('temsilî');
   await expect(page.getByTestId('kl-sales-phone')).toHaveAttribute('href', 'tel:+905326256812');
@@ -89,7 +90,7 @@ test('liste: D-11 yakın zamanda satıldı ve fiyatsız; D-12 13.750.000 TL kal�
   await expect(page.locator('[data-unit="p-el-ele"]')).toContainText('1 satılık dubleks');
   await expect(page.getByTestId('kl-proje-el-ele')).toHaveAttribute('href', /projeler\/el-ele-apartmani$/);
   await expect(page.getByTestId('kl-proje-masuk')).toHaveAttribute('href', /projeler\/masuk-apartmani$/);
-  await expect(page.getByTestId('kl-detay-d11')).toHaveAttribute('href', /satilik-daireler\/daire-1$/);
+  await expect(page.getByTestId('kl-detay-d11')).toHaveAttribute('href', /satilik-daireler\/el-ele-apartmani-3-2-dubleks-satildi$/);
   // CTA hiyerarşisi: ilan Detayları Gör beyaz-üstü-kırmızı; proje Projeyi İncele hayalet kalır
   const cta = page.getByTestId('kl-detay-d11');
   const [ctaBg, ctaFg] = await cta.evaluate((el) => {
@@ -148,23 +149,40 @@ test('liste: sekme + filtre + sıralama + favoriler dürüst envanterde', async 
   await expect(page.getByTestId('kl-count')).toContainText('5 sonuç');
 });
 
-test('detay D-11: matris lejantı ve gerçek durum dağılımı', async ({ page }) => {
-  await page.goto(u(K + 'daire-1'));
-  const matrix = page.getByTestId('kc-matrix');
-  await expect(matrix.getByTestId('kc-matrix-legend').locator('li')).toHaveCount(3);
-  await expect(matrix.locator('td[data-durum="musait"]')).toHaveCount(2); // yalnız D-12 × 2 kat satırı
-  await expect(matrix.locator('td[data-durum="satildi"]')).toHaveCount(10);
-  await expect(matrix.locator('td').filter({ hasText: 'D-11' })).toHaveCount(2);
-  await expect(matrix.locator('td').filter({ hasText: 'D-11' }).first()).toHaveAttribute('data-durum', 'satildi');
-  await expect(matrix.locator('td').filter({ hasText: 'D-12' })).toHaveCount(2);
-  await expect(matrix.locator('td').filter({ hasText: 'D-12' }).first()).toHaveAttribute('data-durum', 'musait');
-  // t-tech görsel olarak büyük harfe çevirir; textContent 'Müsait' kalır
-  await expect(matrix.locator('td[data-durum="musait"]').first()).toContainText('Müsait');
+test('liste: Harita Görünümü kart görsellerini konum mini-haritasına çevirir; grid kalır', async ({ page }, testInfo) => {
+  await page.goto(u(K));
+  const toggle = testInfo.project.name === 'mobile-360'
+    ? page.getByTestId('klm-harita')
+    : page.getByTestId('kl-harita');
+  await expect(page.getByTestId('kl-grid')).toBeVisible();
+  const cards = await page.getByTestId('kl-card').count();
+  expect(cards).toBeGreaterThan(0);
+  await expect(page.locator('.kl-card .km-leaflet')).toHaveCount(0); // grid modunda kartta harita yok
+
+  // Harita Görünümü → grid HÂLÂ görünür, aynı kart sayısı; her kart görseli mini-haritaya döner
+  await toggle.click();
+  await expect(page.getByTestId('kl-grid')).toBeVisible();
+  await expect(page.getByTestId('kl-card')).toHaveCount(cards);
+  await expect(page.locator('.kl-card .km-leaflet')).toHaveCount(cards);
+  await expect(page.locator('.kl-card .km-leaflet-pin').first()).toBeVisible();
+
+  // geri: görseller döner, haritalar kaybolur
+  await toggle.click();
+  await expect(page.locator('.kl-card .km-leaflet')).toHaveCount(0);
+  await expect(page.locator('.kl-card img').first()).toBeVisible();
+});
+
+test('detay D-12: haritanın sol altındaki küçük "Yol tarifi" düğmesi Google yol tarifine gider', async ({ page }) => {
+  await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
+  await page.locator('.kcg-media .kc-map-canvas').scrollIntoViewIfNeeded();
+  const btn = page.getByTestId('kc-loc-mapdir-primary'); // galeri sütunu haritasındaki bindirme düğmesi
+  await expect(btn).toContainText('Yol tarifi');
+  await expect(btn).toHaveAttribute('href', /google\.com\/maps\/dir\/\?api=1&destination=40\.875/);
 });
 
 test('detay: varsayılan galeri|künye; ⟷ geniş görünümü açar, tercih iki sayfada da tutulur', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-360', 'dar ekranda düzen zaten tek sütun, düğme gizli');
-  await page.goto(u(K + 'daire-1'));
+  await page.goto(u(K + 'el-ele-apartmani-3-2-dubleks-satildi'));
   const stage = page.getByTestId('kc-car-main');
   const kunye1 = page.getByTestId('kc-specs-d1');
   // varsayılan: künye galerinin SAĞINDA (ref-a düzeni)
@@ -181,7 +199,7 @@ test('detay: varsayılan galeri|künye; ⟷ geniş görünümü açar, tercih ik
   expect(kb.y).toBeGreaterThan(sb.y + sb.height - 1);
   await expect(kunye1).toBeVisible();
   // tercih diğer detay sayfasına taşınır (localStorage)
-  await page.goto(u(K + 'daire-2'));
+  await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
   await expect(page.getByTestId('kc-car-wide')).toHaveAttribute('aria-pressed', 'true');
   const sb2 = (await page.getByTestId('kc-car-main').boundingBox())!;
   const kb2 = (await page.getByTestId('kc-specs-d2').boundingBox())!;
@@ -195,7 +213,7 @@ test('detay: varsayılan galeri|künye; ⟷ geniş görünümü açar, tercih ik
 });
 
 test('detay D-11: karusel ok/sayaç/küçük resim/tam ekran', async ({ page }) => {
-  await page.goto(u(K + 'daire-1'));
+  await page.goto(u(K + 'el-ele-apartmani-3-2-dubleks-satildi'));
   await decoded(page, '[data-testid="kc-car-main"]');
   await expect(page.getByTestId('kc-car-count')).toHaveText('1 / 20');
   await page.getByTestId('kc-car-next').click();
@@ -213,16 +231,16 @@ test('detay D-11: karusel ok/sayaç/küçük resim/tam ekran', async ({ page }) 
 });
 
 test('detay: D-11 sold durumunda fiyatsız; D-12 fiyatı değişmeden satışta', async ({ page }) => {
-  await page.goto(u(K + 'daire-1'));
+  await page.goto(u(K + 'el-ele-apartmani-3-2-dubleks-satildi'));
   await expect(page.getByTestId('kc-sold-status')).toHaveText('YAKIN ZAMANDA SATILDI');
   await expect(page.getByTestId('kc-sold-detail')).toContainText('Bu dairenin satış işlemi tamamlandı.');
   await expect(page.getByTestId('kc-price')).toHaveCount(0);
   await expect(page.getByTestId('kc-payment')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('14.900.000');
   await expect(page.getByTestId('kc-sold-next')).toContainText('13.750.000 TL');
-  await expect(page.getByTestId('kc-sold-next')).toHaveAttribute('href', /satilik-daireler\/daire-2$/);
+  await expect(page.getByTestId('kc-sold-next')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks$/);
 
-  await page.goto(u(K + 'daire-2'));
+  await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
   await expect(page.getByTestId('kc-price')).toHaveText('13.750.000 TL');
   await expect(page.locator('body')).not.toContainText('14.900.000');
   const similarD11 = page.getByTestId('kc-sim-unit-d11');
@@ -230,63 +248,37 @@ test('detay: D-11 sold durumunda fiyatsız; D-12 fiyatı değişmeden satışta'
   await expect(similarD11.locator('.kc-sim-fiyat')).toHaveCount(0);
 });
 
-test('ray formu: doğrulama → gerçek gönderim (Web3Forms) hata ve başarı panelleri', async ({ page }) => {
-  // Web3Forms uç noktası mock'lanır; gerçek servise asla çıkılmaz.
-  let relay: 'ok' | 'fail' = 'fail';
-  let lastBody: any = null;
-  await page.route('https://api.web3forms.com/submit', async (route) => {
-    lastBody = JSON.parse(route.request().postData() ?? '{}');
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(relay === 'ok'
-        ? { success: true, message: 'Message sent successfully' }
-        : { success: false, message: 'Invalid access key' }),
-    });
-  });
-
-  await page.goto(u(K + 'daire-2'));
+test('ray formu: Web3Forms anahtarı yokken nazikçe kapalı — ölü gönderim yerine telefon/WhatsApp', async ({ page }) => {
+  // content/company.json'da formAccessKey boş → RailForm dürüst notu gösterir, form/submit RENDER ETMEZ.
+  // Anahtar eklendiğinde submit akışı testi (mock Web3Forms ile) geri getirilmelidir.
+  await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
   const railFormIsland = page.locator('astro-island[component-url*="RailForm"]');
   await expect.poll(() => railFormIsland.evaluate((element) => element.hasAttribute('ssr'))).toBe(false);
 
-  // boş gönderim → doğrulama hataları, ağ çağrısı yok
-  await page.getByTestId('kcf-submit').click();
-  await expect(page.getByTestId('kcf-err-name')).toBeVisible();
-  await expect(page.getByTestId('kcf-err-contact')).toBeVisible();
+  // ölü "Gönder" yok; onun yerine dürüst not
+  await expect(page.getByTestId('kcf-offline')).toBeVisible();
+  await expect(page.getByTestId('kcf-form')).toHaveCount(0);
+  await expect(page.getByTestId('kcf-submit')).toHaveCount(0);
+  await expect(page.getByTestId('kcf-offline')).toContainText(/telefon veya WhatsApp/i);
 
-  await page.getByTestId('kcf-name').fill('Deneme Ziyaretçi');
-  await page.getByTestId('kcf-contact').fill('deneme@example.com');
-
-  // servis başarısız → dürüst hata paneli (sahte başarı yok)
-  await page.getByTestId('kcf-submit').click();
-  await expect(page.getByTestId('kcf-error')).toBeVisible({ timeout: 5000 });
-  // gönderilen gövde alanları doğru eşlendi
-  expect(lastBody).toMatchObject({ name: 'Deneme Ziyaretçi', email: 'deneme@example.com' });
-  expect(String(lastBody.message)).toContain('deneme@example.com');
-
-  // servis başarılı → talep alındı paneli
-  relay = 'ok';
-  await page.getByTestId('kcf-submit').click();
-  await expect(page.getByTestId('kcf-success')).toBeVisible({ timeout: 5000 });
-  await page.getByTestId('kcf-again').click();
-  await expect(page.getByTestId('kcf-form')).toBeVisible();
+  // birincil eylem satış hattı telefon + WhatsApp (rayın üstünde canlı)
+  await expect(page.getByTestId('kc-rail-phone')).toHaveAttribute('href', 'tel:+905326256812');
+  await expect(page.getByTestId('kc-rail-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
 });
 
-test('detay satış contact links are live; remaining dead ends use the honest dialog', async ({ page }) => {
-  await page.goto(u(K + 'daire-1'));
-  await expect(page.getByTestId('kc-compare')).toHaveAttribute('href', /satilik-daireler\/daire-2$/);
-  await expect(page.getByTestId('kc-sim-daire-2')).toHaveAttribute('href', /satilik-daireler\/daire-2$/);
+test('detay satış contact links are live; YAKINDA belge ölü-uçları kaldırıldı', async ({ page }) => {
+  await page.goto(u(K + 'el-ele-apartmani-3-2-dubleks-satildi'));
+  await expect(page.getByTestId('kc-compare')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks$/);
+  await expect(page.getByTestId('kc-sim-daire-2')).toHaveAttribute('href', /satilik-daireler\/pendik-satilik-3-2-dubleks$/);
   await expect(page.getByTestId('kc-rail-phone')).toHaveAttribute('href', 'tel:+905326256812');
   await expect(page.getByTestId('kc-rail-phone')).toContainText('+90 532 625 68 12');
   await expect(page.getByTestId('kc-rail-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
   await expect(page.getByTestId('kc-rail-whatsapp')).toContainText('+90 532 625 68 12');
   await expect(page.getByTestId('kc-rail-alarm')).toHaveCount(0);
-  await page.goto(u(K + 'daire-2'));
-  await page.getByTestId('kc-rail-doc').first().click();
-  await expect(page.getByTestId('kc-soon-dialog')).toBeVisible();
-  await expect(page.getByTestId('kc-soon-dialog')).toContainText('Proje Broşürü');
-  await page.getByTestId('kc-soon-close').click();
-  await expect(page.getByTestId('kc-soon-dialog')).not.toBeVisible();
+  // canlı D-12 detayında YAKINDA belge ölü-uçları kaldırıldı (docs prop düştü)
+  await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
+  await expect(page.getByTestId('kc-rail-doc')).toHaveCount(0);
+  await expect(page.locator('body')).not.toContainText('YAKINDA');
   // kırıntı listeye döner
   await expect(page.getByTestId('kc-breadcrumb').locator('a').nth(1)).toHaveAttribute('href', /\/satilik-daireler$/);
 });
@@ -308,7 +300,7 @@ test('yerelleştirilmiş rotalar ayakta: /en, /ru, /ar listeye ulaşır', async 
 
 test('mobil: canlı üç sayfa — yatay taşma yok, görseller çözülür, menü açılır', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-360', 'yalnız mobil projede');
-  for (const route of [K, K + 'daire-1', K + 'daire-2']) {
+  for (const route of [K, K + 'el-ele-apartmani-3-2-dubleks-satildi', K + 'pendik-satilik-3-2-dubleks']) {
     await page.goto(u(route));
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth
@@ -317,7 +309,7 @@ test('mobil: canlı üç sayfa — yatay taşma yok, görseller çözülür, men
     await decoded(page, 'main img');
 }
   // dar ekranda geniş-görünüm anahtarı GİZLİ (düzen zaten tek sütun)
-  await page.goto(u(K + 'daire-1'));
+  await page.goto(u(K + 'el-ele-apartmani-3-2-dubleks-satildi'));
   await expect(page.getByTestId('kc-car-main')).toBeVisible();
   await expect(page.getByTestId('kc-car-wide')).toBeHidden();
   await page.goto(u(K));

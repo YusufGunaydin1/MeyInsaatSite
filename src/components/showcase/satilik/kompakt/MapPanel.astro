@@ -2,8 +2,8 @@
 /*
   Konum paneli — kendi çizdiğimiz Leaflet haritası (harici karo iframe'i YOK):
   kesin pin, zoom, büyüt→modal, köşede küçük ⓘ atıf. Yanında bina adı + satır-içi
-  tek "Yol tarifi" düğmesi (Google · Yandex · Apple) ve yakın çevre mesafe listesi.
-  Mesafeler İÇ TAHMİN — arayüzde belirtilmez. Bina: El Ele Apartmanı.
+  tek "Yol tarifi" düğmesi (Google · Yandex · Apple) ve yakın çevre listesi (nitel,
+  metresiz — kesin mesafeler İÇ TAHMİN olduğu için gösterilmez). Bina: El Ele Apartmanı.
 */
 import Icon from './Icon.astro';
 import LeafletMap from '../../location/LeafletMap';
@@ -18,15 +18,19 @@ interface Props {
   title?: string;
   compact?: boolean;
   locale?: Locale;
+  /** 'full' = harita + bilgi (yan yana); 'map' = yalnız harita (esner, boşluğu doldurur);
+      'info' = yalnız adres + yol tarifi + yakın çevre (haritasız) */
+  mode?: 'full' | 'map' | 'info';
 }
-const { title = 'Yakın Lokasyonlar', compact = false, locale = 'tr' } = Astro.props;
+const { title = 'Yakın Lokasyonlar', compact = false, locale = 'tr', mode = 'full' } = Astro.props;
 
 const loc = projectLocations(locale).find((l) => l.slug === 'el-ele-apartmani');
 if (!loc) throw new Error('MapPanel: El Ele Apartmanı konum verisi bulunamadı');
 const prefix = 'kc-loc';
 ---
 
-<div class:list={['kc-map card', compact && 'kc-map-compact']} data-testid="kc-map">
+<div class:list={['kc-map card', compact && 'kc-map-compact', mode === 'map' && 'kc-map-only', mode === 'info' && 'kc-map-infoonly']} data-testid="kc-map">
+  {mode !== 'info' && (
   <div class="kc-map-canvas" data-map="leaflet">
     <LeafletMap
       client:visible
@@ -52,8 +56,25 @@ const prefix = 'kc-loc';
       primaryHref={loc.googleDirectionsHref}
       items={directionsItems(loc)}
     />
+    {mode === 'map' && (
+      <div class="kc-map-dir">
+        <DirectionsMenu
+          client:visible
+          layout="split"
+          tone="light"
+          size="sm"
+          openUp
+          primaryHref={loc.googleDirectionsHref}
+          items={directionsItems(loc)}
+          label="Yol tarifi"
+          testid={`${prefix}-mapdir`}
+        />
+      </div>
+    )}
   </div>
+  )}
 
+  {mode !== 'map' && (
   <div class="kc-map-list">
     <div class="kc-loc-titlerow">
       <h3 class="t-heading-s kc-loc-name">{loc.name}</h3>
@@ -70,16 +91,17 @@ const prefix = 'kc-loc';
     <address class="kc-loc-addr">{loc.address}</address>
 
     <h4 class="t-heading-s kc-loc-heading">{title}</h4>
+    <p class="t-caption kc-loc-sub">Yürüme ve kısa araç mesafesinde:</p>
     <ul>
       {yakinCevre.map((y) => (
         <li>
           <span class="kc-map-ic"><Icon name={y.icon} size={17} /></span>
           <span class="kc-map-ad">{y.ad}</span>
-          <span class="kc-map-mesafe tabular-nums">{y.mesafe}</span>
         </li>
       ))}
     </ul>
   </div>
+  )}
 </div>
 
 <style>
@@ -89,8 +111,26 @@ const prefix = 'kc-loc';
     overflow: hidden;
   }
   .kc-map-compact { grid-template-columns: minmax(0, 1fr); }
+  /* mode="map" / mode="info": tek sütun. mode="map" esner (flex ebeveyni doldurur). */
+  .kc-map-only,
+  .kc-map-infoonly { grid-template-columns: minmax(0, 1fr); }
+  .kc-map-only { height: 100%; }
+  .kc-map-only .kc-map-canvas { min-height: 240px; }
   .kc-map-canvas { position: relative; min-height: 340px; overflow: hidden; background: #d9ddd9; }
   .kc-map-canvas :global(.km-sale-expand) { top: 5.1rem; right: 0.65rem; }
+
+  /* Küçük "Yol tarifi" düğmesi — haritanın sol alt köşesine bindirilmiş (yalnız mode="map").
+     Leaflet kabının KARDEŞİ olduğu için tıklama haritayı kaydırmaz. */
+  .kc-map-dir { position: absolute; left: 0.6rem; bottom: 0.6rem; z-index: 20; }
+  .kc-map-dir :global(.km-dir) { width: auto; }
+  .kc-map-dir :global(.km-dir-bar) { border: 1px solid var(--color-line); border-radius: var(--radius-brand); overflow: hidden; }
+  /* !important: taban .km-dir[data-size='sm'] kuralı (46px) daha yüksek özgüllükte — küçültmek için gerekli */
+  .kc-map-dir :global(.km-dir-primary),
+  .kc-map-dir :global(.km-dir-toggle) { min-height: 32px !important; font-size: 0.7rem; }
+  .kc-map-dir :global(.km-dir-primary) { padding-inline: 0.5rem; gap: 0.3rem; }
+  .kc-map-dir :global(.km-dir-toggle) { flex: 0 0 28px !important; }
+  .kc-map-dir :global(.km-dir svg) { width: 13px; height: 13px; }
+  .kc-map-dir :global(.km-dir-pop) { inset-inline: 0 auto; min-width: 188px; }
 
   .kc-map-list { display: flex; flex-direction: column; padding: 1rem 1.1rem 1.1rem; }
   .kc-loc-titlerow {
@@ -112,8 +152,9 @@ const prefix = 'kc-loc';
     line-height: 1.5;
   }
   .kc-loc-heading { margin-top: 1rem; }
+  .kc-loc-sub { color: var(--color-graphite-400); margin-top: 0.3rem; }
 
-  .kc-map-list ul { margin-top: 0.6rem; }
+  .kc-map-list ul { margin-top: 0.5rem; }
   .kc-map-list li {
     display: flex;
     align-items: center;

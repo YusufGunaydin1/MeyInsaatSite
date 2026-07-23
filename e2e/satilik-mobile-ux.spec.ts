@@ -90,7 +90,8 @@ test('fineUX capture matrix: Satılık landing composition', async ({ page }, te
       expect(filterBox?.height, 'filter touch target').toBeGreaterThanOrEqual(40);
       expect(await centerIsUnoccluded(page, '[data-testid="klm-filter-toggle"]'), 'filter control center').toBe(true);
     } else {
-      expect(metrics.hero?.height, `${cell.name}px hero height`).toBeLessThanOrEqual(330);
+      // Hero, dönüşüm için Ara/WhatsApp CTA satırını taşır (satış odaklı) — bu yüzden ~330'dan biraz yüksek.
+      expect(metrics.hero?.height, `${cell.name}px hero height`).toBeLessThanOrEqual(365);
       await expect(page.getByTestId('kl-filters')).toBeVisible();
     }
 
@@ -101,7 +102,7 @@ test('fineUX capture matrix: Satılık landing composition', async ({ page }, te
 test('fineUX capture: mobile apartment gallery and image delivery', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-360', 'narrow-mobile evidence only');
   mkdirSync(evidenceDir, { recursive: true });
-  await page.goto(u('satilik-daireler/daire-1'), { waitUntil: 'domcontentloaded' });
+  await page.goto(u('satilik-daireler/el-ele-apartmani-3-2-dubleks-satildi'), { waitUntil: 'domcontentloaded' });
   await settlePrimaryImage(page, '[data-testid="kc-car-main"]');
 
   const metrics = {

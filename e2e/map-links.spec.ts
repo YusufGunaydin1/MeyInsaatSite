@@ -75,7 +75,7 @@ test('mobile project dossier exposes the same exact provider links', async ({ pa
 
 test('for-sale apartment location panel opens the exact El Ele pin', async ({ page }) => {
   const point = PROJECTS[0];
-  await page.goto(u('/satilik-daireler/daire-1'));
+  await page.goto(u('/satilik-daireler/el-ele-apartmani-3-2-dubleks-satildi'));
   const panel = page.getByTestId('kc-map');
   await panel.scrollIntoViewIfNeeded();
 

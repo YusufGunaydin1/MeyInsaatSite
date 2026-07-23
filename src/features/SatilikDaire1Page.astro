@@ -1,7 +1,7 @@
 ---
 /*
   DAİRE DETAY — D-11 / Daire 1 (canlı; tasarım: daire-detay-ref-a mock).
-  Başlık+satış durumu → galeri | künye → çapa sekmeleri → matris + genel bakış
+  Başlık+satış durumu → galeri | künye → çapa sekmeleri → genel bakış
   → konum → satış durumu + SSS → benzer daireler; sağda yapışkan ray.
   NOINDEX (bilerek): daire SATILDI + m²/kat İÇ TAHMİN; Google'a gönderilmez
   (sitemap'ten de dışlanır). Arayüzde temsilî ibaresi YOK.
@@ -10,15 +10,13 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/showcase/satilik/kompakt/Icon.astro';
 import Breadcrumb from '../components/showcase/satilik/kompakt/Breadcrumb.astro';
 import SpecGrid from '../components/showcase/satilik/kompakt/SpecGrid.astro';
-import AvailabilityMatrix from '../components/showcase/satilik/kompakt/AvailabilityMatrix.astro';
 import MapPanel from '../components/showcase/satilik/kompakt/MapPanel.astro';
 import FaqList from '../components/showcase/satilik/kompakt/FaqList.astro';
 import SimilarUnits from '../components/showcase/satilik/kompakt/SimilarUnits.astro';
 import StickyRail from '../components/showcase/satilik/kompakt/StickyRail.astro';
-import SoonDialog from '../components/showcase/satilik/kompakt/SoonDialog.astro';
 import Carousel from '../components/showcase/satilik/kompakt/Carousel.tsx';
 import { carouselItems } from '../components/showcase/satilik/kompakt/assets.ts';
-import { detay, specsD1, proje, RECENTLY_SOLD_LABEL } from '../components/showcase/satilik/kompakt/data.ts';
+import { detay, specsD1, proje, RECENTLY_SOLD_LABEL, DETAY_SLUG } from '../components/showcase/satilik/kompakt/data.ts';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui } from '../lib/content';
 import '../components/showcase/satilik/kompakt/kompakt.css';
@@ -36,7 +34,6 @@ const items = await carouselItems([...d.galeri]);
 
 const sekmeler = [
   { id: 'genel', label: 'Genel Bilgiler' },
-  { id: 'konum-secimi', label: 'Daire Konumu' },
   { id: 'konum', label: 'Konum' },
   { id: 'durum', label: 'Satış Durumu' },
   { id: 'sss', label: 'SSS' },
@@ -56,7 +53,7 @@ const projeDetay = [
 <Base
   locale={locale}
   page="satilik"
-  path="/satilik-daireler/daire-1"
+  path={'/satilik-daireler/' + DETAY_SLUG['daire-1']}
   title={d.baslik + ' — MEY İnşaat'}
   description="El Ele Apartmanı D-11: yakın zamanda satılan deniz manzaralı 3+2 dubleks — galeri ve künye."
   noindex
@@ -85,7 +82,7 @@ const projeDetay = [
       <p class="t-caption kcd-sold-summary">Satış işlemi tamamlandı</p>
     </div>
     <div class="kcd-head-actions">
-      <a class="kcd-mini" href={root + '/daire-2'} data-testid="kc-compare"><Icon name="compare" size={15} /> Satıştaki D-12’yi İncele</a>
+      <a class="kcd-mini" href={root + '/' + DETAY_SLUG['daire-2']} data-testid="kc-compare"><Icon name="compare" size={15} /> Satıştaki D-12’yi İncele</a>
     </div>
   </header>
 
@@ -121,10 +118,6 @@ const projeDetay = [
         </div>
       </section>
 
-      <section class="kcd-block" id="konum-secimi" aria-label="Blok, kat ve daire konumu">
-        <AvailabilityMatrix />
-      </section>
-
       <section class="kcd-block" id="konum" aria-label="Konum ve yakın çevre">
         <MapPanel title="Yakın Çevre" locale={locale} />
       </section>
@@ -135,7 +128,7 @@ const projeDetay = [
             <p class="t-tech kcd-sold-kicker">{RECENTLY_SOLD_LABEL}</p>
             <h2 class="t-heading-s kcd-sold-title">Bu dairenin satış işlemi tamamlandı.</h2>
             <p class="t-caption kcd-sold-text">D-11 arşiv ve galeri bilgileri için yayında kalır. Satıştaki D-12 dairesini inceleyebilirsiniz.</p>
-            <a class="kcd-sold-next" href={root + '/daire-2'} data-testid="kc-sold-next">13.750.000 TL fiyatlı D-12’yi incele <Icon name="arrow-right" size={15} /></a>
+            <a class="kcd-sold-next" href={root + '/' + DETAY_SLUG['daire-2']} data-testid="kc-sold-next">13.750.000 TL fiyatlı D-12’yi incele <Icon name="arrow-right" size={15} /></a>
           </div>
           <div class="card kcd-card" id="sss"><FaqList /></div>
         </div>
@@ -148,8 +141,6 @@ const projeDetay = [
 
     <StickyRail konu="D-11 (satıldı) · benzer daireler" base={basePrefix} />
   </div>
-
-  <SoonDialog />
 </Base>
 
 <style>

@@ -1,0 +1,97 @@
+---
+/*
+  Mobil yapışkan satış çubuğu (≤1023px) — reklamla gelen ziyaretçinin birincil
+  eylemi (Ara / WhatsApp) her an ekranda kalsın; detay sayfası uzun kaydırıldığında
+  bile CTA kaybolmaz. Marka: düz, gölgesiz, 2px radius; kırmızı birincil + teal
+  hatlı WhatsApp. Sayfa altına global bir dolgu eklenir ki çubuk footer'ı örtmesin.
+*/
+import Icon from './Icon.astro';
+import { company } from '../../../../lib/content';
+import { contactNumber, telHref, whatsappHref } from '../../../../lib/contact';
+
+interface Props {
+  /** görünen fiyat (ör. "13.750.000 TL") */
+  fiyat: string;
+  /** kısa kırmızı etiket (ör. "Son daire · D-12") */
+  etiket?: string;
+}
+const { fiyat, etiket } = Astro.props;
+const phone = contactNumber(company.salesContact.phone);
+const wa = contactNumber(company.salesContact.whatsapp);
+const phoneHref = telHref(company.salesContact.phone);
+const waHref = whatsappHref(company.salesContact.whatsapp);
+---
+
+<div class="kc-mbar" data-testid="kc-mbar">
+  <div class="kc-mbar-price">
+    <p class="kc-mbar-fiyat tabular-nums">{fiyat}</p>
+    {etiket && <p class="kc-mbar-etiket t-tech">{etiket}</p>}
+  </div>
+  <div class="kc-mbar-actions">
+    {phoneHref && (
+      <a class="kc-mbar-call" href={phoneHref} data-testid="kc-mbar-call" aria-label={`Satış danışmanını ara: ${phone?.display ?? ''}`}>
+        <Icon name="phone" size={16} /> Ara
+      </a>
+    )}
+    {waHref && (
+      <a class="kc-mbar-wa" href={waHref} data-testid="kc-mbar-whatsapp" aria-label={`WhatsApp: ${wa?.display ?? ''}`}>
+        <Icon name="chat" size={16} /> <span>WhatsApp</span>
+      </a>
+    )}
+  </div>
+</div>
+
+<style>
+  .kc-mbar {
+    display: none;
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 40;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.5rem 0.85rem calc(0.5rem + env(safe-area-inset-bottom));
+    background: #fff;
+    border-top: 1px solid var(--color-line);
+  }
+  .kc-mbar-price { min-width: 0; }
+  .kc-mbar-fiyat {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-graphite-900);
+    line-height: 1.05;
+    white-space: nowrap;
+  }
+  .kc-mbar-etiket { color: var(--color-mey-red); font-size: 0.6875rem; margin-top: 0.05rem; }
+  .kc-mbar-actions { display: flex; gap: 0.45rem; flex-shrink: 0; }
+  .kc-mbar-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 44px;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-brand);
+    font-weight: 600;
+    font-size: 0.8125rem;
+  }
+  .kc-mbar-call { background: var(--color-mey-red); color: #fff; }
+  .kc-mbar-wa { border: 1px solid var(--color-mey-teal-700); color: var(--color-mey-teal-700); }
+
+  @media (max-width: 1023px) {
+    .kc-mbar { display: flex; }
+  }
+  /* 360px gibi çok dar ekranda WhatsApp etiketini simgeye indir (taşmayı önler) */
+  @media (max-width: 400px) {
+    .kc-mbar-wa span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .kc-mbar-actions a { padding-inline: 0.75rem; }
+  }
+</style>
+
+<style is:global>
+  /* Çubuk footer'ı örtmesin: sayfa altına yer aç (yalnız mobil, çubuk varken). */
+  @media (max-width: 1023px) {
+    body:has([data-testid='kc-mbar']) { padding-bottom: 72px; }
+  }
+</style>
