@@ -42,6 +42,9 @@ const basePrefix = localePath(locale, '/').replace(/\/$/, '');
 const root = localePath(locale, '/satilik-daireler');
 const salesPhone = contactNumber(company.salesContact.phone);
 const salesWhatsapp = contactNumber(company.salesContact.whatsapp);
+/* Her WhatsApp girişi ön dolu açılsın: ziyaretçi ilk cümleyi yazmak zorunda
+   kalmasın, talep hangi daire için geldiği belli olarak düşsün. */
+const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hakkında bilgi almak istiyorum.';
 
 const heroKey = 'daire-1/bina-dis.png';
 const hero = publicAsset(heroKey);
@@ -189,7 +192,7 @@ const trOnly = locale !== 'tr';
           <a class="ks-hero-cta-call" href={telHref(company.salesContact.phone) ?? '#'} data-testid="ks-hero-call">
             <Icon name="phone" size={17} /> Ara · {salesPhone?.display ?? ''}
           </a>
-          <a class="ks-hero-cta-wa" href={whatsappHref(company.salesContact.whatsapp) ?? '#'} data-testid="ks-hero-whatsapp">
+          <a class="ks-hero-cta-wa" href={whatsappHref(company.salesContact.whatsapp, WA_KONU) ?? '#'} data-testid="ks-hero-whatsapp">
             <Icon name="chat" size={17} /> WhatsApp
           </a>
         </div>
@@ -215,7 +218,7 @@ const trOnly = locale !== 'tr';
             <a href={telHref(company.salesContact.phone) ?? '#'} aria-label={`Satış danışmanını ara: ${salesPhone?.display ?? ''}`} data-testid="ksm-call">
               <Icon name="phone" size={16} /> Ara
             </a>
-            <a href={whatsappHref(company.salesContact.whatsapp) ?? '#'} aria-label={`WhatsApp: ${salesWhatsapp?.display ?? ''}`} data-testid="ksm-whatsapp">
+            <a href={whatsappHref(company.salesContact.whatsapp, WA_KONU) ?? '#'} aria-label={`WhatsApp: ${salesWhatsapp?.display ?? ''}`} data-testid="ksm-whatsapp">
               <Icon name="chat" size={16} /> WhatsApp
             </a>
           </div>
@@ -233,7 +236,7 @@ const trOnly = locale !== 'tr';
       salesPhone={salesPhone?.display ?? ''}
       salesPhoneHref={telHref(company.salesContact.phone) ?? ''}
       salesWhatsapp={salesWhatsapp?.display ?? ''}
-      salesWhatsappHref={whatsappHref(company.salesContact.whatsapp) ?? ''}
+      salesWhatsappHref={whatsappHref(company.salesContact.whatsapp, WA_KONU) ?? ''}
       formAccessKey={company.contact.formAccessKey ?? ''}
     />
   </section>
@@ -260,7 +263,7 @@ const trOnly = locale !== 'tr';
     <CtaBand base={basePrefix} />
   </div>
 
-  <MobileSaleBar fiyat={tl(13_750_000)} etiket="Son daire · D-12" />
+  <MobileSaleBar fiyat={tl(13_750_000)} etiket="Son daire · D-12" konu="D-12 · 3+2 çatı dubleksi" />
 </Base>
 
 <style>

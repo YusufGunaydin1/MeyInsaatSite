@@ -46,7 +46,10 @@ test('liste: nav Satılık aktif + sekmeler/filtre/ray + gerçek veri (temsilî 
   await expect(page.locator('body')).not.toContainText('temsilî');
   await expect(page.getByTestId('kl-sales-phone')).toHaveAttribute('href', 'tel:+905326256812');
   await expect(page.getByTestId('kl-sales-phone')).toContainText('+90 532 625 68 12');
-  await expect(page.getByTestId('kl-sales-whatsapp')).toHaveAttribute('href', 'https://wa.me/905326256812');
+  await expect(page.getByTestId('kl-sales-whatsapp')).toHaveAttribute(
+    'href',
+    /^https:\/\/wa\.me\/905326256812\?text=Merhaba/
+  );
   await expect(page.getByTestId('kl-sales-whatsapp')).toContainText('+90 532 625 68 12');
   await expect(page.getByTestId('kc-sales-phone')).toHaveAttribute('href', 'tel:+905326256812');
 });

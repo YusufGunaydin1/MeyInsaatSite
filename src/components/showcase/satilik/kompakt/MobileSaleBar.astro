@@ -14,12 +14,14 @@ interface Props {
   fiyat: string;
   /** kısa kırmızı etiket (ör. "Son daire · D-12") */
   etiket?: string;
+  /** WhatsApp ön dolu mesajındaki konu (ör. "D-12 · 3+2 Dubleks") */
+  konu?: string;
 }
-const { fiyat, etiket } = Astro.props;
+const { fiyat, etiket, konu = 'Pendik’teki satılık daire' } = Astro.props;
 const phone = contactNumber(company.salesContact.phone);
 const wa = contactNumber(company.salesContact.whatsapp);
 const phoneHref = telHref(company.salesContact.phone);
-const waHref = whatsappHref(company.salesContact.whatsapp);
+const waHref = whatsappHref(company.salesContact.whatsapp, `Merhaba, ${konu} hakkında bilgi almak istiyorum.`);
 ---
 
 <div class="kc-mbar" data-testid="kc-mbar">
