@@ -36,7 +36,7 @@ const kompaktBase = base + '/satilik-daireler/';
             <p class="kc-sim-ad">{u.tip} — {u.kat}</p>
             <p class="kc-sim-meta">Brüt {u.brut} m² · {u.cephe}</p>
             {u.fiyat !== null && <p class="kc-sim-fiyat tabular-nums" data-testid={`kc-sim-price-${u.id}`}>{tl(u.fiyat)}</p>}
-            <a class="kc-sim-cta" href={kompaktBase + DETAY_SLUG[u.detay!]} data-testid={`kc-sim-${u.detay}`}>Detaylı İncele</a>
+            <a class="kc-sim-cta" href={kompaktBase + DETAY_SLUG[u.detay!] + '/'} data-testid={`kc-sim-${u.detay}`}>Detaylı İncele</a>
           </div>
         </article>
       );
@@ -48,7 +48,7 @@ const kompaktBase = base + '/satilik-daireler/';
           <p class="t-tech kc-sim-durum is-mute">{t.not.toUpperCase()}</p>
           <p class="kc-sim-ad">{t.ad}</p>
           <p class="kc-sim-meta">{t.konum}</p>
-          <a class="kc-sim-cta is-ghost" href={base + '/projeler/' + t.slug}>Projeyi Gör</a>
+          <a class="kc-sim-cta is-ghost" href={base + '/projeler/' + t.slug + '/'}>Projeyi Gör</a>
         </div>
       </article>
     ))}

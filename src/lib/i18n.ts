@@ -15,11 +15,15 @@ export function dir(locale: Locale): 'ltr' | 'rtl' {
   return locale === 'ar' ? 'rtl' : 'ltr';
 }
 
-/** Locale-prefixed, base-aware path. `path` starts with '/', e.g. '/kurumsal'. */
+/** Locale-prefixed, base-aware path. `path` starts with '/', e.g. '/kurumsal'.
+    Always ends in '/': the static host serves `/kurumsal/index.html` and 301s
+    `/kurumsal` → `/kurumsal/`, so any unslashed link or canonical would send both
+    crawlers and users through a redirect. Canonical, hreflang, sitemap and every
+    internal link must agree on this one form. */
 export function localePath(locale: Locale, path = '/'): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const prefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;
-  const p = path === '/' ? (prefix ? '' : '/') : path;
+  const p = path === '/' ? '/' : path.endsWith('/') ? path : `${path}/`;
   return `${base}${prefix}${p}` || '/';
 }
 

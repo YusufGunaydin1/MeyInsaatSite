@@ -39,7 +39,7 @@ const t = ui(locale);
 
 /** yerel dil öneki dahil kök ('' | '/en' | ...) — bileşenlerin base'i */
 const basePrefix = localePath(locale, '/').replace(/\/$/, '');
-const root = basePrefix + '/satilik-daireler';
+const root = localePath(locale, '/satilik-daireler');
 const salesPhone = contactNumber(company.salesContact.phone);
 const salesWhatsapp = contactNumber(company.salesContact.whatsapp);
 
@@ -99,7 +99,7 @@ const ilanlar: ListingCard[] = await Promise.all(
     fiyatText: u.fiyat === null ? null : tl(u.fiyat),
     durum: u.durum,
     badge: u.badge,
-    href: `${root}/${DETAY_SLUG[u.detay!]}`,
+    href: `${root}${DETAY_SLUG[u.detay!]}/`,
     img: await cardImage(u.imgKey!),
     lat: projeCoords[u.projeKey]?.lat,
     lng: projeCoords[u.projeKey]?.lng,
@@ -116,7 +116,7 @@ const projeKartlari: ListingCard[] = await Promise.all(
     sold: p.sold,
     not: p.not,
     rozet: p.rozet,
-    href: `${basePrefix}/projeler/${p.slug}`,
+    href: localePath(locale, `/projeler/${p.slug}`),
     img: await assetImage(projeGorsel[p.projeKey], `${p.ad} dış cephe`),
     lat: projeCoords[p.projeKey]?.lat,
     lng: projeCoords[p.projeKey]?.lng,
@@ -191,7 +191,7 @@ const stats = [
         <span class="ks-help-ic"><Icon name="chat" size={22} /></span>
         <p class="ks-help-title">Size yardımcı olalım</p>
         <p class="ks-help-sub">Size en uygun daireyi bulmanızda ekibimiz yardımcı olsun.</p>
-        <a class="btn-ghost ks-help-cta" href={basePrefix + '/iletisim'}>Bize Ulaşın</a>
+        <a class="btn-ghost ks-help-cta" href={localePath(locale, '/iletisim')}>Bize Ulaşın</a>
       </aside>
 
       <div class="ksm-mobile-hero" data-testid="ksm-mobile-hero">

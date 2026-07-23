@@ -32,7 +32,7 @@ interface Props {
 const { locale } = Astro.props;
 const t = ui(locale);
 const basePrefix = localePath(locale, '/').replace(/\/$/, '');
-const root = basePrefix + '/satilik-daireler';
+const root = localePath(locale, '/satilik-daireler');
 
 const d = detay['daire-2'];
 const items = await carouselItems([...d.galeri]);
@@ -243,7 +243,7 @@ const jsonLd = {
             class="kce-proje-img"
           />
           <p class="t-caption kce-proje-text">{building.positioning} — {building.builder} yapımı, {proje.kat} katlı, {proje.toplamDaire} daireli bina.</p>
-          <a class="kce-proje-link" href={basePrefix + '/projeler/el-ele-apartmani'}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
+          <a class="kce-proje-link" href={localePath(locale, '/projeler/el-ele-apartmani')}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
         </div>
         <MapPanel mode="info" title="Pendik Batı Mah. — Yakın Çevre" locale={locale} />
       </section>

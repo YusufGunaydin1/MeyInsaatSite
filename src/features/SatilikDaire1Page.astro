@@ -27,7 +27,7 @@ interface Props {
 const { locale } = Astro.props;
 const t = ui(locale);
 const basePrefix = localePath(locale, '/').replace(/\/$/, '');
-const root = basePrefix + '/satilik-daireler';
+const root = localePath(locale, '/satilik-daireler');
 
 const d = detay['daire-1'];
 const items = await carouselItems([...d.galeri]);
@@ -82,7 +82,7 @@ const projeDetay = [
       <p class="t-caption kcd-sold-summary">Satış işlemi tamamlandı</p>
     </div>
     <div class="kcd-head-actions">
-      <a class="kcd-mini" href={root + '/' + DETAY_SLUG['daire-2']} data-testid="kc-compare"><Icon name="compare" size={15} /> Satıştaki D-12’yi İncele</a>
+      <a class="kcd-mini" href={root + DETAY_SLUG['daire-2'] + '/'} data-testid="kc-compare"><Icon name="compare" size={15} /> Satıştaki D-12’yi İncele</a>
     </div>
   </header>
 
@@ -128,7 +128,7 @@ const projeDetay = [
             <p class="t-tech kcd-sold-kicker">{RECENTLY_SOLD_LABEL}</p>
             <h2 class="t-heading-s kcd-sold-title">Bu dairenin satış işlemi tamamlandı.</h2>
             <p class="t-caption kcd-sold-text">D-11 arşiv ve galeri bilgileri için yayında kalır. Satıştaki D-12 dairesini inceleyebilirsiniz.</p>
-            <a class="kcd-sold-next" href={root + '/' + DETAY_SLUG['daire-2']} data-testid="kc-sold-next">13.750.000 TL fiyatlı D-12’yi incele <Icon name="arrow-right" size={15} /></a>
+            <a class="kcd-sold-next" href={root + DETAY_SLUG['daire-2'] + '/'} data-testid="kc-sold-next">13.750.000 TL fiyatlı D-12’yi incele <Icon name="arrow-right" size={15} /></a>
           </div>
           <div class="card kcd-card" id="sss"><FaqList /></div>
         </div>
