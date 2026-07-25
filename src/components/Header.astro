@@ -8,9 +8,16 @@ import logo from '../assets/brand/mey-logo-dark.png';
 interface Props {
   locale: Locale;
   path: string;
+  /** Yalnız TR yayınlanan sayfalar için: diğer diller bu yola gider.
+      Verilmezse `path` kullanılır (tüm çok dilli sayfalarda davranış aynı). */
+  langFallbackPath?: string;
 }
 
-const { locale, path } = Astro.props;
+const { locale, path, langFallbackPath } = Astro.props;
+/* TR-only bir sayfada dil seçici, var olmayan /en/… /ru/… /ar/… URL'lerine
+   link veriyordu (404). Geçerli dil sayfada kalır; diğerleri o dilde GERÇEKTEN
+   var olan en yakın üst sayfaya gider. */
+const langHref = (l: Locale) => localePath(l, l === locale ? path : (langFallbackPath ?? path));
 const t = ui(locale);
 
 const items = [
@@ -69,7 +76,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
           {LOCALES.map((l) => (
             <li>
               <a
-                href={localePath(l, path)}
+                href={langHref(l)}
                 lang={l}
                 hreflang={l}
                 aria-current={l === locale ? 'true' : undefined}

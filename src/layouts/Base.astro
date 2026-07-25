@@ -39,12 +39,15 @@ interface Props {
   verification?: string;
   /** hreflang kümesi — çevrilmemiş bir bölüm yalnız kendi dilini ilan etsin */
   hreflangLocales?: Locale[];
+  /** Yalnız TR yayınlanan sayfalarda dil seçicinin diğer dilleri göndereceği
+      yol. Verilmezse seçici `path`'te kalır (çok dilli sayfaların davranışı). */
+  langFallbackPath?: string;
 }
 
 const {
   locale, page, path, title, description, noindex = false,
   ogType = 'website', ogImage: ogImageProp, ogImageAlt, jsonLd, extraMeta, verification,
-  hreflangLocales = LOCALES,
+  hreflangLocales = LOCALES, langFallbackPath,
 } = Astro.props;
 const s = seo(locale);
 const t = ui(locale);
@@ -179,11 +182,11 @@ const OG_LOCALES: Record<Locale, string> = {
     >
       {t.a11y.skipToContent}
     </a>
-    <Header locale={locale} path={path} />
+    <Header locale={locale} path={path} langFallbackPath={langFallbackPath} />
     <main id="main" class="flex-1">
       <slot />
     </main>
-    <Footer locale={locale} path={path} />
+    <Footer locale={locale} path={path} langFallbackPath={langFallbackPath} />
     <Analytics locale={locale} />
 
     <!-- Inline on purpose: reveals must not wait for a module fetch on slow networks -->

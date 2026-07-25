@@ -9,9 +9,12 @@ import logo from '../assets/brand/mey-logo-dark.png';
 interface Props {
   locale: Locale;
   path: string;
+  /** Yalnız TR yayınlanan sayfalar için — bkz. Header.astro. */
+  langFallbackPath?: string;
 }
 
-const { locale, path } = Astro.props;
+const { locale, path, langFallbackPath } = Astro.props;
+const langHref = (l: Locale) => localePath(l, l === locale ? path : (langFallbackPath ?? path));
 const t = ui(locale);
 const prose = companyContent(locale);
 const year = new Date().getFullYear();
@@ -85,7 +88,7 @@ const items = [
           {LOCALES.map((l) => (
             <li>
               <a
-                href={localePath(l, path)}
+                href={langHref(l)}
                 lang={l}
                 hreflang={l}
                 aria-current={l === locale ? 'true' : undefined}

@@ -126,6 +126,28 @@ test('/hizmetler/ üç hizmet sayfasının hepsine link veriyor', async ({ page 
   }
 });
 
+/* TR-only sayfalarda dil seçici, var olmayan /en/… /ru/… /ar/… URL'lerine link
+   veriyordu (her sayfada 3 ölü bağlantı; gizlilik sayfasında da aynısı vardı).
+   Seçici artık o dilde GERÇEKTEN var olan en yakın üst sayfaya gider. */
+test('TR-only sayfalarda dil seçici ölü bağlantı üretmiyor', async ({ page, request }) => {
+  for (const path of [
+    '/hizmetler/kat-karsiligi-insaat/',
+    '/hizmetler/kentsel-donusum/',
+    '/hizmetler/anahtar-teslim-insaat/',
+    '/gizlilik-ve-cerez-politikasi/',
+  ]) {
+    await page.goto(u(path));
+    const hrefs = await page.$$eval('a.lang-item, a.foot-lang', (els) =>
+      els.map((e) => e.getAttribute('href')!)
+    );
+    expect(hrefs.length, `${path}: dil seçici bulunamadı`).toBeGreaterThan(0);
+    for (const href of [...new Set(hrefs)]) {
+      const res = await request.get(href);
+      expect(res.status(), `${path} → ${href} ölü`).toBe(200);
+    }
+  }
+});
+
 test('EN/RU/AR hizmet sayfalarına klon üretmiyor', async ({ page }) => {
   for (const lang of ['en', 'ru', 'ar']) {
     const res = await page.goto(u(`/${lang}/hizmetler/kat-karsiligi-insaat/`));
