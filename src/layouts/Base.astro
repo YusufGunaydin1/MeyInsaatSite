@@ -132,10 +132,11 @@ const OG_LOCALES: Record<Locale, string> = {
         foundingDate: String(company.constructionFoundedYear),
         founder: { '@type': 'Person', name: company.founder },
         knowsLanguage: LOCALES,
-        areaServed: [
-          { '@type': 'City', name: 'İstanbul' },
-          { '@type': 'AdministrativeArea', name: 'Pendik' },
-        ],
+        // ŞEHİR düzeyi, bilerek. MEY İstanbul genelinde iş alır; tamamlanan
+        // binalar Pendik'te olsa da kurumsal düğüme ilçe yazmak markayı tek
+        // ilçeye kilitler. İlçe, doğru olduğu yerde — proje sayfalarının
+        // ApartmentComplex adreslerinde — zaten yayınlanıyor.
+        areaServed: { '@type': 'City', name: 'İstanbul' },
         address: {
           '@type': 'PostalAddress',
           streetAddress: 'Orhanlı, Vakum Sk. No:26',

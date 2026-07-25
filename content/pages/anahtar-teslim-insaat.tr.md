@@ -7,8 +7,8 @@ title: "Anahtar Teslim İnşaat — Kendi Arsanıza"
 intro: >-
   Arsa sizin, bina da sizin kalacak. Bu modelde paylaşım yok: işi siz yaptırır,
   bedelini ödersiniz. Karşılığında beklediğiniz şey nettir — söz verilen
-  standartta, söz verilen tarihte teslim. MEY İnşaat'ın Pendik'te tamamladığı
-  binalar El Ele, Çamoğlu ve Maşuk apartmanlarıdır.
+  standartta, söz verilen tarihte teslim. MEY İnşaat İstanbul'da konut yapar;
+  tamamladığı binalar El Ele, Çamoğlu ve Maşuk apartmanlarıdır.
 sections:
   - title: "Kat karşılığından farkı"
     body: >-

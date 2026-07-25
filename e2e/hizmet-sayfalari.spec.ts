@@ -14,8 +14,8 @@ import { u } from './util';
 const SAYFALAR = [
   {
     slug: 'kat-karsiligi-insaat',
-    baslik: "Pendik'te Kat Karşılığı İnşaat",
-    metaTitle: 'Pendik Kat Karşılığı İnşaat — MEY İnşaat',
+    baslik: "İstanbul'da Kat Karşılığı İnşaat",
+    metaTitle: "İstanbul Kat Karşılığı İnşaat — MEY İnşaat",
     referansVar: true,
   },
   {
@@ -74,7 +74,8 @@ for (const s of SAYFALAR) {
       const service = nodes.find((n) => n['@type'] === 'Service');
       expect(service, 'Service düğümü yok').toBeTruthy();
       expect(service.provider['@id']).toBe('https://meyinsaat.com/#org');
-      expect(service.areaServed.map((a: any) => a.name)).toContain('Pendik');
+      // Şehir düzeyi, bilerek: marka tek ilçeye kilitlenmez.
+      expect(service.areaServed.map((a: any) => a.name)).toEqual(['İstanbul']);
 
       const faq = nodes.find((n) => n['@type'] === 'FAQPage');
       expect(faq, 'FAQPage düğümü yok').toBeTruthy();

@@ -5,7 +5,7 @@ title: "Hizmetler"
 intro: >-
   MEY İnşaat konut geliştirir: arsanın değerlendirilmesinden anahtar teslimine
   kadar süreci tek elden yürütürüz. Bugüne kadar tamamladığımız üç bina —
-  El Ele, Çamoğlu ve Maşuk apartmanları — İstanbul Pendik'te.
+  El Ele, Çamoğlu ve Maşuk apartmanları — İstanbul'da.
 services:
   - name: "Konut Projesi Geliştirme"
     desc: >-
@@ -39,7 +39,7 @@ detailPages:
   items:
     - slug: "kat-karsiligi-insaat"
       name: "Kat Karşılığı İnşaat"
-      desc: "Arsa sizden, inşaat bizden; bina bittiğinde bağımsız bölümler yazılı bir oranla paylaşılır. Pendik'te tamamladığımız üç bina bu modelle yapıldı."
+      desc: "Arsa sizden, inşaat bizden; bina bittiğinde bağımsız bölümler yazılı bir oranla paylaşılır. Tamamladığımız üç bina bu modelle yapıldı."
     - slug: "kentsel-donusum"
       name: "Kentsel Dönüşüm"
       desc: "Riskli yapı tespiti, kat malikleri kararı, tahliye ve yeniden yapım. 6306 sürecinin hangi adımı kaç gün sürüyor."

@@ -32,9 +32,11 @@ const t = ui(locale);
 const fm = pageContent(slug, locale)?.frontmatter ?? {};
 const path = `/hizmetler/${slug}`;
 
-/* İşin fiilen alındığı ilçeler. Tamamlanan binalar Pendik'te; komşu ilçeler
-   "görüşürüz" seviyesinde ve sayfa metni de bunu böyle söylüyor. */
-const DISTRICTS = ['Pendik', 'Tuzla', 'Kartal', 'Sultanbeyli', 'Kurtköy'];
+/* İş alınan alan İSTANBUL'dur — ilçe değil. Tamamlanan binalar Pendik'te,
+   Erenköy'de devam eden bir proje var; markayı tek ilçeye kilitlemek hedeflenen
+   pazarı baştan keser. İlçe sinyali proje sayfalarında, gerçekten doğru olduğu
+   yerde durur. */
+const AREAS = ['İstanbul'];
 
 const refs = fm.references
   ? projects(locale).map((p) => ({
@@ -54,7 +56,7 @@ const jsonLd = [
     path,
     name: fm.title,
     desc: fm.intro,
-    districts: DISTRICTS,
+    areas: AREAS,
     references: refs.map((r) => ({ name: r.name, path: `/projeler/${r.slug}` })),
   }),
   ...(fm.faq?.length ? [faqLd(Astro.site, locale, path, fm.faq)] : []),

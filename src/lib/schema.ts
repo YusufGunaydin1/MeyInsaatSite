@@ -132,9 +132,10 @@ export function serviceCatalogLd(
 }
 
 /** Tek bir hizmet sayfası (kat karşılığı, kentsel dönüşüm, anahtar teslim).
-    `areaServed` ilçe listesi olarak verilir: bu sayfalar il geneline değil,
-    işin fiilen alındığı ilçelere göre aranır. Referans bina adları yalnız
-    doğrulanmışsa geçilir — sayı, m² ya da yıl ASLA. */
+    `areaServed` ŞEHİR düzeyindedir: MEY İstanbul genelinde iş alır ve markayı
+    tek bir ilçeye daraltmak hedeflenen pazarı baştan kesmek olur. İlçe sinyali
+    ilçenin gerçekten doğru olduğu yerde — proje sayfalarında — durur.
+    Referans bina adları yalnız doğrulanmışsa geçilir; sayı, m² ya da yıl ASLA. */
 export function serviceLd(
   site: URL | undefined,
   locale: Locale,
@@ -142,7 +143,7 @@ export function serviceLd(
     path: string;
     name: string;
     desc: string;
-    districts: string[];
+    areas: string[];
     references?: { name: string; path: string }[];
   }
 ): Json {
@@ -156,7 +157,7 @@ export function serviceLd(
     description: svc.desc,
     serviceType: svc.name,
     provider: { '@id': orgId(site) },
-    areaServed: svc.districts.map((d) => ({ '@type': 'AdministrativeArea', name: d })),
+    areaServed: svc.areas.map((a) => ({ '@type': 'City', name: a })),
     ...(svc.references?.length
       ? {
           subjectOf: svc.references.map((r) => ({

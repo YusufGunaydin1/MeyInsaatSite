@@ -3,12 +3,13 @@ locale: tr
 machineTranslated: false
 slug: kat-karsiligi-insaat
 eyebrow: "KAT KARŞILIĞI"
-title: "Pendik'te Kat Karşılığı İnşaat"
+title: "İstanbul'da Kat Karşılığı İnşaat"
 intro: >-
   Arsanız var, üzerine bina yapılmasını istiyorsunuz. Kat karşılığı inşaatta
-  arsanızın tapusunu satmazsınız; yapılacak binadan pay alırsınız. MEY İnşaat'ın
-  Pendik'te tamamladığı üç bina — El Ele, Çamoğlu ve Maşuk apartmanları — kat
-  karşılığı yapıldı. Bu sayfa, o süreci arsa sahibinin gördüğü yerden anlatır.
+  arsanızın tapusunu satmazsınız; yapılacak binadan pay alırsınız. MEY İnşaat
+  İstanbul'da konut yapar; tamamladığımız El Ele, Çamoğlu ve Maşuk apartmanları
+  kat karşılığı yapıldı, hâlen Erenköy'de bir projemiz sürüyor. Bu sayfa, o
+  süreci arsa sahibinin gördüğü yerden anlatır.
 sections:
   - title: "Kat karşılığı nedir, arsa sahibi ne verir ne alır"
     body: >-
@@ -63,11 +64,11 @@ faq:
     cevap: "Riski asıl belirleyen, tapunun ne kadarının önceden devredildiğidir. Tapu kademeli devredilmişse arsa sahibi tamamlanmamış işin karşılığını vermemiş olur. Sözleşmedeki gecikme ve fesih maddeleri de bu ihtimal için vardır."
   - soru: "Kat karşılığı ile kentsel dönüşüm aynı şey mi?"
     cevap: "Değil. Kat karşılığı, arsa sahibi ile müteahhit arasındaki bir sözleşme türüdür. Kentsel dönüşüm ise 6306 sayılı Kanun kapsamında riskli yapı tespiti ile başlayan ayrı bir süreçtir — mevcut bir binanın yıkılıp yeniden yapılmasını kapsar ve kat malikleri kararı gerektirir."
-  - soru: "Pendik dışında iş alıyor musunuz?"
-    cevap: "Tamamladığımız binalar Pendik'te. İstanbul Anadolu Yakası'ndaki arsalar için görüşürüz; arsanın yerini ve imar durumunu konuşarak başlayalım."
+  - soru: "Hangi ilçelerde iş alıyorsunuz?"
+    cevap: "İstanbul genelinde çalışıyoruz. Tamamladığımız binalar Pendik'te, hâlen Erenköy'de devam eden bir projemiz var. Arsanızın yerini ve imar durumunu söyleyin; ilçe fark etmeksizin değerlendirelim."
 references:
   title: "Kat karşılığı tamamladığımız binalar"
-  note: "Üçü de Pendik'te, kat karşılığı yapıldı."
+  note: "Üçü de kat karşılığı yapıldı."
 cta:
   title: "Arsanız için ne çıkar, konuşalım"
   body: "Arsanın yerini ve imar durumunu söyleyin; kaç bağımsız bölüm çıktığını ve nasıl bir paylaşım konuşulabileceğini birlikte değerlendirelim."

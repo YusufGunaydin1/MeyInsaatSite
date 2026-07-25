@@ -32,8 +32,9 @@ insanların hayatlarındaki en büyük yatırıma — konuta — taşımak. Tama
 **El Ele**, **Çamoğlu** ve **Maşuk apartmanları** — İstanbul Pendik'te; her birinde aynı ilkeyi
 koruduk: çizdiğimizi inşa ederiz.
 
-Bugün MEY İnşaat, İstanbul'un Anadolu yakasında, Pendik ve çevresinde konut geliştirmeye devam
-ediyor; hızlı değil, doğru büyümeyi önceleyen kontrollü ve sürdürülebilir bir strateji izliyor.
+Bugün MEY İnşaat İstanbul genelinde konut geliştiriyor; kat karşılığı, kentsel dönüşüm ve
+anahtar teslim işler alıyor. Hızlı değil, doğru büyümeyi önceleyen kontrollü ve sürdürülebilir
+bir strateji izliyoruz.
 
 ## Değerlerimiz
 

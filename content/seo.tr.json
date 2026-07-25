@@ -4,36 +4,36 @@
   "siteName": "MEY İnşaat",
   "pages": {
     "home": {
-      "title": "MEY İnşaat İstanbul — Pendik'te Konut Projeleri",
-      "description": "İstanbul Pendik'te konut projeleri geliştiren ve inşa eden MEY Grubu markası. Tamamladığımız apartmanları görün; satıştaki 3+2 çatı dubleksi için arayın."
+      "title": "MEY İnşaat — İstanbul'da Konut ve Kentsel Dönüşüm",
+      "description": "İstanbul'da konut geliştiren, kat karşılığı ve kentsel dönüşüm işleri yapan MEY Grubu markası. Tamamladığımız binaları görün; arsanız için görüşelim."
     },
     "projects": {
-      "title": "Pendik'te Tamamlanan Konut Projeleri — MEY İnşaat",
-      "description": "MEY İnşaat'ın İstanbul Pendik'te tamamladığı konut binaları: El Ele, Çamoğlu ve Maşuk apartmanları — adres, konum ve yapım süreci."
+      "title": "Tamamlanan Konut Projeleri — MEY İnşaat, İstanbul",
+      "description": "MEY İnşaat'ın İstanbul'da tamamladığı konut binaları: El Ele, Çamoğlu ve Maşuk apartmanları — adres, konum ve yapım süreci."
     },
     "satilik": {
       "title": "Pendik Satılık 3+2 Dubleks Daire — MEY İnşaat",
       "description": "Pendik El Ele Apartmanı'nda MEY İnşaat'tan sıfır 3+2 çatı dubleksi: 160 m², çatı terası, kapalı otopark. Son daire 13.750.000 TL — randevu alın."
     },
     "corporate": {
-      "title": "Kurumsal — Pendik'te Konut Geliştiren MEY İnşaat",
-      "description": "2021'de kurulan MEY İnşaat, 23 yıllık MEY Grubu'nun inşaat markasıdır. Hikayemiz, değerlerimiz ve Pendik'te tamamladığımız binalar."
+      "title": "Kurumsal — İstanbul'da Konut Geliştiren MEY İnşaat",
+      "description": "2021'de kurulan MEY İnşaat, 23 yıllık MEY Grubu'nun inşaat markasıdır. Hikayemiz, değerlerimiz ve tamamladığımız binalar."
     },
     "services": {
       "title": "Konut İnşaatı Hizmetleri — MEY İnşaat, İstanbul",
-      "description": "Arsa değerlendirmeden anahtar teslime: konut projesi geliştirme, ruhsat ve proje yönetimi, betonarme kaba yapı, ince işler. Pendik/İstanbul."
+      "description": "Arsa değerlendirmeden anahtar teslime: konut projesi geliştirme, ruhsat ve proje yönetimi, betonarme kaba yapı, ince işler. İstanbul."
     },
     "katKarsiligi": {
-      "title": "Pendik Kat Karşılığı İnşaat — MEY İnşaat",
-      "description": "Arsanız için kat karşılığı: paylaşım oranı, tapu devir aşamaları ve sözleşmede dikkat edilecekler. Pendik'teki üç binamız kat karşılığı yapıldı."
+      "title": "İstanbul Kat Karşılığı İnşaat — MEY İnşaat",
+      "description": "Arsanız için kat karşılığı: paylaşım oranı, tapu devir aşamaları ve sözleşmede dikkat edilecekler. İstanbul'da MEY İnşaat."
     },
     "kentselDonusum": {
       "title": "Kentsel Dönüşüm ve Riskli Bina Yenileme — MEY İnşaat",
-      "description": "Riskli yapı tespitinden teslime: 15 gün itiraz, 60 gün yıkım, salt çoğunlukla karar ve kira yardımı. İstanbul Pendik'te MEY İnşaat."
+      "description": "Riskli yapı tespitinden teslime: 15 gün itiraz, 60 gün yıkım, salt çoğunlukla karar ve kira yardımı. İstanbul'da kentsel dönüşüm — MEY İnşaat."
     },
     "anahtarTeslim": {
       "title": "Anahtar Teslim İnşaat, İstanbul — MEY İnşaat",
-      "description": "Arsanız sizde kalır, bedelini ödersiniz: teslim standardı kalem kalem, iş programı sözleşme eki. Pendik/İstanbul'da MEY İnşaat."
+      "description": "Arsanız sizde kalır, bedelini ödersiniz: teslim standardı kalem kalem, iş programı sözleşme eki. İstanbul'da MEY İnşaat."
     },
     "contact": {
       "title": "İletişim — MEY İnşaat, Tuzla/İstanbul",
@@ -48,5 +48,5 @@
       "description": "meyinsaat.com'da hangi verilerin işlendiği, çerez kullanımı, saklama süreleri ve KVKK kapsamındaki haklarınız."
     }
   },
-  "orgDescription": "İstanbul Pendik'te konut geliştiren ve inşa eden MEY Grubu markası. Tamamlanan üç bina: El Ele, Çamoğlu ve Maşuk apartmanları."
+  "orgDescription": "İstanbul'da konut geliştiren, kat karşılığı ve kentsel dönüşüm işleri yapan MEY Grubu markası. Tamamlanan binalar: El Ele, Çamoğlu ve Maşuk apartmanları."
 }

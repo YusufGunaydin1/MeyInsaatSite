@@ -8,7 +8,7 @@ intro: >-
   Binanız eski, riskli yapı tespiti düşünüyorsunuz ya da tespit çoktan yapıldı
   ve komşularınızla müteahhit konuşuyorsunuz. Bu sayfa süreci sırasıyla anlatır:
   hangi adım nereye başvurulur, hangi süre kaç gündür ve kat malikleri kararı
-  bugün hangi çoğunlukla alınır. MEY İnşaat İstanbul'da konut yapar; Pendik'te
+  bugün hangi çoğunlukla alınır. MEY İnşaat İstanbul'da konut yapar;
   tamamladığı binalar El Ele, Çamoğlu ve Maşuk apartmanlarıdır.
 sections:
   - title: "Süreç riskli yapı tespitiyle başlar"
@@ -74,7 +74,7 @@ faq:
   - soru: "Kentsel dönüşümde de kat karşılığı yapılabiliyor mu?"
     cevap: "Evet. Kanun, riskli yapının kat karşılığı veya hasılat paylaşımı gibi usullerle yeniden değerlendirilmesine salt çoğunlukla karar verilebileceğini düzenler. Kat karşılığı sözleşmesinde arsa sahibinin dikkat etmesi gerekenler ayrı sayfamızda."
   - soru: "Hangi ilçelerde çalışıyorsunuz?"
-    cevap: "Tamamladığımız binalar Pendik'te. İstanbul Anadolu Yakası'ndaki işler için görüşürüz; binanın adresini ve tespit durumunu konuşarak başlayalım."
+    cevap: "İstanbul genelinde çalışıyoruz. Tamamladığımız binalar Pendik'te, hâlen Erenköy'de devam eden bir projemiz var. Binanın adresini ve tespit durumunu söyleyin; ilçe fark etmeksizin değerlendirelim."
 disclaimer: >-
   Bu sayfadaki süreler ve yeter sayılar mevzuattan alınmıştır ve mevzuat
   değişebilir. Kendi binanız için bağlayıcı adım atmadan önce ilgili idareden

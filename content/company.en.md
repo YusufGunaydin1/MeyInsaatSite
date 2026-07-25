@@ -36,8 +36,8 @@ project to today, the buildings we have completed — **El Ele**, **Çamoğlu** 
 apartments**, all in Pendik, Istanbul —
 and in every one of them we have kept the same principle: we build what we draw.
 
-Today, MEY İnşaat continues to develop housing in Pendik and the surrounding districts on the
-Anatolian side of Istanbul, following a controlled and sustainable strategy that prioritizes growing right
+Today, MEY İnşaat develops housing across Istanbul, taking on land-share, urban-renewal and
+turnkey projects, following a controlled and sustainable strategy that prioritizes growing right
 over growing fast.
 
 ## Our Values

@@ -2,10 +2,10 @@
 locale: tr
 machineTranslated: false
 hero:
-  eyebrow: "GERÇEK ŞANTİYE · PENDİK, İSTANBUL"
+  eyebrow: "GERÇEK ŞANTİYE · İSTANBUL"
   headline: "YAŞAM ALANLARINIZI\nÖZENLE İNŞA EDİYORUZ."
   sub: >-
-    23 yıllık MEY Grubu deneyimiyle, 2021'den bu yana İstanbul Pendik'te
+    23 yıllık MEY Grubu deneyimiyle, 2021'den bu yana İstanbul'da
     ailelerin huzurla yaşayacağı konutlar inşa ediyoruz.
   primaryCta: "Projeleri gör"
   secondaryCta: "İletişim"
