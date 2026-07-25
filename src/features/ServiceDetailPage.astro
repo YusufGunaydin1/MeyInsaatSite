@@ -1,0 +1,154 @@
+---
+/*
+  Tek hizmet sayfası şablonu — kat karşılığı, kentsel dönüşüm, anahtar teslim.
+
+  Üç sayfa da aynı iskeleti kullanır; fark yalnız içeriktedir
+  (content/pages/<slug>.tr.md). Yalnız TR yayınlanır: arsa sahibi ve kat maliki
+  sorgularının tamamı Türkçedir ve mevzuat metni makine çevirisiyle
+  yayınlanmaz — bu yüzden [lang] ikizi YOK ve hreflang kümesi tek dildir.
+
+  Referans binalar yalnız `references` frontmatter'ı varsa basılır. Sayfa hiçbir
+  yerde proje sayısı, m² ya da tecrübe yılı iddia etmez; yalnız adı geçen
+  binalara link verir (content/company.json'daki sert gerçek kuralı).
+*/
+import Base from '../layouts/Base.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import { localePath, type Locale } from '../lib/i18n';
+import { ui, pageContent, projects } from '../lib/content';
+import { breadcrumbLd, serviceLd, faqLd } from '../lib/schema';
+import { contactNumber, telHref } from '../lib/contact';
+import { company } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+  /** content/pages/<slug>.tr.md ve /hizmetler/<slug> */
+  slug: string;
+  /** seo.<loc>.json → pages anahtarı */
+  seoKey: string;
+}
+
+const { locale, slug, seoKey } = Astro.props;
+const t = ui(locale);
+const fm = pageContent(slug, locale)?.frontmatter ?? {};
+const path = `/hizmetler/${slug}`;
+
+/* İşin fiilen alındığı ilçeler. Tamamlanan binalar Pendik'te; komşu ilçeler
+   "görüşürüz" seviyesinde ve sayfa metni de bunu böyle söylüyor. */
+const DISTRICTS = ['Pendik', 'Tuzla', 'Kartal', 'Sultanbeyli', 'Kurtköy'];
+
+const refs = fm.references
+  ? projects(locale).map((p) => ({
+      name: p.md?.frontmatter?.name ?? p.data.slug,
+      slug: p.data.slug,
+      location: p.data.location as string,
+    }))
+  : [];
+
+const jsonLd = [
+  breadcrumbLd(Astro.site, locale, [
+    { name: t.nav.home, path: '/' },
+    { name: t.nav.services, path: '/hizmetler' },
+    { name: fm.title },
+  ]),
+  serviceLd(Astro.site, locale, {
+    path,
+    name: fm.title,
+    desc: fm.intro,
+    districts: DISTRICTS,
+    references: refs.map((r) => ({ name: r.name, path: `/projeler/${r.slug}` })),
+  }),
+  ...(fm.faq?.length ? [faqLd(Astro.site, locale, path, fm.faq)] : []),
+];
+
+const salesPhone = contactNumber(company.salesContact.phone);
+const salesTel = telHref(company.salesContact.phone);
+---
+
+<Base
+  locale={locale}
+  page={seoKey}
+  path={path}
+  jsonLd={jsonLd}
+  hreflangLocales={[locale]}
+>
+  <section class="container-site section-pad">
+    <div class="guide-line-v ps-6 sm:ps-10">
+      <p class="t-tech text-mey-red mb-4">{fm.eyebrow}</p>
+      <h1 class="t-display-xl">{fm.title}</h1>
+      <p class="t-body-l mt-6 max-w-2xl">{fm.intro}</p>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2 mt-14">
+      {(fm.sections ?? []).map((s: { title: string; body: string }) => (
+        <div class="card p-6 reveal">
+          <h2 class="t-heading-m">{s.title}</h2>
+          <p class="t-body mt-3">{s.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {fm.steps?.length && (
+    <section class="bg-concrete-100 border-y border-line">
+      <div class="container-site section-pad">
+        <h2 class="t-display-l reveal">{fm.stepsTitle}</h2>
+        <div class="mt-12">
+          <ProcessSteps steps={fm.steps} />
+        </div>
+      </div>
+    </section>
+  )}
+
+  {refs.length > 0 && (
+    <section class="container-site section-pad">
+      <h2 class="t-display-l reveal">{fm.references.title}</h2>
+      <p class="t-body mt-4 max-w-2xl">{fm.references.note}</p>
+      <ul class="grid gap-4 sm:grid-cols-3 mt-10">
+        {refs.map((r) => (
+          <li class="card p-6 reveal">
+            <h3 class="t-heading-s">{r.name}</h3>
+            <p class="t-caption text-graphite-600 mt-2">{r.location}</p>
+            <a href={localePath(locale, `/projeler/${r.slug}`)} class="t-tech text-mey-red mt-4 inline-block">
+              {t.cta.readMore}
+              <span aria-hidden="true" class="rtl:-scale-x-100 inline-block">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {fm.faq?.length && (
+    <section class="bg-concrete-100 border-y border-line">
+      <div class="container-site section-pad">
+        <h2 class="t-display-l reveal">{fm.faqTitle}</h2>
+        <dl class="mt-10 max-w-3xl">
+          {fm.faq.map((q: { soru: string; cevap: string }) => (
+            <div class="border-t border-line py-6 reveal">
+              <dt class="t-heading-s">{q.soru}</dt>
+              <dd class="t-body mt-3">{q.cevap}</dd>
+            </div>
+          ))}
+        </dl>
+        {fm.disclaimer && (
+          <p class="t-caption text-graphite-400 mt-8 max-w-3xl">{fm.disclaimer}</p>
+        )}
+      </div>
+    </section>
+  )}
+
+  <section class="container-site section-pad">
+    <div class="guide-line-v ps-6 sm:ps-10 max-w-2xl">
+      <h2 class="t-display-l">{fm.cta?.title}</h2>
+      <p class="t-body-l mt-4">{fm.cta?.body}</p>
+      <div class="flex flex-wrap gap-3 mt-8">
+        {salesTel && salesPhone && (
+          <a href={salesTel} class="btn-primary" data-testid="service-call">
+            {salesPhone.display}
+          </a>
+        )}
+        <a href={localePath(locale, '/iletisim')} class="btn-ghost">{t.cta.contact}</a>
+      </div>
+    </div>
+  </section>
+</Base>

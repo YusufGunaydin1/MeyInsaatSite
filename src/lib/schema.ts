@@ -131,6 +131,65 @@ export function serviceCatalogLd(
   };
 }
 
+/** Tek bir hizmet sayfası (kat karşılığı, kentsel dönüşüm, anahtar teslim).
+    `areaServed` ilçe listesi olarak verilir: bu sayfalar il geneline değil,
+    işin fiilen alındığı ilçelere göre aranır. Referans bina adları yalnız
+    doğrulanmışsa geçilir — sayı, m² ya da yıl ASLA. */
+export function serviceLd(
+  site: URL | undefined,
+  locale: Locale,
+  svc: {
+    path: string;
+    name: string;
+    desc: string;
+    districts: string[];
+    references?: { name: string; path: string }[];
+  }
+): Json {
+  const url = absUrl(site, locale, svc.path);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': url + '#service',
+    url,
+    name: svc.name,
+    description: svc.desc,
+    serviceType: svc.name,
+    provider: { '@id': orgId(site) },
+    areaServed: svc.districts.map((d) => ({ '@type': 'AdministrativeArea', name: d })),
+    ...(svc.references?.length
+      ? {
+          subjectOf: svc.references.map((r) => ({
+            '@type': 'ApartmentComplex',
+            name: r.name,
+            url: absUrl(site, locale, r.path),
+          })),
+        }
+      : {}),
+  };
+}
+
+/** FAQPage — sayfada GÖRÜNEN soru/cevapların aynısı.
+    Google, sayfada bulunmayan bir cevabı yapısal veride görürse yapıyı yok sayar;
+    bu yüzden çağıran taraf her zaman render ettiği diziyi geçmelidir. */
+export function faqLd(
+  site: URL | undefined,
+  locale: Locale,
+  path: string,
+  qa: { soru: string; cevap: string }[]
+): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': absUrl(site, locale, path) + '#faq',
+    mainEntity: qa.map((q) => ({
+      '@type': 'Question',
+      name: q.soru,
+      acceptedAnswer: { '@type': 'Answer', text: q.cevap },
+    })),
+  };
+}
+
 /** Projeler listesi — görünen kart sırasıyla aynı. */
 export function projectListLd(
   site: URL | undefined,

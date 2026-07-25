@@ -30,6 +30,22 @@ services:
       imalatlar ve teslim. Süreç kat mülkiyeti ve anahtar teslimine kadar
       takip edilir.
     confirmed: true
+detailPages:
+  title: "Arsanız ya da binanız için"
+  intro: >-
+    İşin nasıl kurulduğu, elinizde ne olduğuna göre değişir: boş bir arsa,
+    yıkılıp yeniden yapılacak bir bina, ya da kendi paranızla yaptıracağınız
+    bir ev. Üçünün süreci de ayrı.
+  items:
+    - slug: "kat-karsiligi-insaat"
+      name: "Kat Karşılığı İnşaat"
+      desc: "Arsa sizden, inşaat bizden; bina bittiğinde bağımsız bölümler yazılı bir oranla paylaşılır. Pendik'te tamamladığımız üç bina bu modelle yapıldı."
+    - slug: "kentsel-donusum"
+      name: "Kentsel Dönüşüm"
+      desc: "Riskli yapı tespiti, kat malikleri kararı, tahliye ve yeniden yapım. 6306 sürecinin hangi adımı kaç gün sürüyor."
+    - slug: "anahtar-teslim-insaat"
+      name: "Anahtar Teslim İnşaat"
+      desc: "Arsa ve bina tamamen sizde kalır, işin bedelini ödersiniz. Teslim standardı kalem kalem yazılır."
 process:
   title: "Nasıl çalışırız"
   steps:

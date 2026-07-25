@@ -56,6 +56,28 @@ const photo = (name: string) =>
     </div>
   </section>
 
+  {/* Hizmet detay sayfaları yalnız TR yayında (mevzuat metni makine çevirisiyle
+      yayınlanmaz) — diğer dillerde bu blok hiç basılmaz, yoksa 404'e link verir. */}
+  {locale === 'tr' && fm.detailPages && (
+    <section class="bg-night-950 text-concrete-050 border-y border-line">
+      <div class="container-site section-pad">
+        <h2 class="t-display-l reveal">{fm.detailPages.title}</h2>
+        <p class="t-body-l mt-4 max-w-2xl text-concrete-100/80">{fm.detailPages.intro}</p>
+        <ul class="grid gap-4 md:grid-cols-3 mt-12">
+          {(fm.detailPages.items ?? []).map((it: any) => (
+            <li class="reveal">
+              <a href={`/hizmetler/${it.slug}/`} class="sd-link">
+                <h3 class="t-heading-m">{it.name}</h3>
+                <p class="t-caption mt-3 text-concrete-100/75">{it.desc}</p>
+                <span class="t-tech sd-go" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
   <section class="bg-concrete-100 border-y border-line">
     <div class="container-site section-pad">
       <h2 class="t-display-l reveal">{fm.process?.title}</h2>
@@ -82,3 +104,31 @@ const photo = (name: string) =>
     </div>
   </section>
 </Base>
+
+<style>
+  /* Koyu banttaki hizmet kartları: çerçeve kırmızıya döner, ok sağa kayar.
+     Gölge yok — tasarım brifi düz yüzey ister. */
+  .sd-link {
+    display: block;
+    height: 100%;
+    padding: 1.5rem;
+    border: 1px solid rgb(244 244 242 / 0.18);
+    border-radius: var(--radius-brand);
+    transition: border-color 160ms ease;
+  }
+  .sd-link:hover,
+  .sd-link:focus-visible { border-color: var(--color-red-on-dark); }
+  .sd-go {
+    display: inline-block;
+    margin-top: 1.25rem;
+    color: var(--color-red-on-dark);
+    transition: transform 160ms ease;
+  }
+  .sd-link:hover .sd-go { transform: translateX(0.25rem); }
+  :global([dir='rtl']) .sd-go { transform: scaleX(-1); }
+  :global([dir='rtl']) .sd-link:hover .sd-go { transform: scaleX(-1) translateX(0.25rem); }
+  @media (prefers-reduced-motion: reduce) {
+    .sd-go, .sd-link { transition: none; }
+    .sd-link:hover .sd-go { transform: none; }
+  }
+</style>

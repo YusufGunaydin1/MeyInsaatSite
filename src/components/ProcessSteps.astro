@@ -15,9 +15,9 @@ interface Props {
 const { steps } = Astro.props;
 ---
 
-<ol class="ps-steps reveal">
+<ol class="ps-steps reveal" style={`--ps-n:${steps.length}`}>
   {steps.map((s, i) => (
-    <li class="ps-step">
+    <li class="ps-step" style={`--ps-i:${i}`}>
       <span class="ps-level"><span class="t-tech ps-no">{String(i + 1).padStart(2, '0')}</span></span>
       <h3 class="t-heading-s mt-3">{s.name}</h3>
       <p class="t-caption text-graphite-600 mt-2">{s.desc}</p>
@@ -43,15 +43,14 @@ const { steps } = Astro.props;
   }
   @media (min-width: 900px) {
     .ps-steps {
-      grid-template-columns: repeat(4, 1fr);
+      /* column count follows the step count — the service pages run five stages,
+         /hizmetler runs four, and both must keep the rising silhouette */
+      grid-template-columns: repeat(var(--ps-n, 4), 1fr);
       gap: 0 2rem;
       align-items: end;
       border-bottom: 1px solid var(--color-graphite-400);
     }
     /* each step ends one level above the previous — the rising-build silhouette */
-    .ps-step:nth-child(1) { padding-bottom: 1.5rem; }
-    .ps-step:nth-child(2) { padding-bottom: 4rem; }
-    .ps-step:nth-child(3) { padding-bottom: 6.5rem; }
-    .ps-step:nth-child(4) { padding-bottom: 9rem; }
+    .ps-step { padding-bottom: calc(1.5rem + var(--ps-i, 0) * 2.5rem); }
   }
 </style>
