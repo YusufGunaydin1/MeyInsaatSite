@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { breadcrumbLd } from '../lib/schema';
 import ContactRouteBoard from '../components/contact/ContactRouteBoard.astro';
+import ContactFormPanel from '../components/contact/ContactFormPanel.astro';
 import { type Locale } from '../lib/i18n';
 import { ui } from '../lib/content';
 
@@ -19,4 +20,5 @@ const jsonLd = breadcrumbLd(Astro.site, locale, [
 
 <Base locale={locale} page="contact" path="/iletisim" jsonLd={jsonLd}>
   <ContactRouteBoard locale={locale} />
+  <ContactFormPanel locale={locale} />
 </Base>

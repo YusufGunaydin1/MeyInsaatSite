@@ -287,7 +287,12 @@ const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hak
       </section>
     </div>
 
-    <StickyRail konu="D-12 · 3+2 Dubleks" base={basePrefix} />
+    <StickyRail
+      konu="D-12 · 3+2 Dubleks"
+      subject={`Web Formu · D-12 · 3+2 Dubleks · ${proje.ad}`}
+      formLocation="daire-detay-d12"
+      base={basePrefix}
+    />
   </div>
 
   <MobileSaleBar fiyat={tl(d.unit.fiyat!)} etiket="Son daire · D-12" konu="D-12 · 3+2 çatı dubleksi" />
@@ -341,7 +346,9 @@ const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hak
     color: var(--color-graphite-900);
   }
   .kce-meta { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 0.5rem; }
-  .kce-meta span { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--color-graphite-400); }
+  /* Künye satırı başlığın altındaki tek teknik satır: 500/graphite-400 ile
+     soluk kalıyordu. Gerçek Plex Mono 600 + bir kademe koyu ton. */
+  .kce-meta span { display: inline-flex; align-items: center; gap: 0.3rem; font-weight: 600; color: var(--color-graphite-600); }
   .kce-price-box { text-align: end; display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
   .kce-price {
     font-family: var(--font-display);

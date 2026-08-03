@@ -1,0 +1,68 @@
+---
+/*
+  /iletisim talep formu — satılık raylarındaki ADA'nın aynısı, geniş yerleşimde.
+  Kanallar burada OFİS hattıdır: satış numarası ve WhatsApp yalnız
+  /satilik-daireler/** yüzeyinde yayımlanır, genel talepler santrale gider.
+*/
+import RailForm from '../showcase/satilik/kompakt/RailForm';
+import { company } from '../../lib/content';
+import { contactNumber, telHref } from '../../lib/contact';
+import type { Locale } from '../../lib/i18n';
+import '../showcase/satilik/kompakt/kompakt.css';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const phone = contactNumber(company.contact.phone);
+const phoneHref = telHref(company.contact.phone);
+const email = company.contact.email;
+
+const fallback = [
+  ...(phone && phoneHref ? [{ kind: 'call' as const, label: `Ara · ${phone.display}`, href: phoneHref }] : []),
+  ...(email ? [{ kind: 'email' as const, label: `E-posta · ${email}`, href: `mailto:${email}` }] : []),
+];
+---
+
+{/* Form metinleri Türkçe: RTL yerelde bile kendi yönünü taşır, aksi hâlde
+    etiketler ve örnek numara ters akar. */}
+<section
+  class="cf"
+  aria-labelledby="contact-form-title"
+  data-testid="contact-form"
+  lang="tr"
+  dir={locale === 'ar' ? 'ltr' : undefined}
+>
+  <div class="container-site cf-wrap">
+    <p class="t-tech cf-kicker">TALEP FORMU</p>
+    <h2 id="contact-form-title" class="t-heading-m cf-title">Bize Yazın</h2>
+    <p class="cf-sub">
+      Formu doldurun; aynı gün içinde size dönüş yapalım. Acele ediyorsanız doğrudan arayın.
+    </p>
+
+    <RailForm
+      client:load
+      wide
+      konu="İletişim"
+      daire="Genel iletişim"
+      subject="Web Formu · İletişim"
+      formLocation="iletisim"
+      fallback={fallback}
+      privacyHref="/gizlilik-ve-cerez-politikasi/"
+      accessKey={company.contact.formAccessKey ?? ''}
+    />
+  </div>
+</section>
+
+<style>
+  .cf {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+    border-block-start: 1px solid var(--color-line);
+    background-color: var(--color-concrete-050);
+  }
+  .cf-wrap { max-width: 46rem; }
+  .cf-kicker { color: var(--color-mey-teal-700); }
+  .cf-title { margin-top: 0.35rem; }
+  .cf-sub { margin-block: 0.5rem 1.1rem; color: var(--color-graphite-600); }
+</style>

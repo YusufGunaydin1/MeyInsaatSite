@@ -139,7 +139,12 @@ const projeDetay = [
       </section>
     </div>
 
-    <StickyRail konu="D-11 (satıldı) · benzer daireler" base={basePrefix} />
+    <StickyRail
+      konu="D-11 (satıldı) · benzer daireler"
+      subject={`Web Formu · D-11 (satıldı) · benzer daireler · ${proje.ad}`}
+      formLocation="daire-detay-d11"
+      base={basePrefix}
+    />
   </div>
 </Base>
 
@@ -166,7 +171,8 @@ const projeDetay = [
   .kcd-chip { padding: 0.2rem 0.5rem; border-radius: var(--radius-brand); border: 1px solid var(--color-line); color: var(--color-graphite-600); }
   .kcd-chip.is-red { background: var(--color-mey-red); border-color: var(--color-mey-red); color: #fff; }
   .kcd-chip.is-teal { border-color: var(--color-mey-teal-700); color: var(--color-mey-teal-700); }
-  .kcd-meta { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--color-graphite-400); }
+  /* D-12 künye satırıyla aynı ağırlık — iki detay sayfası ayrışmasın. */
+  .kcd-meta { display: inline-flex; align-items: center; gap: 0.3rem; font-weight: 600; color: var(--color-graphite-600); }
   .kcd-head-price { text-align: end; display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
   .kcd-sold-summary { color: var(--color-mey-red); font-weight: 600; }
   .kcd-head-actions { grid-column: 1 / -1; display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.2rem; }

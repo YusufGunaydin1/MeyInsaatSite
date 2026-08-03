@@ -94,9 +94,13 @@ const targets = {
           var isWa = href.indexOf('wa.me/') > -1;
           var digits = href.replace(/[^0-9]/g, '');
           var salesDigits = SALES_E164.replace(/[^0-9]/g, '');
+          var where = a.getAttribute('data-testid') || a.className || 'link';
+          // GTM tarafında tetikleyici kurmayı kolaylaştıran adlandırılmış olay.
+          // Ads dönüşümü meyTrackLead'den gider; burada İKİNCİ bir dönüşüm YOK.
+          window.dataLayer.push({ event: isWa ? 'click_whatsapp' : 'click_phone', link_location: where });
           window.meyTrackLead(
             isWa ? 'whatsapp' : 'call',
-            a.getAttribute('data-testid') || a.className || 'link',
+            where,
             isWa || digits.indexOf(salesDigits) > -1
           );
         },

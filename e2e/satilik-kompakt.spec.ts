@@ -40,8 +40,8 @@ test('liste: nav Satılık aktif + sekmeler/filtre/ray + gerçek veri (temsilî 
   await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveText(/^satılık$/i);
   await expect(page.getByTestId('kl-tab-tumu')).toContainText('Tümü (5)');
   await revealMobileFilters(page);
-  // Web3Forms anahtarı boş → hızlı iletişim formu nazikçe kapalı (dürüst not, ölü gönderim yok)
-  await expect(page.getByTestId('kcf-offline')).toBeVisible();
+  // hızlı iletişim panosu rayda duruyor (form/not ayrımı lead-form.spec.ts'te ölçülür)
+  await expect(page.locator('.kcf').first()).toBeVisible();
   await expect(page.getByTestId('kc-mock-chip')).toHaveCount(0); // temsilî çip kaldırıldı
   await expect(page.locator('body')).not.toContainText('temsilî');
   await expect(page.getByTestId('kl-sales-phone')).toHaveAttribute('href', 'tel:+905326256812');
@@ -251,18 +251,13 @@ test('detay: D-11 sold durumunda fiyatsız; D-12 fiyatı değişmeden satışta'
   await expect(similarD11.locator('.kc-sim-fiyat')).toHaveCount(0);
 });
 
-test('ray formu: Web3Forms anahtarı yokken nazikçe kapalı — ölü gönderim yerine telefon/WhatsApp', async ({ page }) => {
-  // content/company.json'da formAccessKey boş → RailForm dürüst notu gösterir, form/submit RENDER ETMEZ.
-  // Anahtar eklendiğinde submit akışı testi (mock Web3Forms ile) geri getirilmelidir.
+test('ray formu adası hidratlanır; birincil eylem satış hattıdır', async ({ page }) => {
+  // Formun kendi davranışı (anahtar var/yok, doğrulama, gönderim, hata) e2e/lead-form.spec.ts'te.
+  // Burada yalnız rayın taşıdığı şey ölçülür: ada canlı mı, telefon/WhatsApp doğru mu.
   await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
   const railFormIsland = page.locator('astro-island[component-url*="RailForm"]');
   await expect.poll(() => railFormIsland.evaluate((element) => element.hasAttribute('ssr'))).toBe(false);
-
-  // ölü "Gönder" yok; onun yerine dürüst not
-  await expect(page.getByTestId('kcf-offline')).toBeVisible();
-  await expect(page.getByTestId('kcf-form')).toHaveCount(0);
-  await expect(page.getByTestId('kcf-submit')).toHaveCount(0);
-  await expect(page.getByTestId('kcf-offline')).toContainText(/telefon veya WhatsApp/i);
+  await expect(page.locator('.kcf').first()).toBeVisible();
 
   // birincil eylem satış hattı telefon + WhatsApp (rayın üstünde canlı)
   await expect(page.getByTestId('kc-rail-phone')).toHaveAttribute('href', 'tel:+905326256812');

@@ -5,7 +5,7 @@ title: "Gizlilik ve Çerez Politikası"
 intro: >-
   Bu sayfa, meyinsaat.com'u ziyaret ettiğinizde hangi verilerin işlendiğini, neden
   işlendiğini ve bu konuda hangi haklara sahip olduğunuzu anlatır.
-updated: "24.07.2026"
+updated: "03.08.2026"
 sections:
   - title: "Veri sorumlusu"
     body: >-
@@ -13,11 +13,16 @@ sections:
       E-posta: info@meykozmetik.com. Telefon: +90 (0216) 394 05 51.
   - title: "Hangi verileri işliyoruz"
     body: >-
-      Sitede üyelik, hesap veya form yoktur; kendiliğinden hiçbir kişisel veri toplanmaz.
-      İki durumda veri işlenir: (1) çerezleri kabul ederseniz, ziyaret istatistikleri ve
+      Sitede üyelik veya hesap yoktur; yalnızca gezinmekle hiçbir kişisel veri toplanmaz.
+      Üç durumda veri işlenir: (1) çerezleri kabul ederseniz, ziyaret istatistikleri ve
       reklam ölçümü için tarayıcınıza çerez yazılır ve Google'a anonim/istatistiksel
       ölçüm verisi iletilir; (2) telefon veya WhatsApp ile bize ulaşırsanız, paylaştığınız
-      ad ve iletişim bilgisi talebinizi yanıtlamak için işlenir.
+      ad ve iletişim bilgisi talebinizi yanıtlamak için işlenir; (3) iletişim formunu
+      doldurup gönderirseniz yazdığınız ad soyad, telefon, varsa e-posta ve mesaj —
+      talebin hangi daire ve hangi sayfa üzerinden geldiği bilgisiyle birlikte — bize
+      ulaşır. Form gönderimi Web3Forms (Web3Forms LLC) hizmeti üzerinden iletilir;
+      Web3Forms yalnızca iletim aracıdır ve mesajı MEY İnşaat'ın doğrulanmış e-posta
+      adresine yönlendirir. Bu sitede form kayıtlarını tutan bir veri tabanı yoktur.
   - title: "Çerezler"
     body: >-
       Zorunlu çerezler: yalnızca çerez tercihinizin hatırlanması için tarayıcınızda tutulan
@@ -28,9 +33,11 @@ sections:
   - title: "İşleme amacı ve hukuki sebep"
     body: >-
       Ziyaret istatistiği ve reklam ölçümü açık rızanıza dayanır (KVKK m.5/1); rıza
-      vermezseniz bu işleme yapılmaz. Telefon veya WhatsApp ile ilettiğiniz talepler,
-      sözleşmenin kurulması ve meşru menfaat kapsamında, yalnızca talebinizi yanıtlamak
-      için işlenir.
+      vermezseniz bu işleme yapılmaz. İletişim formu da açık rızanıza dayanır: formu
+      göndermeden önce onay kutusunu işaretlemeniz gerekir ve işaretlemezseniz form
+      gönderilmez. Telefon veya WhatsApp ile ilettiğiniz talepler, sözleşmenin kurulması
+      ve meşru menfaat kapsamında, yalnızca talebinizi yanıtlamak için işlenir. Form
+      verileriniz pazarlama listesine eklenmez ve üçüncü kişilere satılmaz.
   - title: "Saklama süresi"
     body: >-
       Çerez tercihiniz siz silene kadar tarayıcınızda kalır. Analitik veriler Google'ın
@@ -40,7 +47,9 @@ sections:
     body: >-
       Google Analytics ve Google Ads kullanıldığında ölçüm verisi Google'ın yurt dışındaki
       sunucularında işlenebilir. Bu aktarım yalnızca çerezleri kabul etmeniz halinde
-      gerçekleşir.
+      gerçekleşir. İletişim formunu gönderdiğinizde mesajınız, iletim sırasında Web3Forms'un
+      yurt dışındaki sunucularından geçer; bu aktarım yalnızca formu gönderme tercihinizle
+      ve onay kutusunu işaretlemenizle gerçekleşir.
   - title: "Haklarınız (KVKK m.11)"
     body: >-
       Kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme,

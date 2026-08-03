@@ -509,7 +509,22 @@ export default function SaleListing({
         <div className="kl-quick">
           <h3 className="t-heading-s">Hızlı İletişim</h3>
           <p className="t-caption kl-quick-sub">Size en uygun daireyi birlikte bulalım.</p>
-          <RailForm konu="Satılık daireler" accessKey={formAccessKey} />
+          <RailForm
+            konu="Satılık daireler"
+            daire="Satılık daireler · liste"
+            subject="Web Formu · Satılık Daireler"
+            formLocation="satilik-liste"
+            fallback={[
+              ...(salesPhone && salesPhoneHref
+                ? [{ kind: 'call' as const, label: `Ara · ${salesPhone}`, href: salesPhoneHref }]
+                : []),
+              ...(salesWhatsapp && salesWhatsappHref
+                ? [{ kind: 'whatsapp' as const, label: "WhatsApp'tan Sor", href: salesWhatsappHref }]
+                : []),
+            ]}
+            privacyHref="/gizlilik-ve-cerez-politikasi/"
+            accessKey={formAccessKey}
+          />
           <div className="kl-quick-lines">
             {salesPhone && salesPhoneHref && (
               <a href={salesPhoneHref} data-testid="kl-sales-phone"><Ic d={I.tel} /> {salesPhone}</a>

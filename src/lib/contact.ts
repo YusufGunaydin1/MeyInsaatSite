@@ -37,29 +37,74 @@ export function whatsappHref(value: unknown, message?: string): string | null {
 */
 export const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
+/** Web3Forms her gönderimde geçerli bir `email` ister; ziyaretçi yalnız telefon
+    bıraktıysa gönderen olarak bu adres kullanılır, telefon gövdede tam durur. */
+const NO_EMAIL_SENDER = 'bildirim@meyinsaat.com';
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function isValidEmail(value: string): boolean {
+  return EMAIL_RE.test(value.trim());
+}
+
+/*
+  Türkiye numaraları elle çok farklı yazılır: "0532 625 68 12", "532 625 68 12",
+  "+90 532 625 68 12", "+90-532-625-68-12". Biçimi dayatmak yerine yalnız rakam
+  sayısına bakılır — geçerli bir numarayı reddetmek satış kaybıdır.
+*/
+export function isValidTrPhone(value: string): boolean {
+  const digits = value.replace(/\D/g, '');
+  return digits.length >= 10 && digits.length <= 13;
+}
 
 export interface LeadFields {
   accessKey: string;
-  /** hangi daire/konu hakkında */
-  konu: string;
+  /** e-posta konu satırının tamamı — sayfaya göre çağıran belirler */
+  subject: string;
+  /** hangi daire hakkında; talebin bağlamı */
+  daire: string;
+  /** formun gönderildiği tam adres */
+  sayfa: string;
   name: string;
-  /** ziyaretçinin telefonu VEYA e-postası */
-  contact: string;
+  phone: string;
+  /** isteğe bağlı */
+  email: string;
   message: string;
 }
 
-/** Web3Forms gövdesi. `contact` telefon da olabilir e-posta da; ikisini de korur. */
-export function leadPayload({ accessKey, konu, name, contact, message }: LeadFields) {
-  const trimmedContact = contact.trim();
-  const isEmail = EMAIL_RE.test(trimmedContact);
+/*
+  Web3Forms gövdesi. `access_key`, `subject`, `from_name`, `botcheck` ayrılmış
+  alanlardır; `telefon`, `daire`, `sayfa` özel alan olarak e-postaya tabloda düşer.
+*/
+export function leadPayload({
+  accessKey,
+  subject,
+  daire,
+  sayfa,
+  name,
+  phone,
+  email,
+  message,
+}: LeadFields) {
+  const trimmedEmail = email.trim();
+  const hasEmail = isValidEmail(trimmedEmail);
+  const trimmedPhone = phone.trim();
   return {
     access_key: accessKey,
-    subject: `Web sitesi talebi — ${konu}`,
+    subject,
+    from_name: 'meyinsaat.com',
     name: name.trim(),
-    // e-posta verildiyse yanıt adresi olur; telefonsa gövdede tam olarak durur
-    email: isEmail ? trimmedContact : 'bildirim@meyinsaat.com',
-    message: [message.trim(), `Konu: ${konu}`, `İletişim: ${trimmedContact}`]
+    // e-posta verildiyse yanıt doğrudan ziyaretçiye gider
+    email: hasEmail ? trimmedEmail : NO_EMAIL_SENDER,
+    telefon: trimmedPhone,
+    daire,
+    sayfa,
+    // Gönderen adresi vekil olabildiği için telefon/e-posta gövdede de yazılır.
+    message: [
+      message.trim(),
+      `Telefon: ${trimmedPhone}`,
+      hasEmail ? `E-posta: ${trimmedEmail}` : 'E-posta: verilmedi',
+    ]
       .filter(Boolean)
       .join('\n'),
     botcheck: '',

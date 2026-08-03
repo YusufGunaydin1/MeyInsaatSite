@@ -77,8 +77,10 @@ test('confirmed company identity appears on every corporate locale', async ({ pa
 test('general contact publishes the office details without leaking sales contacts', async ({ page }) => {
   await page.goto(u('/iletisim'));
   const main = page.locator('main');
-  await expect(main.locator('a[href="tel:+902163940551"]')).toContainText('+90 (0216) 394 05 51');
-  await expect(main.locator('a[href="mailto:info@meykozmetik.com"]')).toContainText('info@meykozmetik.com');
+  // Ofis numarası sayfada birden çok yerde geçer (yol panosu + talep formunun
+  // kanal düğmeleri); kanonik olanı testid taşır, sızıntı denetimi aşağıda.
+  await expect(page.getByTestId('contact-live-phone')).toContainText('+90 (0216) 394 05 51');
+  await expect(main.locator('a[href="mailto:info@meykozmetik.com"]').first()).toContainText('info@meykozmetik.com');
   await expect(main).toContainText('Orhanlı, Vakum Sk. No:26, 34956 Tuzla/İstanbul');
   await expect(main.locator('a[href^="https://wa.me/"]')).toHaveCount(0);
   await expect(main).not.toContainText('+90 532 625 68 12');

@@ -15,6 +15,9 @@
 @import "@fontsource/ibm-plex-sans/500.css";
 @import "@fontsource/ibm-plex-sans/600.css";
 @import "@fontsource/ibm-plex-mono/500.css";
+/* 600: teknik katmanın vurgulu kullanımı (daire künye satırı). Sentetik kalın
+   yerine gerçek SemiBold — brief §14 gövde/teknik tavanı 600'dür. */
+@import "@fontsource/ibm-plex-mono/600.css";
 @import "@fontsource/ibm-plex-sans-arabic/400.css";
 @import "@fontsource/ibm-plex-sans-arabic/500.css";
 @import "@fontsource/ibm-plex-sans-arabic/700.css";

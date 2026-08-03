@@ -712,10 +712,24 @@
   border-radius: var(--radius-brand);
   padding: 0.9rem 1rem 1rem;
 }
-.kcf-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+/* Bal küpü kırpılarak gizlenir, EKRAN DIŞINA itilerek değil: `left: -9999px`
+   RTL yerelde (/ar) belgeyi 9999px genişletip yatay kaydırma yaratıyordu. */
+.kcf-hp {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
 .kcf-fields { display: flex; flex-direction: column; gap: 0.6rem; }
+.kcf-wide { padding: 1.25rem 1.35rem 1.4rem; }
+/* Geniş yerleşim: ad + telefon yan yana, e-posta ve mesaj tam genişlik.
+   E-posta yarım kalırsa yanında ölü bir hücre açılıyor. */
 .kcf-wide .kcf-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 0.9rem; }
-.kcf-wide .kcf-row-msg { grid-column: 1 / -1; }
+.kcf-wide .kcf-row-email, .kcf-wide .kcf-row-msg { grid-column: 1 / -1; }
 .kcf-row label {
   display: block;
   font-size: 0.8125rem;
@@ -723,21 +737,90 @@
   color: var(--color-graphite-900);
   margin-bottom: 0.25rem;
 }
+.kcf-optional { font-weight: 400; color: var(--color-graphite-400); }
+/* 16px ALTINDA iOS Safari alana odaklanınca sayfayı yakınlaştırır ve bir daha
+   geri çıkmaz — form ölçüsü değil, mobil kullanılabilirlik kuralı. */
 .kcf-row input, .kcf-row textarea {
   width: 100%;
-  font: inherit;
-  font-size: 0.875rem;
-  padding: 0.5rem 0.6rem;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  min-height: 44px;
+  padding: 0.55rem 0.6rem;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-brand);
   background: var(--color-concrete-050);
   color: var(--color-graphite-900);
 }
-.kcf-row input[aria-invalid='true'] { border-color: var(--color-mey-red); }
+.kcf-row textarea { min-height: 5.5rem; resize: vertical; line-height: 1.4; }
+.kcf-row input[aria-invalid='true'], .kcf-row textarea[aria-invalid='true'] { border-color: var(--color-mey-red); }
 .kcf-err { margin-top: 0.25rem; font-size: 0.75rem; color: var(--color-mey-red); }
+
+/* KVKK onayı — kutu küçük, dokunma hedefi 44px'i etiketle birlikte tutturur. */
+.kcf-consent {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  margin-top: 0.8rem;
+}
+.kcf-consent input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-mey-red);
+  cursor: pointer;
+}
+.kcf-consent input[aria-invalid='true'] { outline: 2px solid var(--color-mey-red); outline-offset: 2px; }
+.kcf-consent label {
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--color-graphite-600);
+  cursor: pointer;
+}
+.kcf-consent a { color: var(--color-mey-red); text-decoration: underline; text-underline-offset: 2px; }
+
+/* Canlı bölge — YALNIZ duyuru içindir, görünmez. Durumu gören kullanıcı için
+   düğme yazısı ve başarı/hata paneli zaten anlatıyor; görünür bırakılınca aynı
+   cümle panelin hemen üstünde ikinci kez yazıyordu. */
+.kcf-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Asla çıkmaz sokak: her panel gerçek kanalları düğme olarak taşır. */
+.kcf-fallback { margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.kcf-channel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-graphite-900);
+  border: 1px solid var(--color-graphite-900);
+  border-radius: var(--radius-brand);
+  transition: background-color 200ms ease-out;
+}
+.kcf-channel:hover { background: var(--color-concrete-100); }
+.kcf-channel.is-primary { background: var(--color-mey-red); border-color: var(--color-mey-red); color: #fff; }
+.kcf-channel.is-primary:hover { background: var(--color-mey-red-700); }
+
+/* JS kapalıyken ada hidratlanmaz: sunucudan gelen form ölü kalırdı. Formu gizle,
+   kanalları göster. .js sınıfını Base.astro <head>'de basar, yanıp sönme olmaz. */
+.kcf-nojs { display: none; }
+html:not(.js) .kcf-body { display: none; }
+html:not(.js) .kcf-nojs { display: block; }
+
 .kcf-submit {
   margin-top: 0.75rem;
   width: 100%;
+  min-height: 44px;
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 0.9rem;
@@ -754,9 +837,16 @@
 .kcf-wide .kcf-submit { width: auto; padding-inline: 2rem; }
 .kcf-privacy { margin-top: 0.5rem; font-size: 0.75rem; color: var(--color-graphite-400); }
 .kcf-kicker { color: var(--color-mey-teal-700); }
+/* Panel kendi kutusunu taşır: .kcf sarmalayıcısının kenarlığını iki ray da
+   sıfırladığı için ondan miras alınamaz. */
+.kcf-panel {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-brand);
+  padding: 0.75rem 0.85rem;
+}
 .kcf-panel-title { font-weight: 600; color: var(--color-graphite-900); margin-top: 0.3rem; }
 .kcf-panel-text { font-size: 0.875rem; margin-top: 0.2rem; }
-.kcf-success { border-color: var(--color-mey-teal-700); }
+.kcf-success { border-color: var(--color-mey-teal-700); background: rgb(73 193 198 / 0.08); }
 /* Form kapalı notu — her iki ray da .kcf'nin kenar/dolgusunu sıfırlar, o yüzden
    kendi kutusunu !important ile geri kurar (anahtar gelince form döner). */
 .kcf-offline {
@@ -766,10 +856,8 @@
   padding: 0.75rem 0.85rem !important;
 }
 .kcf-failure {
-  border: 1px solid var(--color-mey-red);
-  border-radius: var(--radius-brand);
+  border-color: var(--color-mey-red);
   background: rgb(181 35 35 / 0.06);
-  padding: 0.6rem 0.7rem;
   margin-bottom: 0.7rem;
 }
 .kcf-again {
