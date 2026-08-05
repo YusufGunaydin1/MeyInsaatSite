@@ -11,6 +11,12 @@
     "whatsapp": "",
     "form": ""
   },
+  "_labelActions": {
+    "call": "MEY İnşaat - Telefon (kategori: Kişi, sayım: Bir, tıklama aralığı: 90 gün)",
+    "whatsapp": "henüz oluşturulmadı",
+    "form": "henüz oluşturulmadı"
+  },
+  "_labelActionsHelp": "Yukarıdaki etiketler okunamaz dizelerdir; hangisinin Ads'teki hangi dönüşüm eylemine ait olduğunu burada tutuyoruz. Ads hesabı (AW-17569804185) MEY Kozmetik ile ortak — İnşaat eylemleri 'MEY İnşaat - ' önekiyle ayrılır.",
   "_labelsHelp": "Her dönüşüm eyleminin kendi etiketi vardır; Ads'in verdiği 'AW-123456789/AbC-D_efG' dizesinin EĞİK ÇİZGİDEN SONRAKİ kısmını yazın. Etiketi boş kalan eylem için Ads dönüşümü gönderilmez (GA4 olayı yine de gider).",
   "consentBanner": true,
   "_consentHelp": "true: ziyaretçi kabul edene kadar çerezler kapalı (Consent Mode v2 varsayılan 'denied') ve alt bantta onay kutusu gösterilir — KVKK/GDPR için savunulabilir varsayılan. false: onay bandı gösterilmez ve izin 'granted' başlar; yalnız hukuk danışmanınız bunu onaylarsa kullanın."
