@@ -4,7 +4,7 @@
   "_verificationHelp": "Search Console'da 'HTML etiketi' yöntemini seçerseniz verilen <meta name=\"google-site-verification\" content=\"...\"> içindeki content değerini buraya yapıştırın; site her sayfaya basar. Alan adı (DNS TXT) doğrulaması yaparsanız buraya bir şey yazmanıza gerek yoktur.",
   "ga4MeasurementId": "",
   "_ga4Help": "GA4 → Yönetici → Veri akışları → web akışı → 'Ölçüm Kimliği'. Biçim: G-XXXXXXXXXX",
-  "adsConversionId": "",
+  "adsConversionId": "AW-17569804185",
   "_adsHelp": "Google Ads → Hedefler → Dönüşümler → bir dönüşüm eylemi → Etiket kurulumu. Biçim: AW-123456789",
   "adsConversionLabels": {
     "call": "",
