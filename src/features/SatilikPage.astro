@@ -4,7 +4,7 @@
   kartı) → sekme/filtre/sıralama + kart ızgarası + hızlı iletişim rayı → kat
   planları → CTA. TR + [lang] rotaları bu bileşeni sarar; sayfa içeriği şimdilik TR.
 
-  İNDEKSLENİR: D-12 gerçek satış verisiyle canlıya alındı (sahibinden ilanı) →
+  İNDEKSLENİR: D-21 gerçek satış verisiyle canlıya alındı (sahibinden ilanı) →
   noindex kaldırıldı, sitemap istisnası da kaldırıldı (astro.config.mjs — yalnız
   daire-1 sitemap dışı, çünkü satıldı).
 */
@@ -17,7 +17,7 @@ import CtaBand from '../components/showcase/satilik/kompakt/CtaBand.astro';
 import MobileSaleBar from '../components/showcase/satilik/kompakt/MobileSaleBar.astro';
 import SaleListing, { type ListingCard, type ListingImage } from '../components/showcase/satilik/kompakt/SaleListing.tsx';
 import { cardImage } from '../components/showcase/satilik/kompakt/assets.ts';
-import { listing, listingProjeler, satistakiDaireSayisi, tl, DETAY_SLUG } from '../components/showcase/satilik/kompakt/data.ts';
+import { listing, listingProjeler, satistakiDaireSayisi, tl, DETAY_SLUG, WA_KONU } from '../components/showcase/satilik/kompakt/data.ts';
 import { publicAsset, entry } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
 import { ui, company } from '../lib/content';
@@ -42,9 +42,6 @@ const basePrefix = localePath(locale, '/').replace(/\/$/, '');
 const root = localePath(locale, '/satilik-daireler');
 const salesPhone = contactNumber(company.salesContact.phone);
 const salesWhatsapp = contactNumber(company.salesContact.whatsapp);
-/* Her WhatsApp girişi ön dolu açılsın: ziyaretçi ilk cümleyi yazmak zorunda
-   kalmasın, talep hangi daire için geldiği belli olarak düşsün. */
-const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hakkında bilgi almak istiyorum.';
 
 const heroKey = 'daire-1/bina-dis.png';
 const hero = publicAsset(heroKey);
@@ -248,7 +245,7 @@ const trOnly = locale !== 'tr';
       <p>
         El Ele Apartmanı, Mey İnşaat’ın Pendik Batı Mahallesi’nde tamamladığı, kat mülkiyetli
         sıfır bir konut binasıdır. Bina teslime hazırdır; şu an yalnızca 5. kattaki 3+2 çatı
-        dubleksi (D-12) satılıktır ve aracısız, doğrudan binayı yapan Mey İnşaat’tan satın alınır.
+        dubleksi (D-21) satılıktır ve aracısız, doğrudan binayı yapan Mey İnşaat’tan satın alınır.
       </p>
       <p>
         Bina; sahil parkı, market, eczane ve ilkokulun yürüme mesafesinde, Marmaray ve metro
@@ -263,7 +260,7 @@ const trOnly = locale !== 'tr';
     <CtaBand base={basePrefix} />
   </div>
 
-  <MobileSaleBar fiyat={tl(13_750_000)} etiket="Son daire · D-12" konu="D-12 · 3+2 çatı dubleksi" />
+  <MobileSaleBar fiyat={tl(13_750_000)} etiket="Son daire · D-21" konu="D-21 · 3+2 çatı dubleksi" />
 </Base>
 
 <style>

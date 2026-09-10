@@ -110,7 +110,7 @@ test('yönlendirme sayfaları noindex taşır ve hedefe canonical verir', () => 
   }
 });
 
-test('satılan daire sayfası noindex ve sitemap dışıdır; canlı D-12 indekslenir', () => {
+test('satılan daire sayfası noindex ve sitemap dışıdır; canlı D-21 indekslenir', () => {
   const sold = real.filter((p) => p.file.includes('el-ele-apartmani-3-2-dubleks-satildi'));
   expect(sold.length).toBe(4); // dört dil
   for (const p of sold) {

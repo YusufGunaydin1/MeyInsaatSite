@@ -1,6 +1,6 @@
 ---
 /*
-  DAİRE DETAY — D-12 / Daire 2 (canlı). Üst bölge 2026-07-16'da D-11'in
+  DAİRE DETAY — D-21 / Daire 2 (canlı). Üst bölge 2026-07-16'da D-11'in
   varsayılanına eşitlendi: galeri | künye (.kcg, ortak); eski ref-b geniş karusel
   artık galeri adasındaki ⟷ anahtarıyla SEÇMELİ geniş görünüm. Sayfanın geri
   kalanı ref-b kimliğini korur: özellik çipleri, oda ölçüleri, genel bakış +
@@ -19,7 +19,7 @@ import StickyRail from '../components/showcase/satilik/kompakt/StickyRail.astro'
 import MobileSaleBar from '../components/showcase/satilik/kompakt/MobileSaleBar.astro';
 import Carousel from '../components/showcase/satilik/kompakt/Carousel.tsx';
 import { carouselItems } from '../components/showcase/satilik/kompakt/assets.ts';
-import { detay, specsD2, odaOlculeriD2, tl, proje, sss, DETAY_SLUG } from '../components/showcase/satilik/kompakt/data.ts';
+import { detay, specsD2, odaOlculeriD2, tl, proje, sss, DETAY_SLUG, WA_KONU } from '../components/showcase/satilik/kompakt/data.ts';
 import { building } from '../components/showcase/satilik/data.ts';
 import { publicAsset, entry } from '../components/showcase/satilik/media.ts';
 import { localePath, type Locale } from '../lib/i18n';
@@ -65,9 +65,9 @@ const ogTeras = await getImage({ src: publicAsset('daire-2/d2-teras.png'), width
 const ogBina = await getImage({ src: publicAsset(binaKey), width: 1200, format: 'webp', quality: 74 });
 const schemaImages = [abs(ogHero.src), abs(ogTeras.src), abs(ogBina.src)];
 
-const metaTitle = 'Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı D-12';
+const metaTitle = 'Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı D-21';
 const metaDesc =
-  "Pendik El Ele Apartmanı'nda sıfır 3+2 çatı dubleksi (D-12): 160/135 m², 5. kat, çatı terası, 2 banyo, kapalı otopark. 13.750.000 TL — yerinde gezin.";
+  "Pendik El Ele Apartmanı'nda sıfır 3+2 çatı dubleksi (D-21): 160/135 m², 5. kat, çatı terası, 2 banyo, kapalı otopark. 13.750.000 TL — yerinde gezin.";
 const h1 = 'Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı';
 
 // og:type=product için fiyat meta'ları (scraper'lar fiyatı önizlemede göstersin)
@@ -77,7 +77,7 @@ const extraMeta = [
   { property: 'og:availability', content: 'instock' },
 ];
 
-/* JSON-LD @graph — YALNIZ doğrulanmış D-12 değerleri (sahibinden 1317631166).
+/* JSON-LD @graph — YALNIZ doğrulanmış D-21 değerleri (sahibinden 1317631166).
    Tahminler (oda m², mesafeler) ŞEMAYA GİRMEZ. */
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -90,7 +90,7 @@ const jsonLd = {
       // accommodationCategory'ye taşındı.
       '@type': ['Product', 'Apartment'],
       '@id': detailUrl + '#unit',
-      name: 'El Ele Apartmanı — Çatı Avlulu 3+2 Dubleks (D-12)',
+      name: 'El Ele Apartmanı — Çatı Avlulu 3+2 Dubleks (D-21)',
       description:
         "Pendik Batı Mah. sıfır El Ele Apartmanı'nda 5. kat çatı dubleksi: 160 m² brüt / 135 m² net, 3+2, 2 banyo, çatı terası, kapalı otopark.",
       url: detailUrl,
@@ -130,7 +130,7 @@ const jsonLd = {
       '@type': 'RealEstateListing',
       '@id': detailUrl + '#listing',
       url: detailUrl,
-      name: 'El Ele Apartmanı 3+2 Dubleks — Satılık (D-12)',
+      name: 'El Ele Apartmanı 3+2 Dubleks — Satılık (D-21)',
       datePosted: '2026-07-21',
       mainEntity: { '@id': detailUrl + '#unit' },
     },
@@ -139,7 +139,7 @@ const jsonLd = {
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: t.nav.home, item: siteUrl + localePath(locale, '/') },
         { '@type': 'ListItem', position: 2, name: t.nav.forSale, item: siteUrl + localePath(locale, '/satilik-daireler') },
-        { '@type': 'ListItem', position: 3, name: '3+2 Dubleks · D-12' },
+        { '@type': 'ListItem', position: 3, name: '3+2 Dubleks · D-21' },
       ],
     },
     {
@@ -158,8 +158,6 @@ const jsonLd = {
    adında kopya içerik sinyalidir. TR sayfa etkilenmez. */
 const trOnly = locale !== 'tr';
 const salesPhone = contactNumber(company.salesContact.phone);
-/* Ön dolu WhatsApp mesajı — hangi daire için yazıldığı belli olsun. */
-const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hakkında bilgi almak istiyorum.';
 ---
 
 <Base
@@ -170,7 +168,7 @@ const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hak
   description={metaDesc}
   ogType="product"
   ogImage={ogHero.src}
-  ogImageAlt="El Ele Apartmanı D-12 — çatı avlulu 3+2 dubleks üst kat salonu, Pendik"
+  ogImageAlt="El Ele Apartmanı D-21 — çatı avlulu 3+2 dubleks üst kat salonu, Pendik"
   jsonLd={jsonLd}
   extraMeta={extraMeta}
   noindex={trOnly}
@@ -181,7 +179,7 @@ const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hak
       { label: t.nav.home, href: localePath(locale, '/') },
       { label: t.nav.forSale, href: root },
       { label: proje.ad, href: root },
-      { label: '3+2 Dubleks · D-12' },
+      { label: '3+2 Dubleks · D-21' },
     ]} />
   </div>
 
@@ -288,14 +286,14 @@ const WA_KONU = 'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-12) hak
     </div>
 
     <StickyRail
-      konu="D-12 · 3+2 Dubleks"
-      subject={`Web Formu · D-12 · 3+2 Dubleks · ${proje.ad}`}
+      konu="D-21 · 3+2 Dubleks"
+      subject={`Web Formu · D-21 · 3+2 Dubleks · ${proje.ad}`}
       formLocation="daire-detay-d12"
       base={basePrefix}
     />
   </div>
 
-  <MobileSaleBar fiyat={tl(d.unit.fiyat!)} etiket="Son daire · D-12" konu="D-12 · 3+2 çatı dubleksi" />
+  <MobileSaleBar fiyat={tl(d.unit.fiyat!)} etiket="Son daire · D-21" konu="D-21 · 3+2 çatı dubleksi" />
 </Base>
 
 <style>

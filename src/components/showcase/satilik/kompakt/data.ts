@@ -1,7 +1,7 @@
 /*
   SATILIK DAİRELER — KOMPAKT veri modeli.
 
-  D-12 (satıştaki TEK daire) 100% GERÇEK — sahibinden ilanı 1317631166
+  D-21 (satıştaki TEK daire) 100% GERÇEK — sahibinden ilanı 1317631166
   (21.07.2026): 160/135 m², 5. kat çatı dubleksi, 5 katlı sıfır bina,
   13.750.000 TL. Bu dairenin hiçbir alanı tahmin değildir.
 
@@ -9,10 +9,10 @@
   oda ölçüleri, çevre mesafeleri, kat planı m², ödeme oranları). `mock: true` bunu
   KOD düzeyinde işaretler; kullanıcıya "temsilî" olarak SUNULMAZ — arayüzdeki
   temsilî çip ve notlar kaldırıldı. Yeni doğrulanan bilgi geldikçe ilgili tahmini
-  gerçek değerle değiştir (D-12 gibi).
+  gerçek değerle değiştir (D-21 gibi).
 
   Gerçek çekirdek ../data.ts'ten gelir: El Ele Apartmanı, Mey İnşaat, iki 3+2
-  dubleks; D-11 yakın zamanda satıldı, D-12 satışta.
+  dubleks; D-11 yakın zamanda satıldı, D-21 satışta.
 */
 import { daire1, daire2, building } from '../data';
 import type { MapCoordinates } from '../../../../lib/maps';
@@ -37,6 +37,11 @@ export type DetaySlugKey = keyof typeof DETAY_SLUG;
 
 export const tl = (n: number) => n.toLocaleString('tr-TR') + ' TL';
 
+/* Satıştaki dairenin ön dolu WhatsApp mesajı (liste + detay aynı metin): talep
+   hangi daire için geldiği belli olarak düşer ve ziyaretçiyi gezme gününe yönlendirir. */
+export const WA_KONU =
+  'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-21) hakkında bilgi almak istiyorum. Daireyi görmek için hangi gün müsaitsiniz, gelip görebilir miyim?';
+
 /* ─── Proje üst bilgisi (stat bar) ─── */
 export const proje = {
   ad: building.name,
@@ -53,8 +58,8 @@ export const proje = {
 };
 
 /* ─── Daire envanteri ───
-   D-12 = 13.750.000 TL, müsait, sahibinden ilanıyla GERÇEK (160/135 m², 5. kat).
-   D-11 = yakın zamanda satıldı (gerçek); m²/kat İÇ TAHMİN (D-12'nin ikizi).
+   D-21 = 13.750.000 TL, müsait, sahibinden ilanıyla GERÇEK (160/135 m², 5. kat).
+   D-11 = yakın zamanda satıldı (gerçek); m²/kat İÇ TAHMİN (D-21'in ikizi).
    Kalan 8 daire İÇ TAHMİN doluluk — satılmış gösterilir, fiyat taşımaz;
    arayüzde tahmin olduğu belirtilmez. */
 export type Durum = 'musait' | 'rezerve' | 'satildi';
@@ -83,15 +88,15 @@ export interface KUnit {
 }
 
 export const units: KUnit[] = [
-  // D-11 — gerçek (yakın zamanda satıldı); brut/net/kat İÇ TAHMİN (D-12'nin ikizi).
+  // D-11 — gerçek (yakın zamanda satıldı); brut/net/kat İÇ TAHMİN (D-21'in ikizi).
   {
     id: 'd11', mock: true, apartmentId: 'daire-1', no: 'D-11', kat: '5. Kat', katKey: '5-6',
     tip: '3+2 Dubleks', oda: '3+2', brut: 182, net: 148, fiyat: null, durum: 'satildi',
     cephe: 'Deniz — teras katı', badge: RECENTLY_SOLD_LABEL, foto: 'daire-1/d1-salon-alt.png', detay: 'daire-1',
   },
-  // D-12 — 100% GERÇEK (sahibinden ilan 1317631166): 160/135 m², 5. kat çatı dubleksi.
+  // D-21 — 100% GERÇEK (sahibinden ilan 1317631166): 160/135 m², 5. kat çatı dubleksi.
   {
-    id: 'd12', mock: true, apartmentId: 'daire-2', no: 'D-12', kat: '5. Kat', katKey: '5-6',
+    id: 'd12', mock: true, apartmentId: 'daire-2', no: 'D-21', kat: '5. Kat', katKey: '5-6',
     tip: '3+2 Dubleks', oda: '3+2', brut: 160, net: 135, fiyat: 13_750_000, durum: 'musait',
     cephe: 'Çatı avlusu — şehir', badge: 'SON DAİRE', foto: 'daire-2/d2-salon-ust-1.png', detay: 'daire-2',
   },
@@ -152,7 +157,7 @@ export const tipler: Tip[] = [
 /* ─── Detay sayfası spec ızgaraları ─── */
 export interface SpecItem { label: string; value: string }
 
-/* Bina + daire künyesi. D-12 için TÜM değerler sahibinden ilanıyla birebir;
+/* Bina + daire künyesi. D-21 için TÜM değerler sahibinden ilanıyla birebir;
    Cephe (ikisinde) ve D-11'in brüt/net/kat'ı İÇ TAHMİN. */
 function commonSpecs(u: KUnit): SpecItem[] {
   return [
@@ -179,7 +184,7 @@ function commonSpecs(u: KUnit): SpecItem[] {
   ];
 }
 export const specsD1 = commonSpecs(units[0]);
-// D-12'ye gerçek sahibinden ilan kimliği eklenir (yalnız bu daireye özel).
+// D-21'e gerçek sahibinden ilan kimliği eklenir (yalnız bu daireye özel).
 export const specsD2: SpecItem[] = [
   ...commonSpecs(units[1]),
   { label: 'İlan No', value: '1317631166' },
@@ -236,13 +241,13 @@ export const odaOlculeriD2: { grup: string; odalar: SpecItem[] }[] = [
 /* ─── SSS ─── */
 export const sss: { soru: string; cevap: string }[] = [
   { soru: 'Daireler hemen teslim mi?',
-    cevap: 'Satıştaki D-12 sıfır ve boştur; tapu işlemleriyle birlikte teslim edilir. D-11 yakın zamanda satılmıştır.' },
+    cevap: 'Satıştaki D-21 sıfır ve boştur; tapu işlemleriyle birlikte teslim edilir. D-11 yakın zamanda satılmıştır.' },
   { soru: 'Konut kredisi kullanılabilir mi?',
     cevap: 'Kat mülkiyetli sıfır konutlar kredi kullanımına uygundur; oran ve vade bankanıza göre değişir.' },
   { soru: 'Aracı komisyonu var mı?',
     cevap: 'Hayır. Daireler binayı yapan Mey İnşaat’tan doğrudan satın alınır; süreç tek muhatapla ilerler.' },
   { soru: 'Daireyi yerinde görebilir miyim?',
-    cevap: 'Evet — satış hattını arayın ya da WhatsApp’tan yazın; satıştaki D-12’yi size uyan saatte gezdirelim.' },
+    cevap: 'Evet — satış hattını arayın ya da WhatsApp’tan yazın; satıştaki D-21’i size uyan saatte gezdirelim.' },
 ];
 
 /* ─── Benzer daireler / proje teaser kartları ─── */
@@ -258,7 +263,7 @@ export const projeTeasers: Teaser[] = [
 ];
 
 /* ─── LİSTELEME SAYFASI (liste-ref.png) — dürüst envanter ───
-   Izgara = 2 gerçek daire kaydı (D-11 satıldı, D-12 satışta) + 3 proje kartı
+   Izgara = 2 gerçek daire kaydı (D-11 satıldı, D-21 satışta) + 3 proje kartı
    (listingProjeler). Ali ve Çamoğlu Apartmanı'nda satılık daire YOK (gerçek durum) —
    kırmızı TÜMÜ SATILDI bandı taşır, proje sayfasına çıkar. Uydurma ilan üretme:
    önceki temsilî Ali/Çamoğlu Apartmanı satırları bu yüzden silindi. */

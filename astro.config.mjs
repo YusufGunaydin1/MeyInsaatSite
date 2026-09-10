@@ -44,10 +44,10 @@ export default defineConfig({
     '/ar/satilik-daireler/daire-1': '/ar/satilik-daireler/el-ele-apartmani-3-2-dubleks-satildi/',
   },
   // /showcases = dahili tasarım vitrini: sitemap dışı (sayfa ayrıca noindex).
-  // /satilik-daireler = CANLI ve gerçek (D-12 sahibinden ilanı) → sitemap'e girer.
+  // /satilik-daireler = CANLI ve gerçek (D-21 sahibinden ilanı) → sitemap'e girer.
   // Tek istisna satılan D-11 (el-ele-apartmani-3-2-dubleks-satildi): noindex → dışlanır.
   // DİKKAT: dışlama dizesi satılan slug'ın TAMAMI; canlı slug'ın alt-dizesi DEĞİL
-  // (Şema A ayrık kökler kullanır) — yoksa .includes() canlı D-12'yi de düşürürdü.
+  // (Şema A ayrık kökler kullanır) — yoksa .includes() canlı D-21'i de düşürürdü.
   integrations: [react(), sitemap({
     i18n: {
       defaultLocale: 'tr',

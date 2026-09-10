@@ -5,7 +5,7 @@ import { u } from './util';
   Satılık Daireler — CANLI listeleme ailesi (/satilik-daireler + iki detay).
   Ölçülen şeyler kullanıcının GÖRDÜĞÜ davranış:
   sekme/filtre/sıralama/favori kart sayısını değiştirir, karusel çalışır, D-11
-  sold durumunda hiçbir fiyat göstermez, D-12 doğrulanmış fiyatını korur, ray
+  sold durumunda hiçbir fiyat göstermez, D-21 doğrulanmış fiyatını korur, ray
   formu mock sonuç panellerini gösterir ve mobilde taşma yoktur.
 */
 
@@ -35,7 +35,7 @@ const revealMobileFilters = async (page: Page) => {
 
 test('liste: nav Satılık aktif + sekmeler/filtre/ray + gerçek veri (temsilî çip yok)', async ({ page }) => {
   await page.goto(u(K));
-  // gerçek satış verisi (D-12 sahibinden ilanı) → indekslenir (noindex DEĞİL)
+  // gerçek satış verisi (D-21 sahibinden ilanı) → indekslenir (noindex DEĞİL)
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index,follow,max-image-preview:large');
   await expect(page.locator('header nav a[aria-current="page"]').first()).toHaveText(/^satılık$/i);
   await expect(page.getByTestId('kl-tab-tumu')).toContainText('Tümü (5)');
@@ -54,12 +54,12 @@ test('liste: nav Satılık aktif + sekmeler/filtre/ray + gerçek veri (temsilî 
   await expect(page.getByTestId('kc-sales-phone')).toHaveAttribute('href', 'tel:+905326256812');
 });
 
-test('liste: D-11 yakın zamanda satıldı ve fiyatsız; D-12 13.750.000 TL kalır', async ({ page }) => {
+test('liste: D-11 yakın zamanda satıldı ve fiyatsız; D-21 13.750.000 TL kalır', async ({ page }) => {
   await page.goto(u(K));
   await expect(page.getByTestId('kl-card')).toHaveCount(5);
   await expect(page.getByTestId('kl-count')).toContainText('5 sonuç');
   await expect(page.getByTestId('kl-more')).toHaveCount(0); // 5 kart tek sayfaya sığar
-  // İki gerçek kayıt görünür; yalnız satıştaki D-12 fiyat ve favori taşır.
+  // İki gerçek kayıt görünür; yalnız satıştaki D-21 fiyat ve favori taşır.
   await expect(page.locator('[data-kind="ilan"]')).toHaveCount(2);
   await expect(page.locator('[data-kind="proje"]')).toHaveCount(3);
   const d11 = page.locator('[data-unit="d11"]');
@@ -131,7 +131,7 @@ test('liste: sekme + filtre + sıralama + favoriler dürüst envanterde', async 
   // proje filtresi iki kart türüne de uygulanır: El Ele → 2 ilan + 1 proje kartı
   await page.getByTestId('kl-f-proje').selectOption('el-ele');
   await expect(page.getByTestId('kl-card')).toHaveCount(3);
-  // sıralama: fiyatlı D-12 önce; fiyatsız satılmış D-11 ve proje kartı sonra
+  // sıralama: fiyatlı D-21 önce; fiyatsız satılmış D-11 ve proje kartı sonra
   await page.getByTestId('kl-sort').selectOption('desc');
   await expect(page.getByTestId('kl-card').first()).toContainText('13.750.000 TL');
   await expect(page.getByTestId('kl-card').last()).toHaveAttribute('data-kind', 'proje');
@@ -142,7 +142,7 @@ test('liste: sekme + filtre + sıralama + favoriler dürüst envanterde', async 
   await expect(page.locator('[data-unit="d12"]')).toContainText('13.750.000 TL');
   await expect(page.locator('[data-unit="d11"]')).toHaveCount(0);
   await page.getByTestId('kl-clear').click();
-  // favori: satıştaki D-12 kalbi → sayaç → yalnız favoriler
+  // favori: satıştaki D-21 kalbi → sayaç → yalnız favoriler
   await page.getByTestId('kl-fav-d12').click();
   await expect(page.getByTestId('kl-favorilerim')).toContainText('(1)');
   await page.getByTestId('kl-favorilerim').click();
@@ -175,7 +175,7 @@ test('liste: Harita Görünümü kart görsellerini konum mini-haritasına çevi
   await expect(page.locator('.kl-card img').first()).toBeVisible();
 });
 
-test('detay D-12: haritanın sol altındaki küçük "Yol tarifi" düğmesi Google yol tarifine gider', async ({ page }) => {
+test('detay D-21: haritanın sol altındaki küçük "Yol tarifi" düğmesi Google yol tarifine gider', async ({ page }) => {
   await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
   await page.locator('.kcg-media .kc-map-canvas').scrollIntoViewIfNeeded();
   const btn = page.getByTestId('kc-loc-mapdir-primary'); // galeri sütunu haritasındaki bindirme düğmesi
@@ -233,7 +233,7 @@ test('detay D-11: karusel ok/sayaç/küçük resim/tam ekran', async ({ page }) 
   await expect(page.getByTestId('kc-car-overlay')).toHaveCount(0);
 });
 
-test('detay: D-11 sold durumunda fiyatsız; D-12 fiyatı değişmeden satışta', async ({ page }) => {
+test('detay: D-11 sold durumunda fiyatsız; D-21 fiyatı değişmeden satışta', async ({ page }) => {
   await page.goto(u(K + 'el-ele-apartmani-3-2-dubleks-satildi'));
   await expect(page.getByTestId('kc-sold-status')).toHaveText('YAKIN ZAMANDA SATILDI');
   await expect(page.getByTestId('kc-sold-detail')).toContainText('Bu dairenin satış işlemi tamamlandı.');
@@ -283,7 +283,7 @@ test('detay satış contact links are live; YAKINDA belge ölü-uçları kaldır
   );
   await expect(page.getByTestId('kc-rail-whatsapp')).toContainText('+90 532 625 68 12');
   await expect(page.getByTestId('kc-rail-alarm')).toHaveCount(0);
-  // canlı D-12 detayında YAKINDA belge ölü-uçları kaldırıldı (docs prop düştü)
+  // canlı D-21 detayında YAKINDA belge ölü-uçları kaldırıldı (docs prop düştü)
   await page.goto(u(K + 'pendik-satilik-3-2-dubleks'));
   await expect(page.getByTestId('kc-rail-doc')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('YAKINDA');

@@ -12,9 +12,9 @@ import { contactNumber, telHref, whatsappHref } from '../../../../lib/contact';
 interface Props {
   /** görünen fiyat (ör. "13.750.000 TL") */
   fiyat: string;
-  /** kısa kırmızı etiket (ör. "Son daire · D-12") */
+  /** kısa kırmızı etiket (ör. "Son daire · D-21") */
   etiket?: string;
-  /** WhatsApp ön dolu mesajındaki konu (ör. "D-12 · 3+2 Dubleks") */
+  /** WhatsApp ön dolu mesajındaki konu (ör. "D-21 · 3+2 Dubleks") */
   konu?: string;
 }
 const { fiyat, etiket, konu = 'Pendik’teki satılık daire' } = Astro.props;

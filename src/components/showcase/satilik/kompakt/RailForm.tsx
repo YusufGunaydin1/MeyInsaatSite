@@ -22,7 +22,7 @@ export interface FallbackChannel {
 interface Props {
   /** hangi daire/konu hakkında — mesaj yer tutucusunda ve panellerde görünür */
   konu: string;
-  /** e-posta konu satırı, ör. "Web Formu · D-12 · 3+2 Dubleks · El Ele Apartmanı" */
+  /** e-posta konu satırı, ör. "Web Formu · D-21 · 3+2 Dubleks · El Ele Apartmanı" */
   subject: string;
   /** ölçümde sayfa kırılımı, ör. "daire-detay-d12" */
   formLocation: string;
