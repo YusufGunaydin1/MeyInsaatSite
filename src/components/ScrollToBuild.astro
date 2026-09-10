@@ -9,8 +9,8 @@
   each stage sits at its height on the building, dashed leader lines pointing in.
   The in-canvas red level-line + mono readout stay (guide-line device, brief §7).
 
-  Fallbacks (mandatory): prefers-reduced-motion, Save-Data, or no JS render the
-  final-state poster + the four stages as plain text. Stage list is real text always.
+  Fallbacks (mandatory): prefers-reduced-motion, Save-Data, no JS, or no decodable
+  frame render the final-state poster + the four stages as plain text. Stage list is real text always.
 */
 import type { Locale } from '../lib/i18n';
 import { ui } from '../lib/content';
@@ -221,11 +221,15 @@ const valueIcons: string[][] = [
     overflow: hidden;
     padding-block: 3.25rem 1.5rem;
   }
-  /* Static mode (reduced motion / Save-Data / no JS): no pin, natural height */
-  [data-static] .scrub-wrap {
+  /* Static mode: no pin, natural height. [data-static] comes from the script
+     (reduced motion / Save-Data / no frame decoded); html:not(.js) covers no JS,
+     where nothing runs to set it. */
+  [data-static] .scrub-wrap,
+  :global(html:not(.js)) .scrub-wrap {
     height: auto;
   }
-  [data-static] .scrub-stage {
+  [data-static] .scrub-stage,
+  :global(html:not(.js)) .scrub-stage {
     position: static;
     height: auto;
     overflow: visible;
@@ -233,7 +237,10 @@ const valueIcons: string[][] = [
   }
   [data-static] .scrub-bgfx,
   [data-static] .scrub-hud,
-  [data-static] .scrub-progress {
+  [data-static] .scrub-progress,
+  :global(html:not(.js)) .scrub-bgfx,
+  :global(html:not(.js)) .scrub-hud,
+  :global(html:not(.js)) .scrub-progress {
     display: none;
   }
   .scrub-static-note {
@@ -375,6 +382,7 @@ const valueIcons: string[][] = [
      theatre and the blurred backdrop shows through where the sky was. */
   .scrub-canvas-box {
     position: relative;
+    container-type: inline-size;
     aspect-ratio: 9 / 16;
     width: 100%;
     border-radius: var(--radius-brand);
@@ -413,7 +421,8 @@ const valueIcons: string[][] = [
       /* room for the tick numerals hanging off the inline-start side */
       padding-inline-start: 2.4rem;
     }
-    [data-static] .scrub-ruler {
+    [data-static] .scrub-ruler,
+    :global(html:not(.js)) .scrub-ruler {
       display: none;
     }
   }
@@ -490,8 +499,15 @@ const valueIcons: string[][] = [
     bottom: 8%;
     border-top: 2px solid var(--color-red-on-dark);
     pointer-events: none;
+    /* Until frames are ready the poster (finished building) shows: an excavation
+       readout over it would contradict the image. */
+    visibility: hidden;
   }
-  [data-static] .scrub-level {
+  [data-ready] .scrub-level {
+    visibility: visible;
+  }
+  [data-static] .scrub-level,
+  :global(html:not(.js)) .scrub-level {
     display: none;
   }
   .scrub-readout {
@@ -502,6 +518,14 @@ const valueIcons: string[][] = [
     background: rgb(14 15 17 / 0.85);
     padding: 0.25rem 0.5rem;
     border-radius: var(--radius-brand);
+    white-space: nowrap;
+  }
+  /* Landscape phones shrink the canvas to ~120px, where the readout would cover
+     the picture; the stage line above the canvas carries the same floor + level. */
+  @container (max-width: 12rem) {
+    .scrub-readout {
+      display: none;
+    }
   }
 
   .scrub-loader {
@@ -514,7 +538,8 @@ const valueIcons: string[][] = [
     border-radius: var(--radius-brand);
   }
   [data-ready] .scrub-loader,
-  [data-static] .scrub-loader {
+  [data-static] .scrub-loader,
+  :global(html:not(.js)) .scrub-loader {
     display: none;
   }
 
@@ -665,7 +690,8 @@ const valueIcons: string[][] = [
       display: none;
     }
   }
-  [data-static] .scrub-mobile-stage {
+  [data-static] .scrub-mobile-stage,
+  :global(html:not(.js)) .scrub-mobile-stage {
     display: none;
   }
 </style>

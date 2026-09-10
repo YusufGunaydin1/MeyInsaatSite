@@ -22,9 +22,14 @@ export function initScrub(root: HTMLElement) {
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saveData = (navigator as any).connection?.saveData === true;
-  if (reduced || saveData || urls.length === 0) {
+  // Static mode: final-state poster + every stage readable, no pin (CSS)
+  function goStatic() {
     root.dataset.static = 'true';
     stageItems.forEach((el) => (el.dataset.active = 'true'));
+  }
+
+  if (reduced || saveData || urls.length === 0) {
+    goStatic();
     return;
   }
 
@@ -41,7 +46,10 @@ export function initScrub(root: HTMLElement) {
   };
 
   const ctx = canvas.getContext('2d')!;
-  const bctx = bgfx.getContext('2d');
+  // Safari has no ctx.filter (WebKit bug 198416) and assigning it is a silent
+  // no-op, so the backdrop would paint SHARP behind the sheet. No filter → no
+  // backdrop: the theatre stays night-950.
+  const bctx = 'filter' in CanvasRenderingContext2D.prototype ? bgfx.getContext('2d') : null;
   let bitmaps: (ImageBitmap | HTMLImageElement)[] = [];
   let currentPos = -1;
   let currentFrame = -1;
@@ -76,18 +84,14 @@ export function initScrub(root: HTMLElement) {
     const bmp = bitmaps[frame - 1];
     if (!bmp) return;
     bgFrame = frame;
-    try {
-      // Alpha frames: clear first or the previous (taller) building ghosts
-      // through the transparent sky when scrubbing backward.
-      bctx.clearRect(0, 0, bgfx.width, bgfx.height);
-      bctx.filter = 'blur(14px) brightness(0.55)';
-      bctx.drawImage(
-        bmp as CanvasImageSource,
-        -32, -32, bgfx.width + 64, bgfx.height + 64
-      );
-    } catch {
-      /* ctx.filter unsupported: backdrop stays night-950 — acceptable */
-    }
+    // Alpha frames: clear first or the previous (taller) building ghosts
+    // through the transparent sky when scrubbing backward.
+    bctx.clearRect(0, 0, bgfx.width, bgfx.height);
+    bctx.filter = 'blur(14px) brightness(0.55)';
+    bctx.drawImage(
+      bmp as CanvasImageSource,
+      -32, -32, bgfx.width + 64, bgfx.height + 64
+    );
   }
 
   function render(pos: number) {
@@ -176,18 +180,29 @@ export function initScrub(root: HTMLElement) {
   async function load() {
     let done = 0;
     // Concurrency-limited so the ~1.5MB sequence never floods the connection.
-    const results: (ImageBitmap | HTMLImageElement)[] = new Array(urls.length);
+    const results: (ImageBitmap | HTMLImageElement | undefined)[] = new Array(urls.length);
     let next = 0;
     async function worker() {
       while (next < urls.length) {
         const i = next++;
-        results[i] = await loadOne(urls[i]);
+        // One retry absorbs a dropped request on a flaky mobile connection
+        results[i] = await loadOne(urls[i])
+          .catch(() => loadOne(urls[i]))
+          .catch(() => undefined);
         done += 1;
         loaderPct.textContent = `${Math.round((done / urls.length) * 100)}%`;
       }
     }
     await Promise.all(Array.from({ length: 4 }, worker));
-    bitmaps = results;
+    const first = results.find(Boolean);
+    if (!first) {
+      goStatic(); // offline / blocked: a pin over a frozen poster is worse than none
+      return;
+    }
+    // A frame that still failed borrows its predecessor: the scrub skips one step
+    // instead of stalling forever on the loader.
+    let last = first;
+    bitmaps = results.map((bmp) => (last = bmp ?? last));
     sizeBg();
     root.dataset.ready = 'true';
     render(posFromProgress());
