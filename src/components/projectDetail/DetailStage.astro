@@ -10,6 +10,7 @@
 */
 import type { ImageMetadata } from 'astro';
 import type { Locale } from '../../lib/i18n';
+import type { MapCoordinates } from '../../lib/maps';
 import { localePath } from '../../lib/i18n';
 import { ui } from '../../lib/content';
 import StagePhoto from './StagePhoto.astro';
@@ -41,8 +42,21 @@ interface Props {
   detail: Record<string, any>;
   /** düz metin gerçek adres (data.location) — varsa künyede harita bağlantıları açar */
   mapQuery?: string | null;
+  /** doğrulanmış bina pini — sağlayıcıların adresi farklı yorumlamasını engeller */
+  mapCoordinates?: MapCoordinates | null;
 }
-const { locale, name, typeLabel, statusLabel, cover, coverXray, imgs, detail, mapQuery } = Astro.props;
+const {
+  locale,
+  name,
+  typeLabel,
+  statusLabel,
+  cover,
+  coverXray,
+  imgs,
+  detail,
+  mapQuery,
+  mapCoordinates,
+} = Astro.props;
 
 const t = ui(locale);
 const td = detail;
@@ -120,6 +134,8 @@ const frames = [
                 dokular={imgs.dokular}
                 locale={locale}
                 mapQuery={mapQuery}
+                mapCoordinates={mapCoordinates}
+                mapName={name}
               />
             </article>
           </div>
@@ -141,6 +157,8 @@ const frames = [
     ctaHref={localePath(locale, '/iletisim')}
     locale={locale}
     mapQuery={mapQuery}
+    mapCoordinates={mapCoordinates}
+    mapName={name}
   />
 </div>
 

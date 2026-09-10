@@ -1,12 +1,11 @@
 ---
 /*
-  Gerçek harita bağlantıları. Koordinat UYDURMAZ: sorgu, MEY'in doğruladığı açık
-  adres metnidir; pin'i sağlayıcının geocoder'ı çözer. Harici karo/iframe yok
-  (çerez/consent yükü sıfır); bağlantılar mobilde yerel harita uygulamasını açar.
-  UA koklama bilinçli olarak yok — RU yereli Yandex'i öne alır, kalan yereller
-  Google önde, üç sağlayıcı da daima görünür.
+  Gerçek harita bağlantıları. Doğrulanmış koordinat varsa üç sağlayıcı da aynı
+  kesin pine açılır; yalnız koordinatı olmayan adreslerde metin araması yedektir.
+  UA koklama yok — RU yereli Yandex'i öne alır, kalan yereller Google önde.
 */
 import type { Locale } from '../lib/i18n';
+import { mapProviderLinks, type MapCoordinates } from '../lib/maps';
 
 interface Props {
   /** düz metin adres, ör. "Batı Mah. Maşuk Sok. No:10, Pendik/İstanbul" */
@@ -14,22 +13,19 @@ interface Props {
   locale: Locale;
   /** yerelleştirilmiş "Haritada aç" etiketi */
   label: string;
+  /** harita sağlayıcılarını aynı kesin pine bağlayan doğrulanmış koordinat */
+  coordinates?: MapCoordinates | null;
+  /** Apple Maps pin etiketi; verilmezse adres kullanılır */
+  name?: string;
 }
-const { address, locale, label } = Astro.props;
-
-const q = encodeURIComponent(address.replace('/', ' '));
-const providers = [
-  { ad: 'Google', href: `https://www.google.com/maps/search/?api=1&query=${q}` },
-  { ad: 'Yandex', href: `https://yandex.com.tr/maps/?text=${q}` },
-  { ad: 'Apple', href: `https://maps.apple.com/?q=${q}` },
-];
-if (locale === 'ru') providers.unshift(providers.splice(1, 1)[0]);
+const { address, locale, label, coordinates, name } = Astro.props;
+const providers = mapProviderLinks({ address, coordinates, locale, name });
 ---
 
 <p class="t-tech maplinks" data-testid="map-links">
   <span class="maplinks-label">{label}:</span>
   {providers.map((p) => (
-    <a href={p.href} target="_blank" rel="noopener" data-testid={`map-${p.ad.toLowerCase()}`}>{p.ad}</a>
+    <a href={p.href} target="_blank" rel="noopener" data-testid={`map-${p.name.toLowerCase()}`}>{p.name}</a>
   ))}
 </p>
 

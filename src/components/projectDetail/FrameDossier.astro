@@ -7,6 +7,7 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { Locale } from '../../lib/i18n';
+import type { MapCoordinates } from '../../lib/maps';
 import MapLinks from '../MapLinks.astro';
 
 interface Props {
@@ -21,8 +22,23 @@ interface Props {
   locale: Locale;
   /** gerçek adres — varsa harita sağlayıcı bağlantıları gösterilir */
   mapQuery?: string | null;
+  mapCoordinates?: MapCoordinates | null;
+  mapName?: string;
 }
-const { typeLabel, statusLabel, t, samples, brand, ctaHref, izometrik, dokular, locale, mapQuery } = Astro.props;
+const {
+  typeLabel,
+  statusLabel,
+  t,
+  samples,
+  brand,
+  ctaHref,
+  izometrik,
+  dokular,
+  locale,
+  mapQuery,
+  mapCoordinates,
+  mapName,
+} = Astro.props;
 
 // Yıl yalnız doğrulanmış değer girildiğinde satır olur.
 const ozet = [
@@ -50,7 +66,13 @@ const malzeme = (t.materials as string[]).map((ad, i) => ({ ad, img: dokular[i] 
       </dl>
       {mapQuery && (
         <div class="pk-map">
-          <MapLinks address={mapQuery} locale={locale} label={t.mapOpen ?? 'HARİTADA AÇ'} />
+          <MapLinks
+            address={mapQuery}
+            coordinates={mapCoordinates}
+            name={mapName}
+            locale={locale}
+            label={t.mapOpen ?? 'HARİTADA AÇ'}
+          />
         </div>
       )}
     </div>
