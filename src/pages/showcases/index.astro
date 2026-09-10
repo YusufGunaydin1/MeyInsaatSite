@@ -2,7 +2,7 @@
 /*
   TASARIM VİTRİNİ — dahili sayfa (/showcases).
   Üzerinde çalışılan tasarım iyileştirmeleri/varyasyonları burada sergilenir; onaylanan
-  varyant prod'a alınır ve kartı CANLIDA olur. Navigasyonda YOK, noindex, sitemap dışı
+  varyant prod'a alınır ve vitrinden kaldırılır. Navigasyonda YOK, noindex, sitemap dışı
   (astro.config'teki filter). Yeni demo eklerken: src/pages/showcases/<slug>.astro sayfası
   (gerçek site bileşenleri/tokenlarıyla, varyantlar alt alta) + aşağıdaki demos dizisine kart.
 */
@@ -11,7 +11,7 @@ import Base from '../../layouts/Base.astro';
 type Demo = {
   title: string;
   desc: string;
-  status: 'live' | 'proposal';
+  status: 'proposal';
   meta: string;
   href: string;
 };
@@ -20,35 +20,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const demos: Demo[] = [
   {
-    title: 'CANLI — Satılık: kompakt mobil hero + filtre',
+    title: 'ÖNERİ — Konum: kesin pinli harita bölümleri',
     desc:
-      'Onaylanan telefon tasarımı canlı Satılık sayfasına alındı: ' +
-      '156 px karar odaklı hero, doğrudan arama ve WhatsApp, sade kategori satırı ve yalnız ' +
-      'istendiğinde açılan iki alanlı filtre. Kartlar ve masaüstü düzeni değiştirilmez.',
-    status: 'live',
-    meta: 'satilik-mobile-kompakt · canlı mobile <= 640 px · desktop unchanged',
-    href: base + '/showcases/satilik-mobile-kompakt',
-  },
-  {
-    title: 'ÖNERİ — İletişim: 3 responsive tasarım yönü',
-    desc:
-      'Masaüstü ve telefonda çalışan üç gerçek-verili yön: A) koyu Doğrudan Masa, ' +
-      'B) açık Rota Panosu, C) teknik Ofis Künyesi. Genel telefon, e-posta ve ofis adresi ' +
-      'kullanılır; satış görüşmesi Satılık sayfasına ayrılır. B seçili adaydır ve kareli fonu kaldırılmıştır.',
+      'El Ele, Maşuk ve Çamoğlu Apartmanı için serbest adres araması yerine doğrulanmış ' +
+      'koordinat kullanan üç responsive yön: A) canlı harita gezgini, B) hafif koordinat ' +
+      'atlası, C) proje/daire detay modülü. Tüm Google, Yandex ve Apple linkleri kesin pine açılır.',
     status: 'proposal',
-    meta: 'iletisim-lab · B Rota ★ · 360 / 1024 / 1366',
-    href: base + '/showcases/iletisim-lab',
-  },
-  {
-    title: 'CANLI — Proje detay mobil: Kompakt Akış',
-    desc:
-      'Seçilen varyant prod\'a alındı: canlı mobil detayın tam-genişlik uzun yığını yerine ' +
-      'tek yoğun kaydırma — küçük çevrelenmiş görseller, sıkı satır/tipografi, bindirmeli ' +
-      'hero başlığı, bölüm satırları, yüzen şeffaf izometrik. Üç binada da DetailStage\'in ' +
-      '<1024px kolu bu bileşeni render eder (RTL/AR dahil). Vitrin: cihaz çerçevesinde Maşuk önizlemesi.',
-    status: 'live',
-    meta: 'projectDetail/mobile/MobileDetail.astro · 3 proje sayfası · lab: proje-detay-mobil-lab',
-    href: base + '/showcases/proje-detay-mobil-lab',
+    meta: 'konum-lab · exact coordinates · 360 / 1024 / 1366',
+    href: base + '/showcases/konum-lab',
   },
   {
     title: 'ÖNERİ — Kurumsal: tasarım & içerik yükseltmesi (3 yön)',
@@ -63,17 +42,6 @@ const demos: Demo[] = [
     meta: 'kurumsal/data.ts · Dossier/Gallery/Surec · lab: kurumsal-lab',
     href: base + '/showcases/kurumsal-lab',
   },
-  {
-    title: 'CANLI — Kompakt panel: adımlı gezinme (Önceki/Sonraki)',
-    desc:
-      'Kazanan varyant (2026-07-11) production\'da: sol 3:4 bina fotoğrafı HİÇ değişmez; ' +
-      'sağ pencere üç kareyi (hikâye → mekân → künye) yalnız Önceki/Sonraki düğmeleriyle ' +
-      'değiştirir — iğne ve scroll-pan yok, sayfa doğal kayar. Reduced-motion aynı deneyimi ' +
-      'alır. Scroll-pan\'lı eski varyant silindi (git geçmişinde).',
-    status: 'live',
-    meta: 'DetailStage.astro · 3 proje sayfası · lab: proje-detay-adimli-lab',
-    href: base + '/projeler/masuk-apartmani',
-  },
 ];
 ---
 
@@ -83,18 +51,18 @@ const demos: Demo[] = [
       <p class="t-tech" style="color: var(--color-red-on-dark);">MEY İnşaat · Dahili</p>
       <h1 class="t-display-l mt-2">Tasarım Vitrini</h1>
       <p class="t-body-l mt-4 max-w-2xl text-concrete-100/70">
-        Tasarım iyileştirmeleri ve varyasyonlar burada sergilenir. Onaylanan varyant prod'a
-        alınır ve kartı <span class="t-tech" style="color:#7dd87d;">CANLIDA</span> olur.
+        Yalnız karar bekleyen tasarım iyileştirmeleri burada sergilenir. Onaylanan varyant
+        canlıya alınır; tamamlanan lab ve kartı vitrinden kaldırılır.
       </p>
       <p class="t-tech sc-flow mt-6">
-        Akış: varyant vitrine eklenir → incelersin → onay → main'e commit → push → canlı
+        Akış: varyant vitrine eklenir → incelersin → onay → canlıya al → vitrinden kaldır
       </p>
 
       <div class="sc-grid mt-10">
         {demos.map((d) => (
           <article class="sc-card">
             <span class:list={['t-tech sc-status', d.status]}>
-              {d.status === 'live' ? '● CANLIDA' : '○ ÖNERİ'}
+              ○ ÖNERİ
             </span>
             <h2 class="t-heading-s sc-title">{d.title}</h2>
             <p class="t-caption text-concrete-100/60">{d.desc}</p>

@@ -3,7 +3,6 @@
 ## Scope
 
 - Live routes: `/iletisim` and RTL `/ar/iletisim`.
-- Shared reference: B on `/showcases/iletisim-lab`.
 - Cells: 1366×900, 1024×768, 360×740, and Arabic RTL 360×740.
 
 ## Utility contract
@@ -18,7 +17,6 @@ A visitor can immediately call or email the verified general office, open its ad
 - Every action is at least 44×44px, inside the viewport, and externally unoccluded.
 - Heading/summary, direct channels/topic routes, repeated rows, and office band preserve intended order without overlap.
 - Desktop remains split; mobile stacks. Arabic uses RTL document flow, Arabic display font, and mirrored route arrows.
-- TR live and showcase B geometry/style fingerprints remain equal at 1366, 1024, and 360.
 - No horizontal overflow, fixed blockers, or unapproved shadows.
 
 ## Evidence
@@ -28,4 +26,4 @@ A visitor can immediately call or email the verified general office, open its ad
 - `test-results/fineUX/contact-live/mobile-360-360x740.png`
 - `test-results/fineUX/contact-live/mobile-ar-360-360x740.png`
 
-Status: PASS — 7/7 contact live/showcase audit cells passed; all four live screenshots were visually inspected.
+The implemented design is now guarded directly on the live routes; its retired showcase reference is no longer required.

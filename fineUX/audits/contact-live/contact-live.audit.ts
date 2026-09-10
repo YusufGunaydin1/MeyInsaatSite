@@ -2,7 +2,6 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
-const SHOWCASE_ROUTE = 'showcases/iletisim-lab/';
 const SCREENSHOT_ROOT = resolve(
   process.cwd(),
   process.env.FINEUX_CONTACT_LIVE_SCREENSHOT_DIR ?? 'test-results/fineUX/contact-live'
@@ -15,55 +14,19 @@ type AuditCell = {
   height: number;
   prefix: string;
   dir: 'ltr' | 'rtl';
-  compareShowcase?: boolean;
 };
 
 const cells: AuditCell[] = [
-  { name: 'desktop-1366', route: 'iletisim/', width: 1366, height: 900, prefix: '', dir: 'ltr', compareShowcase: true },
-  { name: 'tablet-1024', route: 'iletisim/', width: 1024, height: 768, prefix: '', dir: 'ltr', compareShowcase: true },
-  { name: 'mobile-360', route: 'iletisim/', width: 360, height: 740, prefix: '', dir: 'ltr', compareShowcase: true },
+  { name: 'desktop-1366', route: 'iletisim/', width: 1366, height: 900, prefix: '', dir: 'ltr' },
+  { name: 'tablet-1024', route: 'iletisim/', width: 1024, height: 768, prefix: '', dir: 'ltr' },
+  { name: 'mobile-360', route: 'iletisim/', width: 360, height: 740, prefix: '', dir: 'ltr' },
   { name: 'mobile-ar-360', route: 'ar/iletisim/', width: 360, height: 740, prefix: '/ar', dir: 'rtl' },
 ];
-
-type Metric = {
-  width: number;
-  height: number;
-  display: string;
-  gridTemplateColumns: string;
-  backgroundColor: string;
-};
 
 async function settle(page: Page) {
   await expect(page.getByTestId('contact-route-board')).toBeVisible();
   await page.evaluate(async () => { await document.fonts.ready; });
   await page.waitForTimeout(80);
-}
-
-async function capture(board: Locator): Promise<Record<string, Metric>> {
-  return board.evaluate((root) => {
-    const selectors: Record<string, string> = {
-      root: ':scope',
-      head: '.cb-head',
-      grid: '.cb-grid',
-      direct: '.cb-direct',
-      routes: '.cb-routeboard',
-      office: '.cb-office',
-    };
-    return Object.fromEntries(Object.entries(selectors).map(([key, selector]) => {
-      const element = selector === ':scope'
-        ? root as HTMLElement
-        : root.querySelector<HTMLElement>(selector)!;
-      const box = element.getBoundingClientRect();
-      const style = getComputedStyle(element);
-      return [key, {
-        width: box.width,
-        height: box.height,
-        display: style.display,
-        gridTemplateColumns: style.gridTemplateColumns,
-        backgroundColor: style.backgroundColor,
-      }];
-    }));
-  });
 }
 
 async function inspect(page: Page, cell: AuditCell) {
@@ -206,7 +169,6 @@ for (const cell of cells) {
     await page.goto(cell.route, { waitUntil: 'domcontentloaded' });
     await settle(page);
     const board = page.getByTestId('contact-route-board');
-    const liveMetrics = await capture(board);
     await expectActionsUnoccluded(board);
 
     const result = await inspect(page, cell);
@@ -215,19 +177,6 @@ for (const cell of cells) {
     const screenshotPath = resolve(SCREENSHOT_ROOT, `${cell.name}-${cell.width}x${cell.height}.png`);
     mkdirSync(dirname(screenshotPath), { recursive: true });
     await board.screenshot({ path: screenshotPath, animations: 'disabled' });
-
-    if (cell.compareShowcase) {
-      await page.goto(SHOWCASE_ROUTE, { waitUntil: 'domcontentloaded' });
-      await page.evaluate(async () => { await document.fonts.ready; });
-      const showcaseMetrics = await capture(page.getByTestId('contact-variant-b'));
-      for (const key of Object.keys(liveMetrics)) {
-        expect(showcaseMetrics[key].width, `${cell.name} ${key} width drift`).toBeCloseTo(liveMetrics[key].width, 1);
-        expect(showcaseMetrics[key].height, `${cell.name} ${key} height drift`).toBeCloseTo(liveMetrics[key].height, 1);
-        expect(showcaseMetrics[key].display, `${cell.name} ${key} display drift`).toBe(liveMetrics[key].display);
-        expect(showcaseMetrics[key].gridTemplateColumns, `${cell.name} ${key} grid drift`).toBe(liveMetrics[key].gridTemplateColumns);
-        expect(showcaseMetrics[key].backgroundColor, `${cell.name} ${key} surface drift`).toBe(liveMetrics[key].backgroundColor);
-      }
-    }
     await context.close();
   });
 }
