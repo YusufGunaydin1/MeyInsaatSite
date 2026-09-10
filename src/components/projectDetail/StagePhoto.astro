@@ -1,7 +1,7 @@
 ---
 /*
   Sol sütun: 3:4 bina fotoğrafı + canlı sitedeki survey-etiket dili (nivo direği,
-  tip/statü gerçek; bilinmeyenler tek "doğrulanıyor" etiketi). Cutaway ikizi varsa
+  tip/statü). Cutaway ikizi varsa
   X-ray hover merceği fotoğrafın üzerinde aynen çalışır; etiketler pointer-events
   almaz ki mercek imleci kesintisiz izlesin.
 */
@@ -13,11 +13,10 @@ interface Props {
   name: string;
   typeLabel: string;
   statusLabel: string;
-  pendingLabel: string;
   cover: ImageMetadata;
   coverXray?: ImageMetadata;
 }
-const { name, typeLabel, statusLabel, pendingLabel, cover, coverXray } = Astro.props;
+const { name, typeLabel, statusLabel, cover, coverXray } = Astro.props;
 
 const widths = [480, 800, 1200];
 const sizes = '(min-width: 1024px) 28vw, 100vw';
@@ -32,7 +31,6 @@ const sizes = '(min-width: 1024px) 28vw, 100vw';
   <span class="pds-pole" aria-hidden="true"></span>
   <span class="pds-tag t-tech" style="--kt: 14%;">{typeLabel}</span>
   <span class="pds-tag t-tech" style="--kt: 38%;">{statusLabel}</span>
-  <span class="pds-tag pds-tag-pending t-tech" style="--kt: 64%;">{pendingLabel}</span>
 </figure>
 
 <style>
@@ -82,14 +80,5 @@ const sizes = '(min-width: 1024px) 28vw, 100vw';
     width: 0.65rem;
     height: 2px;
     background: var(--color-mey-red);
-  }
-  .pds-tag-pending {
-    color: rgb(244 244 242 / 0.6);
-    border: 1px dashed rgb(244 244 242 / 0.25);
-    background: rgb(14 15 17 / 0.7);
-    font-size: 0.6875rem;
-    letter-spacing: 0.05em;
-    white-space: normal;
-    max-inline-size: calc(100% - 2.5rem);
   }
 </style>

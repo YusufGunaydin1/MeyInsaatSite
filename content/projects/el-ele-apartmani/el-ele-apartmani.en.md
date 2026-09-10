@@ -11,5 +11,4 @@ With its wrought-iron balcony railings and elegant white façade, it adds lastin
 value to the streetscape.
 
 The frames below show the building's real construction — from the first
-excavation to handover. Delivery year and unit details will be
-updated on this page once provided by MEY.
+excavation to handover.

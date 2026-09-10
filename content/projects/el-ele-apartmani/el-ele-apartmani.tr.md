@@ -12,5 +12,4 @@ Ferforje balkon korkulukları ve zarif beyaz cephesiyle sokak dokusuna kalıcı
 bir değer katar.
 
 Aşağıdaki kareler, projenin ilk kazısından teslimine kadarki gerçek inşaat
-sürecini gösterir. Teslim yılı ve daire bilgileri MEY tarafından
-sağlandığında bu sayfada güncellenecektir.
+sürecini gösterir.

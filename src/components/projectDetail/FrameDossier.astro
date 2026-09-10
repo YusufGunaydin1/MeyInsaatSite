@@ -24,14 +24,14 @@ interface Props {
 }
 const { typeLabel, statusLabel, t, samples, brand, ctaHref, izometrik, dokular, locale, mapQuery } = Astro.props;
 
+// Yıl yalnız doğrulanmış değer girildiğinde satır olur.
 const ozet = [
-  { k: t.labels.type, v: typeLabel, sample: false },
-  { k: t.labels.status, v: statusLabel, sample: false },
-  { k: t.labels.place, v: samples.address ?? samples.placeCity, sample: false },
-  { k: t.labels.year, v: samples.year, sample: true },
-  { k: t.labels.client, v: t.clientSample, sample: true },
-  { k: t.labels.contractor, v: brand, sample: false },
-];
+  { k: t.labels.type, v: typeLabel },
+  { k: t.labels.status, v: statusLabel },
+  { k: t.labels.place, v: samples.address ?? samples.placeCity },
+  { k: t.labels.year, v: samples.year },
+  { k: t.labels.contractor, v: brand },
+].filter((o) => o.v);
 
 const malzeme = (t.materials as string[]).map((ad, i) => ({ ad, img: dokular[i] }));
 ---
@@ -44,7 +44,7 @@ const malzeme = (t.materials as string[]).map((ad, i) => ({ ad, img: dokular[i] 
         {ozet.map((o) => (
           <div class="pk-ozet-row">
             <dt class="t-tech pk-ozet-k">{o.k}</dt>
-            <dd class:list={['t-tech pk-ozet-v', o.sample && 'pk-sample']}>{o.v}</dd>
+            <dd class="t-tech pk-ozet-v">{o.v}</dd>
           </div>
         ))}
       </dl>
@@ -58,9 +58,9 @@ const malzeme = (t.materials as string[]).map((ad, i) => ({ ad, img: dokular[i] 
     <div class="pk-col">
       <h3 class="t-tech text-mey-red pk-h">{t.timelineTitle}</h3>
       <ol class="pk-tl">
-        {t.timeline.map((z: { date: string; name: string; desc: string }) => (
+        {t.timeline.map((z: { date?: string; name: string; desc: string }) => (
           <li class="pk-tl-item">
-            <p class="t-tech pk-sample">{z.date}</p>
+            {z.date && <p class="t-tech pk-tl-date">{z.date}</p>}
             <p class="t-heading-s pk-tl-ad">{z.name}</p>
             <p class="t-caption pk-tl-d">{z.desc}</p>
           </li>
@@ -124,7 +124,7 @@ const malzeme = (t.materials as string[]).map((ad, i) => ({ ad, img: dokular[i] 
   .pk-ozet-k { color: var(--color-graphite-400); }
   .pk-ozet-k::after { content: " :"; }
   .pk-ozet-v { color: var(--color-graphite-900); }
-  .pk-sample { color: var(--color-graphite-400); }
+  .pk-tl-date { color: var(--color-graphite-600); }
   .pk-map { margin-block-start: 0.9rem; padding-block-start: 0.75rem; border-block-start: 1px solid var(--color-line); }
 
   /* Malzeme paleti: kapanış şeridinde tek sıra 48px çipler */

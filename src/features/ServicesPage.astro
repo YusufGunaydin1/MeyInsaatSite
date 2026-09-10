@@ -90,14 +90,11 @@ const photo = (name: string) =>
           <figure class="card overflow-hidden reveal">
             <Image
               src={photo(name)}
-              alt={t.placeholder.representativeImage}
+              alt={t.photoAlt[name]}
               widths={[640, 1024, 1600]}
               sizes="(min-width: 1024px) 640px, 100vw"
               class="w-full aspect-[4/3] object-cover"
             />
-            <figcaption class="t-tech text-graphite-400 px-4 py-2 border-t border-line bg-white">
-              {t.placeholder.representativeImage}
-            </figcaption>
           </figure>
         ))}
       </div>

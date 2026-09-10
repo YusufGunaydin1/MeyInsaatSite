@@ -28,7 +28,7 @@ test('projects list shows the three real buildings with decoded covers', async (
   await decodes(page, 'main .card img');
 });
 
-test('El Ele page: horizontal stage hero, construction story, honest samples', async ({ page }) => {
+test('El Ele page: horizontal stage hero, construction story, no placeholder copy', async ({ page }) => {
   await page.goto(u('/projeler/el-ele-apartmani'));
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('El Ele Apartmanı');
   // Full gallery set → the horizontal detail stage replaces the simple hero (like Maşuk).
@@ -40,13 +40,12 @@ test('El Ele page: horizontal stage hero, construction story, honest samples', a
   await expect(page.locator('.ps-stage')).toHaveCount(5);
   await decodes(page, '.ps-img');
 
-  // Facts not yet provided stay honest: the survey "pending" tag on the photo and
-  // the single footnote that flags the grey sample values as representative.
-  await expect(page.locator('.pds-tag-pending')).toContainText('DOĞRULANIYOR');
-  await expect(page.getByTestId('pd-note')).toHaveCount(1);
+  // No placeholder copy: no "pending" tag on the photo, no sample-values footnote.
+  await expect(page.locator('.pds-tag-pending')).toHaveCount(0);
+  await expect(page.getByTestId('pd-note')).toHaveCount(0);
 });
 
-test('Çamoğlu Apartmanı page: horizontal stage hero, construction story, honest samples', async ({ page }) => {
+test('Çamoğlu Apartmanı page: horizontal stage hero, construction story, no placeholder copy', async ({ page }) => {
   await page.goto(u('/projeler/camoglu-apartmani'));
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Çamoğlu Apartmanı');
   // Full gallery set → the horizontal detail stage replaces the simple hero (like Maşuk/El Ele).
@@ -58,10 +57,9 @@ test('Çamoğlu Apartmanı page: horizontal stage hero, construction story, hone
   await expect(page.locator('.ps-stage')).toHaveCount(5);
   await decodes(page, '.ps-img');
 
-  // Facts not yet provided stay honest: the survey "pending" tag on the photo and
-  // the single footnote that flags the grey sample values as representative.
-  await expect(page.locator('.pds-tag-pending')).toContainText('DOĞRULANIYOR');
-  await expect(page.getByTestId('pd-note')).toHaveCount(1);
+  // No placeholder copy: no "pending" tag on the photo, no sample-values footnote.
+  await expect(page.locator('.pds-tag-pending')).toHaveCount(0);
+  await expect(page.getByTestId('pd-note')).toHaveCount(0);
 });
 
 test('Maşuk page: horizontal stage hero, decoded cover, no fabricated story', async ({ page }) => {

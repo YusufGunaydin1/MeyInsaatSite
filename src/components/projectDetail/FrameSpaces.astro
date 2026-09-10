@@ -19,6 +19,13 @@ interface Props {
   vaziyet: ImageMetadata;
 }
 const { typeLabel, statusLabel, t, samples, cephe, mutfak, salon, vaziyet } = Astro.props;
+// Kat/daire yalnız doğrulanmış değer girildiğinde basılır.
+const meta = [
+  samples.place,
+  samples.floors && `${samples.floors} ${t.floorsWord}`,
+  samples.units && `${samples.units} ${t.unitsWord}`,
+  statusLabel,
+].filter(Boolean);
 
 const chapterImgs = [cephe, mutfak, salon];
 const chapters = (t.chapters as { name: string; text: string; alt: string }[]).map(
@@ -51,13 +58,12 @@ const chapters = (t.chapters as { name: string; text: string; alt: string }[]).m
     </ol>
 
     <p class="t-tech pm-meta">
-      <span>{samples.place}</span>
-      <span class="pm-dot" aria-hidden="true">·</span>
-      <span class="pm-sample">{samples.floors} {t.floorsWord}</span>
-      <span class="pm-dot" aria-hidden="true">·</span>
-      <span class="pm-sample">{samples.units} {t.unitsWord}</span>
-      <span class="pm-dot" aria-hidden="true">·</span>
-      <span>{statusLabel}</span>
+      {meta.map((m, i) => (
+        <Fragment>
+          {i > 0 && <span class="pm-dot" aria-hidden="true">·</span>}
+          <span>{m}</span>
+        </Fragment>
+      ))}
     </p>
   </div>
 
@@ -71,23 +77,27 @@ const chapters = (t.chapters as { name: string; text: string; alt: string }[]).m
         </svg>
         <p class="pm-stat-v">{typeLabel}</p>
       </div>
-      <div class="pm-stat">
-        <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-          <path d="m12 3-9 4.5 9 4.5 9-4.5L12 3Z" />
-          <path d="m3 12 9 4.5 9-4.5" />
-          <path d="m3 16.5 9 4.5 9-4.5" />
-        </svg>
-        <p class="pm-stat-v"><span class="pm-sample">{samples.floors}</span> {t.floorsWord}</p>
-      </div>
-      <div class="pm-stat">
-        <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-          <rect x="4" y="4" width="16" height="16" />
-          <path d="M4 13h8V4" />
-          <path d="M12 13h8" />
-          <path d="M12 13v7" />
-        </svg>
-        <p class="pm-stat-v"><span class="pm-sample">{samples.units}</span> {t.unitsWord}</p>
-      </div>
+      {samples.floors && (
+        <div class="pm-stat">
+          <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="m12 3-9 4.5 9 4.5 9-4.5L12 3Z" />
+            <path d="m3 12 9 4.5 9-4.5" />
+            <path d="m3 16.5 9 4.5 9-4.5" />
+          </svg>
+          <p class="pm-stat-v">{samples.floors} {t.floorsWord}</p>
+        </div>
+      )}
+      {samples.units && (
+        <div class="pm-stat">
+          <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <rect x="4" y="4" width="16" height="16" />
+            <path d="M4 13h8V4" />
+            <path d="M12 13h8" />
+            <path d="M12 13v7" />
+          </svg>
+          <p class="pm-stat-v">{samples.units} {t.unitsWord}</p>
+        </div>
+      )}
       <div class="pm-stat">
         <svg class="pm-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <path d="M12 21s-7-5.6-7-11a7 7 0 1 1 14 0c0 5.4-7 11-7 11Z" />
@@ -186,7 +196,6 @@ const chapters = (t.chapters as { name: string; text: string; alt: string }[]).m
     border-block-start: 1px solid var(--color-line);
     padding-block-start: 0.9rem;
   }
-  .pm-sample { color: var(--color-graphite-400); }
   .pm-dot { color: var(--color-mey-red); }
 
   .pm-rail {
@@ -225,7 +234,6 @@ const chapters = (t.chapters as { name: string; text: string; alt: string }[]).m
     color: var(--color-graphite-900);
     font-variant-numeric: tabular-nums;
   }
-  .pm-stat-v .pm-sample { font-size: 1.15rem; }
 
   /* Vaziyet = şeffaf render'in alt zemin/site bandı. KART YOK (arka plan yok):
      bant sayfa zemininde durur, saydam kenarlar sayfaya karışır. */

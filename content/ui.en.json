@@ -93,8 +93,12 @@
     "chip": "Information pending",
     "value": "—",
     "sampleProject": "SAMPLE TEMPLATE",
-    "sampleProjectNote": "This page is a template preview; it will be updated when real project information is added.",
-    "representativeImage": "Representative image"
+    "sampleProjectNote": "This page is a template preview; it will be updated when real project information is added."
+  },
+  "photoAlt": {
+    "planning-design-desk": "Project desk — architectural model, floor plans and façade material samples",
+    "materials-finish-palette": "Selected material palette — brick, concrete, glass, steel and composite samples",
+    "hero-residential-corner-building": "Modern residential building with glass balconies and a white-and-grey façade"
   },
   "projects": {
     "empty": "The project portfolio is being prepared. Real project information and photos will be here soon.",
@@ -133,7 +137,6 @@
       ]
     },
     "detail": {
-      "pendingTag": "YEAR · UNITS — PENDING VERIFICATION",
       "brand": "MEY İNŞAAT",
       "prev": "Previous section",
       "next": "Next section",
@@ -150,31 +153,31 @@
           "Glass balconies",
           "Central location"
         ],
-        "salonAlt": "Living room — a daylight-filled living area (representative image)",
-        "malzemeAlt": "Façade materials — brick, glass balcony, concrete (representative composition)"
+        "salonAlt": "Living room — a daylight-filled living area",
+        "malzemeAlt": "Façade materials — brick, glass balcony, concrete"
       },
       "spaces": {
         "chapters": [
           {
             "name": "FAÇADE",
             "text": "A modern façade strengthened by glass balconies and vertical rhythm.",
-            "alt": "Façade detail — technical drawing (representative)"
+            "alt": "Façade detail — technical drawing"
           },
           {
             "name": "INTERIOR",
             "text": "Interiors shaped by daylight and a restrained material language.",
-            "alt": "Kitchen (representative image)"
+            "alt": "Kitchen"
           },
           {
             "name": "LIVING",
             "text": "Balconies wrapped in greenery — a calm breathing space in the city.",
-            "alt": "Living room and balcony (representative image)"
+            "alt": "Living room and balcony"
           }
         ],
         "floorsWord": "FLOORS",
         "unitsWord": "UNITS",
-        "mapAlt": "Site plan — location sketch (representative)",
-        "mapCaption": "SITE PLAN — REPRESENTATIVE"
+        "mapAlt": "Site plan — location sketch",
+        "mapCaption": "SITE PLAN"
       },
       "dossier": {
         "summaryTitle": "PROJECT SUMMARY",
@@ -183,30 +186,25 @@
           "status": "STATUS",
           "place": "LOCATION",
           "year": "YEAR",
-          "client": "CLIENT",
           "contractor": "CONTRACTOR"
         },
-        "clientSample": "PRIVATE",
         "timelineTitle": "TIMELINE",
         "timeline": [
           {
-            "date": "03.2023",
             "name": "Design & Permits",
             "desc": "Design and permitting were completed."
           },
           {
-            "date": "07.2023",
             "name": "Structural Shell",
             "desc": "The load-bearing system and structural shell were completed."
           },
           {
-            "date": "06.2024",
             "name": "Handover",
             "desc": "Finishing works and inspections were completed and the building was handed over."
           }
         ],
-        "isoAlt": "Maşuk Apartmanı — axonometric drawing (representative)",
-        "isoCaption": "AXONOMETRIC — REPRESENTATIVE",
+        "isoAlt": "Maşuk Apartmanı — axonometric drawing",
+        "isoCaption": "AXONOMETRIC",
         "materialsTitle": "FAÇADE & MATERIALS",
         "materials": [
           "CONCRETE",
@@ -221,12 +219,8 @@
         "place": "PENDIK",
         "city": "ISTANBUL",
         "placeCity": "ISTANBUL · PENDIK",
-        "address": "BATI MAH. MAŞUK SOK. NO:10, PENDİK/İSTANBUL",
-        "floors": "6",
-        "units": "24",
-        "year": "2024"
+        "address": "BATI MAH. MAŞUK SOK. NO:10, PENDİK/İSTANBUL"
       },
-      "samplesNote": "Values shown in grey — year, floors, units and the timeline — are sample placements; they will be updated once MEY İnşaat confirms them. Interior, site-plan and axonometric visuals are representative.",
       "prevShort": "Previous",
       "nextShort": "Next"
     },

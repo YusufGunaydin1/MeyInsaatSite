@@ -4,45 +4,42 @@
     "para": "El Ele Apartmanı, klasik mimarinin zarafetini modern konforla buluşturur. Beyaz sıva cephesi, doğal taş silmeleri ve el işçiliği ferforje balkon korkulukları ile sokak dokusuna kalıcı bir değer katar.",
     "quote": "“Klasik zarafet,\nkalıcı değer.”",
     "features": ["Ferforje detay", "Doğal taş silme", "Zarif beyaz cephe"],
-    "salonAlt": "Salon — geniş pencereden gün ışığı alan yaşam alanı (temsilî görsel)",
-    "malzemeAlt": "Cephe detayı — ferforje korkuluk ve beyaz sıva işçiliği (temsilî kompozisyon)"
+    "salonAlt": "Salon — geniş pencereden gün ışığı alan yaşam alanı",
+    "malzemeAlt": "Cephe detayı — ferforje korkuluk ve beyaz sıva işçiliği"
   },
   "spaces": {
     "chapters": [
       {
         "name": "CEPHE",
         "text": "Ferforje korkuluklar ve taş silmelerle ritim kazanan klasik beyaz cephe.",
-        "alt": "Cephe detayı — ferforje ve sıva (temsilî)"
+        "alt": "Cephe detayı — ferforje ve sıva"
       },
       {
         "name": "İÇ MEKÂN",
         "text": "Sade malzeme dili ve gün ışığıyla tasarlanmış ferah iç mekânlar.",
-        "alt": "İç mekân — hol ve merdiven (temsilî görsel)"
+        "alt": "İç mekân — hol ve merdiven"
       },
       {
         "name": "YAŞAM",
         "text": "Geniş pencerelerden şehre açılan, huzurlu ve aydınlık yaşam alanları.",
-        "alt": "Salon ve pencere — yaşam alanı (temsilî görsel)"
+        "alt": "Salon ve pencere — yaşam alanı"
       }
     ],
-    "mapAlt": "Vaziyet — bina ve parsel yerleşimi (temsilî)"
+    "mapAlt": "Vaziyet — bina ve parsel yerleşimi"
   },
   "dossier": {
-    "isoAlt": "El Ele Apartmanı — aksonometrik görünüm (temsilî)",
+    "isoAlt": "El Ele Apartmanı — aksonometrik görünüm",
     "materials": ["BEYAZ SIVA", "DOĞAL TAŞ", "CAM", "FERFORJE"],
     "timeline": [
       {
-        "date": "05.2022",
         "name": "Projelendirme",
         "desc": "Proje ve ruhsat süreçleri tamamlandı."
       },
       {
-        "date": "10.2022",
         "name": "Kaba İnşaat",
         "desc": "Taşıyıcı sistem ve kaba inşaat tamamlandı."
       },
       {
-        "date": "08.2023",
         "name": "Teslim",
         "desc": "İnce işler ve kontroller tamamlanarak teslim edildi."
       }
@@ -52,9 +49,6 @@
     "place": "PENDİK",
     "city": "İSTANBUL",
     "placeCity": "İSTANBUL · PENDİK",
-    "address": "BATI MAH. ÇİĞDEM SOK. NO:6, PENDİK/İSTANBUL",
-    "floors": "6",
-    "units": "20",
-    "year": "2023"
+    "address": "BATI MAH. ÇİĞDEM SOK. NO:6, PENDİK/İSTANBUL"
   }
 }

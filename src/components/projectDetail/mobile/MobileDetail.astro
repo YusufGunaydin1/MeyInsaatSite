@@ -45,20 +45,27 @@ const chapterImgs = [imgs.cephe, imgs.mutfak, imgs.salon];
 const chapters = (td.spaces.chapters as { name: string; text: string; alt: string }[]).map(
   (c, i) => ({ ...c, no: String(i + 1).padStart(2, '0'), img: chapterImgs[i] })
 );
-// Satır-içi künye ızgarası: büyük değer + küçük (locale) etiket
+// Satır-içi künye ızgarası: büyük değer + küçük (locale) etiket. Kat/daire/yıl
+// yalnız doğrulanmış değer girildiğinde basılır.
 const specs = [
   { big: typeLabel, small: L.type },
   { big: s.floors, small: td.spaces.floorsWord },
   { big: s.units, small: td.spaces.unitsWord },
   { big: s.place, small: L.place },
-];
+].filter((sp) => sp.big);
 // KÜNYE özeti
 const ozet = [
-  { k: L.type, v: typeLabel, sample: false },
-  { k: L.status, v: statusLabel, sample: false },
-  { k: L.place, v: s.address ?? s.placeCity, sample: false },
-  { k: L.year, v: s.year, sample: true },
-];
+  { k: L.type, v: typeLabel },
+  { k: L.status, v: statusLabel },
+  { k: L.place, v: s.address ?? s.placeCity },
+  { k: L.year, v: s.year },
+].filter((o) => o.v);
+const meta = [
+  s.placeCity,
+  s.floors && `${s.floors} ${td.spaces.floorsWord}`,
+  s.units && `${s.units} ${td.spaces.unitsWord}`,
+  s.year,
+].filter(Boolean);
 const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: imgs.dokular[i] }));
 ---
 
@@ -76,13 +83,12 @@ const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: 
       </div>
     </figure>
     <p class="t-tech pdm-meta">
-      <span>{s.placeCity}</span>
-      <span class="pdm-dot" aria-hidden="true">·</span>
-      <span class="pdm-s">{s.floors} {td.spaces.floorsWord}</span>
-      <span class="pdm-dot" aria-hidden="true">·</span>
-      <span class="pdm-s">{s.units} {td.spaces.unitsWord}</span>
-      <span class="pdm-dot" aria-hidden="true">·</span>
-      <span class="pdm-s">{s.year}</span>
+      {meta.map((m, i) => (
+        <Fragment>
+          {i > 0 && <span class="pdm-dot" aria-hidden="true">·</span>}
+          <span>{m}</span>
+        </Fragment>
+      ))}
     </p>
   </div>
 
@@ -133,7 +139,7 @@ const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: 
         {ozet.map((o) => (
           <div class="pdm-ozet-row">
             <dt class="t-tech pdm-ozet-k">{o.k}</dt>
-            <dd class:list={['t-tech pdm-ozet-v', o.sample && 'pdm-sample']}>{o.v}</dd>
+            <dd class="t-tech pdm-ozet-v">{o.v}</dd>
           </div>
         ))}
       </dl>
@@ -145,9 +151,9 @@ const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: 
     )}
 
     <ol class="pdm-tl">
-      {td.dossier.timeline.map((z: { date: string; name: string }) => (
+      {td.dossier.timeline.map((z: { date?: string; name: string }) => (
         <li class="pdm-tl-item">
-          <span class="t-tech pdm-tl-date pdm-sample">{z.date}</span>
+          {z.date && <span class="t-tech pdm-tl-date">{z.date}</span>}
           <span class="t-tech pdm-tl-name">{z.name}</span>
         </li>
       ))}
@@ -210,7 +216,6 @@ const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: 
   }
   .pdm-title:lang(ar) { font-family: var(--font-arabic); font-weight: 700; letter-spacing: 0; line-height: 1.2; }
   .pdm-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-block-start: 0.55rem; font-size: 0.62rem; color: var(--color-graphite-900); }
-  .pdm-s { color: var(--color-graphite-400); }
   .pdm-dot { color: var(--color-mey-red); }
 
   /* Bölüm ayracı */
@@ -261,7 +266,6 @@ const materials = (td.dossier.materials as string[]).map((ad, i) => ({ ad, img: 
   .pdm-ozet-k { font-size: 0.55rem; color: var(--color-graphite-400); }
   .pdm-ozet-k::after { content: " :"; }
   .pdm-ozet-v { font-size: 0.6rem; color: var(--color-graphite-900); }
-  .pdm-sample { color: var(--color-graphite-400); }
   .pdm-map { margin-block-start: 0.7rem; }
 
   .pdm-tl {

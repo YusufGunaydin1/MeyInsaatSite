@@ -12,5 +12,4 @@ antrasit cephesi, kırmızı çatısı ve geniş cam balkonlarıyla modern bir d
 sergiler.
 
 Aşağıdaki kareler, projenin ilk kazısından teslimine kadarki gerçek inşaat
-sürecini gösterir. Teslim yılı ve daire bilgileri MEY tarafından
-sağlandığında bu sayfada güncellenecektir.
+sürecini gösterir.

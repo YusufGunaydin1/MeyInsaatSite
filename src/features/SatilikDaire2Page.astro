@@ -236,8 +236,7 @@ const salesPhone = contactNumber(company.salesContact.phone);
 
       <section aria-label="Oda ölçüleri">
         <div class="card kce-card" data-testid="kc-oda-olculeri">
-          <h2 class="t-heading-s">Yaklaşık Oda Ölçüleri</h2>
-          <p class="t-caption kce-plan-note">Toplam 160 m² brüt / 135 m² net kesindir (sahibinden ilanı). Oda bazındaki değerler yaklaşıktır; kesin ölçüler yerinde teyit edilir.</p>
+          <h2 class="t-heading-s">Oda Ölçüleri</h2>
           <div class="kce-oda-cols">
             {odaOlculeriD2.map((g) => (
               <div class="kce-oda-grup">
@@ -377,7 +376,6 @@ const salesPhone = contactNumber(company.salesContact.phone);
   .kce-chip-sub { font-size: 0.75rem; color: var(--color-graphite-400); }
 
   .kce-card { padding: 1rem 1.1rem 1.1rem; }
-  .kce-plan-note { color: var(--color-graphite-400); margin-top: 0.2rem; }
   .kce-oda-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; align-items: start; }
   .kce-oda-grup { margin-top: 0.7rem; }
   .kce-oda-grup-ad { color: var(--color-mey-teal-700); margin-bottom: 0.2rem; }

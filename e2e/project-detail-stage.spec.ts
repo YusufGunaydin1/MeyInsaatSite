@@ -12,7 +12,6 @@ import { u } from './util';
 
 const PAGE = 'projeler/masuk-apartmani';
 /** Koyulaştırılmış graphite-400 (#66696D) — örnek/gri değerlerin rengi */
-const SAMPLE_GREY = 'rgb(102, 105, 109)';
 
 function trackX(transform: string): number {
   if (transform === 'none') return 0;
@@ -89,19 +88,13 @@ test.describe('proje detay — adımlı sahne', () => {
     await expect(page.getByTestId('pd-frame-hikaye')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  test('dürüstlük: örnek değerler gri, gerçek değerler değil, dipnot TEK', async ({ page }) => {
-    test.skip(test.info().project.name !== 'desktop', 'renk denetimi tek projede yeter');
+  test('künye: doğrulanmamış değer ve açıklama dipnotu basılmaz', async ({ page }) => {
+    test.skip(test.info().project.name !== 'desktop', 'tek projede yeter');
     await page.goto(u(PAGE));
-
-    // Örnek (doğrulanmamış) değer gri graphite-400 — künye YER satırı
-    const sample = page.locator('.pk-sample').first();
-    await expect(sample).toHaveCSS('color', SAMPLE_GREY);
-    // Gerçek değer (PROJE TİPİ: KONUT) gri DEĞİL
-    const real = page.locator('.pk-ozet-v:not(.pk-sample)').first();
-    const realColor = await real.evaluate((el) => getComputedStyle(el).color);
-    expect(realColor).not.toBe(SAMPLE_GREY);
-    // Açıklayan t-caption dipnotu tam olarak BİR kez
-    await expect(page.getByTestId('pd-note')).toHaveCount(1);
+    await expect(page.locator('.pk-sample, .pm-sample, .pdm-sample')).toHaveCount(0);
+    await expect(page.getByTestId('pd-note')).toHaveCount(0);
+    // YIL satırı yalnız doğrulanmış yıl girildiğinde basılır
+    await expect(page.locator('.pk-ozet-k', { hasText: 'YIL' })).toHaveCount(0);
   });
 
   test('AR RTL: kayma işareti döner — kareler sağdan sola ilerler', async ({ page }) => {

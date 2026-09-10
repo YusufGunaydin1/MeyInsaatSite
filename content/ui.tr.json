@@ -93,8 +93,12 @@
     "chip": "Bilgi bekleniyor",
     "value": "—",
     "sampleProject": "ÖRNEK ŞABLON",
-    "sampleProjectNote": "Bu sayfa bir şablon önizlemesidir; gerçek proje bilgileri eklendiğinde güncellenecektir.",
-    "representativeImage": "Temsili görsel"
+    "sampleProjectNote": "Bu sayfa bir şablon önizlemesidir; gerçek proje bilgileri eklendiğinde güncellenecektir."
+  },
+  "photoAlt": {
+    "planning-design-desk": "Proje masası — mimari maket, kat planları ve cephe malzemesi numuneleri",
+    "materials-finish-palette": "Seçilmiş malzeme paleti — tuğla, beton, cam, çelik ve kompozit örnekleri",
+    "hero-residential-corner-building": "Cam balkonlu, beyaz-gri cepheli modern konut binası"
   },
   "projects": {
     "empty": "Proje portföyü hazırlanıyor. Gerçek proje bilgileri ve fotoğrafları yakında burada olacak.",
@@ -133,7 +137,6 @@
       ]
     },
     "detail": {
-      "pendingTag": "YIL · DAİRE — DOĞRULANIYOR",
       "brand": "MEY İNŞAAT",
       "prev": "Önceki bölüm",
       "next": "Sonraki bölüm",
@@ -150,31 +153,31 @@
           "Cam balkon",
           "Merkezi konum"
         ],
-        "salonAlt": "Salon — gün ışığı alan yaşam alanı (temsilî görsel)",
-        "malzemeAlt": "Cephe malzemeleri — tuğla, cam balkon, beton (temsilî kompozisyon)"
+        "salonAlt": "Salon — gün ışığı alan yaşam alanı",
+        "malzemeAlt": "Cephe malzemeleri — tuğla, cam balkon, beton"
       },
       "spaces": {
         "chapters": [
           {
             "name": "CEPHE",
             "text": "Cam balkonlar ve dikey ritimle güçlenen modern cephe.",
-            "alt": "Cephe detayı — teknik çizim (temsilî)"
+            "alt": "Cephe detayı — teknik çizim"
           },
           {
             "name": "İÇ MEKÂN",
             "text": "Gün ışığı ve sade malzeme diliyle tasarlanmış iç mekânlar.",
-            "alt": "Mutfak (temsilî görsel)"
+            "alt": "Mutfak"
           },
           {
             "name": "YAŞAM",
             "text": "Yeşil dokuyla çevrili balkonlar, huzurlu bir nefes alanı.",
-            "alt": "Salon ve balkon (temsilî görsel)"
+            "alt": "Salon ve balkon"
           }
         ],
         "floorsWord": "KAT",
         "unitsWord": "DAİRE",
-        "mapAlt": "Vaziyet paftası — konum krokisi (temsilî)",
-        "mapCaption": "VAZİYET — TEMSİLİ"
+        "mapAlt": "Vaziyet paftası — konum krokisi",
+        "mapCaption": "VAZİYET"
       },
       "dossier": {
         "summaryTitle": "PROJE ÖZETİ",
@@ -183,30 +186,25 @@
           "status": "STATÜ",
           "place": "YER",
           "year": "YIL",
-          "client": "MÜŞTERİ",
           "contractor": "MÜTEAHHİT"
         },
-        "clientSample": "ÖZEL",
         "timelineTitle": "ZAMAN ÇİZELGESİ",
         "timeline": [
           {
-            "date": "03.2023",
             "name": "Projelendirme",
             "desc": "Proje ve ruhsat süreçleri tamamlandı."
           },
           {
-            "date": "07.2023",
             "name": "Kaba İnşaat",
             "desc": "Taşıyıcı sistem ve kaba inşaat tamamlandı."
           },
           {
-            "date": "06.2024",
             "name": "Teslim",
             "desc": "İnce işler ve kontroller tamamlanarak teslim edildi."
           }
         ],
-        "isoAlt": "Maşuk Apartmanı — aksonometrik çizim (temsilî)",
-        "isoCaption": "AKSONOMETRİ — TEMSİLİ",
+        "isoAlt": "Maşuk Apartmanı — aksonometrik çizim",
+        "isoCaption": "AKSONOMETRİ",
         "materialsTitle": "CEPHE & MALZEME",
         "materials": [
           "BETON",
@@ -221,12 +219,8 @@
         "place": "PENDİK",
         "city": "İSTANBUL",
         "placeCity": "İSTANBUL · PENDİK",
-        "address": "BATI MAH. MAŞUK SOK. NO:10, PENDİK/İSTANBUL",
-        "floors": "6",
-        "units": "24",
-        "year": "2024"
+        "address": "BATI MAH. MAŞUK SOK. NO:10, PENDİK/İSTANBUL"
       },
-      "samplesNote": "Gri renkte gösterilen yıl, kat, daire ve zaman çizelgesi değerleri örnek yerleşimdir; MEY İnşaat doğruladığında güncellenecek. İç mekân, vaziyet ve aksonometri görselleri temsilîdir.",
       "prevShort": "Önceki",
       "nextShort": "Sonraki"
     },

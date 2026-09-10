@@ -63,7 +63,6 @@ const frames = [
             name={name}
             typeLabel={typeLabel}
             statusLabel={statusLabel}
-            pendingLabel={td.pendingTag}
             cover={cover}
             coverXray={coverXray}
           />
@@ -145,14 +144,8 @@ const frames = [
   />
 </div>
 
-<!-- Dürüstlük dipnotu: örnek/temsilî değerlerin TEK açıklaması (her iki düzende ortak) -->
-<div class="container-site">
-  <p class="t-caption pds-note" data-testid="pd-note">{td.samplesNote}</p>
-</div>
-
 <style>
-  /* <1024px: masaüstü sahne gizlenir, yerini kompakt mobil akış (MobileDetail) alır.
-     Dipnot (.pds-note) sahnenin DIŞINDA olduğu için her iki düzende de görünür. */
+  /* <1024px: masaüstü sahne gizlenir, yerini kompakt mobil akış (MobileDetail) alır. */
   @media (max-width: 1023.98px) { .pds { display: none; } }
   @media (min-width: 1024px) { .pds-mobile { display: none; } }
 
@@ -173,11 +166,6 @@ const frames = [
     gap: 4rem;
   }
   .pds-frame { min-width: 0; }
-  .pds-note {
-    color: var(--color-graphite-400);
-    max-width: 62ch;
-    margin-block: 0.5rem 0;
-  }
 
   /* ---- Adımlı mod (JS + ≥1024 → .pds-live): tek kare + düğmeler ---- */
   .pds-live .pds-spread {
