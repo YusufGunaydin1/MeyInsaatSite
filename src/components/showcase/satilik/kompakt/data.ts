@@ -38,9 +38,12 @@ export type DetaySlugKey = keyof typeof DETAY_SLUG;
 export const tl = (n: number) => n.toLocaleString('tr-TR') + ' TL';
 
 /* Satıştaki dairenin ön dolu WhatsApp mesajı (liste + detay aynı metin): talep
-   hangi daire için geldiği belli olarak düşer ve ziyaretçiyi gezme gününe yönlendirir. */
+   hangi daire için geldiği belli olarak düşer ve ziyaretçiyi gezme gününe yönlendirir.
+   Son satır ziyaretçinin dolduracağı boşluk; ayrı satırda ki göze çarpsın. "___"
+   değil ".....": WhatsApp alt çizgiyi italik biçimlendirme işareti sayar. */
 export const WA_KONU =
-  'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-21) hakkında bilgi almak istiyorum. Daireyi görmek için hangi gün müsaitsiniz, gelip görebilir miyim?';
+  'Merhaba, Pendik’teki satılık 3+2 çatı dubleksi (D-21) hakkında bilgi almak istiyorum. Daireyi görmek için hangi gün müsaitsiniz, gelip görebilir miyim?\n' +
+  'Benim için hafta içi ..... günü veya hafta sonu uygun.';
 
 /* ─── Proje üst bilgisi (stat bar) ─── */
 export const proje = {
