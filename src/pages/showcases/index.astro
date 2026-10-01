@@ -14,11 +14,39 @@ type Demo = {
   status: 'proposal';
   meta: string;
   href: string;
+  preview?: { src: string; alt: string; kind?: 'facade' };
 };
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const demos: Demo[] = [
+  {
+    title: 'İç Mekân Lab — Boş mekândan yaşanan eve',
+    desc: 'İki gerçek D-21 oda fotoğrafı, iki dekorasyon stili ve üç etkileşim: ' +
+      'A) önce/sonra perdesi, B) mobilyaları aç/kapat stüdyosu, C) kaydırmayla değişen oda. ' +
+      'Gerçek fotoğraf ile yapay zekâ dekorasyon önerisini aynı kadrajda karşılaştır.',
+    status: 'proposal',
+    meta: '3 yön · 2 oda · 4 mobilyalı sahne',
+    href: base + '/showcases/ic-mekan-lab/',
+    preview: {
+      src: base + '/images/showcases/interiors/living-natural.webp',
+      alt: 'D-21 salonu için doğal malzemeli, yapay zekâ ile oluşturulmuş mobilya önerisi',
+    },
+  },
+  {
+    title: 'Hareket Lab — Yapıyı adım adım keşfet',
+    desc: 'Üç ayrı hareket dili: A) 17 kareyle sinematik inşa akışı, ' +
+      'B) katmanlarına ayrılan mimari model, C) derinlik hissi ve gündüz/akşam cephe sahnesi. ' +
+      'Kaydır, sahneyi kontrol et ve ana sayfa için en güçlü yönü seç.',
+    status: 'proposal',
+    meta: '3 yön · kaydırma · katmanlar · gündüz/akşam',
+    href: base + '/showcases/hareket-lab/',
+    preview: {
+      src: base + '/images/showcases/motion/el-ele-dusk.webp',
+      alt: 'El Ele Apartmanı cephesi için yapay zekâ ile oluşturulmuş akşam ışığı konsepti',
+      kind: 'facade',
+    },
+  },
   {
     title: 'ÖNERİ — Konum: kesin pinli harita bölümleri',
     desc:
@@ -45,7 +73,7 @@ const demos: Demo[] = [
 ];
 ---
 
-<Base locale="tr" page="home" path="/showcases" title="Tasarım Vitrini — MEY İnşaat" noindex>
+<Base locale="tr" page="home" path="/showcases" title="Tasarım Vitrini — MEY İnşaat" noindex hreflangLocales={['tr']} langFallbackPath="/">
   <section class="theatre blueprint-grid sc-wrap">
     <div class="container-site">
       <p class="t-tech" style="color: var(--color-red-on-dark);">MEY İnşaat · Dahili</p>
@@ -61,6 +89,12 @@ const demos: Demo[] = [
       <div class="sc-grid mt-10">
         {demos.map((d) => (
           <article class="sc-card">
+            {d.preview && (
+              <a class:list={['sc-preview', { 'sc-preview-facade': d.preview.kind === 'facade' }]} href={d.href} tabindex="-1" aria-hidden="true">
+                <img src={d.preview.src} alt="" width="720" height="450" loading="lazy" decoding="async" />
+                <span class="t-tech">Yapay zekâ konsepti · İncele →</span>
+              </a>
+            )}
             <span class:list={['t-tech sc-status', d.status]}>
               ○ ÖNERİ
             </span>
@@ -70,9 +104,6 @@ const demos: Demo[] = [
             <a class="t-tech sc-open" href={d.href}>Aç <span aria-hidden="true">→</span></a>
           </article>
         ))}
-        <div class="sc-empty t-caption text-concrete-100/50">
-          Sonraki varyant burada görünecek — bir tasarım denemesi istediğinde bu vitrine eklenir.
-        </div>
       </div>
     </div>
   </section>
@@ -105,19 +136,28 @@ const demos: Demo[] = [
     gap: 0.6rem;
   }
   .sc-title { color: #fff; }
+  .sc-preview {
+    position: relative;
+    display: block;
+    aspect-ratio: 8 / 5;
+    overflow: hidden;
+    background: var(--color-night-950);
+    margin-bottom: 0.5rem;
+  }
+  .sc-preview img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease; }
+  .sc-preview:hover img { transform: scale(1.025); }
+  .sc-preview-facade img { object-position: center 45%; }
+  .sc-preview span {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    background: rgb(14 15 17 / 0.85);
+    color: #fff;
+    padding: 0.5rem 0.65rem;
+  }
   .sc-status { align-self: flex-start; padding: 0.2rem 0.55rem; border-radius: var(--radius-brand); }
   .sc-status.live { color: #7dd87d; border: 1px solid rgb(125 216 125 / 0.3); }
   .sc-status.proposal { color: var(--color-red-on-dark); border: 1px solid rgb(242 85 90 / 0.3); }
   .sc-open { color: var(--color-mey-teal); margin-top: auto; }
   .sc-open:hover { color: #fff; }
-  .sc-empty {
-    border: 1px dashed rgb(255 255 255 / 0.15);
-    border-radius: var(--radius-brand);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-height: 200px;
-    padding: 1rem;
-  }
 </style>

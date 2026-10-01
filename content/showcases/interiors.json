@@ -1,0 +1,68 @@
+{
+  "rooms": [
+    {
+      "id": "living",
+      "title": "Alt kat salonu",
+      "description": "El Ele Apartmanı D21'in mevcut alt kat salonu. Soldaki pencere ve radyatör ile arka kapı, iki yerleşimde de korunur.",
+      "original": {
+        "src": "/images/showcases/interiors/living-original.webp",
+        "alt": "D21 alt kat salonunun boş hâli; solda siyah çerçeveli pencere ve beyaz radyatör, arkada açık kapı.",
+        "width": 1448,
+        "height": 1086
+      },
+      "styles": [
+        {
+          "id": "natural",
+          "label": "Doğal sıcaklık",
+          "description": "Keten tonlarında kanepe, açık meşe sehpa ve dokulu halıyla sakin bir oturma alanı.",
+          "src": "/images/showcases/interiors/living-natural.webp",
+          "alt": "D21 salonunun yapay zekâ ile hazırlanmış doğal stilde mobilyalı önerisi; açık renk kanepe, meşe sehpa ve tekli koltuk.",
+          "width": 1448,
+          "height": 1086
+        },
+        {
+          "id": "urban",
+          "label": "Kentli kontrast",
+          "description": "Antrasit kanepe, ceviz sehpa ve taba renkli tekli koltukla daha belirgin bir kontrast.",
+          "src": "/images/showcases/interiors/living-urban.webp",
+          "alt": "D21 salonunun yapay zekâ ile hazırlanmış kentli stilde mobilyalı önerisi; antrasit kanepe, ceviz sehpa ve taba koltuk.",
+          "width": 1448,
+          "height": 1086
+        }
+      ]
+    },
+    {
+      "id": "attic",
+      "title": "Çatı katı odası",
+      "description": "D21'in eğimli tavanlı üst kat odası. Mevcut pencere, çatı eğimi ve soldaki radyatör üzerinden iki yatak odası yorumu.",
+      "original": {
+        "src": "/images/showcases/interiors/attic-original.webp",
+        "alt": "D21 çatı katı odasının boş hâli; eğimli tavan, ortada siyah çerçeveli pencere ve solda radyatör.",
+        "width": 1448,
+        "height": 1086
+      },
+      "styles": [
+        {
+          "id": "natural",
+          "label": "Doğal sıcaklık",
+          "description": "Alçak meşe yatak, açık keten dokular ve doğal lifli halıyla yumuşak bir yatak odası.",
+          "src": "/images/showcases/interiors/attic-natural.webp",
+          "alt": "D21 çatı katı odasının yapay zekâ ile hazırlanmış doğal stilde yatak odası önerisi; alçak meşe yatak ve açık renk tekstiller.",
+          "width": 1448,
+          "height": 1086
+        },
+        {
+          "id": "urban",
+          "label": "Kentli kontrast",
+          "description": "Ceviz yatak, antrasit başlık ve gri tekstillerle sade bir yatak odası.",
+          "src": "/images/showcases/interiors/attic-urban.webp",
+          "alt": "D21 çatı katı odasının yapay zekâ ile hazırlanmış kentli stilde yatak odası önerisi; ceviz yatak ve antrasit başlık.",
+          "width": 1448,
+          "height": 1086
+        }
+      ]
+    }
+  ],
+  "provenance": "/images/showcases/interiors/provenance.json",
+  "disclosure": "Mobilyalı görseller, gerçek fotoğraflardan yapay zekâ ile üretilmiş yerleşim fikirleridir. Mobilyalar satışa dahil değildir; ölçü ve uygulama uygunluğu yerinde doğrulanmalıdır."
+}

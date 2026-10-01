@@ -1,3 +1,4 @@
+import { translator, type Messages } from '../../../../lib/translate';
 /*
   Kompakt adalara (React) geçen düz görsel verisi — astro:assets optimizasyonu
   SUNUCUDA yapılır, ada yalnız hazır URL alır (shared/imageVariants.ts ile aynı
@@ -35,7 +36,7 @@ async function widthSet(
 }
 
 /** Kart görseli: ~400px kolonda keskin, 2x dahil. */
-export async function cardImage(key: string): Promise<FlatImage> {
+export async function cardImage(key: string, messages: Messages = {}): Promise<FlatImage> {
   const { img, alt } = shot(key);
   const set = await widthSet(img, [400, 720], 74);
   return {
@@ -43,12 +44,12 @@ export async function cardImage(key: string): Promise<FlatImage> {
     srcset: set.map((v) => `${v.src} ${v.w}w`).join(', '),
     width: img.width,
     height: img.height,
-    alt,
+    alt: translator(messages)(alt),
   };
 }
 
 /** Karusel karesi: büyük sahne + küçük şerit küçük resmi + tam ekran. */
-export async function carouselItem(key: string): Promise<CarouselItem> {
+export async function carouselItem(key: string, messages: Messages = {}): Promise<CarouselItem> {
   const { img, alt, caption } = shot(key);
   const main = await widthSet(img, [480, 880, 1440], 76);
   const thumb = await getImage({ src: img, width: 144, format: 'webp', quality: 68 });
@@ -58,14 +59,14 @@ export async function carouselItem(key: string): Promise<CarouselItem> {
     srcset: main.map((v) => `${v.src} ${v.w}w`).join(', '),
     width: img.width,
     height: img.height,
-    alt,
-    caption,
+    alt: translator(messages)(alt),
+    caption: translator(messages)(caption),
     thumb: thumb.src,
   };
 }
 
-export async function carouselItems(keys: string[]): Promise<CarouselItem[]> {
+export async function carouselItems(keys: string[], messages: Messages = {}): Promise<CarouselItem[]> {
   const items: CarouselItem[] = [];
-  for (const key of keys) items.push(await carouselItem(key));
+  for (const key of keys) items.push(await carouselItem(key, messages));
   return items;
 }

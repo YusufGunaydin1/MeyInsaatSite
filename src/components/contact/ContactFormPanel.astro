@@ -7,6 +7,8 @@
 import RailForm from '../showcase/satilik/kompakt/RailForm';
 import { company } from '../../lib/content';
 import { contactNumber, telHref } from '../../lib/contact';
+import { salesMessages, islandMessages } from '../../lib/salesContent';
+import { translator } from '../../lib/translate';
 import type { Locale } from '../../lib/i18n';
 import '../showcase/satilik/kompakt/kompakt.css';
 
@@ -14,38 +16,38 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const messages = salesMessages(locale);
+const tx = translator(messages);
+const enabled = Boolean(company.contact.formAccessKey?.trim());
 
 const phone = contactNumber(company.contact.phone);
 const phoneHref = telHref(company.contact.phone);
 const email = company.contact.email;
 
 const fallback = [
-  ...(phone && phoneHref ? [{ kind: 'call' as const, label: `Ara · ${phone.display}`, href: phoneHref }] : []),
-  ...(email ? [{ kind: 'email' as const, label: `E-posta · ${email}`, href: `mailto:${email}` }] : []),
+  ...(phone && phoneHref ? [{ kind: 'call' as const, label: tx('Ara'), detail: phone.display, href: phoneHref }] : []),
+  ...(email ? [{ kind: 'email' as const, label: tx('E-posta'), detail: email, href: `mailto:${email}` }] : []),
 ];
 ---
 
-{/* Form metinleri Türkçe: RTL yerelde bile kendi yönünü taşır, aksi hâlde
-    etiketler ve örnek numara ters akar. */}
 <section
   class="cf"
   aria-labelledby="contact-form-title"
   data-testid="contact-form"
-  lang="tr"
-  dir={locale === 'ar' ? 'ltr' : undefined}
 >
   <div class="container-site cf-wrap">
-    <p class="t-tech cf-kicker">TALEP FORMU</p>
-    <h2 id="contact-form-title" class="t-heading-m cf-title">Bize Yazın</h2>
+    <p class="t-tech cf-kicker">{tx(enabled ? 'TALEP FORMU' : 'HIZLI İLETİŞİM')}</p>
+    <h2 id="contact-form-title" class="t-heading-m cf-title">{tx(enabled ? 'Bize Yazın' : 'Doğrudan ulaşın')}</h2>
     <p class="cf-sub">
-      Formu doldurun; aynı gün içinde size dönüş yapalım. Acele ediyorsanız doğrudan arayın.
+      {tx(enabled ? 'Formu doldurun; size dönüş yapalım. Dilerseniz doğrudan arayın.' : 'Aşağıdaki kanallardan bize ulaşabilirsiniz.')}
     </p>
 
     <RailForm
       client:load
+      messages={islandMessages(messages, 'form')}
       wide
-      konu="İletişim"
-      daire="Genel iletişim"
+      konu={tx("İletişim")}
+      daire={tx("Genel iletişim")}
       subject="Web Formu · İletişim"
       formLocation="iletisim"
       fallback={fallback}

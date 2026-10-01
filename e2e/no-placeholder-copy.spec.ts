@@ -10,6 +10,9 @@ import { join } from 'node:path';
 */
 const DIST = 'dist';
 const FORBIDDEN = [
+  /Formu kısa süre içinde açıyoruz/i,
+  /Bilgi bekleniyor/i,
+  /Information pending/i,
   /temsil[iî]/i,
   /doğrulan(ıyor|dığında)/i,
   /güncellenecek/i,

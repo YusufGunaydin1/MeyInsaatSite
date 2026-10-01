@@ -55,10 +55,7 @@ export default defineConfig({
     },
     filter: (page) =>
       !page.includes('/showcases') &&
-      !page.includes('/satilik-daireler/el-ele-apartmani-3-2-dubleks-satildi') &&
-      // Satılık bölümünün gövdesi henüz çevrilmedi: EN/RU/AR kopyaları noindex
-      // (bkz. SatilikPage/SatilikDaire2Page trOnly) → sitemap'te de yer almazlar.
-      !/\/(en|ru|ar)\/satilik-daireler/.test(page),
+      !page.includes('/satilik-daireler/el-ele-apartmani-3-2-dubleks-satildi'),
   })],
   i18n: {
     locales: ['tr', 'en', 'ru', 'ar'],

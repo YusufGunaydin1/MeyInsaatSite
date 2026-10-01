@@ -1,14 +1,21 @@
 ---
+import type { Locale } from "../../../../lib/i18n";
+import { salesMessages } from "../../../../lib/salesContent";
+import { translator } from "../../../../lib/translate";
 /* SSS — yerel <details>: JS'siz çalışır, kompakt akordeon. */
 import { sss } from './data';
+interface Props { locale?: Locale; }
+const messages = salesMessages(Astro.props.locale ?? 'tr');
+const tx = translator(messages);
+const { locale = 'tr' } = Astro.props;
 ---
 
 <div class="kc-faq" data-testid="kc-faq">
-  <h3 class="t-heading-s">Sıkça Sorulan Sorular</h3>
+  <h3 class="t-heading-s">{tx("Sıkça Sorulan Sorular")}</h3>
   {sss.map((q) => (
     <details class="kc-faq-item">
-      <summary>{q.soru}</summary>
-      <p>{q.cevap}</p>
+      <summary>{tx(q.soru)}</summary>
+      <p>{tx(q.cevap)}</p>
     </details>
   ))}
 </div>

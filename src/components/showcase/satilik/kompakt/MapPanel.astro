@@ -1,4 +1,6 @@
 ---
+import { salesMessages, islandMessages } from "../../../../lib/salesContent";
+import { translator } from "../../../../lib/translate";
 /*
   Konum paneli — kendi çizdiğimiz Leaflet haritası (harici karo iframe'i YOK):
   kesin pin, zoom, büyüt→modal, köşede küçük ⓘ atıf. Yanında bina adı + satır-içi
@@ -22,7 +24,9 @@ interface Props {
       'info' = yalnız adres + yol tarifi + yakın çevre (haritasız) */
   mode?: 'full' | 'map' | 'info';
 }
-const { title = 'Yakın Lokasyonlar', compact = false, locale = 'tr', mode = 'full' } = Astro.props;
+const messages = salesMessages(Astro.props.locale ?? 'tr');
+const tx = translator(messages);
+const { title = tx("Yakın Lokasyonlar"), compact = false, locale = 'tr', mode = 'full' } = Astro.props;
 
 const loc = projectLocations(locale).find((l) => l.slug === 'el-ele-apartmani');
 if (!loc) throw new Error('MapPanel: El Ele Apartmanı konum verisi bulunamadı');
@@ -32,7 +36,7 @@ const prefix = 'kc-loc';
 <div class:list={['kc-map card', compact && 'kc-map-compact', mode === 'map' && 'kc-map-only', mode === 'info' && 'kc-map-infoonly']} data-testid="kc-map">
   {mode !== 'info' && (
   <div class="kc-map-canvas" data-map="leaflet">
-    <LeafletMap
+    <LeafletMap messages={islandMessages(messages, 'maps')}
       client:visible
       lat={loc.coordinates.lat}
       lng={loc.coordinates.lng}
@@ -41,7 +45,7 @@ const prefix = 'kc-loc';
       testid={`${prefix}-leaflet`}
     />
     <span class="km-sale-badge t-tech">{loc.code}</span>
-    <SaleMapExpand
+    <SaleMapExpand messages={islandMessages(messages, 'maps')}
       client:visible
       map="leaflet"
       prefix={prefix}
@@ -58,7 +62,7 @@ const prefix = 'kc-loc';
     />
     {mode === 'map' && (
       <div class="kc-map-dir">
-        <DirectionsMenu
+        <DirectionsMenu messages={islandMessages(messages, 'maps')}
           client:visible
           layout="split"
           tone="light"
@@ -66,7 +70,7 @@ const prefix = 'kc-loc';
           openUp
           primaryHref={loc.googleDirectionsHref}
           items={directionsItems(loc)}
-          label="Yol tarifi"
+          label={tx("Yol tarifi")}
           testid={`${prefix}-mapdir`}
         />
       </div>
@@ -78,7 +82,7 @@ const prefix = 'kc-loc';
   <div class="kc-map-list">
     <div class="kc-loc-titlerow">
       <h3 class="t-heading-s kc-loc-name">{loc.name}</h3>
-      <DirectionsMenu
+      <DirectionsMenu messages={islandMessages(messages, 'maps')}
         client:visible
         layout="split"
         tone="light"
@@ -91,12 +95,12 @@ const prefix = 'kc-loc';
     <address class="kc-loc-addr">{loc.address}</address>
 
     <h4 class="t-heading-s kc-loc-heading">{title}</h4>
-    <p class="t-caption kc-loc-sub">Yürüme ve kısa araç mesafesinde:</p>
+    <p class="t-caption kc-loc-sub">{tx("Yürüme ve kısa araç mesafesinde:")}</p>
     <ul>
       {yakinCevre.map((y) => (
         <li>
           <span class="kc-map-ic"><Icon name={y.icon} size={17} /></span>
-          <span class="kc-map-ad">{y.ad}</span>
+          <span class="kc-map-ad">{tx(y.ad)}</span>
         </li>
       ))}
     </ul>

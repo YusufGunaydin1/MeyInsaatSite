@@ -1,3 +1,4 @@
+import { translator, type Messages } from '../../../../lib/translate';
 /*
   Detay galerisi adası — büyük sahne + ok/sayaç/tam ekran + küçük resim rayı.
   Tam ekran yerel <dialog> yerine sabit katman: odak/ESC/oklar elle yönetilir
@@ -25,11 +26,13 @@ export interface CarouselItemData {
 }
 
 interface Props {
+  messages?: Messages;
   items: CarouselItemData[];
   label: string;
 }
 
-export default function Carousel({ items, label }: Props) {
+export default function Carousel({ items, label, messages = {} }: Props) {
+  const tx = translator(messages);
   const [index, setIndex] = useState(0);
   const [full, setFull] = useState(false);
   const [wide, setWide] = useState(false);
@@ -119,26 +122,26 @@ export default function Carousel({ items, label }: Props) {
           fetchPriority="high"
           data-testid="kc-car-main"
         />
-        <span className="t-tech kcar-count" data-testid="kc-car-count">{index + 1} / {n}</span>
-        <button type="button" className="kcar-btn kcar-prev" onClick={() => step(-1)} aria-label="Önceki fotoğraf" data-testid="kc-car-prev">
+        <span className="t-tech kcar-count" dir="ltr" data-testid="kc-car-count">{index + 1} / {n}</span>
+        <button type="button" className="kcar-btn kcar-prev" onClick={() => step(-1)} aria-label={tx("Önceki fotoğraf")} data-testid="kc-car-prev">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m14.5 5-7 7 7 7" /></svg>
         </button>
-        <button type="button" className="kcar-btn kcar-next" onClick={() => step(1)} aria-label="Sonraki fotoğraf" data-testid="kc-car-next">
+        <button type="button" className="kcar-btn kcar-next" onClick={() => step(1)} aria-label={tx("Sonraki fotoğraf")} data-testid="kc-car-next">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m9.5 5 7 7-7 7" /></svg>
         </button>
         {canWide && (
           <button type="button" className="kcar-btn kcar-wide" onClick={toggleWide}
-            aria-pressed={wide} aria-label={wide ? 'Yan panelli görünüme dön' : 'Geniş görünüm'}
-            title={wide ? 'Yan panelli görünüme dön' : 'Geniş görünüm'} data-testid="kc-car-wide">
+            aria-pressed={wide} aria-label={wide ? tx("Yan panelli görünüme dön") : tx("Geniş görünüm")}
+            title={wide ? tx("Yan panelli görünüme dön") : tx("Geniş görünüm")} data-testid="kc-car-wide">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 7 5 12l5 5M14 7l5 5-5 5M5 12h14" /></svg>
           </button>
         )}
-        <button type="button" className="kcar-btn kcar-full" onClick={() => setFull(true)} aria-label="Tam ekran görüntüle" data-testid="kc-car-full">
+        <button type="button" className="kcar-btn kcar-full" onClick={() => setFull(true)} aria-label={tx("Tam ekran görüntüle")} data-testid="kc-car-full">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" /></svg>
         </button>
       </div>
       <figcaption className="t-caption kcar-cap">{cur.caption}</figcaption>
-      <div className="kcar-thumbs" role="tablist" aria-label="Fotoğraflar">
+      <div className="kcar-thumbs" role="tablist" aria-label={tx("Fotoğraflar")}>
         {items.map((it, i) => (
           <button
             key={it.key}
@@ -147,7 +150,7 @@ export default function Carousel({ items, label }: Props) {
             aria-selected={i === index}
             className={i === index ? 'kcar-thumb is-active' : 'kcar-thumb'}
             onClick={() => setIndex(i)}
-            aria-label={`Fotoğraf ${i + 1}: ${it.alt}`}
+            aria-label={tx('Fotoğraf {n}: {alt}', { n: i + 1, alt: it.alt })}
             data-testid={`kc-car-thumb-${i}`}
           >
             <DeferredImage
@@ -167,13 +170,13 @@ export default function Carousel({ items, label }: Props) {
         <div className="kcar-overlay" role="dialog" aria-modal="true" aria-label={label} data-testid="kc-car-overlay">
           <img src={cur.src} srcSet={cur.srcset} sizes="96vw" alt={cur.alt} decoding="async" data-testid="kc-car-overlay-img" />
           <p className="t-caption kcar-overlay-cap">{cur.caption} · {index + 1} / {n}</p>
-          <button type="button" className="kcar-btn kcar-overlay-prev" onClick={() => step(-1)} aria-label="Önceki fotoğraf">
+          <button type="button" className="kcar-btn kcar-overlay-prev" onClick={() => step(-1)} aria-label={tx("Önceki fotoğraf")}>
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m14.5 5-7 7 7 7" /></svg>
           </button>
-          <button type="button" className="kcar-btn kcar-overlay-next" onClick={() => step(1)} aria-label="Sonraki fotoğraf">
+          <button type="button" className="kcar-btn kcar-overlay-next" onClick={() => step(1)} aria-label={tx("Sonraki fotoğraf")}>
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m9.5 5 7 7-7 7" /></svg>
           </button>
-          <button type="button" className="kcar-btn kcar-close" onClick={() => setFull(false)} aria-label="Tam ekrandan çık" data-testid="kc-car-close" autoFocus>
+          <button type="button" className="kcar-btn kcar-close" onClick={() => setFull(false)} aria-label={tx("Tam ekrandan çık")} data-testid="kc-car-close" autoFocus>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m6 6 12 12M18 6 6 18" /></svg>
           </button>
         </div>

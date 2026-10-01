@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+import LabIntro from '../../components/showcase/LabIntro.astro';
+import Specimen from '../../components/showcase/Specimen.astro';
+import ComparisonStudio from '../../components/showcase/interior-lab/ComparisonStudio';
+import FurnishingStudio from '../../components/showcase/interior-lab/FurnishingStudio';
+import ScrollInterior from '../../components/showcase/interior-lab/ScrollInterior';
+import type { InteriorRoom } from '../../components/showcase/interior-lab/types';
+import interiorData from '../../../content/showcases/interiors.json';
+import '../../components/showcase/interior-lab/interior-lab.css';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const rooms: InteriorRoom[] = interiorData.rooms.map((room) => ({
+  ...room,
+  original: { ...room.original, src: base + room.original.src },
+  styles: room.styles.map((style) => ({ ...style, src: base + style.src })),
+}));
+---
+
+<Base locale="tr" page="home" path="/showcases/ic-mekan-lab"
+  title="İç Mekân Lab — Eşyalı Yaşam Önerileri" noindex hreflangLocales={['tr']} langFallbackPath="/">
+  <LabIntro kicker="MEY İnşaat · Tasarım vitrini · İç mekân"
+    title="Bir mekân. Birçok yaşam."
+    desc="Gerçek daire fotoğraflarından üretilmiş eşyalı dekorasyon önerileri. Karşılaştırma, aç/kapat ve kaydırarak dönüşüm: aynı görselleri kullanan üç ayrı deneyim." />
+  <div class="container-site">
+    <nav class="il-route-nav" aria-label="İç mekân deneyimleri">
+      <a href="#karsilastirma">A · Çizgiyi kaydır</a>
+      <a href="#esyali">B · Eşyalı görünüm</a>
+      <a href="#hikaye">C · Dönüşümü izle</a>
+    </nav>
+    <div class="il-context">
+      <p><strong>Kaynak: El Ele Apartmanı D-21'in mevcut oda fotoğrafları.</strong> Eşyalı sahneler yapay zekâ ile hazırlanmış dekorasyon önerileridir. Mobilyalar, ölçüler ve görsel detaylar teslimat taahhüdü değildir; mevcut durum için orijinal fotoğrafı esas alın.</p>
+      <a href={base + '/satilik-daireler/pendik-satilik-3-2-dubleks/'}>Gerçek daireyi incele →</a>
+    </div>
+  </div>
+
+  <div id="karsilastirma" class="il-route-section">
+    <Specimen id="A · KARŞILAŞTIR" name="Gerçek fotoğraf ile dekorasyon önerisi arasında bir çizgi"
+      why="İlan galerisi için: odanın mevcut hâli her zaman elinizin altında. Çizgi fareyle, dokunarak veya klavyeyle hareket eder; oda ve dekorasyon seçilebilir.">
+      <ComparisonStudio rooms={rooms} client:visible />
+    </Specimen>
+  </div>
+  <div id="esyali" class="il-route-section">
+    <Specimen id="B · YAŞAM SEÇİMİ" name="Odayı seç, eşyalı görünümü aç, dekorasyonu değiştir"
+      why="Daire detay sayfası için: gerçek fotoğraf başlangıç noktasıdır. Eşyalı görünüm açıkça açılıp kapatılır; farklı dekorasyonlar yumuşak geçişle denenir.">
+      <FurnishingStudio rooms={rooms} client:visible />
+    </Specimen>
+  </div>
+  <div id="hikaye" class="il-route-section">
+    <Specimen id="C · MEKÂN HİKÂYESİ" name="Kaydırma, boş odayı bir yaşam fikrine dönüştürür"
+      why="Proje sunumu için: büyük fotoğraf, üç aşamalı anlatı ve kaydırmaya bağlı dönüşüm. Durdurma, aşama seçimi ve manuel kontrol her zaman erişilebilir.">
+      <ScrollInterior rooms={rooms} client:visible />
+    </Specimen>
+  </div>
+
+  <noscript>
+    <section class="container-site il-fallback" aria-labelledby="static-interiors">
+      <h2 id="static-interiors" class="t-display-l">Tüm mekân ve dekorasyon görselleri</h2>
+      <p class="mt-4">Etkileşimli kontroller JavaScript gerektirir. Orijinal fotoğrafları ve tüm dekorasyon önerilerini aşağıda inceleyebilirsiniz.</p>
+      {rooms.map((room) => (
+        <div class="mt-6">
+          <h3 class="t-heading-m">{room.title}</h3>
+          <div class="il-fallback-grid">
+            <figure><img src={room.original.src} alt={room.original.alt} width={room.original.width} height={room.original.height} loading="lazy" /><figcaption>Orijinal fotoğraf</figcaption></figure>
+            {room.styles.map((style) => (
+              <figure><img src={style.src} alt={style.alt} width={style.width} height={style.height} loading="lazy" /><figcaption>{style.label} — Yapay zekâ ile hazırlanmış dekorasyon önerisi</figcaption></figure>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+  </noscript>
+</Base>

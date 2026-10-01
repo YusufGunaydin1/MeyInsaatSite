@@ -1,4 +1,7 @@
 ---
+import type { Locale } from "../../../../lib/i18n";
+import { salesMessages } from "../../../../lib/salesContent";
+import { translator } from "../../../../lib/translate";
 /*
   Mobil yapışkan satış çubuğu (≤1023px) — reklamla gelen ziyaretçinin birincil
   eylemi (Ara / WhatsApp) her an ekranda kalsın; detay sayfası uzun kaydırıldığında
@@ -10,6 +13,7 @@ import { company } from '../../../../lib/content';
 import { contactNumber, telHref, whatsappHref } from '../../../../lib/contact';
 
 interface Props {
+  locale?: Locale;
   /** görünen fiyat (ör. "13.750.000 TL") */
   fiyat: string;
   /** kısa kırmızı etiket (ör. "Son daire · D-21") */
@@ -17,22 +21,24 @@ interface Props {
   /** WhatsApp ön dolu mesajındaki konu (ör. "D-21 · 3+2 Dubleks") */
   konu?: string;
 }
-const { fiyat, etiket, konu = 'Pendik’teki satılık daire' } = Astro.props;
+const messages = salesMessages(Astro.props.locale ?? 'tr');
+const tx = translator(messages);
+const { locale = 'tr', fiyat, etiket, konu = tx("Pendik’teki satılık daire") } = Astro.props;
 const phone = contactNumber(company.salesContact.phone);
 const wa = contactNumber(company.salesContact.whatsapp);
 const phoneHref = telHref(company.salesContact.phone);
-const waHref = whatsappHref(company.salesContact.whatsapp, `Merhaba, ${konu} hakkında bilgi almak istiyorum.`);
+const waHref = whatsappHref(company.salesContact.whatsapp, tx('Merhaba, {konu} hakkında bilgi almak istiyorum.', { konu }));
 ---
 
 <div class="kc-mbar" data-testid="kc-mbar">
   <div class="kc-mbar-price">
-    <p class="kc-mbar-fiyat tabular-nums">{fiyat}</p>
+    <p class="kc-mbar-fiyat tabular-nums" dir="ltr">{fiyat}</p>
     {etiket && <p class="kc-mbar-etiket t-tech">{etiket}</p>}
   </div>
   <div class="kc-mbar-actions">
     {phoneHref && (
-      <a class="kc-mbar-call" href={phoneHref} data-testid="kc-mbar-call" aria-label={`Satış danışmanını ara: ${phone?.display ?? ''}`}>
-        <Icon name="phone" size={16} /> Ara
+      <a class="kc-mbar-call" href={phoneHref} data-testid="kc-mbar-call" aria-label={tx('Satış danışmanını ara: {phone}', { phone: phone?.display ?? '' })}>
+        <Icon name="phone" size={16} /> {tx("Ara")}
       </a>
     )}
     {waHref && (

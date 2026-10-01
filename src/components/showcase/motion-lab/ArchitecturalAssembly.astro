@@ -1,0 +1,150 @@
+---
+import { box, project, layerInfo, type Face } from './geometry';
+const foundation = box(-105, -78, -22, 210, 156, 22);
+const frame: Face[] = [];
+for (const x of [-76, -4, 68]) for (const y of [-52, 44]) frame.push(...box(x, y, 0, 8, 8, 270));
+for (const z of [48, 102, 156, 210, 264]) {
+  frame.push(...box(-76, -52, z, 152, 8, 6), ...box(-76, 44, z, 152, 8, 6));
+}
+const slabs = [0, 54, 108, 162, 216, 270].flatMap((z) => box(-84, -60, z, 168, 120, 6));
+const facade: Face[] = [
+  { shade: 'front', vertices: [[-84, 61, 6], [84, 61, 6], [84, 61, 270], [-84, 61, 270]] },
+  { shade: 'side', vertices: [[85, -60, 6], [85, 61, 6], [85, 61, 270], [85, -60, 270]] },
+];
+for (const z of [17, 71, 125, 179, 233]) {
+  for (const x of [-70, -20, 30]) facade.push({ shade: 'front', glass: true, vertices: [[x, 62, z], [x + 31, 62, z], [x + 31, 62, z + 30], [x, 62, z + 30]] });
+  for (const y of [-43, 10]) facade.push({ shade: 'side', glass: true, vertices: [[86, y, z], [86, y + 28, z], [86, y + 28, z + 30], [86, y, z + 30]] });
+}
+const roof = [...box(-91, -67, 276, 182, 134, 10), ...box(-81, -57, 286, 162, 114, 4)];
+const layers = [
+  { id: 'foundation', title: 'Temel', faces: foundation, x: 0, y: 0 },
+  { id: 'frame', title: 'Taşıyıcı sistem', faces: frame, x: 0, y: -25 },
+  { id: 'slabs', title: 'Döşemeler', faces: slabs, x: -35, y: -62 },
+  { id: 'facade', title: 'Cephe', faces: facade, x: 130, y: -65 },
+  { id: 'roof', title: 'Çatı', faces: roof, x: 0, y: -145 },
+];
+const grid = Array.from({ length: 9 }, (_, index) => index * 35 - 140);
+---
+
+<section id="katmanlar" class="motion-lab ml-assembly" data-motion-assembly data-testid="motion-assembly"
+  data-separation="45" data-selected="all" aria-labelledby="ml-assembly-title">
+  <div class="container-site ml-assembly-layout">
+    <div class="ml-assembly-intro">
+      <p class="t-tech ml-label">B / Yapının anatomisi</p>
+      <h2 id="ml-assembly-title" class="t-display-l">Bütünü görün.<br />Katmanları keşfedin.</h2>
+      <p class="ml-description">Bir yapıyı yalnız cephesinden okumayın. Katmanları birbirinden ayırın, bakış açısını değiştirin ve her parçanın bütündeki yerini görün.</p>
+      <p class="ml-note">Kavramsal mimari şema. Herhangi bir MEY projesinin ölçülü modeli, statik projesi veya BIM verisi değildir.</p>
+    </div>
+    <div class="ml-assembly-stage">
+      <div class="ml-assembly-stamp t-tech"><span>AKSONOMETRİ</span><span>ÖLÇEKSİZ / KAVRAMSAL</span></div>
+      <svg class="ml-assembly-model" viewBox="0 0 720 720" role="img" aria-labelledby="ml-model-title ml-model-desc" data-testid="assembly-model">
+        <title id="ml-model-title">Beş katmandan oluşan kavramsal yapı modeli</title>
+        <desc id="ml-model-desc">Temel, kolon ve kirişler, yatay döşemeler, pencereli cephe ve çatı, ayrıştırılabilir katmanlar olarak gösterilir.</desc>
+        <g class="ml-model-ground" aria-hidden="true">
+          {grid.map((position) => <>
+            <polyline points={project([[position, -140, -27], [position, 140, -27]])} />
+            <polyline points={project([[-140, position, -27], [140, position, -27]])} />
+          </>)}
+        </g>
+        <g class="ml-model-axis" aria-hidden="true">
+          <path d="M360 150 V625" /><path d="M310 596 L360 625 L410 596" />
+        </g>
+        {layers.map((layer) => (
+          <g class={`ml-model-layer ml-model-${layer.id}`} data-model-layer={layer.id}
+            data-offset-x={layer.x} data-offset-y={layer.y} transform={`translate(${layer.x * 0.45} ${layer.y * 0.45})`}>
+            {layer.faces.map((face) => <polygon class:list={[`ml-face-${face.shade}`, { 'ml-face-glass': face.glass }]}
+              points={project(face.vertices)} data-vertices={JSON.stringify(face.vertices)} />)}
+          </g>
+        ))}
+      </svg>
+      <div class="ml-assembly-legend" aria-hidden="true"><span></span> SEÇİLİ KATMAN <i></i> BAĞLAM</div>
+    </div>
+    <div class="ml-assembly-panel">
+      <div class="ml-controls ml-assembly-controls">
+        <label class="ml-range-group">
+          <span class="ml-range-label"><span>Katman açıklığı</span><output data-assembly-separation-output>45%</output></span>
+          <input type="range" class="ml-range" min="0" max="100" step="1" value="45" aria-label="Katman açıklığı"
+            data-testid="assembly-separation" data-assembly-separation />
+        </label>
+        <label class="ml-range-group">
+          <span class="ml-range-label"><span>Bakış açısı</span><output data-assembly-angle-output>0°</output></span>
+          <input type="range" class="ml-range" min="-35" max="35" step="1" value="0" aria-label="Yapı bakış açısı"
+            data-testid="assembly-rotation" data-assembly-angle />
+        </label>
+        <div class="ml-buttons">
+          <button type="button" class="ml-button" data-assembly-preset="0">Birleştir</button>
+          <button type="button" class="ml-button" data-assembly-preset="100">Katmanları aç</button>
+          <button type="button" class="ml-button" data-assembly-reset data-testid="assembly-reset">Sıfırla</button>
+        </div>
+        <div class="ml-assembly-layer-picker" role="group" aria-label="İncelenecek yapı katmanı">
+          <button type="button" class="ml-button" data-assembly-layer="all" aria-pressed="true" data-testid="assembly-layer-all">Tüm yapı</button>
+          {layers.map((layer, index) => <button type="button" class="ml-button" data-assembly-layer={layer.id}
+            aria-pressed="false" data-testid={`assembly-layer-${layer.id}`}><span class="t-tech">0{index + 1}</span>{layer.title}</button>)}
+        </div>
+      </div>
+      <div class="ml-assembly-detail" data-testid="assembly-detail" aria-live="polite" aria-atomic="true">
+        <h3 data-assembly-title>{layerInfo.all.name}</h3>
+        <p data-assembly-description>{layerInfo.all.text}</p>
+      </div>
+      <noscript><p class="ml-noscript">Statik ayrıştırılmış model gösteriliyor. Katmanları hareket ettirmek ve incelemek için JavaScript gereklidir.</p></noscript>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initAssembly } from './assembly';
+  document.querySelectorAll<HTMLElement>('[data-motion-assembly]').forEach(initAssembly);
+</script>
+
+<style>
+  .ml-assembly { background: var(--color-night-800); padding-block: clamp(2.5rem, 6vw, 5rem); }
+  .ml-assembly-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.85fr); gap: 2rem 4rem; }
+  .ml-assembly-intro { grid-column: 1 / -1; display: grid; grid-template-columns: 1.3fr 0.85fr; gap: 0.6rem 4rem; }
+  .ml-assembly-intro .t-tech, .ml-assembly-intro h2 { grid-column: 1; }
+  .ml-assembly-intro h2 { line-height: 1.1; margin-block: 0.5rem 0; }
+  .ml-assembly-intro .ml-description { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+  .ml-assembly-intro .ml-note { grid-column: 2; grid-row: 3; align-self: start; }
+  .ml-assembly-stage { position: relative; min-width: 0; border: 1px solid var(--ml-border); background: var(--color-night-950); }
+  .ml-assembly-stamp { position: absolute; inset-inline: 1rem; top: 1rem; display: flex; justify-content: space-between; gap: 1rem; font-size: 0.625rem; color: var(--ml-muted); }
+  .ml-assembly-model { width: 100%; display: block; }
+  .ml-model-ground { fill: none; stroke: var(--color-mey-teal); stroke-width: 0.6; opacity: 0.28; }
+  .ml-model-axis { stroke: var(--color-mey-teal); stroke-dasharray: 3 5; stroke-width: 0.7; fill: none; opacity: 0.6; }
+  .ml-model-layer { stroke: #6b7174; stroke-width: 0.7; stroke-linejoin: round; }
+  .ml-face-top { fill: #e2e2de; }
+  .ml-face-front { fill: #aeb2b2; }
+  .ml-face-side { fill: #747a7d; }
+  .ml-model-foundation .ml-face-top { fill: #737a7b; }
+  .ml-model-foundation .ml-face-front { fill: #454d50; }
+  .ml-model-foundation .ml-face-side { fill: #323a3d; }
+  .ml-model-facade .ml-face-front { fill: #ecece9; }
+  .ml-model-facade .ml-face-side { fill: #a8aeb0; }
+  .ml-model-layer .ml-face-glass { fill: #223e43; stroke: #70898c; }
+  .ml-model-layer[data-dimmed] { opacity: 0.16; }
+  .ml-model-layer[data-highlighted] { stroke: var(--color-red-on-dark); stroke-width: 1.8; }
+  .ml-assembly-legend { position: absolute; inset-inline: 1rem; bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font: 500 0.6rem var(--font-mono); color: var(--ml-muted); }
+  .ml-assembly-legend span, .ml-assembly-legend i { display: block; width: 9px; height: 9px; border: 1px solid var(--color-red-on-dark); }
+  .ml-assembly-legend i { margin-inline-start: 0.75rem; border-color: var(--ml-border); }
+  .ml-assembly-panel { align-self: center; }
+  .ml-assembly-controls { flex-direction: column; align-items: stretch; gap: 1.25rem; }
+  .ml-assembly-layer-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .ml-assembly-layer-picker .ml-button { justify-content: start; gap: 0.75rem; }
+  .ml-assembly-layer-picker .t-tech { color: var(--ml-muted); }
+  .ml-assembly-detail { padding-block-start: 1.25rem; margin-block-start: 1.5rem; border-block-start: 1px solid var(--ml-border); min-height: 140px; }
+  .ml-assembly-detail h3 { font-weight: 500; font-size: 1.125rem; margin-block-end: 0.6rem; }
+  .ml-assembly-detail p { font-size: 0.875rem; color: var(--ml-muted); }
+  @media (max-width: 899px) {
+    .ml-assembly-layout, .ml-assembly-intro { gap: 1.5rem; }
+    .ml-assembly-layout { grid-template-columns: 1fr; }
+    .ml-assembly-intro { display: block; }
+    .ml-assembly-intro .ml-description { margin-block: 1rem; }
+    .ml-assembly-stage { max-width: 660px; width: 100%; margin-inline: auto; }
+    .ml-assembly-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .ml-assembly-detail { margin-block-start: 0; }
+  }
+  @media (max-width: 599px) {
+    .ml-assembly-panel { display: block; }
+    .ml-assembly-detail { margin-block-start: 1.5rem; }
+    .ml-assembly-stamp { font-size: 0.5rem; gap: 0.5rem; inset-inline: 0.65rem; }
+    .ml-assembly-legend { inset-inline: 0.65rem; font-size: 0.5rem; }
+  }
+</style>

@@ -1,3 +1,4 @@
+import { translator, type Messages } from '../../../lib/translate';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { DirectionsItem } from '../../../lib/projectLocations';
@@ -5,6 +6,7 @@ import DirectionsMenu from './DirectionsMenu';
 import LeafletMap from './LeafletMap';
 
 interface Props {
+  messages?: Messages;
   name: string;
   code: string;
   address: string;
@@ -49,7 +51,8 @@ function CloseIcon() {
 const FOCUSABLE = 'a[href],button:not([disabled]),iframe,[tabindex]:not([tabindex="-1"])';
 
 export default function SaleMapExpand(props: Props) {
-  const { map = 'iframe', prefix = 'location-d' } = props;
+  const { map = 'iframe', prefix = 'location-d', messages = {} } = props;
+  const tx = translator(messages);
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -111,17 +114,17 @@ export default function SaleMapExpand(props: Props) {
               className="km-mapmodal-panel"
               role="dialog"
               aria-modal="true"
-              aria-label={`${props.name} — büyük konum haritası`}
+              aria-label={tx('{name} — büyük konum haritası', { name: props.name })}
               data-testid={`${prefix}-modal`}
             >
               <header className="km-mapmodal-head">
                 <h3>{props.name}</h3>
-                <p className="t-tech km-mapmodal-tag">{props.code} · DOĞRULANMIŞ PİN</p>
+                <p className="t-tech km-mapmodal-tag">{props.code} · {tx("DOĞRULANMIŞ PİN")}</p>
                 <button
                   ref={closeRef}
                   type="button"
                   className="km-mapmodal-close"
-                  aria-label="Kapat"
+                  aria-label={tx("Kapat")}
                   data-testid={`${prefix}-modal-close`}
                   onClick={() => setOpen(false)}
                 >
@@ -131,7 +134,7 @@ export default function SaleMapExpand(props: Props) {
 
               <div className="km-mapmodal-map" data-map={map}>
                 {map === 'leaflet' ? (
-                  <LeafletMap
+                  <LeafletMap messages={messages}
                     lat={props.lat}
                     lng={props.lng}
                     label={props.name}
@@ -146,17 +149,17 @@ export default function SaleMapExpand(props: Props) {
                     </div>
                     <iframe
                       src={props.osmEmbedHref}
-                      title={`${props.name} gerçek konum haritası`}
+                      title={tx('{name} gerçek konum haritası', { name: props.name })}
                       loading="lazy"
                     />
                     <a className="km-osm-link" href={props.osmMapHref} target="_blank" rel="noopener">
-                      © OpenStreetMap katkıcıları
+                      {tx("© OpenStreetMap katkıcıları")}
                     </a>
                   </>
                 )}
                 <div className="km-map-badge">
                   <PinIcon />
-                  <span><small>KESİN PİN</small>{props.code}</span>
+                  <span><small>{tx("KESİN PİN")}</small>{props.code}</span>
                 </div>
               </div>
 
@@ -165,7 +168,7 @@ export default function SaleMapExpand(props: Props) {
                   <address>{props.address}</address>
                   <span className="t-tech km-coordinate">{props.coordinateLabel}</span>
                 </div>
-                <DirectionsMenu
+                <DirectionsMenu messages={messages}
                   layout="split"
                   tone="light"
                   size="sm"
@@ -186,7 +189,7 @@ export default function SaleMapExpand(props: Props) {
       <button
         type="button"
         className="km-sale-expand"
-        aria-label="Haritayı büyüt"
+        aria-label={tx("Haritayı büyüt")}
         aria-haspopup="dialog"
         data-testid={`${prefix}-expand`}
         onClick={() => setOpen(true)}

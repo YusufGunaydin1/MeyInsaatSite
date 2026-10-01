@@ -38,7 +38,7 @@ const channels = [
     ch.href ? (
       <a href={ch.href} class="bg-white p-5 hover:bg-concrete-100 transition-colors block">
         <p class="t-tech text-graphite-400">{ch.label}</p>
-        <p class="t-heading-s mt-2 tabular-nums">{ch.value}</p>
+        <p class="t-heading-s mt-2 tabular-nums"><bdi dir="ltr">{ch.value}</bdi></p>
       </a>
     ) : (
       <div class="bg-white p-5">

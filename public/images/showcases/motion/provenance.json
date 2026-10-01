@@ -1,0 +1,9 @@
+{
+  "tool": "Built-in image_gen",
+  "generatedAt": "2026-09-29",
+  "source": "src/assets/projects/el-ele-apartmani.webp",
+  "output": "el-ele-dusk.webp",
+  "master": "images/showcase-masters/motion/el-ele-dusk-master.png (local source library, not published)",
+  "purpose": "Illustrative day/evening comparison in the motion showcase; not a new photograph or specification of installed lighting.",
+  "prompt": "Use case: lighting-weather\nAsset type: portrait project-facade dusk variant for a day/evening website showcase.\nInput image: the attached existing MEY El Ele apartment facade image is the EDIT TARGET. Preserve the same building and exact original composition.\nPrimary request: change only daylight/time of day to sophisticated blue-hour dusk, with a muted deep blue evening sky, subtle warm interior light visible behind selected existing windows, and soft warm existing entrance/balcony ceiling lighting.\nInvariants: same 3:4 portrait framing; exactly the same camera, building silhouette, storey count, perspective, all balconies, intricate black railings, doors, windows, neighbouring buildings, sidewalk, steps, trees, materials and façade white colour. Do not add or remove architectural elements, lights or fixtures. Keep the existing top sign text 'MEY İNŞAAT' unchanged and legible. Shadows and illumination may change naturally; retain all physical geometry so a day/dusk comparison remains aligned.\nStyle: believable premium architectural blue-hour photography, restrained warm/cool balance, no oversaturation, subtle lived-in atmosphere, no people, no cars, no added text, no watermark. Output one full image matching source portrait aspect ratio, no split-screen or collage."
+}

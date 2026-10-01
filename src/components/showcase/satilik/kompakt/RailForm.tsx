@@ -11,15 +11,18 @@
 */
 import { useEffect, useId, useRef, useState } from 'react';
 import { WEB3FORMS_ENDPOINT, isValidEmail, isValidTrPhone, leadPayload } from '../../../../lib/contact';
+import { translator, type Messages } from '../../../../lib/translate';
 import { trackFormLead } from '../../../../lib/leadEvents';
 
 export interface FallbackChannel {
   kind: 'call' | 'whatsapp' | 'email';
   label: string;
+  detail?: string;
   href: string;
 }
 
 interface Props {
+  messages?: Messages;
   /** hangi daire/konu hakkında — mesaj yer tutucusunda ve panellerde görünür */
   konu: string;
   /** e-posta konu satırı, ör. "Web Formu · D-21 · 3+2 Dubleks · El Ele Apartmanı" */
@@ -40,19 +43,6 @@ interface Props {
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
-const SUCCESS_TEXT = 'Teşekkürler! Mesajınız bize ulaştı. Aynı gün içinde size dönüş yapacağız.';
-
-/** Hata cümlesi sayfada GERÇEKTEN sunulan kanalları söyler — /iletisim'de WhatsApp yok. */
-function failureText(fallback: FallbackChannel[]): string {
-  const kinds = new Set(fallback.map((channel) => channel.kind));
-  const phrase = kinds.has('whatsapp')
-    ? 'telefon veya WhatsApp'
-    : kinds.has('email')
-      ? 'telefon veya e-posta'
-      : 'telefon';
-  return `Mesaj gönderilemedi. Lütfen ${phrase} ile ulaşın.`;
-}
-
 /** `where` testid'leri ayırır: aynı kanallar başarı, hata ve JS'siz panelde
     birlikte DOM'da durur, testler tekini hedefleyebilmeli. */
 function Channels({ fallback, where }: { fallback: FallbackChannel[]; where: string }) {
@@ -66,7 +56,8 @@ function Channels({ fallback, where }: { fallback: FallbackChannel[]; where: str
           href={channel.href}
           data-testid={`kcf-${where}-${channel.kind}`}
         >
-          {channel.label}
+          <span>{channel.label}</span>
+          {channel.detail && <bdi dir="ltr">{channel.detail}</bdi>}
         </a>
       ))}
     </div>
@@ -82,7 +73,11 @@ export default function RailForm({
   daire,
   accessKey = '',
   wide = false,
+  messages = {},
 }: Props) {
+  const tx = translator(messages);
+  const successText = tx('Teşekkürler! Mesajınız bize ulaştı. Size dönüş yapacağız.');
+  const failure = tx('Mesaj gönderilemedi. Aşağıdaki kanallardan bize ulaşabilirsiniz.');
   const uid = useId();
   const id = {
     name: `${uid}-name`,
@@ -122,17 +117,17 @@ export default function RailForm({
     setValues((prev) => ({ ...prev, [field]: event.target.value }));
 
   /*
-    Tarayıcının kendi doğrulama balonları İNGİLİZCE çıkar ve dili değiştirilemez;
-    bu yüzden form noValidate, mesajlar Türkçe ve alanın altında satır içi verilir.
+    Tarayıcının doğrulama dili sayfanın diliyle eşleşmeyebilir; noValidate ile
+    yerelleştirilmiş mesajları ilgili alanın altında gösteririz.
     `required` yine durur — ekran okuyucular alanı zorunlu olarak duyurur.
   */
   function validate(): Record<string, string> {
     const next: Record<string, string> = {};
-    if (!values.name.trim()) next.name = 'Lütfen adınızı ve soyadınızı yazın.';
-    if (!values.phone.trim()) next.phone = 'Lütfen telefon numaranızı yazın.';
-    else if (!isValidTrPhone(values.phone)) next.phone = 'Telefon numarası eksik görünüyor — örn. 0532 625 68 12.';
-    if (values.email.trim() && !isValidEmail(values.email)) next.email = 'E-posta adresi geçerli görünmüyor.';
-    if (!consent) next.consent = 'Devam etmek için onay kutusunu işaretleyin.';
+    if (!values.name.trim()) next.name = tx("Lütfen adınızı ve soyadınızı yazın.");
+    if (!values.phone.trim()) next.phone = tx("Lütfen telefon numaranızı yazın.");
+    else if (!isValidTrPhone(values.phone)) next.phone = tx("Telefon numarası eksik görünüyor — örn. 0532 625 68 12.");
+    if (values.email.trim() && !isValidEmail(values.email)) next.email = tx("E-posta adresi geçerli görünmüyor.");
+    if (!consent) next.consent = tx("Devam etmek için onay kutusunu işaretleyin.");
     return next;
   }
 
@@ -190,17 +185,17 @@ export default function RailForm({
   if (!accessKey.trim()) {
     return (
       <div className="kcf kcf-offline" role="note" data-testid="kcf-offline">
-        <p className="t-tech kcf-kicker">HIZLI İLETİŞİM</p>
-        <p className="kcf-panel-title">Formu kısa süre içinde açıyoruz</p>
-        <p className="kcf-panel-text">
-          {konu} için şimdi telefon veya WhatsApp ile ulaşın — aynı gün dönüş yapalım.
-        </p>
+        {!wide && <>
+          <p className="kcf-panel-title">{tx('Doğrudan ulaşın')}</p>
+          <p className="kcf-panel-text">{tx('Aşağıdaki kanallardan bize ulaşabilirsiniz.')}</p>
+        </>}
+        <Channels fallback={fallback} where="offline" />
       </div>
     );
   }
 
   const statusText =
-    status === 'sending' ? 'Gönderiliyor…' : status === 'success' ? SUCCESS_TEXT : status === 'error' ? failureText(fallback) : '';
+    status === 'sending' ? tx("Gönderiliyor…") : status === 'success' ? successText : status === 'error' ? failure : '';
 
   return (
     <div className={wide ? 'kcf kcf-wide' : 'kcf'} data-testid="kcf">
@@ -212,9 +207,9 @@ export default function RailForm({
 
       {status === 'success' ? (
         <div className="kcf-panel kcf-success" data-testid="kcf-success">
-          <p className="t-tech kcf-kicker">TALEP ALINDI</p>
-          <p className="kcf-panel-title">{SUCCESS_TEXT}</p>
-          <p className="kcf-panel-text">Hemen konuşmak isterseniz:</p>
+          <p className="t-tech kcf-kicker">{tx("TALEP ALINDI")}</p>
+          <p className="kcf-panel-title">{successText}</p>
+          <p className="kcf-panel-text">{tx("Hemen konuşmak isterseniz:")}</p>
           <Channels fallback={fallback} where="success" />
           <button
             type="button"
@@ -227,7 +222,7 @@ export default function RailForm({
               setStatus('idle');
             }}
           >
-            Yeni talep oluştur
+            {tx("Yeni talep oluştur")}
           </button>
         </div>
       ) : (
@@ -242,14 +237,14 @@ export default function RailForm({
 
           {status === 'error' && (
             <div className="kcf-panel kcf-failure" data-testid="kcf-error">
-              <p className="kcf-panel-title">{failureText(fallback)}</p>
+              <p className="kcf-panel-title">{failure}</p>
               <Channels fallback={fallback} where="error" />
             </div>
           )}
 
           <div className="kcf-fields">
             <div className="kcf-row">
-              <label htmlFor={id.name}>Ad Soyad</label>
+              <label htmlFor={id.name}>{tx("Ad Soyad")}</label>
               <input
                 id={id.name}
                 type="text"
@@ -267,7 +262,7 @@ export default function RailForm({
             </div>
 
             <div className="kcf-row">
-              <label htmlFor={id.phone}>Telefon</label>
+              <label htmlFor={id.phone}>{tx("Telefon")}</label>
               <input
                 id={id.phone}
                 type="tel"
@@ -286,7 +281,7 @@ export default function RailForm({
             </div>
 
             <div className="kcf-row kcf-row-email">
-              <label htmlFor={id.email}>E-posta <span className="kcf-optional">(isteğe bağlı)</span></label>
+              <label htmlFor={id.email}>{tx("E-posta")} <span className="kcf-optional">{tx("(isteğe bağlı)")}</span></label>
               <input
                 id={id.email}
                 type="email"
@@ -303,12 +298,12 @@ export default function RailForm({
             </div>
 
             <div className="kcf-row kcf-row-msg">
-              <label htmlFor={id.message}>Mesaj <span className="kcf-optional">(isteğe bağlı)</span></label>
+              <label htmlFor={id.message}>{tx("Mesaj")} <span className="kcf-optional">{tx("(isteğe bağlı)")}</span></label>
               <textarea
                 id={id.message}
                 rows={3}
                 value={values.message}
-                placeholder="Örn. Daireyi hafta sonu görebilir miyim?"
+                placeholder={tx("Örn. Daireyi hafta sonu görebilir miyim?")}
                 onChange={set('message')}
                 data-testid="kcf-message"
               />
@@ -327,9 +322,9 @@ export default function RailForm({
               data-testid="kcf-consent"
             />
             <label htmlFor={id.consent}>
-              Kişisel verilerimin iletişim amacıyla işlenmesini kabul ediyorum.{' '}
+              {tx('Kişisel verilerimin iletişim amacıyla işlenmesini kabul ediyorum.')}{' '}
               <a href={privacyHref} target="_blank" rel="noopener noreferrer" data-testid="kcf-privacy-link">
-                Gizlilik ve Çerez Politikası
+                {tx("Gizlilik ve Çerez Politikası")}
               </a>
             </label>
           </div>
@@ -355,17 +350,17 @@ export default function RailForm({
             disabled={!hydrated || status === 'sending'}
             data-testid="kcf-submit"
           >
-            {status === 'sending' ? 'Gönderiliyor…' : 'Gönder'}
+            {status === 'sending' ? tx("Gönderiliyor…") : tx("Gönder")}
           </button>
-          <p className="kcf-privacy">Bilgileriniz yalnız size dönüş için kullanılır.</p>
+          <p className="kcf-privacy">{tx("Bilgileriniz yalnız size dönüş için kullanılır.")}</p>
         </form>
       )}
 
       {/* JS kapalıysa ada hidratlanmaz ve Gönder ölü kalır: formu gizleyip
           kanalları göster (Base.astro <html>'e .js sınıfını ekler). */}
       <div className="kcf-nojs">
-        <p className="kcf-panel-title">Formu açmak için JavaScript gerekiyor</p>
-        <p className="kcf-panel-text">{konu} için doğrudan ulaşın:</p>
+        <p className="kcf-panel-title">{tx("Formu açmak için JavaScript gerekiyor")}</p>
+        <p className="kcf-panel-text">{tx('{konu} için doğrudan ulaşın:', { konu })}</p>
         <Channels fallback={fallback} where="nojs" />
       </div>
     </div>

@@ -1,4 +1,6 @@
 ---
+import { salesMessages, islandMessages } from "../lib/salesContent";
+import { translator } from "../lib/translate";
 /*
   DAİRE DETAY — D-21 / Daire 2 (canlı). Üst bölge 2026-07-16'da D-11'in
   varsayılanına eşitlendi: galeri | künye (.kcg, ortak); eski ref-b geniş karusel
@@ -32,24 +34,26 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const messages = salesMessages(locale);
+const tx = translator(messages);
 const t = ui(locale);
 const basePrefix = localePath(locale, '/').replace(/\/$/, '');
 const root = localePath(locale, '/satilik-daireler');
 
 const d = detay['daire-2'];
-const items = await carouselItems([...d.galeri]);
+const items = await carouselItems([...d.galeri], messages);
 
 const binaKey = 'daire-1/bina-dis.png';
-const bina = { img: publicAsset(binaKey), alt: entry(binaKey).alt };
+const bina = { img: publicAsset(binaKey), alt: tx(entry(binaKey).alt) };
 
 /* Özellik çipleri — fotoğrafların desteklediği + oda ölçüleri modülünden gelen değerler */
 const ozellikler = [
-  { icon: 'sea', title: 'Çatı Terası', sub: '~20 m²' },
-  { icon: 'stairs', title: 'Dubleks', sub: 'İki katlı yaşam' },
-  { icon: 'cart', title: 'İkinci Mutfak', sub: 'Üst kat nişi' },
-  { icon: 'car', title: 'Kapalı Otopark', sub: 'Bina içinde' },
-  { icon: 'expand', title: 'Dam Pencereleri', sub: 'Üç çatı odası' },
-  { icon: 'shield', title: '2 Banyo', sub: 'Siyah profil duş' },
+  { icon: 'sea', title: tx("Çatı Terası"), sub: '~20 m²' },
+  { icon: 'stairs', title: tx("Dubleks"), sub: tx("İki katlı yaşam") },
+  { icon: 'cart', title: tx("İkinci Mutfak"), sub: tx("Üst kat nişi") },
+  { icon: 'car', title: tx("Kapalı Otopark"), sub: tx("Bina içinde") },
+  { icon: 'expand', title: tx("Dam Pencereleri"), sub: tx("Üç çatı odası") },
+  { icon: 'shield', title: tx("2 Banyo"), sub: tx("Siyah profil duş") },
 ];
 
 /* ─── SEO: yayın slug'u, kanonik yol, OG görseli (gerçek daire), JSON-LD ─── */
@@ -65,10 +69,10 @@ const ogTeras = await getImage({ src: publicAsset('daire-2/d2-teras.png'), width
 const ogBina = await getImage({ src: publicAsset(binaKey), width: 1200, format: 'webp', quality: 74 });
 const schemaImages = [abs(ogHero.src), abs(ogTeras.src), abs(ogBina.src)];
 
-const metaTitle = 'Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı D-21';
+const metaTitle = tx("Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı D-21");
 const metaDesc =
-  "Pendik El Ele Apartmanı'nda sıfır 3+2 çatı dubleksi (D-21): 160/135 m², 5. kat, çatı terası, 2 banyo, kapalı otopark. 13.750.000 TL — yerinde gezin.";
-const h1 = 'Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı';
+  tx("Pendik El Ele Apartmanı'nda sıfır 3+2 çatı dubleksi (D-21): 160/135 m², 5. kat, çatı terası, 2 banyo, kapalı otopark. 13.750.000 TL — yerinde gezin.");
+const h1 = tx("Pendik Satılık 3+2 Çatı Dubleksi — El Ele Apartmanı");
 
 // og:type=product için fiyat meta'ları (scraper'lar fiyatı önizlemede göstersin)
 const extraMeta = [
@@ -90,23 +94,23 @@ const jsonLd = {
       // accommodationCategory'ye taşındı.
       '@type': ['Product', 'Apartment'],
       '@id': detailUrl + '#unit',
-      name: 'El Ele Apartmanı — Çatı Avlulu 3+2 Dubleks (D-21)',
+      name: tx("El Ele Apartmanı — Çatı Avlulu 3+2 Dubleks (D-21)"),
       description:
-        "Pendik Batı Mah. sıfır El Ele Apartmanı'nda 5. kat çatı dubleksi: 160 m² brüt / 135 m² net, 3+2, 2 banyo, çatı terası, kapalı otopark.",
+        tx("Pendik Batı Mah. sıfır El Ele Apartmanı'nda 5. kat çatı dubleksi: 160 m² brüt / 135 m² net, 3+2, 2 banyo, çatı terası, kapalı otopark."),
       url: detailUrl,
       image: schemaImages,
       brand: { '@type': 'Organization', name: 'MEY İnşaat' },
-      category: 'Satılık Daire',
+      category: tx("Satılık Daire"),
       numberOfRooms: 5,
       numberOfBedrooms: 3,
       numberOfBathroomsTotal: 2,
       floorSize: { '@type': 'QuantitativeValue', value: 160, unitCode: 'MTK' },
       floorLevel: '5',
-      accommodationCategory: '3+2 çatı dubleksi (iki katlı daire)',
+      accommodationCategory: tx("3+2 çatı dubleksi (iki katlı daire)"),
       amenityFeature: [
-        { '@type': 'LocationFeatureSpecification', name: 'Asansör', value: true },
-        { '@type': 'LocationFeatureSpecification', name: 'Kapalı otopark', value: true },
-        { '@type': 'LocationFeatureSpecification', name: 'Çatı terası', value: true },
+        { '@type': 'LocationFeatureSpecification', name: tx("Asansör"), value: true },
+        { '@type': 'LocationFeatureSpecification', name: tx("Kapalı otopark"), value: true },
+        { '@type': 'LocationFeatureSpecification', name: tx("Çatı terası"), value: true },
       ],
       address: {
         '@type': 'PostalAddress',
@@ -130,7 +134,7 @@ const jsonLd = {
       '@type': 'RealEstateListing',
       '@id': detailUrl + '#listing',
       url: detailUrl,
-      name: 'El Ele Apartmanı 3+2 Dubleks — Satılık (D-21)',
+      name: tx("El Ele Apartmanı 3+2 Dubleks — Satılık (D-21)"),
       datePosted: '2026-07-21',
       mainEntity: { '@id': detailUrl + '#unit' },
     },
@@ -139,24 +143,19 @@ const jsonLd = {
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: t.nav.home, item: siteUrl + localePath(locale, '/') },
         { '@type': 'ListItem', position: 2, name: t.nav.forSale, item: siteUrl + localePath(locale, '/satilik-daireler') },
-        { '@type': 'ListItem', position: 3, name: '3+2 Dubleks · D-21' },
+        { '@type': 'ListItem', position: 3, name: tx("3+2 Dubleks · D-21") },
       ],
     },
     {
       '@type': 'FAQPage',
       mainEntity: sss.map((q) => ({
         '@type': 'Question',
-        name: q.soru,
-        acceptedAnswer: { '@type': 'Answer', text: q.cevap },
+        name: tx(q.soru),
+        acceptedAnswer: { '@type': 'Answer', text: tx(q.cevap) },
       })),
     },
   ],
 };
-/* EN/RU/AR satılık sayfaları gövde metnini HENÜZ çevirmiyor (künye, oda adları,
-   açıklamalar TR). Çeviri gelene kadar bu üç dil noindex ve hreflang kümesi
-   dışında: aynı Türkçe metni "İngilizce sayfa" diye ilan etmek yeni bir alan
-   adında kopya içerik sinyalidir. TR sayfa etkilenmez. */
-const trOnly = locale !== 'tr';
 const salesPhone = contactNumber(company.salesContact.phone);
 ---
 
@@ -168,18 +167,16 @@ const salesPhone = contactNumber(company.salesContact.phone);
   description={metaDesc}
   ogType="product"
   ogImage={ogHero.src}
-  ogImageAlt="El Ele Apartmanı D-21 — çatı avlulu 3+2 dubleks üst kat salonu, Pendik"
+  ogImageAlt={tx("El Ele Apartmanı D-21 — çatı avlulu 3+2 dubleks üst kat salonu, Pendik")}
   jsonLd={jsonLd}
   extraMeta={extraMeta}
-  noindex={trOnly}
-  hreflangLocales={[locale]}
 >
   <div class="container-site kce-crumbwrap">
     <Breadcrumb items={[
       { label: t.nav.home, href: localePath(locale, '/') },
       { label: t.nav.forSale, href: root },
       { label: proje.ad, href: root },
-      { label: '3+2 Dubleks · D-21' },
+      { label: tx("3+2 Dubleks · D-21") },
     ]} />
   </div>
 
@@ -190,21 +187,21 @@ const salesPhone = contactNumber(company.salesContact.phone);
       <p class="kce-meta">
         <span class="t-tech"><Icon name="pin" size={13} /> {proje.lokasyon}</span>
         <span class="t-tech">{proje.ad}</span>
-        <span class="t-tech">3+2 Dubleks</span>
-        <span class="t-tech">{d.unit.brut} m² / {d.unit.net} m²</span>
-        <span class="t-tech">{d.unit.kat}</span>
-        <span class="t-tech">No: {d.unit.no}</span>
+        <span class="t-tech">{tx("3+2 Dubleks")}</span>
+        <span class="t-tech"><bdi dir="ltr">{d.unit.brut} m² / {d.unit.net} m²</bdi></span>
+        <span class="t-tech">{tx(d.unit.kat)}</span>
+        <span class="t-tech">{d.unit.no}</span>
       </p>
     </div>
     <div class="kce-price-box">
-      <p class="kce-price tabular-nums" data-testid="kc-price">{tl(d.unit.fiyat!)}</p>
-      <p class="t-caption kce-kdv">KDV Dahil</p>
+      <p class="kce-price tabular-nums" dir="ltr" data-testid="kc-price">{tl(d.unit.fiyat!)}</p>
+      <p class="t-caption kce-kdv">{tx("KDV Dahil")}</p>
       <div class="kce-head-cta">
         <a class="kce-cta-call" href={telHref(company.salesContact.phone) ?? '#'} data-testid="kce-head-call">
-          <Icon name="phone" size={16} /> Ara · {salesPhone?.display ?? ''}
+          <Icon name="phone" size={16} /> {tx("Ara")} · <bdi dir="ltr">{salesPhone?.display ?? ''}</bdi>
         </a>
-        <a class="kce-cta-wa" href={whatsappHref(company.salesContact.whatsapp, WA_KONU) ?? '#'} data-testid="kce-head-whatsapp">
-          <Icon name="chat" size={16} /> WhatsApp'tan Sor
+        <a class="kce-cta-wa" href={whatsappHref(company.salesContact.whatsapp, tx(WA_KONU)) ?? '#'} data-testid="kce-head-whatsapp">
+          <Icon name="chat" size={16} /> {tx("WhatsApp'tan Sor")}
         </a>
       </div>
     </div>
@@ -213,14 +210,14 @@ const salesPhone = contactNumber(company.salesContact.phone);
   <!-- GÖVDE -->
   <div class="container-site kce-layout">
     <div class="kce-main">
-      <section class="kcg kcg-hasmap" data-gallery aria-label="Galeri, konum ve künye">
+      <section class="kcg kcg-hasmap" data-gallery aria-label={tx("Galeri, konum ve künye")}>
         <div class="kcg-media">
-          <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
+          <Carousel messages={islandMessages(messages, 'gallery')} client:load items={items} label={tx('{title} fotoğrafları', { title: tx(d.baslik) })} />
           <MapPanel mode="map" locale={locale} />
         </div>
         <div class="kcg-specside card">
-          <h2 class="t-heading-s">Künye</h2>
-          <SpecGrid items={specsD2} columns={1} testid="kc-specs-d2" />
+          <h2 class="t-heading-s">{tx("Künye")}</h2>
+          <SpecGrid items={specsD2.map((s) => ({ label: tx(s.label), value: tx(s.value) }))} columns={1} testid="kc-specs-d2" />
         </div>
       </section>
 
@@ -234,31 +231,31 @@ const salesPhone = contactNumber(company.salesContact.phone);
         ))}
       </ul>
 
-      <section aria-label="Oda ölçüleri">
+      <section aria-label={tx("Oda ölçüleri")}>
         <div class="card kce-card" data-testid="kc-oda-olculeri">
-          <h2 class="t-heading-s">Oda Ölçüleri</h2>
+          <h2 class="t-heading-s">{tx("Yaklaşık Oda Ölçüleri")}</h2>
           <div class="kce-oda-cols">
             {odaOlculeriD2.map((g) => (
               <div class="kce-oda-grup">
-                <p class="t-tech kce-oda-grup-ad">{g.grup}</p>
-                <SpecGrid items={g.odalar} columns={1} testid={`kc-oda-${g.grup === 'Alt kat' ? 'alt' : 'ust'}`} />
+                <p class="t-tech kce-oda-grup-ad">{tx(g.grup)}</p>
+                <SpecGrid items={g.odalar.map((s) => ({ label: tx(s.label), value: s.value }))} columns={1} testid={`kc-oda-${g.grup === 'Alt kat' ? 'alt' : 'ust'}`} />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section class="kce-three" aria-label="Genel bakış, proje ve konum">
+      <section class="kce-three" aria-label={tx("Genel bakış, proje ve konum")}>
         <div class="card kce-card">
-          <h2 class="t-heading-s">Daireye Genel Bakış</h2>
+          <h2 class="t-heading-s">{tx("Daireye Genel Bakış")}</h2>
           <ul class="kce-checklist" data-testid="kc-genel-bakis">
             {d.genelBakis.map((g) => (
-              <li><Icon name="check" size={16} /> {g}</li>
+              <li><Icon name="check" size={16} /> {tx(g)}</li>
             ))}
           </ul>
         </div>
         <div class="card kce-card kce-proje">
-          <h2 class="t-heading-s">Proje Hakkında</h2>
+          <h2 class="t-heading-s">{tx("Proje Hakkında")}</h2>
           <Image
             src={bina.img}
             alt={bina.alt}
@@ -269,30 +266,29 @@ const salesPhone = contactNumber(company.salesContact.phone);
             decoding="async"
             class="kce-proje-img"
           />
-          <p class="t-caption kce-proje-text">{building.positioning} — {building.builder} yapımı, {proje.kat} katlı, {proje.toplamDaire} daireli bina.</p>
-          <a class="kce-proje-link" href={localePath(locale, '/projeler/el-ele-apartmani')}>Projeyi İncele <Icon name="arrow-right" size={14} /></a>
+          <p class="t-caption kce-proje-text">{tx('{builder} yapımı, {floors} katlı, {units} daireli bina.', { builder: building.builder, floors: proje.kat, units: proje.toplamDaire })}</p>
+          <a class="kce-proje-link" href={localePath(locale, '/projeler/el-ele-apartmani')}>{tx("Projeyi İncele")} <Icon name="arrow-right" size={14} /></a>
         </div>
-        <MapPanel mode="info" title="Pendik Batı Mah. — Yakın Çevre" locale={locale} />
+        <MapPanel mode="info" title={tx("Pendik Batı Mah. — Yakın Çevre")} locale={locale} />
       </section>
 
-      <section id="sss" aria-label="Sıkça sorulan sorular">
-        <div class="card kce-card"><FaqList /></div>
+      <section id="sss" aria-label={tx("Sıkça sorulan sorular")}>
+        <div class="card kce-card"><FaqList locale={locale} /></div>
       </section>
 
       <section id="benzer">
-        <SimilarUnits current="daire-2" base={basePrefix} />
+        <SimilarUnits locale={locale} current="daire-2" base={basePrefix} />
       </section>
     </div>
 
-    <StickyRail
-      konu="D-21 · 3+2 Dubleks"
+    <StickyRail locale={locale}
+      konu={tx("D-21 · 3+2 Dubleks")}
       subject={`Web Formu · D-21 · 3+2 Dubleks · ${proje.ad}`}
       formLocation="daire-detay-d12"
-      base={basePrefix}
     />
   </div>
 
-  <MobileSaleBar fiyat={tl(d.unit.fiyat!)} etiket="Son daire · D-21" konu="D-21 · 3+2 çatı dubleksi" />
+  <MobileSaleBar locale={locale} fiyat={tl(d.unit.fiyat!)} etiket={tx("Son daire · D-21")} konu={tx("D-21 · 3+2 çatı dubleksi")} />
 </Base>
 
 <style>

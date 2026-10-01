@@ -8,6 +8,8 @@ import { localePath, type Locale } from '../lib/i18n';
 import { ui, seo, project, projectDetailOverride, mergeDeep } from '../lib/content';
 import { breadcrumbLd, buildingLd } from '../lib/schema';
 import { listingProjeler, listing, DETAY_SLUG, tl } from '../components/showcase/satilik/kompakt/data.ts';
+import { salesMessages } from '../lib/salesContent';
+import { translator } from '../lib/translate';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -17,6 +19,7 @@ interface Props {
 }
 
 const { locale, slug } = Astro.props;
+const tx = translator(salesMessages(locale));
 const t = ui(locale);
 const entry = project(slug, locale);
 if (!entry) throw new Error(`Unknown project slug: ${slug}`);
@@ -67,8 +70,7 @@ const statusLabel = String(t.projects.status[data.status] ?? data.status).toLoca
 /* Bu binada CANLI satılık daire var mı? Varsa sayfadan ilana bağlamsal bir
    bağlantı çıkar: satış sayfasına giden tek yol menüdeki "Satılık" değil, bu.
    Kaynak satılık verisinin kendisi — bina adı burada elle yazılmaz. */
-// Satılık bölümü henüz yalnız Türkçe (bkz. SatilikPage trOnly) → bağlantı da TR'de.
-const projeKarti = locale === 'tr' ? listingProjeler.find((lp) => lp.slug === slug) : undefined;
+const projeKarti = listingProjeler.find((lp) => lp.slug === slug);
 const canliDaire = projeKarti && !projeKarti.sold
   ? listing.find((u) => u.projeKey === projeKarti.projeKey && u.durum === 'musait')
   : undefined;
@@ -113,10 +115,10 @@ const jsonLd = [
   {canliDaire && canliDaireHref && (
     <div class="container-site pd-sale-pad">
       <a href={canliDaireHref} class="pd-sale" data-testid="pd-sale-link">
-        <span class="pd-sale-tag t-tech">SATILIK</span>
+        <span class="pd-sale-tag t-tech">{tx('SATILIK')}</span>
         <span class="pd-sale-text">
-          Bu binada satılık {canliDaire.baslik.toLocaleLowerCase('tr')} var —
-          {' '}{canliDaire.brut} m² brüt, {canliDaire.kat}
+          {tx('Satılık Daire')} · {tx(canliDaire.baslik)} —
+          {' '}{canliDaire.brut} m² {tx('Brüt')}, {tx(canliDaire.kat)}
           {canliDaire.fiyat !== null && <>, {tl(canliDaire.fiyat)}</>}
         </span>
         <span class="pd-sale-go" aria-hidden="true">→</span>

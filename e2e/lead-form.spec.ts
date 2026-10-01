@@ -77,7 +77,8 @@ test.describe('Web3Forms anahtarı yokken', () => {
       await expect(page.getByTestId('kcf-offline').first()).toBeVisible();
       await expect(page.getByTestId('kcf-form')).toHaveCount(0);
       await expect(page.getByTestId('kcf-submit')).toHaveCount(0);
-      await expect(page.getByTestId('kcf-offline').first()).toContainText(/telefon veya WhatsApp/i);
+      await expect(page.getByTestId('kcf-offline').first()).not.toContainText(/kısa süre|yakında/);
+      await expect(page.getByTestId('kcf-offline-fallback').first().locator('a')).toHaveCount(2);
     });
   }
 });

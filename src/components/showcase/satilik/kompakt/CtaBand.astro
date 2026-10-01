@@ -1,4 +1,7 @@
 ---
+import type { Locale } from "../../../../lib/i18n";
+import { salesMessages } from "../../../../lib/salesContent";
+import { translator } from "../../../../lib/translate";
 /*
   Koyu CTA bandı — satış telefonu yalnız for-sale yüzeylerinde yayınlanır;
   genel şirket hattından ayrı tutulur.
@@ -8,9 +11,12 @@ import { company } from '../../../../lib/content';
 import { contactNumber, telHref, whatsappHref } from '../../../../lib/contact';
 
 interface Props {
+  locale?: Locale;
   base: string;
 }
-const { base } = Astro.props;
+const messages = salesMessages(Astro.props.locale ?? 'tr');
+const tx = translator(messages);
+const { locale = 'tr', base } = Astro.props;
 const salesPhone = contactNumber(company.salesContact.phone);
 const salesPhoneHref = telHref(company.salesContact.phone);
 ---
@@ -18,23 +24,23 @@ const salesPhoneHref = telHref(company.salesContact.phone);
 <section class="kc-ctaband theatre" data-testid="kc-ctaband">
   <div class="container-site kc-ctaband-in">
     <div>
-      <h2 class="t-heading-m kc-ctaband-title">Hayalinizdeki daireyi birlikte bulalım.</h2>
+      <h2 class="t-heading-m kc-ctaband-title">{tx("Hayalinizdeki daireyi birlikte bulalım.")}</h2>
       <p class="t-caption kc-ctaband-sub">
-        Detaylı bilgi almak veya daireleri yerinde görmek için bizimle iletişime geçin.
+        {tx("Detaylı bilgi almak veya daireleri yerinde görmek için bizimle iletişime geçin.")}
       </p>
     </div>
     <div class="kc-ctaband-actions">
       {salesPhone && salesPhoneHref && (
         <a class="btn-ghost" href={salesPhoneHref} data-testid="kc-sales-phone">
-          <Icon name="phone" size={17} /> {salesPhone.display}
+          <Icon name="phone" size={17} /> <bdi dir="ltr">{salesPhone.display}</bdi>
         </a>
       )}
       <a
         class="btn-primary"
-        href={whatsappHref(company.salesContact.whatsapp, 'Merhaba, satılık daireyi yerinde görmek için randevu almak istiyorum.') ?? '#'}
+        href={whatsappHref(company.salesContact.whatsapp, tx("Merhaba, satılık daireyi yerinde görmek için randevu almak istiyorum.")) ?? '#'}
         data-testid="kc-ctaband-randevu"
       >
-        <Icon name="calendar" size={17} /> Randevu Al
+        <Icon name="calendar" size={17} /> {tx("Randevu Al")}
       </a>
     </div>
   </div>

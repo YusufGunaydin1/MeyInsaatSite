@@ -1,0 +1,44 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import LabIntro from '../../components/showcase/LabIntro.astro';
+import Specimen from '../../components/showcase/Specimen.astro';
+import ConstructionCinema from '../../components/showcase/motion-lab/ConstructionCinema.astro';
+import ArchitecturalAssembly from '../../components/showcase/motion-lab/ArchitecturalAssembly.astro';
+import FacadeDepth from '../../components/showcase/motion-lab/FacadeDepth.astro';
+import dayFacade from '../../assets/projects/el-ele-apartmani.webp';
+import '../../components/showcase/motion-lab/motion-lab.css';
+
+const day = await getImage({ src: dayFacade, width: 1086, format: 'webp', quality: 85 });
+const duskSrc = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/images/showcases/motion/el-ele-dusk.webp`;
+---
+
+<Base locale="tr" page="projects" path="/showcases/hareket-lab" title="Hareket Lab — Yapı, Işık ve Derinlik"
+  description="MEY İnşaat için kaydırmalı yapım sineması, ayrıştırılabilir mimari katmanlar ve gündüz–mavi saat cephe deneyimleri."
+  noindex hreflangLocales={['tr']} langFallbackPath="/">
+  <LabIntro kicker="MEY İnşaat · Tasarım vitrini · Hareket Lab" title="Yapıyı hareketle anlatmak."
+    desc="Üç ayrı tasarım yönü: zaman içinde yükselen yapı, katmanlarına ayrılan mimari ve ışıkla değişen cephe. Her birini aşağıda kullanın; ana sayfa veya proje detayı için en doğru hissi seçin." />
+  <nav class="container-site ml-jump-nav" aria-label="Hareket tasarımları">
+    <a href="#sinema">A — Yapım sineması</a>
+    <a href="#katmanlar">B — Mimari katmanlar</a>
+    <a href="#derinlik">C — Işık ve derinlik</a>
+  </nav>
+  <Specimen id="A · SİNEMA" name="Kaydırma = zaman" why="Ana sayfanın güçlü imza alanı için. Mevcut 17 karelik yapım dizisi; kaydırma, aşama düğmeleri ve doğrudan kare seçimiyle kontrol edilir.">
+    <ConstructionCinema />
+  </Specimen>
+  <Specimen id="B · KATMAN" name="Ayrıştırılabilir yapı" why="Nasıl inşa ediyoruz anlatısı için. Kodla çizilen kavramsal mimari katmanları ayırın, birleştirin ve farklı açılardan inceleyin.">
+    <ArchitecturalAssembly />
+  </Specimen>
+  <Specimen id="C · ATMOSFER" name="Cephede ışık ve derinlik" why="Proje detayının giriş alanı için. Mevcut temsilî cepheyi yeni mavi saat fikriyle karşılaştırın; kontrollü perspektif ve kaydırma derinliğini deneyin.">
+    <FacadeDepth daySrc={day.src} duskSrc={duskSrc} />
+  </Specimen>
+  <section class="container-site ml-review" aria-labelledby="ml-review-title">
+    <p class="t-tech text-mey-red mb-3">Karşılaştırma notu</p>
+    <h2 id="ml-review-title" class="t-display-l">Hangi hikâyeyi öne çıkaralım?</h2>
+    <div class="ml-review-grid">
+      <a href="#sinema"><span class="t-tech text-mey-red">A / Zaman</span><strong>Yapım sineması</strong><p>Bir yapının yükselişini izlemek. Ana sayfada tek, güçlü bir hareket anı için.</p><span class="t-tech">Tekrar incele ↑</span></a>
+      <a href="#katmanlar"><span class="t-tech text-mey-red">B / Sistem</span><strong>Mimari katmanlar</strong><p>Parçaların bir araya gelişini anlamak. İnşa sürecini açıklayan etkileşimli bir bölüm için.</p><span class="t-tech">Tekrar incele ↑</span></a>
+      <a href="#derinlik"><span class="t-tech text-mey-red">C / Atmosfer</span><strong>Işık ve derinlik</strong><p>Aynı cephenin iki farklı hissini karşılaştırmak. Proje detayında daha sürükleyici bir sunum için.</p><span class="t-tech">Tekrar incele ↑</span></a>
+    </div>
+  </section>
+</Base>

@@ -50,7 +50,7 @@ const channels = [
         <div class="cc-ch">
           <span class="t-tech cc-ch-l">{ch.label}</span>
           {ch.href ? (
-            <a class="t-tech cc-ch-v" href={ch.href}>{ch.value}</a>
+            <a class="t-tech cc-ch-v" href={ch.href}><bdi dir="ltr">{ch.value}</bdi></a>
           ) : (
             <PlaceholderChip locale={locale} onDark />
           )}

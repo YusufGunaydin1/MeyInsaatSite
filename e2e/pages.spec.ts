@@ -26,7 +26,7 @@ for (const locale of LOCALES) {
       // Detay sayfası iki düzende iki <h1> içerir (biri display:none → a11y ağacı
       // dışında); role sorgusu yalnız GÖRÜNÜR h1'i eşler (her düzende tek).
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-      await expect(page.locator('header')).toBeVisible();
+      await expect(page.getByRole('banner')).toBeVisible();
       // Site footer landmark only: the detail stage's dossier card also renders a
       // sectioning <footer> (inside <article>, not a contentinfo landmark), so a
       // bare `footer` locator now matches two elements — target the page footer.
@@ -85,7 +85,7 @@ test('general contact publishes the office details without leaking sales contact
   await expect(main.locator('a[href^="https://wa.me/"]')).toHaveCount(0);
   await expect(main).not.toContainText('+90 532 625 68 12');
 
-  // Only the still-unconfirmed office hours remain visibly pending here.
+  // Missing office hours are not published as an unfinished customer-facing block.
   const chips = page.locator('main span.t-tech', { hasText: /Bilgi bekleniyor/ });
-  await expect(chips).toHaveCount(1);
+  await expect(chips).toHaveCount(0);
 });

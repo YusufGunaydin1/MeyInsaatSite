@@ -28,7 +28,7 @@ Thumbs.db
 # Image source library (all generated candidates, used + unused) — maintained
 # locally as a working library, NOT published. The site consumes only the images
 # it needs, brought into the Astro project and optimized (WebP/AVIF) at build time.
-images/
+/images/
 
 # Internal working docs — kept local, not published to this public repo:
 # AI-development guides inherited from the ERP, plus the site design brief.

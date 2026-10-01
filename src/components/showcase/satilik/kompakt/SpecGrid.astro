@@ -14,7 +14,7 @@ const { items, columns = 2, testid = 'kc-specs' } = Astro.props;
   {items.map((s) => (
     <div class="kc-spec">
       <dt>{s.label}</dt>
-      <dd>{s.value}</dd>
+      <dd><bdi>{s.value}</bdi></dd>
     </div>
   ))}
 </dl>

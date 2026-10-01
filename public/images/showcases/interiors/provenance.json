@@ -1,0 +1,67 @@
+{
+  "created": "2026-09-29",
+  "tool": "Built-in image_gen.imagegen; precise-object-edit",
+  "purpose": "Showcase-only furniture concepts based on actual published D21 listing photographs. Generated furniture is an illustrative proposal, not included equipment or a measured fit plan.",
+  "sourceAnalysis": {
+    "living": {
+      "sourcePath": "src/assets/showcase/satilik/el-ele/daire-2/d2-salon-alt-1.webp",
+      "sourceKey": "daire-2/d2-salon-alt-1.png",
+      "width": 1448,
+      "height": 1086,
+      "selectionReason": "Landscape empty living room; large clear floor area and explicit door/window/radiator landmarks make the furnishing comparison readable."
+    },
+    "attic": {
+      "sourcePath": "src/assets/showcase/satilik/el-ele/daire-2/d2-oda-3a.webp",
+      "sourceKey": "daire-2/d2-oda-3a.png",
+      "width": 1448,
+      "height": 1086,
+      "selectionReason": "Landscape attic bedroom with distinctive sloped ceiling, centered dormer and visible radiator; a low-bed concept demonstrates use beneath the roof slope."
+    }
+  },
+  "editingConstraints": [
+    "Preserve viewpoint, original tilt, framing and 4:3 aspect ratio.",
+    "Preserve wall, window, door, radiator, ceiling and floor geometry.",
+    "Keep radiators and access routes clear.",
+    "Add furniture and decor only; no people, text or logos."
+  ],
+  "review": {
+    "method": "Visual inspection of both source photographs and each of the four generated outputs.",
+    "result": "All four retain the source framing and recognizable architectural landmarks. Radiators remain visible; living-room doorway remains accessible. Slight generated lighting/texture differences may remain; these are design visualizations, not survey evidence."
+  },
+  "encoding": {
+    "format": "webp",
+    "quality": 84,
+    "resize": false,
+    "masters": "images/showcase-masters/interiors/*.png (local source library, not published)"
+  },
+  "prompts": [
+    {
+      "id": "living-natural",
+      "source": "living-original.webp",
+      "master": "images/showcase-masters/interiors/living-natural.png",
+      "output": "living-natural.webp",
+      "prompt": "Use case: precise-object-edit\nAsset type: Virtual staging comparison for a real apartment website.\nInput image: edit target, an actual empty lower living room in Istanbul. Use the input photo itself as the base.\nPrimary request: Add tasteful, realistically sized warm contemporary furniture to THIS EXACT ROOM. A low oatmeal linen three-seat sofa sits against the right wall, oriented toward the left side of the room; a small rounded oak coffee table and restrained flatweave ivory rug form the conversation area. One compact oak-and-linen lounge chair may sit near the far left corner while leaving the radiator clear. Add a small side table, one matte ceramic vase and a single restrained framed abstract artwork on the right wall. This is an attainable home, not a luxury palace.\nLighting: Preserve the original daylight, window exposure, wall color and floor color. Match furniture shadows and perspective to the photograph.\nCritical invariants: Keep the camera angle, original slight tilt, lens perspective, full framing and original 4:3 aspect ratio EXACTLY unchanged. Keep all architecture exactly where it is: the left black-framed window, left white radiator including pipework, ceiling mouldings and beams, back-wall open white glazed door and its angle, sockets, baseboards, oak floorboards and all wall intersections. No camera straightening, widening, zooming, cropping, repainting, reconstruction, new openings, changed door swing or replaced floor. Keep a visibly clear walking route through the open back doorway and leave radiator ventilation space. Furniture is the only substantive change. No people, text, logos, watermark or extra windows. Output one full-frame photorealistic edited photograph at 4:3, not a collage."
+    },
+    {
+      "id": "living-urban",
+      "source": "living-original.webp",
+      "master": "images/showcase-masters/interiors/living-urban.png",
+      "output": "living-urban.webp",
+      "prompt": "Use case: precise-object-edit\nAsset type: Virtual staging style alternative for a real apartment website.\nInput image: edit target, actual empty lower living room. Edit this photo, do not replace it with a similar room.\nPrimary request: Furnish THIS EXACT ROOM in refined urban contemporary style: a realistically scaled charcoal woven-fabric sofa against the right wall facing toward the left, low walnut coffee table with slim black legs, softly textured medium-gray rug, one compact cognac leather lounge chair near the far-left corner without blocking the radiator. Include one slim walnut side table with a simple black reading lamp and restrained monochrome abstract artwork on the right wall. Warm and sophisticated, quiet, sparse and believable.\nLighting: Retain the original neutral daylight and existing wall/floor finishes. Only add furniture, decor and plausible contact shadows.\nCritical invariants: Camera position, tilt, lens, viewpoint, full framing and 4:3 aspect ratio must remain EXACTLY the same for an empty/furnished slider. Preserve every window, white radiator, radiator pipes, socket, moulding, ceiling beam, wall edge, floorboard and skirting board. The open back-wall glazed white door must stay at the original position and angle. Keep all wall colors and all building materials unaltered. Keep an obvious clear walking route to and through the doorway. Do not widen the room, remove radiators, redesign the architecture, straighten the camera, crop, zoom or alter outside scenery. No people, letters, labels, logos, watermark or collage. One photorealistic edited photograph."
+    },
+    {
+      "id": "attic-natural",
+      "source": "attic-original.webp",
+      "master": "images/showcase-masters/interiors/attic-natural.png",
+      "output": "attic-natural.webp",
+      "prompt": "Use case: precise-object-edit\nAsset type: Virtual furniture staging comparison for a real apartment's attic bedroom.\nInput image: edit target, the actual empty attic bedroom with sloped ceiling, centered black-framed dormer window, left-wall white radiator and oak floor.\nPrimary request: Add a believable warm natural bedroom arrangement to THIS SAME PHOTO. Put a low oak double bed with an oatmeal linen headboard against the right wall, so its long axis extends from the right wall toward the center-left foreground. Use off-white bedding with a muted sand throw, one compact oak bedside table next to the headboard and a small ceramic lamp. A restrained natural-fiber rug under the bed, one woven basket, and a modest framed print on the right wall complete the room. Keep it comfortably sparse and plausibly scaled for this attic. No furniture taller than the available sloped headroom.\nLighting: Preserve the actual daylight and existing sun patch; match shadows naturally.\nCritical invariants: Preserve the camera angle, original perspective, full 4:3 framing, all room geometry, all white/gray wall paint, wood floor pattern, exact ceiling slope, overhead beam, dormer/window opening and outside roof view. The large radiator on the left wall and all pipes must remain exactly in place, visible and unobstructed. No construction changes, ceiling raising, new window, moved wall, floor replacement, camera correction, crop or zoom. Leave practical walking space in front of radiator and toward the window. Only furnishings and their shadows may change. No people, text, logos, watermarks or collage. Return one photorealistic edited photograph."
+    },
+    {
+      "id": "attic-urban",
+      "source": "attic-original.webp",
+      "master": "images/showcase-masters/interiors/attic-urban.png",
+      "output": "attic-urban.webp",
+      "prompt": "Use case: precise-object-edit\nAsset type: Alternative virtual furniture staging for a real attic bedroom.\nInput image: edit target, the actual empty attic bedroom photograph, not a style reference.\nPrimary request: Add a refined urban bedroom scheme while keeping THIS EXACT ROOM: a low walnut platform double bed with a charcoal fabric headboard placed against the right wall, length projecting toward the center-left foreground; stone-white bedding with a graphite throw, one compact walnut bedside table and a small dark metal reading lamp. Use a soft gray rug below the bed and a restrained monochrome artwork above the headboard. Sparse, polished, believable apartment furniture. Respect the sloped ceiling and modest floor area; no oversized furniture.\nLighting: Preserve the original daylight, exposure, wall color, wood floor and exterior view. Shadows must agree with the original light direction.\nCritical invariants: This image will be overlaid on the empty photograph. Keep camera position/tilt, perspective and entire 4:3 framing EXACTLY unchanged. Preserve all roof slopes, beams, every wall intersection, central black-framed window and dormer shape, outside rooftops, floorboard pattern, skirting, sockets and left white radiator including pipework. Keep the radiator unblocked and a clear route to window. Do not modify architecture or finishes, increase room size, add openings, straighten camera, crop or zoom. Furniture/decor and their shadows only. No people, text, logo, watermark or collage. Produce one full-frame photorealistic edited photograph."
+    }
+  ]
+}

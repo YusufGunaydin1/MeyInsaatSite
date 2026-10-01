@@ -1,8 +1,10 @@
 ---
+import { salesMessages, islandMessages } from "../lib/salesContent";
+import { translator } from "../lib/translate";
 /*
   SATILIK DAİRELER — canlı listeleme sayfası. Koyu hero (başlık + 3 stat + yardım
   kartı) → sekme/filtre/sıralama + kart ızgarası + hızlı iletişim rayı → kat
-  planları → CTA. TR + [lang] rotaları bu bileşeni sarar; sayfa içeriği şimdilik TR.
+  planları → CTA. TR + [lang] rotaları bu bileşeni yerelleştirilmiş içerikle sarar.
 
   İNDEKSLENİR: D-21 gerçek satış verisiyle canlıya alındı (sahibinden ilanı) →
   noindex kaldırıldı, sitemap istisnası da kaldırıldı (astro.config.mjs — yalnız
@@ -35,6 +37,8 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const messages = salesMessages(locale);
+const tx = translator(messages);
 const t = ui(locale);
 
 /** yerel dil öneki dahil kök ('' | '/en' | ...) — bileşenlerin base'i */
@@ -45,7 +49,7 @@ const salesWhatsapp = contactNumber(company.salesContact.whatsapp);
 
 const heroKey = 'daire-1/bina-dis.png';
 const hero = publicAsset(heroKey);
-const heroAlt = entry(heroKey).alt;
+const heroAlt = tx(entry(heroKey).alt);
 
 /* Paylaşım/reklam önizlemesi: jenerik og-default yerine binanın kendisi (1200×630). */
 const ogHero = await getImage({ src: hero, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 72 });
@@ -85,22 +89,22 @@ const ilanlar: ListingCard[] = await Promise.all(
     kind: 'ilan',
     id: u.id,
     tip: u.tip,
-    baslik: u.baslik,
+    baslik: tx(u.baslik),
     proje: u.proje,
     projeKey: u.projeKey,
-    blokKat: u.blokKat,
+    blokKat: tx(u.blokKat),
     oda: u.oda,
     brut: u.brut,
     banyo: u.banyo,
     balkon: u.balkon,
-    kat: u.kat,
+    kat: tx(u.kat),
     katKey: u.katKey,
     fiyat: u.fiyat,
     fiyatText: u.fiyat === null ? null : tl(u.fiyat),
     durum: u.durum,
-    badge: u.badge,
+    badge: u.badge ? tx(u.badge) : undefined,
     href: `${root}${DETAY_SLUG[u.detay!]}/`,
-    img: await cardImage(u.imgKey!),
+    img: await cardImage(u.imgKey!, messages),
     lat: projeCoords[u.projeKey]?.lat,
     lng: projeCoords[u.projeKey]?.lng,
   }))
@@ -114,10 +118,10 @@ const projeKartlari: ListingCard[] = await Promise.all(
     projeKey: p.projeKey,
     konum: p.konum,
     sold: p.sold,
-    not: p.not,
-    rozet: p.rozet,
+    not: tx(p.not),
+    rozet: p.rozet ? tx(p.rozet) : undefined,
     href: localePath(locale, `/projeler/${p.slug}`),
-    img: await assetImage(projeGorsel[p.projeKey], `${p.ad} dış cephe`),
+    img: await assetImage(projeGorsel[p.projeKey], tx('{name} dış cephe', { name: p.ad })),
     lat: projeCoords[p.projeKey]?.lat,
     lng: projeCoords[p.projeKey]?.lng,
   }))
@@ -132,15 +136,10 @@ const projeler = [
 ];
 
 const stats = [
-  { icon: 'building', deger: '160 m²', alt: 'Brüt alan' },
-  { icon: 'stairs', deger: '3+2 Dubleks', alt: 'Çatı katı · 5. kat' },
-  { icon: 'key', deger: tl(13_750_000), alt: 'Müteahhitten sıfır' },
+  { icon: 'building', deger: '160 m²', alt: tx("Brüt alan") },
+  { icon: 'stairs', deger: tx("3+2 Dubleks"), alt: tx("Çatı katı · 5. kat") },
+  { icon: 'key', deger: tl(13_750_000), alt: tx("Müteahhitten sıfır") },
 ];
-/* EN/RU/AR satılık sayfaları gövde metnini HENÜZ çevirmiyor (künye, oda adları,
-   açıklamalar TR). Çeviri gelene kadar bu üç dil noindex ve hreflang kümesi
-   dışında: aynı Türkçe metni "İngilizce sayfa" diye ilan etmek yeni bir alan
-   adında kopya içerik sinyalidir. TR sayfa etkilenmez. */
-const trOnly = locale !== 'tr';
 ---
 
 <Base
@@ -148,10 +147,8 @@ const trOnly = locale !== 'tr';
   page="satilik"
   path="/satilik-daireler"
   ogImage={ogHero.src}
-  ogImageAlt="El Ele Apartmanı — Pendik Batı Mahallesi'nde müteahhitten sıfır 3+2 dubleks daireli bina"
+  ogImageAlt={tx("El Ele Apartmanı — Pendik Batı Mahallesi'nde müteahhitten sıfır 3+2 dubleks daireli bina")}
   jsonLd={breadcrumbLd}
-  noindex={trOnly}
-  hreflangLocales={[locale]}
 >
   <!-- HERO -->
   <section class="ks-hero theatre ksm-hero" data-testid="ksm-hero">
@@ -172,10 +169,9 @@ const trOnly = locale !== 'tr';
         <div class="ks-hero-crumb">
           <Breadcrumb items={[{ label: t.nav.home, href: localePath(locale, '/') }, { label: t.nav.forSale }]} />
         </div>
-        <h1 class="ks-hero-title">Pendik Satılık Daireler</h1>
+        <h1 class="ks-hero-title">{tx("Pendik Satılık Daireler")}</h1>
         <p class="ks-hero-sub">
-          El Ele Apartmanı’nda satılık son daire: 3+2 çatı dubleksi, 160 m² brüt, 5. kat.
-          Müteahhitten sıfır, aracısız — {tl(13_750_000)}.
+          {tx('El Ele Apartmanı’nda satılık son daire: 3+2 çatı dubleksi, 160 m² brüt, 5. kat. Müteahhitten sıfır, aracısız — {price}.', { price: tl(13_750_000) })}
         </p>
         <ul class="ks-hero-stats">
           {stats.map((s) => (
@@ -185,37 +181,37 @@ const trOnly = locale !== 'tr';
             </li>
           ))}
         </ul>
-        <div class="ks-hero-cta" aria-label="Satış danışmanı">
+        <div class="ks-hero-cta" aria-label={tx("Satış danışmanı")}>
           <a class="ks-hero-cta-call" href={telHref(company.salesContact.phone) ?? '#'} data-testid="ks-hero-call">
-            <Icon name="phone" size={17} /> Ara · {salesPhone?.display ?? ''}
+            <Icon name="phone" size={17} /> {tx("Ara")} · <bdi dir="ltr">{salesPhone?.display ?? ''}</bdi>
           </a>
-          <a class="ks-hero-cta-wa" href={whatsappHref(company.salesContact.whatsapp, WA_KONU) ?? '#'} data-testid="ks-hero-whatsapp">
+          <a class="ks-hero-cta-wa" href={whatsappHref(company.salesContact.whatsapp, tx(WA_KONU)) ?? '#'} data-testid="ks-hero-whatsapp">
             <Icon name="chat" size={17} /> WhatsApp
           </a>
         </div>
       </div>
       <aside class="ks-hero-help">
         <span class="ks-help-ic"><Icon name="chat" size={22} /></span>
-        <p class="ks-help-title">Size yardımcı olalım</p>
-        <p class="ks-help-sub">Size en uygun daireyi bulmanızda ekibimiz yardımcı olsun.</p>
+        <p class="ks-help-title">{tx("Size yardımcı olalım")}</p>
+        <p class="ks-help-sub">{tx("Size en uygun daireyi bulmanızda ekibimiz yardımcı olsun.")}</p>
         <a
           class="btn-ghost ks-help-cta"
-          href={whatsappHref(company.salesContact.whatsapp, 'Merhaba, Pendik’teki satılık daire hakkında bilgi almak istiyorum.') ?? '#'}
+          href={whatsappHref(company.salesContact.whatsapp, tx('Merhaba, {konu} hakkında bilgi almak istiyorum.', { konu: tx('Pendik’teki satılık daire') })) ?? '#'}
           data-testid="ks-help-whatsapp"
-        >Bize Ulaşın</a>
+        >{tx("Bize Ulaşın")}</a>
       </aside>
 
       <div class="ksm-mobile-hero" data-testid="ksm-mobile-hero">
-          <p class="ksm-mobile-status"><span aria-hidden="true"></span>{satistakiDaireSayisi} DAİRE SATIŞTA</p>
+          <p class="ksm-mobile-status"><span aria-hidden="true"></span>{satistakiDaireSayisi} {tx("DAİRE SATIŞTA")}</p>
           <!-- Gerçek h1: masaüstü başlığı bu genişlikte display:none, yani mobil
                tarayan Googlebot yalnız bunu görür. Metin masaüstüyle aynı olmalı. -->
-          <h1 class="ksm-mobile-h1">Pendik Satılık Daireler</h1>
-          <p class="ksm-mobile-sub">El Ele Apartmanı · Son 3+2 dubleks</p>
-          <div class="ksm-mobile-actions" aria-label="Satış danışmanı">
-            <a href={telHref(company.salesContact.phone) ?? '#'} aria-label={`Satış danışmanını ara: ${salesPhone?.display ?? ''}`} data-testid="ksm-call">
-              <Icon name="phone" size={16} /> Ara
+          <h1 class="ksm-mobile-h1">{tx("Pendik Satılık Daireler")}</h1>
+          <p class="ksm-mobile-sub">{tx("El Ele Apartmanı · Son 3+2 dubleks")}</p>
+          <div class="ksm-mobile-actions" aria-label={tx("Satış danışmanı")}>
+            <a href={telHref(company.salesContact.phone) ?? '#'} aria-label={tx('Satış danışmanını ara: {phone}', { phone: salesPhone?.display ?? '' })} data-testid="ksm-call">
+              <Icon name="phone" size={16} /> {tx("Ara")}
             </a>
-            <a href={whatsappHref(company.salesContact.whatsapp, WA_KONU) ?? '#'} aria-label={`WhatsApp: ${salesWhatsapp?.display ?? ''}`} data-testid="ksm-whatsapp">
+            <a href={whatsappHref(company.salesContact.whatsapp, tx(WA_KONU)) ?? '#'} aria-label={`WhatsApp: ${salesWhatsapp?.display ?? ''}`} data-testid="ksm-whatsapp">
               <Icon name="chat" size={16} /> WhatsApp
             </a>
           </div>
@@ -224,43 +220,39 @@ const trOnly = locale !== 'tr';
   </section>
 
   <!-- LİSTE + RAY (ada) -->
-  <section class="container-site ks-listing ksm-listing" aria-label="Satılık daire listesi">
-    <h2 class="kc-h2 ks-listing-h2">Satıştaki ve Tamamlanan Daireler</h2>
-    <SaleListing
+  <section class="container-site ks-listing ksm-listing" aria-label={tx("Satılık daire listesi")}>
+    <h2 class="kc-h2 ks-listing-h2">{tx("Satıştaki ve Tamamlanan Daireler")}</h2>
+    <SaleListing messages={islandMessages(messages, 'listing')}
       client:load
       items={items}
       projeler={projeler}
       salesPhone={salesPhone?.display ?? ''}
       salesPhoneHref={telHref(company.salesContact.phone) ?? ''}
       salesWhatsapp={salesWhatsapp?.display ?? ''}
-      salesWhatsappHref={whatsappHref(company.salesContact.whatsapp, WA_KONU) ?? ''}
+      salesWhatsappHref={whatsappHref(company.salesContact.whatsapp, tx(WA_KONU)) ?? ''}
       formAccessKey={company.contact.formAccessKey ?? ''}
     />
   </section>
 
   <!-- TANITIM / indekslenebilir metin (konum + yatırım) -->
-  <section class="container-site ks-intro" aria-label="El Ele Apartmanı hakkında">
-    <h2 class="kc-h2">Pendik’te Müteahhitten Sıfır 3+2 Çatı Dubleksi</h2>
+  <section class="container-site ks-intro" aria-label={tx("El Ele Apartmanı hakkında")}>
+    <h2 class="kc-h2">{tx("Pendik’te Müteahhitten Sıfır 3+2 Çatı Dubleksi")}</h2>
     <div class="ks-intro-cols">
       <p>
-        El Ele Apartmanı, Mey İnşaat’ın Pendik Batı Mahallesi’nde tamamladığı, kat mülkiyetli
-        sıfır bir konut binasıdır. Bina teslime hazırdır; şu an yalnızca 5. kattaki 3+2 çatı
-        dubleksi (D-21) satılıktır ve aracısız, doğrudan binayı yapan Mey İnşaat’tan satın alınır.
+        {tx("El Ele Apartmanı, Mey İnşaat’ın Pendik Batı Mahallesi’nde tamamladığı, kat mülkiyetli sıfır bir konut binasıdır. Bina teslime hazırdır; şu an yalnızca 5. kattaki 3+2 çatı dubleksi (D-21) satılıktır ve aracısız, doğrudan binayı yapan Mey İnşaat’tan satın alınır.")}
       </p>
       <p>
-        Bina; sahil parkı, market, eczane ve ilkokulun yürüme mesafesinde, Marmaray ve metro
-        bağlantılarına yakın bir konumda yer alır. Pendik’in kıyı hattına yakınlığı, hem oturmak
-        hem de uzun vadeli yatırım için elverişli bir konum sunar.
+        {tx("Bina; sahil parkı, market, eczane ve ilkokulun yürüme mesafesinde, Marmaray ve metro bağlantılarına yakın bir konumda yer alır. Pendik’in kıyı hattına yakınlığı, hem oturmak hem de uzun vadeli yatırım için elverişli bir konum sunar.")}
       </p>
     </div>
   </section>
 
   <!-- CTA -->
   <div class="container-site ks-cta">
-    <CtaBand base={basePrefix} />
+    <CtaBand locale={locale} base={basePrefix} />
   </div>
 
-  <MobileSaleBar fiyat={tl(13_750_000)} etiket="Son daire · D-21" konu="D-21 · 3+2 çatı dubleksi" />
+  <MobileSaleBar locale={locale} fiyat={tl(13_750_000)} etiket={tx("Son daire · D-21")} konu={tx("D-21 · 3+2 çatı dubleksi")} />
 </Base>
 
 <style>

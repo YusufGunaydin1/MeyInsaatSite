@@ -1,4 +1,6 @@
 ---
+import { salesMessages, islandMessages } from "../lib/salesContent";
+import { translator } from "../lib/translate";
 /*
   DAİRE DETAY — D-11 / Daire 1 (canlı; tasarım: daire-detay-ref-a mock).
   Başlık+satış durumu → galeri | künye → çapa sekmeleri → genel bakış
@@ -25,28 +27,30 @@ interface Props {
   locale: Locale;
 }
 const { locale } = Astro.props;
+const messages = salesMessages(locale);
+const tx = translator(messages);
 const t = ui(locale);
 const basePrefix = localePath(locale, '/').replace(/\/$/, '');
 const root = localePath(locale, '/satilik-daireler');
 
 const d = detay['daire-1'];
-const items = await carouselItems([...d.galeri]);
+const items = await carouselItems([...d.galeri], messages);
 
 const sekmeler = [
-  { id: 'genel', label: 'Genel Bilgiler' },
-  { id: 'konum', label: 'Konum' },
-  { id: 'durum', label: 'Satış Durumu' },
-  { id: 'sss', label: 'SSS' },
-  { id: 'benzer', label: 'Benzer Daireler' },
+  { id: 'genel', label: tx("Genel Bilgiler") },
+  { id: 'konum', label: tx("Konum") },
+  { id: 'durum', label: tx("Satış Durumu") },
+  { id: 'sss', label: tx("SSS") },
+  { id: 'benzer', label: tx("Benzer Daireler") },
 ];
 
 const projeDetay = [
-  { label: 'Proje Adı', value: proje.ad },
-  { label: 'Yapımcı / Satıcı', value: 'Mey İnşaat' },
-  { label: 'Blok / Kat', value: `${proje.blok} blok · ${proje.kat} kat` },
-  { label: 'Toplam Daire', value: String(proje.toplamDaire) },
-  { label: 'Proje Durumu', value: proje.durum },
-  { label: 'Teslim', value: proje.teslim },
+  { label: tx("Proje Adı"), value: proje.ad },
+  { label: tx("Yapımcı / Satıcı"), value: 'Mey İnşaat' },
+  { label: tx("Blok / Kat"), value: tx('{blocks} blok · {floors} kat', { blocks: proje.blok, floors: proje.kat }) },
+  { label: tx("Toplam Daire"), value: String(proje.toplamDaire) },
+  { label: tx("Proje Durumu"), value: tx(proje.durum) },
+  { label: tx("Teslim"), value: tx(proje.teslim) },
 ];
 ---
 
@@ -54,8 +58,8 @@ const projeDetay = [
   locale={locale}
   page="satilik"
   path={'/satilik-daireler/' + DETAY_SLUG['daire-1']}
-  title={d.baslik + ' — MEY İnşaat'}
-  description="El Ele Apartmanı D-11: yakın zamanda satılan deniz manzaralı 3+2 dubleks — galeri ve künye."
+  title={tx(d.baslik) + ' — MEY İnşaat'}
+  description={tx("El Ele Apartmanı D-11: yakın zamanda satılan deniz manzaralı 3+2 dubleks — galeri ve künye.")}
   noindex
 >
   <div class="container-site kcd-crumbwrap">
@@ -63,87 +67,86 @@ const projeDetay = [
       { label: t.nav.home, href: localePath(locale, '/') },
       { label: t.nav.forSale, href: root },
       { label: proje.ad, href: root },
-      { label: '3+2 Dubleks · D-11' },
+      { label: tx("3+2 Dubleks · D-11") },
     ]} />
   </div>
 
   <!-- BAŞLIK + SATIŞ DURUMU -->
   <header class="container-site kcd-head">
     <div class="kcd-head-main">
-      <h1 class="kcd-title">{d.baslik}</h1>
+      <h1 class="kcd-title">{tx(d.baslik)}</h1>
       <p class="kcd-chips">
-        <span class="t-tech kcd-chip is-red" data-testid="kc-sold-status">{RECENTLY_SOLD_LABEL}</span>
-        <span class="t-tech kcd-chip">DUBLEKS</span>
+        <span class="t-tech kcd-chip is-red" data-testid="kc-sold-status">{tx(RECENTLY_SOLD_LABEL)}</span>
+        <span class="t-tech kcd-chip">{tx("DUBLEKS")}</span>
         <span class="t-tech kcd-meta"><Icon name="pin" size={13} /> {proje.lokasyon}</span>
-        <span class="t-tech kcd-meta">{d.unit.kat} · {d.unit.no} · Brüt {d.unit.brut} m² / Net {d.unit.net} m²</span>
+        <span class="t-tech kcd-meta">{tx(d.unit.kat)} · {d.unit.no} · {tx("Brüt")} {d.unit.brut} m² / {tx("Net")} {d.unit.net} m²</span>
       </p>
     </div>
     <div class="kcd-head-price">
-      <p class="t-caption kcd-sold-summary">Satış işlemi tamamlandı</p>
+      <p class="t-caption kcd-sold-summary">{tx("Satış işlemi tamamlandı")}</p>
     </div>
     <div class="kcd-head-actions">
-      <a class="kcd-mini" href={root + DETAY_SLUG['daire-2'] + '/'} data-testid="kc-compare"><Icon name="compare" size={15} /> Satıştaki D-21’i İncele</a>
+      <a class="kcd-mini" href={root + DETAY_SLUG['daire-2'] + '/'} data-testid="kc-compare"><Icon name="compare" size={15} /> {tx("Satıştaki D-21’i İncele")}</a>
     </div>
   </header>
 
   <!-- GÖVDE: sol içerik + sağ ray -->
   <div class="container-site kcd-layout">
     <div class="kcd-main">
-      <section class="kcg" id="genel" data-gallery aria-label="Galeri ve künye">
-        <Carousel client:load items={items} label={d.baslik + ' fotoğrafları'} />
+      <section class="kcg" id="genel" data-gallery aria-label={tx("Galeri ve künye")}>
+        <Carousel messages={islandMessages(messages, 'gallery')} client:load items={items} label={tx('{title} fotoğrafları', { title: tx(d.baslik) })} />
         <div class="kcg-specside card">
-          <h2 class="t-heading-s">Künye</h2>
-          <SpecGrid items={specsD1} columns={1} testid="kc-specs-d1" />
+          <h2 class="t-heading-s">{tx("Künye")}</h2>
+          <SpecGrid items={specsD1.map((s) => ({ label: tx(s.label), value: tx(s.value) }))} columns={1} testid="kc-specs-d1" />
         </div>
       </section>
 
-      <nav class="kcd-tabs" aria-label="Sayfa bölümleri">
+      <nav class="kcd-tabs" aria-label={tx("Sayfa bölümleri")}>
         {sekmeler.map((s) => <a href={'#' + s.id}>{s.label}</a>)}
       </nav>
 
-      <section class="kcd-block" aria-label="Proje detayları">
+      <section class="kcd-block" aria-label={tx("Proje detayları")}>
         <div class="kcd-two">
           <div class="card kcd-card">
-            <h2 class="t-heading-s">Proje Detayları</h2>
+            <h2 class="t-heading-s">{tx("Proje Detayları")}</h2>
             <SpecGrid items={projeDetay} columns={1} testid="kc-specs-proje" />
           </div>
           <div class="card kcd-card">
-            <h2 class="t-heading-s">Daireye Genel Bakış</h2>
+            <h2 class="t-heading-s">{tx("Daireye Genel Bakış")}</h2>
             <ul class="kcd-checklist" data-testid="kc-genel-bakis">
               {d.genelBakis.map((g) => (
-                <li><Icon name="check" size={16} /> {g}</li>
+                <li><Icon name="check" size={16} /> {tx(g)}</li>
               ))}
             </ul>
           </div>
         </div>
       </section>
 
-      <section class="kcd-block" id="konum" aria-label="Konum ve yakın çevre">
-        <MapPanel title="Yakın Çevre" locale={locale} />
+      <section class="kcd-block" id="konum" aria-label={tx("Konum ve yakın çevre")}>
+        <MapPanel title={tx("Yakın Çevre")} locale={locale} />
       </section>
 
-      <section class="kcd-block" id="durum" aria-label="Satış durumu ve sorular">
+      <section class="kcd-block" id="durum" aria-label={tx("Satış durumu ve sorular")}>
         <div class="kcd-two">
           <div class="card kcd-card kcd-sold-card" data-testid="kc-sold-detail">
-            <p class="t-tech kcd-sold-kicker">{RECENTLY_SOLD_LABEL}</p>
-            <h2 class="t-heading-s kcd-sold-title">Bu dairenin satış işlemi tamamlandı.</h2>
-            <p class="t-caption kcd-sold-text">Aynı binadaki son daire D-21 satışta.</p>
-            <a class="kcd-sold-next" href={root + DETAY_SLUG['daire-2'] + '/'} data-testid="kc-sold-next">13.750.000 TL fiyatlı D-21’i incele <Icon name="arrow-right" size={15} /></a>
+            <p class="t-tech kcd-sold-kicker">{tx(RECENTLY_SOLD_LABEL)}</p>
+            <h2 class="t-heading-s kcd-sold-title">{tx("Bu dairenin satış işlemi tamamlandı.")}</h2>
+            <p class="t-caption kcd-sold-text">{tx("Aynı binadaki son daire D-21 satışta.")}</p>
+            <a class="kcd-sold-next" href={root + DETAY_SLUG['daire-2'] + '/'} data-testid="kc-sold-next">{tx("13.750.000 TL fiyatlı D-21’i incele")} <Icon name="arrow-right" size={15} /></a>
           </div>
-          <div class="card kcd-card" id="sss"><FaqList /></div>
+          <div class="card kcd-card" id="sss"><FaqList locale={locale} /></div>
         </div>
       </section>
 
       <section class="kcd-block" id="benzer">
-        <SimilarUnits current="daire-1" base={basePrefix} />
+        <SimilarUnits locale={locale} current="daire-1" base={basePrefix} />
       </section>
     </div>
 
-    <StickyRail
-      konu="D-11 (satıldı) · benzer daireler"
+    <StickyRail locale={locale}
+      konu={tx("D-11 (satıldı) · benzer daireler")}
       subject={`Web Formu · D-11 (satıldı) · benzer daireler · ${proje.ad}`}
       formLocation="daire-detay-d11"
-      base={basePrefix}
     />
   </div>
 </Base>

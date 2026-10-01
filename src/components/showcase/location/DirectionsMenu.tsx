@@ -1,7 +1,9 @@
+import { translator, type Messages } from '../../../lib/translate';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { DirectionsItem } from '../../../lib/projectLocations';
 
 interface Props {
+  messages?: Messages;
   /** Provider targets, in display order (Google · Yandex · Apple). */
   items: DirectionsItem[];
   /** One-tap target for the primary segment in the `split` layout. */
@@ -33,11 +35,6 @@ function ChevronIcon() {
   );
 }
 
-const SUB: Record<DirectionsItem['kind'], string> = {
-  directions: 'Yol tarifi',
-  map: 'Harita pini',
-};
-
 export default function DirectionsMenu({
   items,
   primaryHref,
@@ -45,9 +42,11 @@ export default function DirectionsMenu({
   tone = 'light',
   size = 'md',
   openUp = false,
-  label = 'Yol tarifi',
+  label,
+  messages = {},
   testid,
 }: Props) {
+  const tx = translator(messages);
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -141,7 +140,7 @@ export default function DirectionsMenu({
               data-testid={testid ? `${testid}-primary` : undefined}
             >
               <NavIcon />
-              <span>{label}</span>
+              <span>{label ?? tx('Yol tarifi')}</span>
             </a>
             <button
               ref={triggerRef}
@@ -150,7 +149,7 @@ export default function DirectionsMenu({
               aria-haspopup="menu"
               aria-expanded={open}
               aria-controls={menuId}
-              aria-label="Diğer harita sağlayıcıları"
+              aria-label={tx("Diğer harita sağlayıcıları")}
               data-testid={testid ? `${testid}-toggle` : undefined}
               onClick={activate}
             >
@@ -169,7 +168,7 @@ export default function DirectionsMenu({
             onClick={activate}
           >
             <NavIcon />
-            <span>{label}</span>
+            <span>{label ?? tx('Yol tarifi')}</span>
             <ChevronIcon />
           </button>
         )}
@@ -179,7 +178,7 @@ export default function DirectionsMenu({
         id={menuId}
         className="km-dir-pop"
         role="menu"
-        aria-label="Harita sağlayıcıları"
+        aria-label={tx("Harita sağlayıcıları")}
         hidden={!open}
       >
         {items.map((item, index) => (
@@ -194,7 +193,7 @@ export default function DirectionsMenu({
             data-testid={testid ? `${testid}-${item.name.toLowerCase()}` : undefined}
           >
             <span className="km-dir-item-name">{item.name}</span>
-            <span className="km-dir-item-sub t-tech">{SUB[item.kind]}</span>
+            <span className="km-dir-item-sub t-tech">{tx(item.kind === 'directions' ? tx("Yol tarifi") : tx("Harita pini"))}</span>
             <span className="km-dir-item-go" aria-hidden="true">↗</span>
           </a>
         ))}

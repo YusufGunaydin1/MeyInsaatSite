@@ -1,13 +1,14 @@
+import { translator, type Messages } from '../../../../lib/translate';
 /*
   Satılık listesi adası — liste-ref.png düzeni, dürüst envanterle: sekmeler
   (Tümü/Daireler/Projeler), canlı filtreler, sıralama, favoriler, kart ızgarası,
-  sağ rayda karşılaştırma + hızlı form. Izgara iki tür kart taşır: gerçek ilanlar
+  sağ rayda hızlı iletişim. Izgara iki tür kart taşır: gerçek ilanlar
   (El Ele dubleksleri — satıştaki daire fiyatlı, satılan daire durum etiketli)
   ve proje kartları
   (satılmışlar kırmızı TÜMÜ SATILDI bandı taşır, fiyatsız, proje sayfasına çıkar).
   Birim filtreleri (kat/oda/m²/fiyat) aktifken proje kartları ızgaradan düşer;
-  fiyat sıralaması fiyatsız proje kartlarını hep sona koyar. Henüz var olmayan
-  uçlar (harita, karşılaştırma görünümü) ortak "yakında" diyaloğunu açar.
+  fiyat sıralaması fiyatsız proje kartlarını hep sona koyar. Harita görünümü
+  her kartın doğrulanmış bina koordinatını gösterir.
 */
 import { useMemo, useState } from 'react';
 import DeferredImage from './DeferredImage';
@@ -66,6 +67,7 @@ export interface ListingProjeItem {
 export type ListingCard = ListingItem | ListingProjeItem;
 
 interface Props {
+  messages?: Messages;
   items: ListingCard[];
   projeler: { key: string; ad: string }[];
   salesPhone: string;
@@ -102,13 +104,14 @@ function Ic({ d, size = 16 }: { d: string; size?: number }) {
 
 /* Kart görsel alanı — "Harita Görünümü"nde fotoğraf yerine binanın konum mini-haritası.
    Aynı 16/10 kutusunu doldurur; rozetler üstünde kalır. */
-function CardMedia({ u, priority, mapView }: { u: ListingCard; priority: boolean; mapView: boolean }) {
+function CardMedia({ u, priority, mapView, messages }: { u: ListingCard; priority: boolean; mapView: boolean; messages: Messages }) {
   if (mapView && typeof u.lat === 'number' && typeof u.lng === 'number') {
     return (
       <LeafletMap
         lat={u.lat}
         lng={u.lng}
-        label={u.kind === 'ilan' ? `${u.proje} konumu` : `${u.ad} konumu`}
+        label={u.kind === 'ilan' ? u.proje : u.ad}
+        messages={messages}
         zoom={15}
         preview
         testid={`kl-cardmap-${u.id}`}
@@ -175,7 +178,9 @@ export default function SaleListing({
   salesWhatsapp,
   salesWhatsappHref,
   formAccessKey,
+  messages = {},
 }: Props) {
+  const tx = translator(messages);
   const [tab, setTab] = useState(TUMU);
   const [filters, setFilters] = useState<Filters>(EMPTY);
   const [sort, setSort] = useState<'asc' | 'desc'>('asc');
@@ -238,11 +243,11 @@ export default function SaleListing({
     <div className="kl kl--mobile-compact" data-testid="kl">
       <div className="kl-main">
         <div className="klm-controls" data-testid="klm-controls">
-            <div className="klm-tabs" role="tablist" aria-label="Sonuç türü">
+            <div className="klm-tabs" role="tablist" aria-label={tx("Sonuç türü")}>
               {([
-                ['tumu', 'Tümü', counts.tumu],
-                ['ilan', 'Daire', counts.ilan],
-                ['proje', 'Proje', counts.proje],
+                ['tumu', tx("Tümü"), counts.tumu],
+                ['ilan', tx("Daire"), counts.ilan],
+                ['proje', tx("Proje"), counts.proje],
               ] as const).map(([key, label, count]) => (
                 <button
                   key={key}
@@ -260,7 +265,7 @@ export default function SaleListing({
 
             <div className="klm-command-row">
               <p className="klm-count" data-testid="klm-count">
-                <strong>{visible.length}</strong> sonuç
+                <strong>{visible.length}</strong> {tx("sonuç")}
               </p>
               <button
                 type="button"
@@ -271,7 +276,7 @@ export default function SaleListing({
                 data-testid="klm-filter-toggle"
               >
                 <Ic d={I.filtre} size={15} />
-                <span>Filtre</span>
+                <span>{tx("Filtre")}</span>
                 {mobileActiveFilterCount > 0 && <strong className="klm-filter-count">{mobileActiveFilterCount}</strong>}
               </button>
               <button
@@ -282,13 +287,13 @@ export default function SaleListing({
                 data-testid="klm-harita"
               >
                 <Ic d={I.harita} size={15} />
-                <span>{view === 'map' ? 'Liste' : 'Harita'}</span>
+                <span>{view === 'map' ? tx("Liste") : tx("Harita")}</span>
               </button>
               <label className="klm-sort">
-                <span className="klm-visually-hidden">Sıralama</span>
+                <span className="klm-visually-hidden">{tx("Sıralama")}</span>
                 <select value={sort} onChange={(event) => setSort(event.target.value as 'asc' | 'desc')} data-testid="klm-sort">
-                  <option value="asc">Fiyat ↑</option>
-                  <option value="desc">Fiyat ↓</option>
+                  <option value="asc">{tx("Fiyat ↑")}</option>
+                  <option value="desc">{tx("Fiyat ↓")}</option>
                 </select>
               </label>
             </div>
@@ -296,24 +301,24 @@ export default function SaleListing({
             {filtersOpen && (
               <div id="satilik-mobil-filtreler" className="klm-filter-panel" data-testid="klm-filter-panel">
                 <label className="klm-field">
-                  <span>Proje</span>
+                  <span>{tx("Proje")}</span>
                   <select value={filters.proje} onChange={set('proje')} data-testid="klm-f-proje">
-                    <option value={TUMU}>Tüm projeler</option>
+                    <option value={TUMU}>{tx("Tüm projeler")}</option>
                     {projeler.map((project) => <option key={project.key} value={project.key}>{project.ad}</option>)}
                   </select>
                 </label>
                 <label className="klm-field">
-                  <span>Durum</span>
+                  <span>{tx("Durum")}</span>
                   <select value={mobileStatus} onChange={(event) => setMobileStatus(event.target.value as MobileStatus)} data-testid="klm-f-status">
-                    <option value="tumu">Tümü</option>
-                    <option value="available">Satışta</option>
-                    <option value="sold">Satıldı</option>
+                    <option value="tumu">{tx("Tümü")}</option>
+                    <option value="available">{tx("Satışta")}</option>
+                    <option value="sold">{tx("Satıldı")}</option>
                   </select>
                 </label>
                 <div className="klm-filter-actions">
-                  <button type="button" className="klm-clear" onClick={clearAll} data-testid="klm-clear">Temizle</button>
+                  <button type="button" className="klm-clear" onClick={clearAll} data-testid="klm-clear">{tx("Temizle")}</button>
                   <button type="button" className="klm-apply" onClick={() => setFiltersOpen(false)} data-testid="klm-apply">
-                    {visible.length} sonucu göster
+                    {tx('{count} sonucu göster', { count: visible.length })}
                   </button>
                 </div>
               </div>
@@ -322,8 +327,8 @@ export default function SaleListing({
 
         {/* SEKMELER + sağ eylemler */}
         <div className="kl-tabs-row">
-          <div className="kl-tabs" role="tablist" aria-label="İlan tipi">
-            {([['tumu', `Tümü (${counts.tumu})`], ['ilan', `Daireler (${counts.ilan})`], ['proje', `Projeler (${counts.proje})`]] as const).map(([key, label]) => (
+          <div className="kl-tabs" role="tablist" aria-label={tx("İlan tipi")}>
+            {([['tumu', `${tx("Tümü")} (${counts.tumu})`], ['ilan', `${tx("Daireler")} (${counts.ilan})`], ['proje', `${tx("Projeler")} (${counts.proje})`]] as const).map(([key, label]) => (
               <button key={key} type="button" role="tab" aria-selected={tab === key}
                 className={tab === key ? 'kl-tab is-active' : 'kl-tab'}
                 onClick={() => { setTab(key); setShown(PAGE); }}
@@ -337,14 +342,14 @@ export default function SaleListing({
               aria-pressed={view === 'map'}
               onClick={() => setView((v) => (v === 'map' ? 'grid' : 'map'))} data-testid="kl-harita">
               <Ic d={I.harita} />
-              <span className="kl-desktop-label">{view === 'map' ? 'Liste Görünümü' : 'Harita Görünümü'}</span>
-              <span className="kl-mobile-label">{view === 'map' ? 'Liste' : 'Harita'}</span>
+              <span className="kl-desktop-label">{view === 'map' ? tx("Liste Görünümü") : tx("Harita Görünümü")}</span>
+              <span className="kl-mobile-label">{view === 'map' ? tx("Liste") : tx("Harita")}</span>
             </button>
             <button type="button" className={favOnly ? 'kl-ghost is-active' : 'kl-ghost'}
               onClick={() => { setFavOnly((v) => !v); setShown(PAGE); }} data-testid="kl-favorilerim">
               <Ic d={I.kalp} />
-              <span className="kl-desktop-label">Favorilerim ({favs.size})</span>
-              <span className="kl-mobile-label">Favoriler ({favs.size})</span>
+              <span className="kl-desktop-label">{tx("Favorilerim")} ({favs.size})</span>
+              <span className="kl-mobile-label">{tx("Favoriler")} ({favs.size})</span>
             </button>
             <button
               type="button"
@@ -354,7 +359,7 @@ export default function SaleListing({
               onClick={() => setFiltersOpen((open) => !open)}
               data-testid="kl-filter-toggle"
             >
-              <Ic d={I.filtre} /> Filtreler
+              <Ic d={I.filtre} /> {tx("Filtreler")}
             </button>
           </div>
         </div>
@@ -366,54 +371,54 @@ export default function SaleListing({
           data-testid="kl-filters"
         >
           <label className="kx-field">
-            <span className="kx-field-label">Proje Seçin</span>
+            <span className="kx-field-label">{tx("Proje Seçin")}</span>
             <select value={filters.proje} onChange={set('proje')} data-testid="kl-f-proje">
-              <option value={TUMU}>Tümü</option>
+              <option value={TUMU}>{tx("Tümü")}</option>
               {projeler.map((p) => <option key={p.key} value={p.key}>{p.ad}</option>)}
             </select>
           </label>
           <label className="kx-field">
-            <span className="kx-field-label">Kat</span>
+            <span className="kx-field-label">{tx("Kat")}</span>
             <select value={filters.kat} onChange={set('kat')} data-testid="kl-f-kat">
-              <option value={TUMU}>Tümü</option>
-              <option value="5-6">5. Kat</option>
+              <option value={TUMU}>{tx("Tümü")}</option>
+              <option value="5-6">{tx("5. Kat")}</option>
             </select>
           </label>
           <label className="kx-field">
-            <span className="kx-field-label">Oda Sayısı</span>
+            <span className="kx-field-label">{tx("Oda Sayısı")}</span>
             <select value={filters.oda} onChange={set('oda')} data-testid="kl-f-oda">
-              <option value={TUMU}>Tümü</option>
+              <option value={TUMU}>{tx("Tümü")}</option>
               <option value="3+2">3+2</option>
             </select>
           </label>
           <label className="kx-field">
-            <span className="kx-field-label">m² Aralığı</span>
+            <span className="kx-field-label">{tx("m² Aralığı")}</span>
             <select value={filters.m2} onChange={set('m2')} data-testid="kl-f-m2">
-              <option value={TUMU}>Tümü</option>
-              <option value="150+">150 m² üzeri</option>
+              <option value={TUMU}>{tx("Tümü")}</option>
+              <option value="150+">{tx("150 m² üzeri")}</option>
             </select>
           </label>
           <label className="kx-field">
-            <span className="kx-field-label">Fiyat Aralığı</span>
+            <span className="kx-field-label">{tx("Fiyat Aralığı")}</span>
             <select value={filters.fiyat} onChange={set('fiyat')} data-testid="kl-f-fiyat">
-              <option value={TUMU}>Tümü</option>
-              <option value="10+">10 milyon TL üzeri</option>
+              <option value={TUMU}>{tx("Tümü")}</option>
+              <option value="10+">{tx("10 milyon TL üzeri")}</option>
             </select>
           </label>
           <button type="button" className="kl-clear" data-testid="kl-clear"
             onClick={clearAll}>
-            ⟳ Filtreyi Temizle
+            {tx("⟳ Filtreyi Temizle")}
           </button>
         </div>
 
         {/* SONUÇ SATIRI */}
         <div className="kl-results-row">
-          <p className="kl-count" data-testid="kl-count"><strong>{visible.length}</strong> sonuç bulundu</p>
+          <p className="kl-count" data-testid="kl-count"><strong>{visible.length}</strong> {tx("sonuç bulundu")}</p>
           <label className="kl-sort">
-            <span className="kl-sort-label">Sırala:</span>
+            <span className="kl-sort-label">{tx("Sırala:")}</span>
             <select value={sort} onChange={(e) => setSort(e.target.value as 'asc' | 'desc')} data-testid="kl-sort">
-              <option value="asc">Fiyata (Düşükten Yükseğe)</option>
-              <option value="desc">Fiyata (Yüksekten Düşüğe)</option>
+              <option value="asc">{tx("Fiyata (Düşükten Yükseğe)")}</option>
+              <option value="desc">{tx("Fiyata (Yüksekten Düşüğe)")}</option>
             </select>
           </label>
         </div>
@@ -424,18 +429,19 @@ export default function SaleListing({
             <article key={u.id} className={u.sold ? 'kl-card kl-card-bina is-sold' : 'kl-card kl-card-bina'}
               data-testid="kl-card" data-unit={u.id} data-kind="proje">
               <div className="kl-card-media">
-                <CardMedia u={u} priority={cardIndex === 0} mapView={view === 'map'} />
-                {u.sold
-                  ? <span className="kl-sold" data-testid={`kl-sold-${u.projeKey}`}>TÜMÜ SATILDI</span>
-                  : u.rozet && <span className="kl-badge is-red">{u.rozet}</span>}
-                <span className="kl-badge is-dark kl-kind">PROJE</span>
+                <CardMedia messages={messages} u={u} priority={cardIndex === 0} mapView={view === 'map'} />
+                {u.sold && <span className="kl-sold" data-testid={`kl-sold-${u.projeKey}`}>{tx("TÜMÜ SATILDI")}</span>}
+                <div className="kl-media-labels">
+                  {!u.sold && u.rozet && <span className="kl-badge is-red">{u.rozet}</span>}
+                  <span className="kl-badge is-dark kl-kind">{tx("PROJE")}</span>
+                </div>
               </div>
               <div className="kl-card-body">
                 <h3 className="kl-card-title">{u.ad}</h3>
-                <p className="kl-card-proje">{u.konum} · Tamamlandı</p>
+                <p className="kl-card-proje">{u.konum} · {tx("Tamamlandı")}</p>
                 <p className="kl-proje-not">{u.not}</p>
                 <div className="kl-card-foot">
-                  <a className="kl-detail kl-detail-ghost" href={u.href} data-testid={`kl-proje-${u.projeKey}`}>Projeyi İncele ›</a>
+                  <a className="kl-detail kl-detail-ghost" href={u.href} data-testid={`kl-proje-${u.projeKey}`}>{tx("Projeyi İncele ›")}</a>
                 </div>
               </div>
             </article>
@@ -449,18 +455,20 @@ export default function SaleListing({
               data-status={u.durum}
             >
               <div className="kl-card-media">
-                <CardMedia u={u} priority={cardIndex === 0} mapView={view === 'map'} />
+                <CardMedia messages={messages} u={u} priority={cardIndex === 0} mapView={view === 'map'} />
                 {u.durum === 'satildi' ? (
                   <span className="kl-sold kl-unit-sold" data-testid={`kl-recently-sold-${u.id}`}>
-                    {u.badge ?? 'YAKIN ZAMANDA SATILDI'}
+                    {u.badge ?? tx("YAKIN ZAMANDA SATILDI")}
                   </span>
                 ) : (
                   <>
-                    <span className="kl-badge is-red">SATILIK</span>
-                    {u.badge && <span className="kl-badge is-dark">{u.badge}</span>}
+                    <div className="kl-media-labels">
+                      <span className="kl-badge is-red">{tx("SATILIK")}</span>
+                      {u.badge && <span className="kl-badge is-dark">{u.badge}</span>}
+                    </div>
                     <button type="button"
                       className={favs.has(u.id) ? 'kl-heart is-active' : 'kl-heart'}
-                      aria-label={favs.has(u.id) ? 'Favorilerden çıkar' : 'Favorilere ekle'}
+                      aria-label={favs.has(u.id) ? tx("Favorilerden çıkar") : tx("Favorilere ekle")}
                       aria-pressed={favs.has(u.id)}
                       onClick={() => toggleFav(u.id)}
                       data-testid={`kl-fav-${u.id}`}>
@@ -473,32 +481,32 @@ export default function SaleListing({
                 <h3 className="kl-card-title">{u.baslik}</h3>
                 <p className="kl-card-proje">{u.proje} · {u.blokKat}</p>
                 <ul className="kl-card-stats">
-                  <li><Ic d={I.oda} /><span>{u.oda}</span><em>Oda</em></li>
-                  <li><Ic d={I.brut} /><span>{u.brut} m²</span><em>Brüt</em></li>
-                  <li><Ic d={I.banyo} /><span>{u.banyo}</span><em>Banyo</em></li>
-                  <li><Ic d={I.balkon} /><span>{u.balkon}</span><em>Balkon</em></li>
-                  <li><Ic d={I.kat} /><span>{u.kat.replace(' Kat', '')}</span><em>Kat</em></li>
+                  <li><Ic d={I.oda} /><span><bdi dir="ltr">{u.oda}</bdi></span><em>{tx("Oda")}</em></li>
+                  <li><Ic d={I.brut} /><span><bdi dir="ltr">{u.brut} m²</bdi></span><em>{tx("Brüt")}</em></li>
+                  <li><Ic d={I.banyo} /><span>{u.banyo}</span><em>{tx("Banyo")}</em></li>
+                  <li><Ic d={I.balkon} /><span>{u.balkon}</span><em>{tx("Balkon")}</em></li>
+                  <li><Ic d={I.kat} /><span>{u.kat.replace(' Kat', '')}</span><em>{tx("Kat")}</em></li>
                 </ul>
                 <div className="kl-card-foot">
                   {u.fiyatText ? (
-                    <p className="kl-price tabular-nums" data-testid={`kl-price-${u.id}`}>{u.fiyatText}</p>
+                    <p className="kl-price tabular-nums" dir="ltr" data-testid={`kl-price-${u.id}`}>{u.fiyatText}</p>
                   ) : (
-                    <p className="kl-unit-status" data-testid={`kl-status-${u.id}`}>Yakın zamanda satıldı</p>
+                    <p className="kl-unit-status" data-testid={`kl-status-${u.id}`}>{tx("Yakın zamanda satıldı")}</p>
                   )}
-                  <a className="kl-detail" href={u.href} data-testid={`kl-detay-${u.id}`}>Detayları Gör ›</a>
+                  <a className="kl-detail" href={u.href} data-testid={`kl-detay-${u.id}`}>{tx("Detayları Gör ›")}</a>
                 </div>
               </div>
             </article>
           ))}
           {visible.length === 0 && (
-            <p className="kx-empty" data-testid="kl-empty">Bu filtrelerle sonuç yok — filtreyi temizleyin.</p>
+            <p className="kx-empty" data-testid="kl-empty">{tx("Bu filtrelerle sonuç yok — filtreyi temizleyin.")}</p>
           )}
         </div>
 
         {visible.length > shown && (
           <p className="kl-more">
             <button type="button" className="kl-ghost" onClick={() => setShown((n) => n + PAGE)} data-testid="kl-more">
-              Daha Fazla Yükle ↓
+              {tx("Daha Fazla Yükle ↓")}
             </button>
           </p>
         )}
@@ -507,19 +515,19 @@ export default function SaleListing({
       {/* SAĞ RAY */}
       <aside className="kl-rail">
         <div className="kl-quick">
-          <h3 className="t-heading-s">Hızlı İletişim</h3>
-          <p className="t-caption kl-quick-sub">Size en uygun daireyi birlikte bulalım.</p>
-          <RailForm
-            konu="Satılık daireler"
-            daire="Satılık daireler · liste"
+          <h3 className="t-heading-s">{tx("Hızlı İletişim")}</h3>
+          <p className="t-caption kl-quick-sub">{tx("Size en uygun daireyi birlikte bulalım.")}</p>
+          <RailForm messages={messages}
+            konu={tx("Satılık daireler")}
+            daire={tx("Satılık daireler · liste")}
             subject="Web Formu · Satılık Daireler"
             formLocation="satilik-liste"
             fallback={[
               ...(salesPhone && salesPhoneHref
-                ? [{ kind: 'call' as const, label: `Ara · ${salesPhone}`, href: salesPhoneHref }]
+                ? [{ kind: 'call' as const, label: tx('Ara'), detail: salesPhone, href: salesPhoneHref }]
                 : []),
               ...(salesWhatsapp && salesWhatsappHref
-                ? [{ kind: 'whatsapp' as const, label: "WhatsApp'tan Sor", href: salesWhatsappHref }]
+                ? [{ kind: 'whatsapp' as const, label: tx("WhatsApp'tan Sor"), href: salesWhatsappHref }]
                 : []),
             ]}
             privacyHref="/gizlilik-ve-cerez-politikasi/"
@@ -527,10 +535,10 @@ export default function SaleListing({
           />
           <div className="kl-quick-lines">
             {salesPhone && salesPhoneHref && (
-              <a href={salesPhoneHref} data-testid="kl-sales-phone"><Ic d={I.tel} /> {salesPhone}</a>
+              <a href={salesPhoneHref} data-testid="kl-sales-phone"><Ic d={I.tel} /> <bdi dir="ltr">{salesPhone}</bdi></a>
             )}
             {salesWhatsapp && salesWhatsappHref && (
-              <a href={salesWhatsappHref} data-testid="kl-sales-whatsapp"><Ic d={I.chat} /> WhatsApp · {salesWhatsapp}</a>
+              <a href={salesWhatsappHref} data-testid="kl-sales-whatsapp"><Ic d={I.chat} /> WhatsApp · <bdi dir="ltr">{salesWhatsapp}</bdi></a>
             )}
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { translator, type Messages } from '../../../lib/translate';
 import { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 // .km-leaflet (host: position:absolute; inset:0), .km-leaflet-pin ve .km-attrib
@@ -6,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import './location.css';
 
 interface Props {
+  messages?: Messages;
   lat: number;
   lng: number;
   label: string;
@@ -22,7 +24,11 @@ const PIN_SVG =
   '<path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"/>' +
   '<circle cx="12" cy="10" r="2"/></svg>';
 
-export default function LeafletMap({ lat, lng, label, zoom = 16, scrollWheel = false, preview = false, testid }: Props) {
+export default function LeafletMap({ lat, lng, label, zoom = 16, scrollWheel = false, preview = false, testid, messages = {} }: Props) {
+  const tx = translator(messages);
+  const zoomInTitle = tx('Yakınlaştır');
+  const zoomOutTitle = tx('Uzaklaştır');
+  const attributionLabel = tx('Harita telifi');
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,7 +60,7 @@ export default function LeafletMap({ lat, lng, label, zoom = 16, scrollWheel = f
         attribution: '© OpenStreetMap',
       }).addTo(map);
 
-      if (!preview) L.control.zoom({ position: 'topright' }).addTo(map);
+      if (!preview) L.control.zoom({ position: 'topright', zoomInTitle, zoomOutTitle }).addTo(map);
 
       const pin = L.divIcon({
         className: 'km-leaflet-pin',
@@ -70,9 +76,10 @@ export default function LeafletMap({ lat, lng, label, zoom = 16, scrollWheel = f
         onAdd() {
           const wrap = L.DomUtil.create('div', 'km-attrib');
           wrap.innerHTML =
-            '<button type="button" class="km-attrib-toggle" aria-label="Harita telifi" aria-expanded="false">i</button>' +
+            '<button type="button" class="km-attrib-toggle" aria-label="" aria-expanded="false">i</button>' +
             '<span class="km-attrib-credit">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></span>';
           const btn = wrap.querySelector('button')!;
+          btn.setAttribute('aria-label', attributionLabel);
           L.DomEvent.disableClickPropagation(wrap);
           L.DomEvent.on(btn, 'click', () => {
             const isOpen = wrap.classList.toggle('is-open');
@@ -90,14 +97,14 @@ export default function LeafletMap({ lat, lng, label, zoom = 16, scrollWheel = f
       cancelled = true;
       if (map) map.remove();
     };
-  }, [lat, lng, zoom, scrollWheel, preview]);
+  }, [lat, lng, zoom, scrollWheel, preview, zoomInTitle, zoomOutTitle, attributionLabel, label]);
 
   return (
     <div
       ref={hostRef}
       className="km-leaflet"
       role="img"
-      aria-label={`${label} konum haritası`}
+      aria-label={tx('{label} konum haritası', { label })}
       data-testid={testid}
     />
   );

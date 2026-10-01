@@ -119,3 +119,15 @@ test('satılan daire sayfası noindex ve sitemap dışıdır; canlı D-21 indeks
   }
   expect(sitemapUrls.has(`${ORIGIN}/satilik-daireler/pendik-satilik-3-2-dubleks/`)).toBe(true);
 });
+
+test('translated sales pages are indexable and link to all language counterparts', () => {
+  for (const prefix of ['', 'en/', 'ru/', 'ar/']) {
+    for (const route of ['satilik-daireler/', 'satilik-daireler/pendik-satilik-3-2-dubleks/']) {
+      const page = real.find(p => p.file === `${prefix}${route}index.html`)!;
+      expect(page.noindex).toBe(false);
+      expect(sitemapUrls.has(page.url)).toBe(true);
+      const languages = [...page.html.matchAll(/<link rel="alternate" hreflang="([^"]+)"/g)].map(m => m[1]);
+      expect(languages).toEqual(['tr', 'en', 'ru', 'ar', 'x-default']);
+    }
+  }
+});

@@ -1,4 +1,7 @@
 ---
+import type { Locale } from "../../../../lib/i18n";
+import { salesMessages } from "../../../../lib/salesContent";
+import { translator } from "../../../../lib/translate";
 /*
   Benzer daireler — gerçek benzer tek daire diğer dublekstir; yanına diğer proje
   teaser'ları gelir (fiyat/müsaitlik UYDURULMAZ: "satış bilgisi yakında").
@@ -11,32 +14,35 @@ import masukImg from '../../../../assets/projects/masuk-apartmani.webp';
 import camogluImg from '../../../../assets/projects/camoglu-apartmani.webp';
 
 interface Props {
+  locale?: Locale;
   current: 'daire-1' | 'daire-2';
   base: string;
 }
-const { current, base } = Astro.props;
+const messages = salesMessages(Astro.props.locale ?? 'tr');
+const tx = translator(messages);
+const { locale = 'tr', current, base } = Astro.props;
 const d = detay[current];
 const teaserImg = { 'masuk-apartmani': masukImg, 'camoglu-apartmani': camogluImg } as const;
 const kompaktBase = base + '/satilik-daireler/';
 ---
 
 <section class="kc-similar" data-testid="kc-similar">
-  <h2 class="t-heading-m">Benzer Daireler</h2>
+  <h2 class="t-heading-m">{tx("Benzer Daireler")}</h2>
   <div class="kc-similar-grid">
     {d.benzerSira.map((id) => {
       const u = unitById(id)!;
       const sold = u.durum === 'satildi';
       return (
         <article class:list={['kc-sim card', { 'is-sold': sold }]} data-testid={`kc-sim-unit-${u.id}`}>
-          <Image src={publicAsset(u.foto!)} alt={entry(u.foto!).alt} widths={[360, 640]} sizes="(min-width: 900px) 300px, calc(100vw - 3rem)" quality={74} loading="lazy" decoding="async" class="kc-sim-img" />
+          <Image src={publicAsset(u.foto!)} alt={tx(entry(u.foto!).alt)} widths={[360, 640]} sizes="(min-width: 900px) 300px, calc(100vw - 3rem)" quality={74} loading="lazy" decoding="async" class="kc-sim-img" />
           <div class="kc-sim-body">
             <p class:list={['t-tech kc-sim-durum', { 'is-sold': sold }]} data-testid={sold ? `kc-sim-status-${u.id}` : undefined}>
-              {sold ? RECENTLY_SOLD_LABEL : `MÜSAİT · ${u.no}`}
+              {sold ? tx(RECENTLY_SOLD_LABEL) : `${tx('MÜSAİT')} · ${u.no}`}
             </p>
-            <p class="kc-sim-ad">{u.tip} — {u.kat}</p>
-            <p class="kc-sim-meta">Brüt {u.brut} m² · {u.cephe}</p>
-            {u.fiyat !== null && <p class="kc-sim-fiyat tabular-nums" data-testid={`kc-sim-price-${u.id}`}>{tl(u.fiyat)}</p>}
-            <a class="kc-sim-cta" href={kompaktBase + DETAY_SLUG[u.detay!] + '/'} data-testid={`kc-sim-${u.detay}`}>Detaylı İncele</a>
+            <p class="kc-sim-ad">{tx(u.tip)} — {tx(u.kat)}</p>
+            <p class="kc-sim-meta">{tx("Brüt")} {u.brut} m² · {tx(u.cephe)}</p>
+            {u.fiyat !== null && <p class="kc-sim-fiyat tabular-nums" dir="ltr" data-testid={`kc-sim-price-${u.id}`}>{tl(u.fiyat)}</p>}
+            <a class="kc-sim-cta" href={kompaktBase + DETAY_SLUG[u.detay!] + '/'} data-testid={`kc-sim-${u.detay}`}>{tx("Detaylı İncele")}</a>
           </div>
         </article>
       );
@@ -45,10 +51,10 @@ const kompaktBase = base + '/satilik-daireler/';
       <article class="kc-sim card is-teaser">
         <Image src={teaserImg[t.slug as keyof typeof teaserImg]} alt={t.ad} widths={[360, 640]} sizes="(min-width: 900px) 300px, calc(100vw - 3rem)" quality={74} loading="lazy" decoding="async" class="kc-sim-img" />
         <div class="kc-sim-body">
-          <p class="t-tech kc-sim-durum is-mute">{t.not.toUpperCase()}</p>
+          <p class="t-tech kc-sim-durum is-mute">{tx(t.not).toLocaleUpperCase(locale)}</p>
           <p class="kc-sim-ad">{t.ad}</p>
           <p class="kc-sim-meta">{t.konum}</p>
-          <a class="kc-sim-cta is-ghost" href={base + '/projeler/' + t.slug + '/'}>Projeyi Gör</a>
+          <a class="kc-sim-cta is-ghost" href={base + '/projeler/' + t.slug + '/'}>{tx("Projeyi Gör")}</a>
         </div>
       </article>
     ))}
